@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Che cosa accadde a Pompei tra l'eruzione del 79 d.C. e il primo scavo del 1748 — dossier con fonti verificate.">
+<title>Pompei dopo il 79 — dossier</title>
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}
+  html{-webkit-text-size-adjust:100%}</style>
+</head>
+<body>
+
+<style>
+  /* ================================================================ token */
+  :root{
+    color-scheme:light;
+    --ground:#E8E9E5;
+    --surface:#F4F5F1;
+    --surface-2:#DEE2DA;
+    --ink:#171B18;
+    --ink-soft:#4E5A54;
+    --ink-faint:#78847D;
+    --rule:#C5C9C1;
+    --rule-soft:#D9DCD4;
+    --accent:#2F5D4F;
+    --accent-soft:#6E9184;
+    --accent-tint:#DCE6E0;
+    --flag:#8F5310;
+    --flag-tint:#EFE3D2;
+
+    /* serie del grafico — validate su queste superfici */
+    --series-1:#0A8A63;
+    --series-2:#AE6112;
+    --series-1-tint:#D7EBE2;
+    --series-2-tint:#F0E2D0;
+
+    /* strati della sezione */
+    --lay-surge:#8C8981;
+    --lay-grey:#B4AE9F;
+    --lay-white:#D3CDBC;
+    --lay-soil:#7C7364;
+    --lay-wall:#B9AE98;
+    --lay-roof:#9D5C3D;
+
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+
+    --measure:64ch;
+    --s1:.4rem; --s2:.75rem; --s3:1.15rem; --s4:1.8rem; --s5:2.8rem; --s6:4.4rem; --s7:7rem;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#0F1311;
+      --surface:#171D1A;
+      --surface-2:#212926;
+      --ink:#E6EAE5;
+      --ink-soft:#9FABA4;
+      --ink-faint:#79857E;
+      --rule:#2B3430;
+      --rule-soft:#212926;
+      --accent:#7FB8A3;
+      --accent-soft:#5C8878;
+      --accent-tint:#1B2A25;
+      --flag:#D2954C;
+      --flag-tint:#2A2219;
+      --series-1:#2FA97F;
+      --series-2:#C08334;
+      --series-1-tint:#12312A;
+      --series-2-tint:#2E2519;
+      --lay-surge:#54524C;
+      --lay-grey:#6E6A5F;
+      --lay-white:#847E70;
+      --lay-soil:#4A443B;
+      --lay-wall:#6F675A;
+      --lay-roof:#6B3E29;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#0F1311;
+    --surface:#171D1A;
+    --surface-2:#212926;
+    --ink:#E6EAE5;
+    --ink-soft:#9FABA4;
+    --ink-faint:#79857E;
+    --rule:#2B3430;
+    --rule-soft:#212926;
+    --accent:#7FB8A3;
+    --accent-soft:#5C8878;
+    --accent-tint:#1B2A25;
+    --flag:#D2954C;
+    --flag-tint:#2A2219;
+    --series-1:#2FA97F;
+    --series-2:#C08334;
+    --series-1-tint:#12312A;
+    --series-2-tint:#2E2519;
+    --lay-surge:#54524C;
+    --lay-grey:#6E6A5F;
+    --lay-white:#847E70;
+    --lay-soil:#4A443B;
+    --lay-wall:#6F675A;
+    --lay-roof:#6B3E29;
+  }
+
+  /* ================================================================ base */
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--serif);font-size:17px;line-height:1.66;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:var(--accent);text-underline-offset:3px;text-decoration-thickness:.6px}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  p{margin:0}
+  strong{font-weight:600}
+  em.lat{font-style:italic}
+
+  .wrap{max-width:74rem;margin:0 auto;padding:0 var(--s4)}
+  .col{max-width:var(--measure)}
+
+  h2{
+    font-family:var(--sans);font-weight:600;
+    font-size:clamp(1.55rem,3.6vw,2.15rem);line-height:1.1;letter-spacing:-.028em;
+    margin:0;text-wrap:balance;
+  }
+  h3{
+    font-family:var(--sans);font-weight:600;font-size:1.04rem;letter-spacing:-.008em;
+    margin:0;text-wrap:balance;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:.63rem;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--accent);
+  }
+  .src{font-family:var(--mono);font-size:.7rem;font-weight:500;color:var(--ink-soft)}
+  .src a{text-decoration:none;border-bottom:1px solid var(--accent-soft)}
+
+  /* ================================================================ hero */
+  #hero{
+    position:relative;min-height:min(94vh,52rem);
+    display:flex;flex-direction:column;
+    overflow:hidden;border-bottom:2px solid var(--ink);
+  }
+  #heroVes{position:absolute;top:0;left:0;right:0;height:62%;z-index:0;opacity:.5}
+  #heroVes svg{width:100%;height:100%;display:block}
+  #heroText{
+    position:relative;z-index:2;flex:1;
+    padding:var(--s6) var(--s4) var(--s4);
+    max-width:74rem;margin:0 auto;width:100%;
+    display:flex;flex-direction:column;gap:var(--s3);justify-content:flex-end;
+  }
+  #heroStrata{position:relative;z-index:1;line-height:0;overflow:hidden}
+  #heroStrata svg{width:100%;height:clamp(9rem,17vh,11.5rem);display:block}
+  #heroText h1{
+    margin:0;font-family:var(--sans);font-weight:700;
+    font-size:clamp(2.7rem,9vw,6.2rem);line-height:.92;letter-spacing:-.045em;
+    text-wrap:balance;
+  }
+  #heroText h1 em{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    letter-spacing:-.02em;color:var(--accent);
+  }
+  #heroText .lede{
+    font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-soft);max-width:46ch;
+  }
+  #heroMeta{
+    position:relative;z-index:2;
+    border-top:1px solid var(--rule);
+    padding:var(--s2) var(--s4);max-width:74rem;margin:0 auto;width:100%;
+    display:flex;flex-wrap:wrap;gap:var(--s4);
+    font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+
+  /* ============================================================= sezione */
+  .band{padding:var(--s7) 0 0}
+  .band-head{display:flex;flex-direction:column;gap:var(--s2);max-width:var(--measure)}
+  .band-body{display:flex;flex-direction:column;gap:var(--s3);max-width:var(--measure);margin-top:var(--s3)}
+  .band-body p{margin:0}
+
+  /* ========================================================== stat tiles */
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+    gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);
+    margin-top:var(--s4);
+  }
+  .stat{
+    background:var(--surface);padding:var(--s3) var(--s3) var(--s3);
+    display:flex;flex-direction:column;gap:.28rem;
+  }
+  .stat .v{
+    font-family:var(--sans);font-weight:600;font-size:clamp(1.9rem,4.4vw,2.7rem);
+    line-height:1;letter-spacing:-.035em;color:var(--ink);
+  }
+  .stat .v small{font-size:.42em;font-weight:500;letter-spacing:-.01em;color:var(--ink-soft)}
+  .stat .k{font-family:var(--sans);font-size:.83rem;line-height:1.35;color:var(--ink-soft)}
+  .stat .s{font-family:var(--mono);font-size:.6rem;color:var(--ink-faint);letter-spacing:.04em}
+
+  /* =============================================================== chart */
+  .viz{
+    margin-top:var(--s4);border:1px solid var(--rule-soft);background:var(--surface);
+  }
+  .viz-head{
+    padding:var(--s3) var(--s3) var(--s2);
+    display:flex;flex-wrap:wrap;gap:var(--s3);align-items:baseline;justify-content:space-between;
+  }
+  .viz-title{font-family:var(--sans);font-weight:600;font-size:1rem;letter-spacing:-.012em}
+  .viz-sub{font-size:.86rem;color:var(--ink-soft);max-width:52ch;margin-top:.2rem}
+  .legend{display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center}
+  .legend span{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-family:var(--mono);font-size:.64rem;letter-spacing:.05em;color:var(--ink-soft);
+  }
+  .swatch{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+  .sw1{background:var(--series-1)}
+  .sw2{background:var(--series-2)}
+  .viz-scroll{overflow-x:auto;padding:0 var(--s3) var(--s2)}
+  #timeline{display:block;min-width:47rem;width:100%;height:auto}
+  .viz-foot{
+    padding:var(--s2) var(--s3) var(--s3);border-top:1px solid var(--rule-soft);
+    display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;justify-content:space-between;
+  }
+  .btn-ghost{
+    font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;
+    border:1px solid var(--rule);padding:.38rem .7rem;color:var(--ink-soft);border-radius:2px;
+  }
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  #tblWrap{display:none;overflow-x:auto;padding:0 var(--s3) var(--s3)}
+  #tblWrap.on{display:block}
+
+  table{border-collapse:collapse;width:100%;min-width:32rem;font-size:.86rem}
+  th,td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  th{
+    font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--ink-faint);background:var(--surface-2);
+  }
+  td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.q{font-family:var(--sans);font-weight:500}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.45rem;vertical-align:baseline}
+
+  #tip{
+    position:fixed;z-index:60;pointer-events:none;opacity:0;transition:opacity .12s;
+    background:var(--ink);color:var(--ground);padding:.45rem .6rem;border-radius:3px;
+    font-family:var(--sans);font-size:.78rem;line-height:1.35;max-width:17rem;
+    box-shadow:0 6px 20px rgba(0,0,0,.22);
+  }
+  #tip.on{opacity:1}
+  #tip .ty{
+    display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;
+    text-transform:uppercase;opacity:.7;margin-bottom:.12rem;
+  }
+
+  /* ============================================================== insets */
+  .inset{
+    border-left:3px solid var(--accent);background:var(--surface);
+    padding:var(--s3);display:flex;flex-direction:column;gap:var(--s2);
+  }
+  .inset.flagged{border-left-color:var(--flag);background:var(--flag-tint)}
+  .inset .tag{
+    font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--accent);
+  }
+  .inset.flagged .tag{color:var(--flag)}
+  .inset p{font-size:.95rem}
+
+  blockquote{
+    margin:0;padding:0 0 0 var(--s3);border-left:1px solid var(--rule);
+    display:flex;flex-direction:column;gap:var(--s2);
+  }
+  blockquote .lat{font-style:italic;font-size:1.06rem}
+  blockquote .tr{font-size:.94rem;color:var(--ink-soft)}
+
+  /* =========================================================== le cause */
+  .strata{margin-top:var(--s4);display:flex;flex-direction:column;gap:2px;max-width:56rem}
+  .stratum{
+    display:grid;grid-template-columns:3.4rem minmax(0,1fr);gap:var(--s3);
+    background:var(--surface);padding:var(--s3);align-items:start;
+    border-left:3px solid var(--accent-soft);
+    transition:border-left-color .2s,background .2s;
+  }
+  .stratum:hover{border-left-color:var(--accent);background:var(--accent-tint)}
+  .stratum .n{
+    font-family:var(--mono);font-size:.72rem;font-weight:600;color:var(--accent);
+    letter-spacing:.06em;padding-top:.2rem;
+  }
+  .stratum .t{display:flex;flex-direction:column;gap:.3rem}
+  .stratum h3{font-size:1rem}
+  .stratum p{font-size:.93rem;color:var(--ink-soft)}
+
+  /* ========================================================== cronologia */
+  .tl{margin-top:var(--s4);position:relative;padding-left:1.6rem}
+  .tl::before{
+    content:"";position:absolute;left:.32rem;top:.6rem;bottom:.6rem;width:1px;
+    background:var(--rule);
+  }
+  .tl-row{
+    display:grid;grid-template-columns:7rem minmax(0,1fr);gap:var(--s3);
+    padding:var(--s3) 0;border-bottom:1px solid var(--rule-soft);position:relative;
+  }
+  .tl-row::before{
+    content:"";position:absolute;left:-1.6rem;top:1.5rem;width:9px;height:9px;
+    border-radius:50%;background:var(--ground);border:2px solid var(--accent-soft);
+    transform:translateX(-.16rem);
+  }
+  .tl-row.key::before{background:var(--accent);border-color:var(--accent)}
+  .tl-row .when{
+    font-family:var(--mono);font-size:.79rem;font-weight:600;color:var(--accent);
+    font-variant-numeric:tabular-nums;padding-top:.2rem;
+  }
+  .tl-row .what{display:flex;flex-direction:column;gap:.3rem;font-size:.96rem}
+  @media (max-width:36rem){ .tl-row{grid-template-columns:minmax(0,1fr);gap:.3rem} }
+
+  /* ============================================================== 3D CTA */
+  #cta{
+    margin-top:var(--s6);border:1px solid var(--rule);background:var(--surface);
+    display:grid;grid-template-columns:minmax(0,1fr);
+  }
+  @media (min-width:52rem){ #cta{grid-template-columns:1.15fr .85fr} }
+  #ctaText{padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2);justify-content:center}
+  #ctaText h3{font-size:1.3rem;letter-spacing:-.02em}
+  #ctaText p{font-size:.96rem;color:var(--ink-soft)}
+  #ctaLink{
+    align-self:flex-start;margin-top:.4rem;background:var(--accent);color:var(--ground);
+    font-family:var(--mono);font-size:.66rem;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;padding:.66rem 1.1rem;border-radius:2px;text-decoration:none;
+  }
+  #ctaLink:hover{filter:brightness(1.12)}
+  #ctaArt{border-top:1px solid var(--rule-soft);min-height:13rem;position:relative;overflow:hidden}
+  @media (min-width:52rem){ #ctaArt{border-top:0;border-left:1px solid var(--rule-soft)} }
+  #ctaArt svg{position:absolute;inset:0;width:100%;height:100%}
+
+  /* ================================================================= bib */
+  .bib{display:flex;flex-direction:column;gap:var(--s3);font-size:.92rem;margin-top:var(--s3)}
+  .bib .entry{display:flex;flex-direction:column;gap:.2rem;padding-left:1.6rem;text-indent:-1.6rem}
+  .bib .meta{font-family:var(--mono);font-size:.68rem;color:var(--ink-faint);text-indent:0;padding-left:0}
+
+  ul.plain{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:var(--s2)}
+  ul.plain li::marker{color:var(--accent-soft)}
+
+  footer{
+    margin-top:var(--s7);border-top:1px solid var(--rule);
+    padding:var(--s3) 0 var(--s6);
+    font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--ink-faint);
+    display:flex;flex-wrap:wrap;gap:var(--s4);
+  }
+
+  /* ============================================================== motion */
+  .rise{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
+  .rise.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .rise{opacity:1;transform:none;transition:none}
+    .grow{transition:none !important}
+  }
+  .grow{transition:transform 1.5s cubic-bezier(.25,.8,.3,1)}
+</style>
+
+<!-- ================================================================ HERO -->
+<section id="hero">
+  <div id="heroVes" aria-hidden="true">
+    <svg viewBox="0 0 1200 380" preserveAspectRatio="xMaxYMax meet">
+      <path d="M540 380 L840 128 L906 96 L972 132 L1200 380 Z" fill="var(--surface-2)"/>
+      <path d="M906 96 L972 132 L940 140 L906 118 L874 142 L840 128 Z" fill="var(--rule)"/>
+    </svg>
+  </div>
+
+  <div id="heroText">
+    <span class="eyebrow">Dossier di ricerca · v3 · fonti verificate al 24/08/2026</span>
+    <h1>Pompei<br>dopo <em>il 79</em></h1>
+    <p class="lede">Sedici secoli tra l'eruzione e il primo colpo di piccone. Non furono secoli di silenzio: furono secoli di scavo senza archeologia.</p>
+  </div>
+
+  <div id="heroStrata" aria-hidden="true">
+    <svg viewBox="0 0 1200 176" preserveAspectRatio="none">
+      <g id="heroLayers">
+        <rect class="grow" x="0" y="0"   width="1200" height="52" fill="var(--lay-surge)"/>
+        <rect class="grow" x="0" y="52"  width="1200" height="40" fill="var(--lay-grey)"/>
+        <rect class="grow" x="0" y="92"  width="1200" height="40" fill="var(--lay-white)"/>
+        <rect class="grow" x="0" y="132" width="1200" height="44" fill="var(--lay-soil)"/>
+      </g>
+      <g font-family="ui-monospace, Menlo, monospace" font-size="9.5" fill="#EDEEE9" letter-spacing="1.4" opacity=".92">
+        <text x="24" y="31">CORRENTI PIROCLASTICHE</text>
+        <text x="24" y="76">LAPILLI POMICEI GRIGI</text>
+        <text x="24" y="116" fill="#2A2721">LAPILLI POMICEI BIANCHI</text>
+        <text x="24" y="160">PIANO DI CALPESTIO, 79 D.C.</text>
+      </g>
+      <g font-family="ui-monospace, Menlo, monospace" font-size="9.5" fill="#EDEEE9" text-anchor="end" opacity=".8">
+        <text x="1176" y="31">≈ 1,8 m</text>
+        <text x="1176" y="76">3,1–3,3 m</text>
+        <text x="1176" y="116" fill="#2A2721">grigi + bianchi</text>
+      </g>
+    </svg>
+  </div>
+
+  <div id="heroMeta">
+    <span>Il seppellimento</span>
+    <span>Le fonti antiche</span>
+    <span>La distribuzione delle prove</span>
+    <span>Gli scavi antichi</span>
+    <span>La rioccupazione</span>
+    <span>Le cause</span>
+    <span>Lo spazio di ricerca</span>
+    <span>Il registro delle verifiche</span>
+  </div>
+</section>
+
+<div class="wrap">
+
+<!-- ======================================================== 00 PREMESSA -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">00 — Premessa</span>
+    <h2>La domanda va corretta prima di rispondere</h2>
+  </div>
+  <div class="band-body">
+    <p>Si scavò, eccome. Si scavò dai giorni immediatamente successivi all'eruzione e si continuò per secoli. Quello che non esisteva non era lo scavo: era lo <strong>scavo per conoscere</strong>.</p>
+    <p>Seconda correzione: il cantiere di Domenico Fontana (1594–1600) non fu uno scavo, fu un'opera idraulica che tagliò la città sepolta senza riconoscerla. Il primo scavo intenzionale a Pompei è del <strong>23 marzo 1748</strong> — e anche quello non era archeologia: era caccia a pezzi da museo per la reggia di Portici.</p>
+    <div class="inset">
+      <span class="tag">Valutazione — mia, da discutere</span>
+      <p>La domanda che regge davanti a una commissione non è «perché nessuno scavò». È: <strong>perché, per sedici secoli, nessuno ebbe una ragione per voler sapere che cosa ci fosse là sotto?</strong> È una domanda di storia culturale, non di archeologia — ed è la ragione per cui il progetto può interessare tanto uno storico quanto un latinista.</p>
+    </div>
+  </div>
+
+  <div class="stats rise">
+    <div class="stat">
+      <span class="v">1684 <small>anni</small></span>
+      <span class="k">tra l'eruzione e l'iscrizione che dà il nome al sito</span>
+      <span class="s">79 → 1763</span>
+    </div>
+    <div class="stat">
+      <span class="v">15 <small>anni</small></span>
+      <span class="k">di scavo prima di sapere che fosse Pompei</span>
+      <span class="s">1748 → 1763</span>
+    </div>
+    <div class="stat">
+      <span class="v">≈5 <small>m</small></span>
+      <span class="k">di deposito nel settore indagato, di cui 3,1–3,3 m di lapilli</span>
+      <span class="s">Sparice et al. 2024</span>
+    </div>
+    <div class="stat">
+      <span class="v">82 <small>anni</small></span>
+      <span class="k">dopo l'eruzione: la moneta persa negli Horrea</span>
+      <span class="s">161 d.C. · Zuchtriegel et al. 2025</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== 01 SEZIONE -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">01 — Il seppellimento</span>
+    <h2>Cinque metri, e non tutti</h2>
+  </div>
+  <div class="band-body">
+    <p>Il dato materiale viene prima di tutto il resto, perché condiziona ogni comportamento successivo. Questa sezione è in scala: il deposito contro l'alzato di una casa a due piani.</p>
+  </div>
+
+  <div class="viz rise">
+    <div class="viz-head">
+      <div>
+        <div class="viz-title">Sezione in scala — deposito del 79 d.C. contro l'alzato domestico</div>
+        <p class="viz-sub">Scala verticale reale, 1 m = 26 px. Le altezze della casa sono convenzionali; gli spessori del deposito vengono dal settore pubblicato.</p>
+      </div>
+    </div>
+    <div class="viz-scroll">
+      <svg id="section" viewBox="0 0 900 344" role="img" aria-labelledby="secT secD" style="display:block;min-width:34rem;width:100%;height:auto">
+        <title id="secT">Sezione in scala del deposito del 79 d.C. contro una casa a due piani</title>
+        <desc id="secD">Circa 5 m di deposito: 3,1–3,3 m di lapilli pomicei alla base, sopra i depositi da correnti piroclastiche. Una casa alta 9 m ha il piano terra interamente sepolto e il piano superiore e il tetto ancora fuori.</desc>
+
+        <!-- casa intera, prima del seppellimento -->
+        <g>
+          <rect x="458" y="52" width="254" height="26" fill="var(--lay-roof)"/>
+          <rect x="470" y="78" width="230" height="104" fill="var(--lay-wall)"/>
+          <rect x="470" y="182" width="230" height="104" fill="var(--lay-wall)"/>
+          <line x1="470" y1="182" x2="700" y2="182" stroke="var(--ground)" stroke-width="2"/>
+          <rect x="556" y="222" width="38" height="64" fill="var(--surface-2)"/>
+        </g>
+
+        <!-- strati del deposito -->
+        <rect x="90" y="286" width="730" height="58" fill="var(--lay-soil)"/>
+        <rect x="90" y="245" width="730" height="41" fill="var(--lay-white)"/>
+        <rect x="90" y="204" width="730" height="41" fill="var(--lay-grey)"/>
+        <rect x="90" y="156" width="730" height="48" fill="var(--lay-surge)"/>
+
+        <!-- quello che resta fuori -->
+        <g>
+          <rect x="458" y="52" width="254" height="26" fill="var(--lay-roof)"/>
+          <rect x="470" y="78" width="230" height="78" fill="var(--lay-wall)"/>
+          <rect x="518" y="104" width="32" height="42" fill="var(--surface-2)"/>
+          <rect x="620" y="104" width="32" height="42" fill="var(--surface-2)"/>
+        </g>
+
+        <!-- quote -->
+        <g stroke="var(--ink-faint)" stroke-width="1" fill="none">
+          <path d="M828 156 h12 v130 h-12"/>
+          <path d="M82 204 h-12 v82 h12"/>
+        </g>
+        <g font-family="ui-monospace, Menlo, monospace" font-size="11">
+          <text x="848" y="216" font-weight="600" fill="var(--ink)">≈ 5 m</text>
+          <text x="848" y="231" font-size="9.5" fill="var(--ink-faint)">deposito</text>
+          <text x="848" y="244" font-size="9.5" fill="var(--ink-faint)">totale</text>
+          <text x="62" y="240" text-anchor="end" font-weight="600" fill="var(--accent)">3,1–3,3 m</text>
+          <text x="62" y="254" text-anchor="end" font-size="9.5" fill="var(--ink-faint)">lapilli</text>
+        </g>
+
+        <!-- etichette degli strati -->
+        <g font-family="ui-monospace, Menlo, monospace" font-size="10.5" letter-spacing=".6">
+          <text x="104" y="177" fill="#EDEEE9">CORRENTI PIROCLASTICHE — CENERE E SURGE</text>
+          <text x="104" y="229" fill="#EDEEE9">LAPILLI POMICEI GRIGI</text>
+          <text x="104" y="270" fill="#2A2721">LAPILLI POMICEI BIANCHI</text>
+          <text x="104" y="316" fill="#EDEEE9">PIANO DI CALPESTIO, 79 D.C.</text>
+        </g>
+
+        <!-- annotazioni -->
+        <g>
+          <line x1="466" y1="112" x2="366" y2="86" stroke="var(--accent)" stroke-width="1.4"/>
+          <circle cx="466" cy="112" r="3.5" fill="var(--accent)"/>
+          <text x="358" y="74" text-anchor="end" font-family="-apple-system, Helvetica, sans-serif" font-size="13" font-weight="600" fill="var(--accent)">Il piano superiore</text>
+          <text x="358" y="90" text-anchor="end" font-family="-apple-system, Helvetica, sans-serif" font-size="13" font-weight="600" fill="var(--accent)">e il tetto restano fuori</text>
+          <text x="358" y="108" text-anchor="end" font-family="-apple-system, Helvetica, sans-serif" font-size="11.5" fill="var(--ink-soft)">4 m su 9 di alzato</text>
+        </g>
+      </svg>
+    </div>
+    <div class="viz-foot">
+      <span class="src">Sparice, Amoretti, Galadini, Di Vito, Terracciano, Scarpati, Zuchtriegel 2024 · <a href="https://doi.org/10.3389/feart.2024.1386960">10.3389/feart.2024.1386960</a></span>
+    </div>
+  </div>
+
+  <div class="band-body">
+    <div class="inset">
+      <span class="tag">La conseguenza</span>
+      <p><strong>Pompei non è mai stata invisibile: è diventata illeggibile.</strong> Con cinque metri, un piano terra alto quattro sparisce e il piano superiore no. È la ragione fisica per cui la città resta raggiungibile — dai recuperanti, dai saccheggiatori e, quattro secoli dopo, da chi ci torna ad abitare.</p>
+    </div>
+    <div class="inset flagged">
+      <span class="tag">⚠️ Precisazione</span>
+      <p>Lo spessore varia da un punto all'altro della città. La misura vale per il settore pubblicato, non per tutta Pompei. Lo spessore massimo del solo deposito di caduta è di 2,8–2,9 m.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================= 02 LE FONTI ANTICHE -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">02 — Le fonti antiche</span>
+    <h2>Che cosa dicono davvero Svetonio e Cassio Dione</h2>
+  </div>
+  <div class="band-body">
+    <p>Qui il professore di lettere classiche ti aspetta al varco, perché i due passi sono continuamente citati per dire più di quanto dicano.</p>
+    <blockquote>
+      <p class="lat">Curatores restituendae Campaniae e consularium numero sorte duxit; bona oppressorum in Vesuvio, quorum heredes non exstabant, restitutioni afflictarum civitatum attribuit.</p>
+      <p class="tr">Estrasse a sorte, tra i consolari, dei curatori per il restauro della Campania; assegnò i beni di chi era perito sul Vesuvio senza lasciare eredi alla ricostruzione delle città colpite. <span class="src">Svet., <em>Tit.</em> 8.4</span></p>
+    </blockquote>
+    <p>Cassio Dione conferma e integra: Tito manda «due ex consoli ai Campani per sovrintendere alla ricostruzione della regione», distribuisce denaro e assegna ai superstiti i beni di chi era morto senza eredi. <span class="src">Dione 66.24</span></p>
+    <div class="inset">
+      <span class="tag">Il punto che regge in sede d'esame</span>
+      <p>Dione <strong>nomina</strong> Pompei ed Ercolano, ma nel racconto della distruzione: «seppellì due intere città, Ercolano e Pompei» (66.23.3). Nel racconto dei <em>soccorsi</em> (66.24) e in Svetonio (8.4) l'oggetto dell'intervento imperiale è la <em>Campania</em> come regione e le <em class="lat">afflictae civitates</em> in generale. <strong>Nessuna fonte antica documenta un tentativo di ricostruire Pompei.</strong> L'aiuto va ai vivi, non alle rovine.</p>
+    </div>
+    <h3>Il resto della tradizione letteraria è quasi muto</h3>
+    <ul class="plain">
+      <li><strong>Plinio il Giovane</strong>, <em>Ep.</em> 6.16 e 6.20: l'eruzione e la morte dello zio. Non il dopo.</li>
+      <li><strong>Tacito</strong>, <em>Hist.</em> 1.2: menzione; la trattazione distesa è perduta.</li>
+      <li><strong>Giuseppe Flavio</strong>, <em>Ant. Iud.</em> 20.144: promette un racconto che non ci è arrivato.</li>
+      <li><strong>Marziale</strong> 4.44 e <strong>Stazio</strong>, <em>Silv.</em> 3.5.72–75; 4.4.78–85; 4.8.3–5; 5.3.205–208: registro elegiaco, non documentario. Sono lamenti sul paesaggio perduto.</li>
+    </ul>
+    <div class="inset">
+      <span class="tag">Verificato — le edizioni su cui controllare</span>
+      <p>Non citare Marziale e Stazio da raccolte online: la numerazione balla (ho trovato pagine che danno Marziale 4.44 come 4.4). Le edizioni di riferimento sono queste, e i dati bibliografici li ho verificati sulle pagine degli editori:</p>
+      <ul class="plain" style="margin-top:.2rem">
+        <li><strong>Marziale</strong> — W. M. Lindsay (a cura di), <em class="lat">M. Val. Martialis Epigrammata</em>, Oxford Classical Texts, ISBN 9780198146254. Con traduzione: D. R. Shackleton Bailey, <em>Epigrams</em>, vol. I (<em>Spectacles</em>, libri 1–5), Loeb Classical Library 94, Harvard University Press, 1993, ISBN 9780674995550 — il 4.44 è in questo volume.</li>
+        <li><strong>Stazio</strong> — E. Courtney (a cura di), <em class="lat">P. Papini Stati Silvae</em>, Oxford Classical Texts, Clarendon Press, 1990, 200 pp., ISBN 9780198146834.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================== 03 GRAFICO CRONOLOGIA -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">03 — La distribuzione delle prove</span>
+    <h2>Il vuoto è nella documentazione, non nella storia</h2>
+  </div>
+  <div class="band-body">
+    <p>Ho messo su un asse unico tutte le evidenze datate e tutti gli eventi documentati che compaiono nelle fonti che ho verificato. Il risultato è il grafico qui sotto — ed è la cosa più utile da mostrare a una commissione, perché rende visibile un argomento invece di enunciarlo.</p>
+  </div>
+
+  <div class="viz rise">
+    <div class="viz-head">
+      <div>
+        <div class="viz-title">Evidenze datate ed eventi documentati, 79 – 2026</div>
+        <p class="viz-sub">Asse lineare. Ogni punto è un dato che compare nelle fonti verificate; le barre sono intervalli di datazione.</p>
+      </div>
+      <div class="legend">
+        <span><i class="swatch sw1"></i>Evidenza materiale datata</span>
+        <span><i class="swatch sw2"></i>Evento documentato</span>
+      </div>
+    </div>
+    <div class="viz-scroll">
+      <svg id="timeline" role="img" aria-label="Distribuzione temporale delle evidenze. Le evidenze materiali si concentrano tra il I e il V secolo e poi nel XV e XVI; gli eventi documentati si concentrano dopo il 1592. Tra il V e il XV secolo non ci sono dati nelle fonti consultate. La tabella qui sotto riporta tutti i valori."></svg>
+    </div>
+    <div class="viz-foot">
+      <span class="src">Dati estratti da: Zuchtriegel et al. 2025 · E-Journal 2026.09 · Sparice et al. 2024 · PAP · Britannica · Parslow 1995</span>
+      <button class="btn-ghost" id="tblBtn" aria-expanded="false" aria-controls="tblWrap">Vedi la tabella</button>
+    </div>
+    <div id="tblWrap"><table id="tbl"><thead><tr><th scope="col">Anno</th><th scope="col">Tipo</th><th scope="col">Dato</th><th scope="col">Fonte</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="band-body">
+    <div class="inset">
+      <span class="tag">Come leggerlo</span>
+      <p>La lacuna tra il V e il XV secolo <strong>non è una prova di abbandono</strong>. È l'effetto combinato di due cose: gli scavi che hanno rimosso le fasi post-79 per arrivare al livello del 79, e il fatto che nessuno abbia mai cercato quelle fasi. Il catino invetriato del XV secolo, trovato nel 2026, chiude la lacuna a un capo. L'altro capo è ancora aperto — e questo è spazio di ricerca, non un buco nell'argomento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================= 04 GLI SCAVI ANTICHI -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">04 — Gli scavi antichi</span>
+    <h2>Si scavò subito: prima per recuperare, poi per saccheggiare</h2>
+  </div>
+  <div class="band-body">
+    <ul class="plain">
+      <li><strong>Recupero dei proprietari.</strong> Attrezzi da scavo accanto ai corpi; cunicoli scavati da un ambiente all'altro; brecce nelle pareti delle stanze svuotate.</li>
+      <li><strong>Spoglio sistematico dei materiali.</strong> Marmi, blocchi di pietra e piombo asportati dalle terme, dal Foro, dai teatri, dall'Anfiteatro. <span class="src">Parco Archeologico di Pompei, <em>Pompei dopo l'eruzione</em></span></li>
+      <li><strong>Tombaroli antichi, documentati dallo scavo.</strong> Nella Casa con Giardino (Regio V) almeno sei individui risultano «rivoltati, contorti e trascinati» da chi cercava oggetti; anelli sfuggiti al saccheggio erano staccati dai corpi. <span class="src">PAP, comunicato del 24/10/2018</span></li>
+    </ul>
+    <div class="inset">
+      <span class="tag">Perché conta</span>
+      <p>Non è colore. È la prova che qualcuno sapeva dov'era la città, sapeva che c'era roba e sapeva come arrivarci. <strong>Sedici secoli di «oblio» non reggono davanti a una stanza svuotata.</strong></p>
+    </div>
+
+    <h3>Il caso <em class="lat">domus pertusa</em> — e come va citato</h3>
+    <p>All'ingresso della Casa di N. Popidius Priscus (VII.2.20), sul lato sud del Vico del Panettiere, Fiorelli registrò un graffito inciso con un chiodo e lo interpretò come il segnale lasciato da chi aveva già svuotato l'edificio, collocando l'operazione «probabilmente all'epoca degli Antonini».</p>
+    <div class="inset flagged">
+      <span class="tag">⚠️ Correzione rispetto alla versione precedente</span>
+      <p><strong>Il graffito era in greco.</strong> <em class="lat">Domus pertusa</em> non è il testo dell'iscrizione: è l'equivalente latino che Fiorelli ne diede. Le fonti che ho potuto raggiungere non riproducono il testo greco. Se scrivi «il graffito <em class="lat">domus pertusa</em>» a un epigrafista, la prima cosa che ti dirà è questa.</p>
+      <p>Del numero <em>CIL</em> IV non ho trovato traccia. L'<strong>Ancient Graffiti Project</strong> non registra graffiti per questa proprietà, ma il suo silenzio non prova nulla: il database copre di Pompei solo il Lupanare, il campus della palestra, la Regio I insula 8, la Regio V insula 1 e tutta la Regio VIII — <strong>la Regio VII non è coperta</strong>. Il posto dove cercare è il <em>CIL</em> IV a stampa e i suoi supplementi De Gruyter curati da Solin, Varone e Kruschwitz; il fascicolo 4.2 (2021) copre il commento a <em>CIL</em> IV 1205–7108, il 4.3 è del 2023 e il 4.4 non è ancora uscito.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 05 LA REVISIONE IN CORSO -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">05 — La revisione in corso</span>
+    <h2>Pompei fu riabitata, e l'archeologia ha cancellato le prove</h2>
+  </div>
+  <div class="band-body">
+    <p>È la parte più recente e la più interessante da presentare, perché non è una curiosità: è una revisione metodologica pubblicata dal Parco stesso. Lo scavo stratigrafico nell'Insula meridionalis documenta due fasi post-eruzione.</p>
+    <ul class="plain">
+      <li><strong>Fine I – inizi III secolo</strong> — sigillata africana nelle forme Hayes 5–23, marmi di riuso, una moneta di età di Marco Aurelio (161 d.C.).</li>
+      <li><strong>IV–V secolo</strong> — insediamento stabile: forni da pane ricavati nelle cisterne, focolari, macine a mano, lucerne con monogramma costantiniano, <em>folles</em> del 326, sepolture di neonati e di equini.</li>
+    </ul>
+    <blockquote>
+      <p class="lat">Dopo il 79, Pompei riemerge meno come città che come agglomerato precario e grigio, una specie di accampamento, una favela tra le rovine ancora riconoscibili.</p>
+      <p class="tr">Gabriel Zuchtriegel, direttore del Parco Archeologico di Pompei</p>
+    </blockquote>
+    <div class="inset">
+      <span class="tag">La tesi metodologica — «inconscio archeologico»</span>
+      <p>Gli autori sostengono che le tracce post-79 <strong>siano state letteralmente rimosse</strong> dagli scavi precedenti, perché ogni campagna puntava a raggiungere il livello del 79 d.C. La documentazione che risponderebbe alla tua domanda l'ha distrutta la disciplina che avrebbe dovuto raccoglierla. Per una presentazione, questo è un tema più forte dell'eruzione stessa.</p>
+    </div>
+    <div class="inset flagged">
+      <span class="tag">⚠️ Conflitto ridotto, non chiuso</span>
+      <p>Sull'articolo del 2026 il nome <strong>Giuseppe Barbella</strong> non è una firma nel testo: compare nel campo <em class="lat">meta-author</em> della pagina web, cioè nei metadati del CMS del Parco. Lo stesso vale per «Antonio Benforte» sull'articolo del 2025, il cui PDF riporta invece i cinque autori che cito. Per il 2026 la stampa specializzata (Archaeoreporter, 21/08/2026) attribuisce il lavoro a <strong>Borsa, Motisi, Ortino, Salvatori, Zuchtriegel</strong>; Naòs e Artribune non danno alcun elenco di autori. Il PDF pesa oltre 30 MB e i miei strumenti non lo aprono.</p>
+      <p><strong>Cosa fare:</strong> apri il PDF, guarda l'intestazione della prima pagina, cita quella. È l'unico passaggio che chiude la questione, e ti costa un minuto.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================= 05 IL MODELLO 3D -->
+<section class="band rise">
+  <div id="cta">
+    <div id="ctaText">
+      <span class="eyebrow">Il pezzo da mostrare</span>
+      <h3>La città stratificata, esplorabile</h3>
+      <p>Lo stesso dossier, ma camminandoci dentro. Otto fasi dal 79 al cantiere di oggi: il deposito sale di cinque metri e i piani terra spariscono, i tetti vengono spogliati, sui piani superiori emergenti compaiono le strutture del IV–V secolo, la collina viene coltivata, il canale di Fontana taglia la città. Ogni cono verde è un punto in cui questo dossier ha un dato.</p>
+      <a id="ctaLink" href="../">Apri l'esploratore</a>
+    </div>
+    <div id="ctaArt" aria-hidden="true">
+      <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice">
+        <rect width="300" height="200" fill="var(--surface-2)"/>
+        <g id="ctaBlocks"></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== 06 LE CAUSE -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">07 — Le cause</span>
+    <h2>Perché nessuno scavò per sapere</h2>
+  </div>
+  <div class="strata">
+    <div class="stratum">
+      <span class="n">I</span>
+      <div class="t">
+        <h3>Il valore recuperabile era già stato recuperato</h3>
+        <p>Tra superstiti, autorità imperiali e saccheggiatori, ciò che era vendibile o riutilizzabile uscì dal sito nell'arco di pochi secoli. Chi arriva dopo non ha un incentivo economico a scavare.</p>
+      </div>
+    </div>
+    <div class="stratum">
+      <span class="n">II</span>
+      <div class="t">
+        <h3>Il luogo non fu dimenticato: si perse il nome</h3>
+        <p>La collina continuò a chiamarsi <em>Civita</em>; la <em class="lat">Tabula Peutingeriana</em> porta <em class="lat">Pompeis</em> tra Oplontis e Nuceria/Stabiae; e ora la ceramica del XV secolo prova la frequentazione. Quello che si smarrì non fu il posto, ma la corrispondenza tra quel posto e quel nome.</p>
+      </div>
+    </div>
+    <div class="stratum">
+      <span class="n">III</span>
+      <div class="t">
+        <h3>Non esisteva la pratica dello scavo conoscitivo</h3>
+        <p>Fino all'antiquaria moderna le rovine sono cava di materiale o riserva di curiosità, non fonte di conoscenza. La stessa Britannica data «l'inizio della scienza archeologica moderna» ai lavori di metà Settecento su queste città: prima di allora il gesto non era disponibile.</p>
+      </div>
+    </div>
+    <div class="stratum">
+      <span class="n">IV</span>
+      <div class="t">
+        <h3>Quando si scavò, si scavò per il re</h3>
+        <p>Obiettivo dichiarato del cantiere borbonico: individuare ed estrarre opere d'arte e manufatti per decorare la reggia di Portici. Alcubierre credette inizialmente di essere a Stabiae. <span class="src">Parslow 1995</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band-body" style="margin-top:var(--s4)">
+    <div class="inset flagged">
+      <span class="tag">⚠️ Una causa che ho dovuto ritirare</span>
+      <p>Nella versione precedente c'era una quinta causa: «il seppellimento fu rinforzato dalle eruzioni successive» — Pollena 472 e Vesuvio 1631. <strong>L'ho verificata e non regge.</strong></p>
+      <p>De Simone, Perrotta &amp; Scarpati 2011 studiano due soli siti, entrambi sul <strong>versante settentrionale</strong> (Pollena Trocchia e Somma Vesuviana): Pompei non è tra questi. L'Osservatorio Vesuviano dell'INGV colloca la dispersione del 472 nei settori nord-occidentale e sud-orientale, e quella del 1631 sui fianchi meridionali e occidentali con i flussi piroclastici fino al mare a Torre del Greco e Torre Annunziata; Rosi, Principe &amp; Vecci 1993 confermano Torre Annunziata (7,5 km dal cratere) e Torre del Greco (8,5 km). <strong>Nessuna di queste fonti indica Pompei come area di deposito.</strong></p>
+      <p>Quello che resta vero del 1631 è un'altra cosa, e va detta così: dopo quell'eruzione il cantiere del canale e l'interesse per l'area vengono abbandonati. È un fatto di storia dell'attenzione, non di stratigrafia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 08 IL BUCO NELLA LETTERATURA -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">08 — Lo spazio di ricerca</span>
+    <h2>Nessuno ha pubblicato che cosa c'è sopra il 79</h2>
+  </div>
+  <div class="band-body">
+    <p>Cercando di verificare la causa ritirata è saltata fuori una cosa più interessante della causa stessa. La domanda «che cosa sta sopra il livello del 79 dentro le mura di Pompei — tefra di eruzioni successive? colluvio? suolo agricolo? e di che spessore?» <strong>non ha una risposta pubblicata</strong> che io sia riuscito a trovare.</p>
+    <p>L'unica affermazione peer-reviewed che si avvicina è in uno studio di microzonazione sismica del Parco: per le aree non scavate gli autori scrivono «<em class="lat">we assume that there are ca. 5 m of 79 AD pyroclastic deposits and more recent soils</em>». È un'assunzione dichiarata, non un dato stratigrafico: i «suoli più recenti» non sono datati né attribuiti.</p>
+    <p class="src">Amato, Covolan, Dessales, Santoriello 2022, <em>Geosciences</em> 12(7), 275 · DOI 10.3390/geosciences12070275</p>
+    <div class="inset">
+      <span class="tag">Come usarlo in un progetto di ricerca</span>
+      <p>Una lacuna nominata con precisione vale più di dieci pagine di stato dell'arte. La formuli così: <strong>manca uno studio geoarcheologico della colonna stratigrafica sopra il livello del 79 nel perimetro urbano</strong>, e senza quello non si può dire se la città sia stata progressivamente coperta, erosa o stabile per sedici secoli. Si aggancia direttamente all'«inconscio archeologico» di Zuchtriegel e colleghi: quella colonna è esattamente ciò che gli scavi hanno asportato.</p>
+      <p>Prima di dichiararla in un proposal, però, fai una verifica bibliografica seria — banche dati, non motori di ricerca. Una ricerca web esaustiva non lo è.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================= 07 CRONOLOGIA -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">09 — Dal canale al nome</span>
+    <h2>La riscoperta, passo per passo</h2>
+  </div>
+  <div class="tl">
+    <div class="tl-row"><div class="when">1592</div><div class="what"><p>Il conte Muzio Tuttavilla incarica Domenico Fontana di costruire il canale del Conte, per portare acqua ai mulini di Torre Annunziata. Il tracciato attraversa la collina di Civita.</p></div></div>
+    <div class="tl-row key"><div class="when">1594–1600</div><div class="what"><p>Durante lo scavo del canale emergono monete e resti di edifici. <strong>Nessuno capisce che si tratta della città romana.</strong> <span class="src">Giunti 1983, pp. 126–127</span></p></div></div>
+    <div class="tl-row"><div class="when">1631</div><div class="what"><p>Eruzione del Vesuvio. Il cantiere e l'interesse per l'area vengono abbandonati.</p></div></div>
+    <div class="tl-row"><div class="when">1738</div><div class="what"><p>Iniziano gli scavi a Ercolano sotto Rocque Joaquín de Alcubierre, per volontà di Carlo di Borbone: cunicoli a oltre venti metri di profondità nel materiale vulcanico compattato.</p></div></div>
+    <div class="tl-row key"><div class="when">23/03/1748</div><div class="what"><p>Primo cantiere sistematico a Civita. Vengono individuati parte dell'Anfiteatro e la necropoli di Porta Ercolano. Il cantiere viene poi sospeso per scarsità di reperti di pregio.</p></div></div>
+    <div class="tl-row"><div class="when">1750–1764</div><div class="what"><p>Karl Jakob Weber introduce planimetrie e inventari settimanali dei ritrovamenti: la prima documentazione degna del nome. <span class="src">Parslow 1995</span></p></div></div>
+    <div class="tl-row key"><div class="when">1763</div><div class="what"><p>Il ritrovamento dell'iscrizione <em class="lat">rei publicae Pompeianorum</em> identifica finalmente il sito. Sono passati 1684 anni dall'eruzione e 15 dall'inizio dello scavo.</p></div></div>
+    <div class="tl-row"><div class="when">1860</div><div class="what"><p>Giuseppe Fiorelli assume la direzione e introduce il metodo stratigrafico e la numerazione per <em>regiones</em> e <em>insulae</em>.</p></div></div>
+    <div class="tl-row"><div class="when">2018</div><div class="what"><p>Regio V: la Casa con Giardino documenta i saccheggiatori antichi; l'iscrizione a carboncino riapre il dibattito sulla data dell'eruzione.</p></div></div>
+    <div class="tl-row key"><div class="when">2023 →</div><div class="what"><p>Cantiere di consolidamento nell'Insula Meridionalis. Da lì vengono le evidenze pubblicate nel 2025 e nel 2026.</p></div></div>
+  </div>
+</section>
+
+<!-- ==================================================== 08 LA TRAPPOLA -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">10 — La trappola</span>
+    <h2>Una tesi diffusa che non regge</h2>
+  </div>
+  <div class="band-body">
+    <p>Circola la spiegazione che nel Cinquecento non si scavò perché sarebbe stato «delitto contro la religione disseppellire una città distrutta» dall'ira divina. È una frase che fa un ottimo effetto in una presentazione.</p>
+    <div class="inset flagged">
+      <span class="tag">⚠️ Non usarla</span>
+      <p>La formula risale a <strong>Domenico Murano</strong>, ingegnere idraulico-militare dell'Ottocento, in un'opera sul Canal Sarno. Non è un documento cinquecentesco: è un <em>topos</em> storiografico ottocentesco. Se la porti a un professore di storia come spiegazione dei fatti del Cinquecento, ti chiederà la fonte primaria e non ce l'hai. Al massimo la puoi usare come <em>oggetto</em> di studio: come esempio di come l'Ottocento si raccontava il silenzio dei secoli precedenti.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== 09 IL COLLOQUIO -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">11 — Il colloquio</span>
+    <h2>Che cosa ti chiederanno</h2>
+  </div>
+  <div class="viz rise" style="max-width:none">
+    <div class="viz-scroll" style="padding:0">
+      <table>
+        <thead><tr><th scope="col">Chi</th><th scope="col">Domanda</th><th scope="col">Dove sei coperto</th></tr></thead>
+        <tbody>
+          <tr><td class="q">Storia</td><td>Che prove hai che il sito fosse «dimenticato»?</td><td>Nessuna — e la ceramica invetriata del XV secolo dice il contrario. Rovescia la premessa invece di difenderla.</td></tr>
+          <tr><td class="q">Storia</td><td>Se le fonti sono mute, su che base ricostruisci?</td><td>Su cultura materiale e stratigrafia, non su testi. È una scelta metodologica: dichiarala.</td></tr>
+          <tr><td class="q">Lettere classiche</td><td>Svetonio e Dione parlano di Pompei o della Campania?</td><td>Dione nomina Pompei nella distruzione (66.23.3); i soccorsi riguardano la regione. Distinzione da tenere.</td></tr>
+          <tr><td class="q">Lettere classiche</td><td>Su quale edizione citi Marziale e Stazio?</td><td>Non sei coperto. Vai su Teubner o OCT prima di scrivere.</td></tr>
+          <tr><td class="q">Entrambi</td><td>La data: 24 agosto o autunno?</td><td>Dione (66.21.1) colloca l'evento alla fine dell'estate; i manoscritti pliniani divergono; l'iscrizione a carboncino del 2018 ha riaperto il dibattito. Dichiaralo controverso, non risolverlo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== BIBLIOGRAFIA -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">— Fonti</span>
+    <h2>Bibliografia verificata</h2>
+    <p class="src" style="margin-top:.4rem">Verificata il 24/08/2026 su fonte primaria o pagina dell'editore.</p>
+  </div>
+  <div class="col">
+    <h3 style="margin-top:var(--s4)">Fonti antiche</h3>
+    <div class="bib">
+      <div class="entry">Svetonio, <em>Divus Titus</em> 8.3–4. Testo latino: LacusCurtius, University of Chicago.<div class="meta">penelope.uchicago.edu</div></div>
+      <div class="entry">Cassio Dione, <em>Storia romana</em> 66.21–24 (epitome). Traduzione Loeb, vol. VIII, 1925.<div class="meta">Pompei ed Ercolano nominati a 66.23.3 · stagione a 66.21.1</div></div>
+      <div class="entry">Plinio il Giovane, <em>Ep.</em> 6.16 e 6.20; Tacito, <em>Hist.</em> 1.2; Giuseppe Flavio, <em>Ant. Iud.</em> 20.144; Marziale 4.44; Stazio, <em>Silvae</em> 3.5.72–75, 4.4.78–85, 4.8.3–5, 5.3.205–208.<div class="meta">luoghi individuati via Ancient Rome Live — testo da controllare su edizione critica</div></div>
+    </div>
+
+    <h3 style="margin-top:var(--s4)">Vulcanologia e stratigrafia</h3>
+    <div class="bib">
+      <div class="entry">Sparice, D., Amoretti, V., Galadini, F., Di Vito, M. A., Terracciano, A., Scarpati, G., &amp; Zuchtriegel, G. (2024). A novel view of the destruction of Pompeii during the 79 CE eruption of Vesuvius (Italy). <em>Frontiers in Earth Science</em>, 12.<div class="meta">DOI 10.3389/feart.2024.1386960 · open access</div></div>
+      <div class="entry">Mastrolorenzo, G., Palladino, D. M., Vecchio, G., &amp; Taddeucci, J. (2002). The 472 AD Pollena eruption of Somma-Vesuvius (Italy) and its environmental impact at the end of the Roman Empire. <em>Journal of Volcanology and Geothermal Research</em>, 113(1–2), 19–36.<div class="meta">DOI 10.1016/S0377-0273(01)00248-7</div></div>
+      <div class="entry">De Simone, G. F., Perrotta, A., &amp; Scarpati, C. (2011). L'eruzione del 472 d.C. ed il suo impatto su alcuni siti alle falde del Vesuvio. <em>Rivista di Studi Pompeiani</em>, 22, 61–71.<div class="meta">ISSN 1120-3579 · JSTOR 44291260</div></div>
+    </div>
+
+    <h3 style="margin-top:var(--s4)">Archeologia del dopo-eruzione</h3>
+    <div class="bib">
+      <div class="entry">Zuchtriegel, G., Borsa, L., Onesti, A., Salvatori, L., &amp; Scarpati, G. (2025). La rioccupazione nell'Insula meridionalis di Pompei dopo il 79 d.C. Riflessioni a margine dell'«inconscio archeologico». <em>E-Journal degli Scavi di Pompei</em>, 06/08/2025, 1–48.<div class="meta">Parco Archeologico di Pompei · open access · autori verificati sul PDF</div></div>
+      <div class="entry">[Autori da verificare] (2026). Pompei oltre il 79 d.C. Nuove evidenze dall'Insula Meridionalis, tra tarda antichità e Rinascimento. <em>E-Journal degli Scavi di Pompei</em>, 2026.09, 21/08/2026.<div class="meta">attribuzione discordante — vedi §04</div></div>
+      <div class="entry">Parco Archeologico di Pompei. <em>Pompei dopo l'eruzione</em> (scheda ufficiale) e comunicato del 24/10/2018 sui saccheggi antichi nella Regio V.<div class="meta">pompeiisites.org · fonte istituzionale, senza apparato bibliografico</div></div>
+      <div class="entry">Fiorelli, G. (1877). <em>Guida di Pompei</em>. Roma: Tipografia Elzeviriana, p. 59.<div class="meta">citato per il graffito «domus pertusa», VII.2.20</div></div>
+    </div>
+
+    <h3 style="margin-top:var(--s4)">Sopravvissuti e storia degli scavi</h3>
+    <div class="bib">
+      <div class="entry">Tuck, S. L. (2020). Harbors of Refuge: Post-Vesuvian Population Shifts in Italian Harbor Communities. In N. Bargfeldt &amp; J. Hjarl Petersen (a cura di), <em>Reflections: Harbour City Deathscapes in Roman Italy and Beyond</em> (Analecta Romana Instituti Danici, Suppl. 53, pp. 63–77). Roma: Edizioni Quasar.<div class="meta">ISBN 978-88-5491-014-0</div></div>
+      <div class="entry">Tuck, S. L. (2025). <em>Escape from Pompeii: The Great Eruption of Mount Vesuvius and Its Survivors</em>. Oxford University Press.<div class="meta">ISBN 9780197678220 · pubblicato 20/10/2025</div></div>
+      <div class="entry">Parslow, C. C. (1995). <em>Rediscovering Antiquity: Karl Weber and the Excavation of Herculaneum, Pompeii, and Stabiae</em>. Cambridge University Press.<div class="meta">non consultato direttamente, citato via Pompeii Perspectives</div></div>
+      <div class="entry">Cooley, A. E., &amp; Cooley, M. G. L. (2014). <em>Pompeii and Herculaneum: A Sourcebook</em> (2ª ed.). London: Routledge.<div class="meta">ISBN 9780415666794 · da consultare per l'apparato delle fonti antiche</div></div>
+    </div>
+
+    <h3 style="margin-top:var(--s4)">Aggiunte della v3</h3>
+    <div class="bib">
+      <div class="entry">Amato, V., Covolan, M., Dessales, H., &amp; Santoriello, A. (2022). Seismic Microzonation of the Pompeii Archaeological Park (Southern Italy): Local Seismic Amplification Factors. <em>Geosciences</em>, 12(7), 275.<div class="meta">DOI 10.3390/geosciences12070275 · open access · unica menzione peer-reviewed trovata dei «suoli più recenti» sopra il 79</div></div>
+      <div class="entry">Rosi, M., Principe, C., &amp; Vecci, R. (1993). The 1631 Vesuvius eruption. A reconstruction based on historical and stratigraphical data. <em>Journal of Volcanology and Geothermal Research</em>, 58, 151–182.<div class="meta">consultato tramite copia su Academia.edu — ScienceDirect bloccato</div></div>
+      <div class="entry">Sulpizio, R., Mele, D., Dellino, P., &amp; La Volpe, L. (2007). Deposits and physical properties of pyroclastic density currents during complex Subplinian eruptions: the AD 472 (Pollena) eruption of Somma-Vesuvius, Italy. <em>Sedimentology</em>, 54, 607–635.<div class="meta">consultato tramite copia — pagina Wiley non raggiungibile</div></div>
+      <div class="entry">Di Vito, M. A., et al. (2024). Lahar events in the last 2000 years from Vesuvius eruptions – Part 1. <em>Solid Earth</em>, 15, 405–436.<div class="meta">open access · nessuna occorrenza di Pompei trovata nella ricerca testuale</div></div>
+      <div class="entry">Solin, H., Varone, A., &amp; Kruschwitz, P. (2021). <em>Corpus Inscriptionum Latinarum IV</em>, Suppl. pars 4, fasc. 2. Berlin–Boston: De Gruyter.<div class="meta">ISBN 9783110729696 · commento a CIL IV 1205–7108 · fasc. 3 nel 2023, fasc. 4 non ancora uscito</div></div>
+      <div class="entry">Lindsay, W. M. (a cura di). <em>M. Val. Martialis Epigrammata</em>. Oxford Classical Texts.<div class="meta">ISBN 9780198146254</div></div>
+      <div class="entry">Shackleton Bailey, D. R. (a cura di e trad.) (1993). Martial, <em>Epigrams</em>, vol. I: <em>Spectacles</em>, libri 1–5. Loeb Classical Library 94. Harvard University Press.<div class="meta">ISBN 9780674995550 · contiene 4.44</div></div>
+      <div class="entry">Courtney, E. (a cura di) (1990). <em>P. Papini Stati Silvae</em>. Oxford Classical Texts. Oxford: Clarendon Press.<div class="meta">ISBN 9780198146834 · 200 pp.</div></div>
+      <div class="entry">Parco Archeologico di Pompei. <em>Guida agli scavi di Pompei</em> (PDF ufficiale).<div class="meta">66 ha di area archeologica, ~45 scavati · Palestra Grande ~140×140 m, piscina 23×35 m · Anfiteatro fino a 20.000 spettatori, 70 a.C. · sette porte</div></div>
+      <div class="entry">Ancient Graffiti Project (Washington and Lee University).<div class="meta">copertura parziale di Pompei: Lupanare, campus della palestra, Regio I ins. 8, Regio V ins. 1, tutta la Regio VIII</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ REGISTRO VERIFICHE -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">— Registro</span>
+    <h2>Le cinque verifiche, e come sono andate</h2>
+    <p style="color:var(--ink-soft);font-size:.95rem;margin-top:.4rem">Due correzioni, un chiarimento, due questioni che restano aperte con l'indicazione di dove chiuderle.</p>
+  </div>
+  <div class="viz rise" style="margin-top:var(--s3)">
+    <div class="viz-scroll" style="padding:0">
+      <table>
+        <thead><tr><th scope="col">Verifica</th><th scope="col">Esito</th><th scope="col">Che cosa cambia</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="q">Numero <em>CIL</em> del graffito <em class="lat">domus pertusa</em></td>
+            <td class="num" style="color:var(--flag)">Correzione</td>
+            <td>Il graffito era <strong>in greco</strong>; <em class="lat">domus pertusa</em> è la resa latina di Fiorelli. Nessun numero <em>CIL</em> trovato. Da cercare sul <em>CIL</em> IV a stampa: l'Ancient Graffiti Project non copre la Regio VII.</td>
+          </tr>
+          <tr>
+            <td class="q">Depositi del 472 e del 1631 su Pompei</td>
+            <td class="num" style="color:var(--flag)">Correzione</td>
+            <td><strong>Causa ritirata.</strong> Nessuna fonte scientifica documenta apporti di quelle eruzioni sul sito urbano. In compenso è emersa una lacuna nella letteratura, ora §08.</td>
+          </tr>
+          <tr>
+            <td class="q">Edizioni critiche di Marziale e Stazio</td>
+            <td class="num" style="color:var(--series-1)">Risolto</td>
+            <td>Lindsay (OCT) e Shackleton Bailey (Loeb 94, 1993) per Marziale; Courtney (OCT, 1990) per le <em>Silvae</em>. Dati verificati sulle pagine degli editori.</td>
+          </tr>
+          <tr>
+            <td class="q">Autori dell'articolo E-Journal 2026.09</td>
+            <td class="num">Aperto</td>
+            <td>«Giuseppe Barbella» è il campo <em class="lat">meta-author</em> del CMS, non una firma. Archaeoreporter dà cinque nomi; nessun'altra testata conferma. Chiudi tu aprendo il PDF.</td>
+          </tr>
+          <tr>
+            <td class="q">Tracciato del canale di Fontana</td>
+            <td class="num">Aperto</td>
+            <td>Nessuno studio scientifico trovato sul percorso sotto la città né sugli affreschi che avrebbe intercettato. L'unica trattazione estesa è autopubblicata e legata a una tesi di ridatazione: <strong>non citarla</strong>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================== LACUNE -->
+<section class="band rise">
+  <div class="band-head">
+    <span class="eyebrow">— Lacune</span>
+    <h2>Che cosa non ho verificato</h2>
+  </div>
+  <div class="band-body">
+    <p>Elenco esplicito, perché è la parte che ti protegge. Aggiornato alla v3.</p>
+    <ul class="plain">
+      <li>Il <strong>testo greco</strong> del graffito di VII.2.20 e il suo numero <em>CIL</em> IV. Vanno cercati sul <em>Corpus</em> a stampa e sui supplementi De Gruyter.</li>
+      <li>L'<strong>attribuzione dell'articolo del 2026</strong>: il PDF supera i 30 MB e i miei strumenti non lo aprono.</li>
+      <li>Il <strong>tracciato del canale del Conte</strong> sotto la città e la versione secondo cui Fontana avrebbe intercettato affreschi e iscrizioni. Nel modello 3D il tracciato è schematico e dichiarato tale.</li>
+      <li>Rolandi, Barrella &amp; Borrelli 1993 sull'eruzione del 1631 (<em>JVGR</em> 58, 183–201): non sono riuscito ad accedervi. Potrebbe menzionare Pompei — non posso escluderlo.</li>
+      <li>Le citazioni testuali da <strong>Sulpizio et al. 2007</strong> e <strong>Rosi et al. 1993</strong> vengono da estrazione automatica di copie PDF, non dalla lettura diretta dell'originale.</li>
+      <li>La lacuna dichiarata al §08 poggia su una ricerca web, non su una ricerca bibliografica su banche dati. <strong>Prima di metterla in un proposal, ricontrollala su Scopus, Web of Science o L'Année philologique.</strong></li>
+      <li>Non ho consultato direttamente <strong>Parslow 1995</strong>, <strong>Cooley &amp; Cooley 2014</strong>, né <strong>Tuck 2020/2025</strong>: ho verificato esistenza e dati bibliografici, non il contenuto pagina per pagina.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <span>Dossier preparatorio — non citabile come pubblicazione</span>
+  <span>v1 23/08/2026 · v3 24/08/2026</span>
+  <span>Ogni affermazione senza fonte a fianco è un'ipotesi</span>
+</footer>
+
+</div>
+
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------------------------------------------------- dati */
+  const DATA = [
+    { y:79,   t:'evento', label:'Eruzione del Vesuvio', src:'Plinio, Ep. 6.16 · Dione 66.23.3' },
+    { y:80,   t:'evento', label:'Tito nomina i curatores restituendae Campaniae', src:'Svet., Tit. 8.4' },
+    { y:155,  t:'materia', label:'Sigillata africana Hayes 5–23 negli Horrea', src:'Zuchtriegel et al. 2025', from:80, to:230 },
+    { y:161,  t:'materia', label:'Moneta di età di Marco Aurelio, Horrea', src:'Zuchtriegel et al. 2025' },
+    { y:326,  t:'materia', label:'Follis di Costantino II, Casa dei Mosaici Geometrici', src:'E-Journal 2026.09' },
+    { y:371,  t:'materia', label:'Moneta di Valente', src:'E-Journal 2026.09', from:364, to:378 },
+    { y:375,  t:'materia', label:'Sigillata africana, 2ª metà del IV secolo', src:'E-Journal 2026.09', from:350, to:400 },
+    { y:450,  t:'materia', label:'Forno da pane nella cisterna; lucerne con monogramma', src:'Zuchtriegel et al. 2025', from:400, to:500 },
+    { y:472,  t:'evento', label:'Eruzione di Pollena — depositi documentati sul versante nord, non a Pompei', src:'De Simone, Perrotta, Scarpati 2011 · INGV' },
+    { y:1450, t:'materia', label:'Catino invetriato campano, XV secolo', src:'E-Journal 2026.09', from:1400, to:1500 },
+    { y:1525, t:'materia', label:'Fiasca e brocca invetriate, XV–XVI secolo', src:'E-Journal 2026.09', from:1450, to:1600 },
+    { y:1597, t:'evento', label:'Il canale di Fontana taglia la collina di Civita', src:'Giunti 1983', from:1592, to:1600 },
+    { y:1631, t:'evento', label:'Eruzione del Vesuvio: flussi fino al mare a Torre Annunziata e Torre del Greco. L’interesse per l’area si spegne', src:'Rosi, Principe, Vecci 1993 · INGV' },
+    { y:1748, t:'evento', label:'Primo cantiere sistematico a Civita', src:'Parslow 1995' },
+    { y:1763, t:'evento', label:'Iscrizione rei publicae Pompeianorum: il sito prende il nome', src:'Britannica' },
+    { y:1860, t:'evento', label:'Fiorelli introduce il metodo stratigrafico', src:'Britannica' },
+    { y:1877, t:'evento', label:'Fiorelli pubblica la lettura «domus pertusa»', src:'Guida di Pompei, p. 59' },
+    { y:2018, t:'evento', label:'Regio V: saccheggiatori antichi e iscrizione a carboncino', src:'PAP, 24/10/2018' },
+    { y:2025, t:'evento', label:'Pubblicata la rioccupazione dell’Insula meridionalis', src:'E-Journal, 06/08/2025' },
+    { y:2026, t:'evento', label:'Pubblicate le evidenze fino al Rinascimento', src:'E-Journal 2026.09' }
+  ];
+
+  /* ------------------------------------------------------- il grafico */
+  const svg = document.getElementById('timeline');
+  const W = 1120, H = 250, L = 54, R = 26, T = 34, B = 46;
+  const Y0 = 60, Y1 = 2040;
+  const x = y => L + (y - Y0) / (Y1 - Y0) * (W - L - R);
+  const laneM = 96, laneE = 168;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (n, a) => { const e = document.createElementNS(NS, n); for(const k in a) e.setAttribute(k, a[k]); return e; };
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  // fascia della lacuna documentaria
+  const gapA = x(500), gapB = x(1400);
+  svg.appendChild(el('rect', { x:gapA, y:T, width:gapB-gapA, height:H-T-B, fill:'var(--surface-2)', opacity:'.75' }));
+  const gapT = el('text', { x:(gapA+gapB)/2, y:T+16, 'text-anchor':'middle',
+    'font-family':'ui-monospace, Menlo, monospace', 'font-size':'10.5', fill:'var(--ink-faint)',
+    'letter-spacing':'.08em' });
+  gapT.textContent = 'NESSUN DATO NELLE FONTI CONSULTATE — 9 SECOLI';
+  svg.appendChild(gapT);
+
+  // assi
+  for(let yr=100; yr<=2000; yr+=100){
+    const px = x(yr);
+    svg.appendChild(el('line', { x1:px, y1:T, x2:px, y2:H-B, stroke:'var(--rule-soft)', 'stroke-width':'1' }));
+    if(yr % 500 === 0 || yr === 100){
+      const t = el('text', { x:px, y:H-B+18, 'text-anchor':'middle',
+        'font-family':'ui-monospace, Menlo, monospace', 'font-size':'10.5', fill:'var(--ink-faint)' });
+      t.textContent = yr;
+      svg.appendChild(t);
+    }
+  }
+  svg.appendChild(el('line', { x1:L, y1:H-B, x2:W-R, y2:H-B, stroke:'var(--rule)', 'stroke-width':'1' }));
+
+  // etichette di corsia
+  [['Evidenza materiale', laneM, 'var(--series-1)'], ['Evento documentato', laneE, 'var(--series-2)']].forEach(([lab,ly,col]) => {
+    svg.appendChild(el('line', { x1:L, y1:ly, x2:W-R, y2:ly, stroke:'var(--rule-soft)', 'stroke-width':'1' }));
+    const t = el('text', { x:L-8, y:ly+4, 'text-anchor':'end',
+      'font-family':'ui-monospace, Menlo, monospace', 'font-size':'9.5', fill:col, 'letter-spacing':'.06em' });
+    t.textContent = lab === 'Evidenza materiale' ? 'MATERIA' : 'EVENTI';
+    svg.appendChild(t);
+  });
+
+  const tip = document.getElementById('tip');
+  const showTip = (e, d) => {
+    tip.innerHTML = `<span class="ty">${d.y < 1000 ? d.y + ' d.C.' : d.y}${d.from ? ' · ' + d.from + '–' + d.to : ''}</span>${d.label}<br><span style="opacity:.7;font-size:.86em">${d.src}</span>`;
+    tip.classList.add('on');
+    const r = tip.getBoundingClientRect();
+    tip.style.left = Math.min(innerWidth - r.width - 12, Math.max(12, e.clientX + 14)) + 'px';
+    tip.style.top  = Math.max(12, e.clientY - r.height - 12) + 'px';
+  };
+  const hideTip = () => tip.classList.remove('on');
+
+  const marks = [];
+  DATA.forEach((d, i) => {
+    const lane = d.t === 'materia' ? laneM : laneE;
+    const col  = d.t === 'materia' ? 'var(--series-1)' : 'var(--series-2)';
+    const g = el('g', { tabindex:'0', role:'img', 'aria-label':`${d.y}: ${d.label}` });
+
+    if(d.from){
+      const bx = x(d.from), bw = Math.max(6, x(d.to) - x(d.from));
+      g.appendChild(el('rect', { x:bx, y:lane-4, width:bw, height:8, rx:4, fill:col, opacity:'.34' }));
+    }
+    const c = el('circle', { cx:x(d.y), cy:lane, r:5.5, fill:col,
+      stroke:'var(--surface)', 'stroke-width':'2' });
+    g.appendChild(c);
+    g.style.cursor = 'pointer';
+    g.addEventListener('pointerenter', e => { c.setAttribute('r','7.5'); showTip(e, d); });
+    g.addEventListener('pointermove',  e => showTip(e, d));
+    g.addEventListener('pointerleave', () => { c.setAttribute('r','5.5'); hideTip(); });
+    g.addEventListener('focus', () => {
+      const b = c.getBoundingClientRect();
+      showTip({ clientX:b.left + b.width/2, clientY:b.top }, d);
+    });
+    g.addEventListener('blur', hideTip);
+    svg.appendChild(g);
+    marks.push(g);
+  });
+
+  // etichette dirette sui punti che portano l'argomento
+  [
+    { y:161,  txt:'161 · moneta',       lane:laneM, dy:-20, anchor:'middle' },
+    { y:450,  txt:'V sec. · forno',     lane:laneM, dy:-20, anchor:'middle' },
+    { y:1450, txt:'XV sec. · catino',   lane:laneM, dy:-20, anchor:'middle' },
+    { y:1763, txt:'1763 · il nome',     lane:laneE, dy:26,  anchor:'middle' }
+  ].forEach(l => {
+    const t = el('text', { x:x(l.y), y:l.lane + l.dy, 'text-anchor':l.anchor,
+      'font-family':'-apple-system, Helvetica, sans-serif', 'font-size':'11', 'font-weight':'500',
+      fill:'var(--ink-soft)' });
+    t.textContent = l.txt;
+    svg.appendChild(t);
+  });
+
+  /* --------------------------------------------------------- tabella */
+  const tb = document.querySelector('#tbl tbody');
+  DATA.forEach(d => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td class="num">${d.from ? d.from + '–' + d.to : d.y}</td>` +
+      `<td class="num"><i class="dot ${d.t === 'materia' ? 'sw1' : 'sw2'}"></i>${d.t === 'materia' ? 'materia' : 'evento'}</td>` +
+      `<td>${d.label}</td><td class="num">${d.src}</td>`;
+    tb.appendChild(tr);
+  });
+  const btn = document.getElementById('tblBtn'), wrap = document.getElementById('tblWrap');
+  btn.addEventListener('click', () => {
+    const on = wrap.classList.toggle('on');
+    btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+    btn.textContent = on ? 'Nascondi la tabella' : 'Vedi la tabella';
+  });
+
+  /* ------------------------------------------------- città del riquadro */
+  const ctaG = document.getElementById('ctaBlocks');
+  let s = 4242;
+  const r2 = () => { s = (s*1103515245 + 12345) >>> 0; return s/4294967296; };
+  for(let i=0;i<150;i++){
+    const gx = (i % 15) * 21 + 4, gz = Math.floor(i / 15) * 21 + 4;
+    const h = 8 + r2()*22;
+    const px = gx + gz*0.34, py = 172 - gz*0.42 - h;
+    ctaG.appendChild(el('rect', { x:px, y:py, width:15, height:h,
+      fill: r2() > 0.62 ? 'var(--lay-roof)' : 'var(--lay-wall)', opacity:(0.35 + r2()*0.5).toFixed(2) }));
+  }
+  ctaG.appendChild(el('rect', { x:0, y:150, width:300, height:50, fill:'var(--lay-white)', opacity:'.85' }));
+
+  /* ------------------------------------------------------------ motion */
+  if(!reduce){
+    document.querySelectorAll('#heroLayers .grow').forEach((r, i) => {
+      r.style.transform = 'translateY(260px)';
+      requestAnimationFrame(() => setTimeout(() => {
+        r.style.transition = `transform 1.15s cubic-bezier(.25,.8,.3,1) ${i*0.13}s`;
+        r.style.transform = 'translateY(0)';
+      }, 140));
+    });
+  }
+
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin:'0px 0px -8% 0px', threshold:0.06 });
+  document.querySelectorAll('.rise').forEach(n => io.observe(n));
+})();
+</script>
+
+</body>
+</html>

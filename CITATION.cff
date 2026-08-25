@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "Se usi questo software o il dossier che lo accompagna, cita come segue."
+title: "Pompei stratificata: un modello navigabile della città dal 79 d.C. al cantiere di oggi"
+abstract: >-
+  Modello urbano navigabile di Pompei articolato in otto fasi cronologiche, dalla
+  vigilia dell'eruzione del 79 d.C. allo scavo contemporaneo, con i dati di un
+  dossier documentario ancorati ai luoghi. Include una modalità sezione che mostra
+  la stratigrafia del deposito e una simulazione della posizione solare calcolata
+  per la latitudine del sito. Modello dichiaratamente schematico, non un rilievo
+  archeologico.
+type: software
+authors:
+  - family-names: Perroni
+    given-names: Domenico
+    # Inserisci il tuo ORCID e togli il cancelletto:
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+version: 4.0.0
+date-released: "2026-08-24"
+license: MIT
+keywords:
+  - Pompei
+  - archeologia
+  - stratigrafia
+  - public archaeology
+  - visualizzazione 3D
+  - storia dell'archeologia
+  - WebGL
+# Dopo il primo rilascio archiviato su Zenodo, aggiungi qui il DOI:
+# identifiers:
+#   - type: doi
+#     value: "10.5281/zenodo.XXXXXXX"
+# repository-code: "https://github.com/DOMENICO/pompei-stratificata"
+# url: "https://DOMENICO.github.io/pompei-stratificata/"
