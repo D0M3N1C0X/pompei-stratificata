@@ -5,10 +5,8 @@ otto fasi cronologiche — dalla vigilia dell'eruzione del 79 d.C. al cantiere d
 scavo di oggi — con i dati di un dossier documentario ancorati ai luoghi in cui
 sono stati raccolti.
 
-**[▶ Apri il simulatore](https://DOMENICO.github.io/pompei-stratificata/)** ·
-**[Leggi il dossier](https://DOMENICO.github.io/pompei-stratificata/dossier/)**
-
-> Sostituisci `DOMENICO` con il tuo nome utente GitHub dopo aver attivato Pages.
+**[▶ Apri il simulatore](https://d0m3n1c0x.github.io/pompei-stratificata/)** ·
+**[Leggi il dossier](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/)**
 
 ---
 
