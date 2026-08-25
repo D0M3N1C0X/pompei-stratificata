@@ -25,9 +25,9 @@ keywords:
   - visualizzazione 3D
   - storia dell'archeologia
   - WebGL
+repository-code: "https://github.com/D0M3N1C0X/pompei-stratificata"
+url: "https://d0m3n1c0x.github.io/pompei-stratificata/"
 # Dopo il primo rilascio archiviato su Zenodo, aggiungi qui il DOI:
 # identifiers:
 #   - type: doi
 #     value: "10.5281/zenodo.XXXXXXX"
-# repository-code: "https://github.com/DOMENICO/pompei-stratificata"
-# url: "https://DOMENICO.github.io/pompei-stratificata/"
