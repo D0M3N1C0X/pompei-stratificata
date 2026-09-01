@@ -1434,19 +1434,42 @@ addEventListener('wheel', e => {
 /* ------------------------------------------------ presentazione e tour */
 
 let presenting = false, presentTimer = 0;
+
+/* La presentazione parte dal punto in cui ti trovi, e da lì non si muove:
+   sono le otto fasi a scorrere sullo stesso fotogramma. È lì che
+   l'argomento colpisce — la stessa strada, il deposito che sale di cinque
+   metri, i piani superiori che riemergono — perché finalmente stai fermo a
+   guardare la stessa cosa cambiare.
+
+   Prima girava sempre in orbita a centosettanta unità dalla città, cioè a
+   quasi settecento metri: da lassù cinque metri di deposito sono un pixel e
+   la dimostrazione non arrivava. L'orbita resta, ma solo quando parti già
+   dall'alto, dove un fotogramma fisso non direbbe niente. Le due cose si
+   compongono: ti metti dove vuoi guardare, e premi Presenta. */
+let presentFisso = false;
+const presentVista = { pos:new Vector3(), yaw:0, pitch:0 };
+
 function startPresentation(){
   presenting = true; presentTimer = 0;
+  presentFisso = !overview && !flyMode;
+  if(presentFisso){
+    presentVista.pos.copy(camera.position);
+    presentVista.yaw = yaw;
+    presentVista.pitch = pitch;
+  }
   applyEpoch(0);
   document.body.classList.add('presenting');
+  document.body.classList.toggle('presenting-fisso', presentFisso);
   document.getElementById('btnPresent').classList.add('on');
   if(locked) document.exitPointerLock();
   closePanel();
-  flyTo({ x:-40, z:120, y:40 });
+  if(!presentFisso) flyTo({ x:-40, z:120, y:40 });
 }
 function stopPresentation(){
   if(!presenting) return;
   presenting = false;
   document.body.classList.remove('presenting');
+  document.body.classList.remove('presenting-fisso');
   document.getElementById('btnPresent').classList.remove('on');
 }
 document.getElementById('btnPresent').addEventListener('click', () =>
@@ -1832,10 +1855,15 @@ function tick(){
       if(epoch >= EPOCHS.length-1) stopPresentation();
       else applyEpoch(epoch+1, true);
     }
-    const a = t*0.045;
-    camera.position.set(-6 + Math.cos(a)*170, 78, 3 + Math.sin(a)*170);
-    const d = new Vector3(-6,6,3).sub(camera.position).normalize();
-    setLook(Math.atan2(-d.x, -d.z), Math.asin(Math.max(-1, Math.min(1, d.y))));
+    if(presentFisso){
+      camera.position.copy(presentVista.pos);
+      setLook(presentVista.yaw, presentVista.pitch);
+    } else {
+      const a = t*0.045;
+      camera.position.set(-6 + Math.cos(a)*170, 78, 3 + Math.sin(a)*170);
+      const d = new Vector3(-6,6,3).sub(camera.position).normalize();
+      setLook(Math.atan2(-d.x, -d.z), Math.asin(Math.max(-1, Math.min(1, d.y))));
+    }
   } else if(flight){
     flight.t = Math.min(1, flight.t + dt*0.85);
     const e = 1 - Math.pow(1-flight.t, 3);
