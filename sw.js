@@ -1,7 +1,7 @@
 // Pompei Stratificata — service worker
 // Strategia: cache-first. Tutto sta in cache al primo caricamento, poi
 // l'app funziona senza rete. Cambiando CACHE si forza l'aggiornamento.
-const CACHE = 'pompei-v4-2026-08-24';
+const CACHE = 'dopo79-v8-2026-08-30';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-1024.png',
