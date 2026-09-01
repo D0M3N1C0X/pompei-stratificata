@@ -1,0 +1,21 @@
+{
+  "name": "pompei-stratificata",
+  "version": "8.0.0",
+  "description": "Dopo il 79 — modello urbano navigabile di Pompei e dello scavo di Ercolano",
+  "type": "module",
+  "license": "MIT",
+  "author": "Domenico Perroni",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/publish.js",
+    "preview": "vite preview",
+    "check": "node scripts/check-build.js"
+  },
+  "dependencies": {
+    "three": "0.169.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.6",
+    "vite-plugin-singlefile": "^2.4.0"
+  }
+}

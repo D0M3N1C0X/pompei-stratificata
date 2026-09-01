@@ -14,6 +14,7 @@ I dati di un dossier documentario sono ancorati ai luoghi in cui sono stati racc
 > l'indirizzo di GitHub Pages, che non viene reindirizzato dopo un cambio di nome.
 
 **[▶ Apri il simulatore](https://d0m3n1c0x.github.io/pompei-stratificata/)** ·
+**[Open in English](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=en)** ·
 **[Leggi il dossier](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/)**
 
 ---
@@ -121,6 +122,36 @@ limiti.
   Cervi (circa 1.190 m²). Tutto il resto della sagoma è dedotto dalle piante.
 - **La posizione del sole usa i parametri orbitali odierni**, non quelli del 79 d.C.
 
+## Lingue
+
+Italiano e inglese. Il simulatore sceglie da solo — parametro `?lang=`, poi la
+scelta salvata, poi la lingua del browser — e il selettore in barra la cambia.
+Il codice finisce nell'indirizzo, quindi un link a una lingua si può passare a
+qualcuno: `…/pompei-stratificata/?lang=en`.
+
+I dati non contengono testo. In `src/data/` restano coordinate, spessori e quali
+gruppi accendere; tutta la prosa sta in `src/i18n/it.js` e in `i18n/*.json`, con
+la stessa forma. Aggiungere una lingua significa copiare `i18n/en.json`,
+tradurlo e aggiungere una riga a `LINGUE` in `src/i18n/index.js`. Le chiavi che
+mancano ricadono sull'italiano, così una traduzione incompleta resta leggibile
+e il buco si vede; `npm run check` fallisce se una lingua dichiarata pronta non
+ha tutte le chiavi.
+
+Tre cose che **non** si traducono, ed è voluto:
+
+- **I toponimi disegnati nella scena.** Via dell'Abbondanza, Porta Marina,
+  REGIO IX restano tali: è così che li chiama anche la letteratura in inglese.
+- **Le fonti.** Titoli di opere, nomi di riviste, «E-Journal degli Scavi di
+  Pompei»: sono riferimenti bibliografici, non testo.
+- **I numeri.** «3,1–3,3 m» e «12.000» non vengono riscritti a mano: passano da
+  `Intl.NumberFormat`, che in inglese dà «3.1–3.3 m» e «12,000».
+
+Le formule di cautela — «dichiarata, non risolta», «[da verificare]», «le fonti
+divergono» — sono portanti e vanno mantenute in ogni lingua. Il lessico tecnico
+inglese è quello dei lavori già citati: *pyroclastic density currents*, *Plinian
+fallout*, *pumice lapilli*, *African Red Slip ware*, e *insula*, *regio*,
+*cardo*, *decumanus* invariati.
+
 ## Metodo
 
 Ogni affermazione nel dossier porta la fonte a fianco. Dove una fonte non è stata
@@ -182,22 +213,49 @@ L'apparato completo, con i dati bibliografici verificati e le lacune dichiarate,
 ## Struttura
 
 ```
-index.html              il simulatore (autosufficiente: motore 3D, città, dati)
+src/                    il sorgente
+  index.html              guscio: markup dell'interfaccia e stili
+  main.js                 avvio: risolve la lingua, poi chiama app.js
+  app.js                  città, luce, sezione, comandi, ciclo di disegno
+  post.js                 passaggio di post-produzione scritto a mano
+  audio.js                sintesi e ambiente sonoro
+  confronto.js            scena del confronto stratigrafico
+  ercolano.js             scena dello scavo di Ercolano
+  data/                   fasi, luoghi, ordine del tour
+  i18n/                   motore delle lingue e testi italiani
+  scene/                  palette e texture procedurali
+index.html              il prodotto della build, autosufficiente — è ciò che gira
 manifest.webmanifest    metadati per l'installazione come applicazione
-sw.js                   service worker: mette tutto in cache, poi funziona offline
+sw.js                   service worker: pagine da rete, il resto da cache
 icon-*.png              icone dell'applicazione
-dossier/index.html      il dossier documentario
+dossier/index.html      il dossier documentario (scritto a mano, niente build)
+i18n/en.json            i testi inglesi, scaricati solo se servono
+scripts/                pubblicazione del prodotto e controlli
 ```
 
-Nessuna dipendenza da installare, nessun passaggio di compilazione. Il motore 3D
-(three.js) è incluso nel file. Per provare in locale:
+Il prodotto resta **un solo file autosufficiente**: three.js ci finisce dentro
+alla compilazione, quindi `index.html` continua a funzionare da solo, offline e
+da `file://`. Cambia solo il modo di scriverlo — moduli leggibili invece di
+quattromila righe in un file, e diff che si possono rileggere.
+
+L'italiano è compilato dentro il file; le altre lingue sono file JSON a fianco.
+Aperto da `file://` il simulatore funziona ma resta in italiano, perché il
+browser non permette di leggere un file locale via `fetch`. Da `http://` e
+dall'applicazione installata le lingue ci sono tutte.
 
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev      # sviluppo, con ricarica a caldo
+npm run build    # compila e pubblica index.html in radice
+npm run check    # controlla che il prodotto sia integro
 ```
 
-e apri `http://localhost:8000`. Il service worker richiede `https` o `localhost`:
-da `file://` l'app funziona, ma non si installa.
+`npm run dev` apre l'indirizzo che stampa in console. Il service worker richiede
+`https` o `localhost`: da `file://` l'app funziona, ma non si installa.
+
+> **Dopo ogni modifica ai sorgenti va rilanciato `npm run build`**, perché
+> `index.html` in radice è il file che GitHub Pages pubblica. L'azione
+> `.github/workflows/verifica.yml` fallisce se i due divergono.
 
 ## Licenza
 

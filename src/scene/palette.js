@@ -1,0 +1,23 @@
+export const PAL = {
+  fog:      0xa8ada6,
+  terrace:  0x8a8271,
+  street:   0x55585a,
+  kerb:     0x9a9384,
+  wall1:    0xb8ad97,
+  wall2:    0xa79a83,
+  wall3:    0xc4b9a4,
+  roof:     0x9d5c3d,
+  roof2:    0x8a4f36,
+  stone:    0xd4cdbd,
+  column:   0xe0d9cb,
+  civic:    0xcfc6b2,
+  depWhite: 0xded8c6,
+  depGrey:  0xa79f8c,
+  depSurge: 0x76736c,
+  veg:      0x6d7a51,
+  crude:    0x7d7365,
+  spoil:    0x9a917f,
+  canal:    0x3f4a44,
+  mountain: 0x62605c,
+  accent:   0x7fb8a3
+};

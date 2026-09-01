@@ -1,0 +1,78 @@
+COME CARICARE QUESTI FILE SU GITHUB
+===================================
+
+26 file, nessuno da cancellare: quelli che carichi sostituiscono i vecchi,
+gli altri restano dove sono.
+
+
+PRIMA DI COMINCIARE — mostra i file nascosti nel Finder
+-------------------------------------------------------
+Due voci di questa cartella cominciano con un punto e il Finder le tiene
+nascoste: «.github» e «.gitignore».
+
+  Premi  Cmd + Shift + .  (comando, maiuscolo, punto)
+
+Le vedrai comparire in grigio chiaro. Stessa combinazione per rinasconderle
+dopo.
+
+
+IL CARICAMENTO
+--------------
+1. Vai su  https://github.com/D0M3N1C0X/pompei-stratificata
+
+2. Bottone  «Add file»  →  «Upload files»
+
+3. Apri questa cartella nel Finder, seleziona TUTTO tranne il file
+   COME-CARICARE.txt (Cmd+A, poi Cmd+clic su COME-CARICARE.txt per
+   deselezionarlo) e trascina la selezione nella pagina.
+
+   Le cartelle vanno trascinate come cartelle: GitHub ricostruisce da solo
+   i percorsi src/, i18n/, scripts/, .github/workflows/.
+
+4. Aspetta che l'elenco dei file finisca di caricarsi. Devono comparire 26
+   voci. Se .github o .gitignore non ci sono, torna al punto sopra: sono
+   ancora nascoste.
+
+5. Nel riquadro del messaggio scrivi:
+
+     Ristrutturazione: moduli e build, correzioni, inglese
+
+   e nella descrizione sotto, se vuoi:
+
+     Ripristina il simulatore sovrascritto, sposta il sorgente in src/ con
+     build Vite, corregge il collegamento al dossier e il service worker,
+     aggiunge l'ora d'ingresso fissa e l'impalcatura multilingua con
+     l'inglese completo.
+
+6. «Commit changes».
+
+
+SUBITO DOPO
+-----------
+· Apri  https://d0m3n1c0x.github.io/pompei-stratificata/  in una finestra
+  ANONIMA. Nella finestra normale il vecchio service worker ti mostrerebbe
+  ancora la versione di prima.
+
+· Prova anche  https://d0m3n1c0x.github.io/pompei-stratificata/?lang=en
+
+· Nella scheda «Actions» del repository parte da sola una verifica che
+  controlla che il file pubblicato sia integro. Se diventa verde, tutto a
+  posto.
+
+
+DA QUI IN POI IL MODO DI LAVORARE CAMBIA
+----------------------------------------
+Il file index.html nella radice non si scrive più a mano: è il prodotto
+della compilazione. Si modifica il sorgente in src/, poi:
+
+    cd ~/pompei-stratificata
+    npm run build
+    npm run check
+
+e si carica di nuovo. Se dimentichi la build, la verifica su GitHub
+fallisce e te lo dice, invece di lasciare il sito indietro senza avvisare.
+
+La cartella ~/pompei-stratificata contiene già tutto questo, con sei
+commit separati che spiegano una cosa per volta. Caricando dalla pagina web
+finisce tutto in un commit solo: funziona, ma quella spiegazione si perde.
+Se sistemi le credenziali (vedi la chat) basta «git push» e la tieni.
