@@ -1,0 +1,45 @@
+name: Verifica
+
+# Il primo settembre 2026 un caricamento ha sovrascritto index.html con una
+# copia del dossier, e il sito pubblico è rimasto rotto senza che nessuno se
+# ne accorgesse. Questo flusso esiste perché non succeda di nuovo.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verifica:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Controlla il prodotto già versionato
+        run: npm run check
+
+      - name: Ricostruisci dai sorgenti
+        run: npm run build
+
+      - name: Il prodotto versionato deve corrispondere ai sorgenti
+        run: |
+          if ! git diff --quiet -- index.html; then
+            echo "::error::index.html in radice non corrisponde a ciò che src/ produce."
+            echo "Hai modificato i sorgenti senza rilanciare la build."
+            echo "Rimedio: npm run build, poi committa anche index.html."
+            git diff --stat -- index.html
+            exit 1
+          fi
+          echo "index.html corrisponde ai sorgenti."
+
+      - name: Ricontrolla dopo la ricostruzione
+        run: npm run check
