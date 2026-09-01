@@ -17,6 +17,7 @@ export const PLACES = [
   { id:"horrea", x:-132, z:38, y:3, from:2, to:7 },
   { id:"mosaici", x:-95, z:48, y:3, from:3, to:7 },
   { id:"quadriportico", x:-62, z:60, y:3, from:3, to:7 },
+  { id:"lacuna", x:-80, z:54, y:3.2, from:1, to:7 },
   { id:"basilica", x:-118, z:30, y:3, from:4, to:7 },
   { id:"canale", x:-86, z:44, y:2.4, from:5, to:6 },
   { id:"porta-ercolano", x:-118, z:-55, y:2.6, from:6, to:7 },

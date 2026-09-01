@@ -249,6 +249,12 @@ export default {
       "body": "<p>Seconda fase, <b>IV–V secolo</b>: insediamento stabile. Nell’ambiente III un <b>forno da pane ricavato in una cisterna defunzionalizzata</b>, datato al V secolo; focolari e un forno secondario associati a un <em>follis</em> di Costantino II (<b>326 d.C.</b>). Ai livelli inferiori ceramica da fuoco tardoantica, sigillata africana del IV secolo, buche di palo per strutture lignee, una macina manuale in pietra lavica e un fuso in osso lavorato.</p>\n    <p class=\"key\">Da qui viene anche il catino smaltato del <b>XV secolo</b>: la stessa casa documenta millequattrocento anni di frequentazione discontinua.</p>",
       "src": "Zuchtriegel et al. 2025 · <em>Pompei oltre il 79 d.C.</em>, E-Journal 2026.09"
     },
+    "lacuna": {
+      "label": "La colonna che nessuno ha studiato",
+      "sub": "Insula Meridionalis — una lacuna dichiarata",
+      "body": "<p>Sotto i tuoi piedi, fra il piano del 79 e la superficie, ci sono circa cinque metri di deposito e milleseicento anni di frequentazione. Questo modello ti ha appena mostrato che cosa c\u2019\u00e8 dentro.</p>\n    <p class=\"warn\"><b>Non risulta per\u00f2 pubblicato uno studio geoarcheologico della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei.</b> \u00c8 emerso cercando una fonte per un\u2019altra affermazione, e la ricerca \u00e8 finita in un vicolo cieco.</p>\n    <p class=\"key\">Perch\u00e9 conta. Tutto quello che questo modello dice sullo spessore viene da <em>un solo settore pubblicato</em> \u2014 l\u2019Insula dei Casti Amanti, Sparice et al. 2024. Per il resto della citt\u00e0 quel dato non esiste, e qui viene esteso per necessit\u00e0 di rappresentazione, non perch\u00e9 sia documentato. Le sei fasi che hai attraversato poggiano su una colonna che nessuno ha misurato.</p>\n    <p class=\"hint\">Questo cono non segna una scoperta. Segna un buco, ed \u00e8 l\u2019unico luogo del modello che lo fa.</p>",
+      "src": "Registro delle verifiche del dossier \u00b7 <b>nessuna fonte individuata</b>"
+    },
     "quadriportico": {
       "label": "Quadriportico dei Teatri",
       "sub": "Insula Meridionalis, estremità est",
