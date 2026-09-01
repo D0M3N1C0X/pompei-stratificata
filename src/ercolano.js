@@ -323,6 +323,15 @@ export const ERCOLANO = (function(){
   /* ------------------------------------------------- comandi in prima persona */
   const pos = { x:0, y:0, z:-6 };
   let yaw = 0, pitch = -0.05, vx = 0, vz = 0;
+
+  /* In volo si esce dal vincolo del terreno e dei muri. Serve perché da
+     terra Ercolano non si vede: si cammina in un cardo largo cinque metri
+     fra due insulae alte, e la forma dello scavo — quattro isolati, due
+     decumani, il fronte che li chiude a monte — non entra mai in quadro.
+     A Pompei lo stesso problema è risolto da «Dall'alto»; qui quel bottone
+     agiva sulla camera dell'altra scena e non faceva niente. */
+  let volo = false;
+  let vy = 0;
   const keys = new Set();
   let locked = false, touchLook = null, touchGo = 0;
   let host = null, cbs = {};
@@ -379,13 +388,32 @@ export const ERCOLANO = (function(){
     const len = Math.hypot(f, r) || 1;
     f /= len; r /= len;
 
-    const speed = sprint ? 4.6 : 1.9;
+    const k = Math.min(1, dt * 12);
     const sy = Math.sin(yaw), cy = Math.cos(yaw);
+
+    if(volo){
+      // si vola nella direzione in cui si guarda: abbassando lo sguardo si
+      // scende, alzandolo si sale, come a Pompei
+      const speed = sprint ? 26 : 11;
+      const cp = Math.cos(pitch), sp = Math.sin(pitch);
+      const tx = (-sy * cp * f + cy * r) * speed;
+      const ty = ( sp * f) * speed;
+      const tz = (-cy * cp * f - sy * r) * speed;
+      vx += (tx - vx) * k;
+      vy += (ty - vy) * k;
+      vz += (tz - vz) * k;
+      pos.x += vx * dt;
+      pos.z += vz * dt;
+      pos.y = Math.max(quota(pos.x, pos.z) + 1.2, Math.min(180, pos.y + vy * dt));
+      return;
+    }
+
+    const speed = sprint ? 4.6 : 1.9;
     const tx = (-sy * f + cy * r) * speed;
     const tz = (-cy * f - sy * r) * speed;
-    const k = Math.min(1, dt * 12);
     vx += (tx - vx) * k;
     vz += (tz - vz) * k;
+    vy = 0;
 
     // spostamento con scorrimento lungo i muri, un asse alla volta
     const nx = pos.x + vx * dt;
@@ -400,14 +428,14 @@ export const ERCOLANO = (function(){
 
   function update(dt, elapsed){
     muovi(dt);
-    eCam.position.set(pos.x, pos.y + EYE, pos.z);
+    eCam.position.set(pos.x, volo ? pos.y : pos.y + EYE, pos.z);
     eCam.rotation.set(0,0,0);
     eCam.rotateY(yaw);
     eCam.rotateX(pitch);
 
     // il riquadro dell'ombra segue il giocatore
-    eSun.target.position.set(pos.x, 0, pos.z);
-    eSun.position.set(pos.x - 34, 52, pos.z + 30);
+    eSun.target.position.set(volo ? C4 : pos.x, 0, volo ? -4 : pos.z);
+    eSun.position.set((volo ? C4 : pos.x) - 34, 52, (volo ? -4 : pos.z) + 30);
     eSun.target.updateMatrixWorld();
 
     hotspots.forEach((h,i) => {
@@ -445,7 +473,26 @@ export const ERCOLANO = (function(){
     keys.clear(); vx = vz = 0; touchGo = 0;
     if(document.pointerLockElement === host) document.exitPointerLock();
   }
+  /* La posizione d'apertura del volo è composta, non calcolata: da qui
+     entrano in quadro insieme i due decumani, i cardini III–V, le quattro
+     insulae, il fronte di scavo a monte con corso Resina sopra, e a valle
+     la spiaggia con i fornici. È l'unica inquadratura da cui si capisce
+     quanto è piccola la parte scavata rispetto a quello che le sta sopra. */
+  function dallAlto(on){
+    volo = !!on;
+    vx = vy = vz = 0;
+    if(volo){
+      pos.x = C4; pos.z = 62; pos.y = 48;
+      yaw = 0; pitch = -0.60;
+    } else {
+      reset();
+    }
+    return volo;
+  }
+  function inVolo(){ return volo; }
+
   function reset(){
+    volo = false; vy = 0;
     // In piedi sul Cardo IV, rivolto verso monte: la prima cosa che si
     // vede è il fronte di scavo con la città moderna sopra. È l'immagine
     // che regge tutta la scena, e va data subito.
@@ -477,5 +524,6 @@ export const ERCOLANO = (function(){
   }
 
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
-           setGo, apri, textures, luoghi: LUOGHI, isActive: () => active };
+           setGo, apri, textures, dallAlto, inVolo, luoghi: LUOGHI,
+           isActive: () => active };
 })();

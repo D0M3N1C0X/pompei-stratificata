@@ -1450,6 +1450,7 @@ document.getElementById('tourClose').addEventListener('click', stopTour);
 
 let overview = false;
 document.getElementById('btnTop').addEventListener('click', () => {
+  if(ercOn){ setErcAlto(!ERCOLANO.inVolo()); return; }
   overview = !overview;
   document.getElementById('btnTop').classList.toggle('on', overview);
   if(overview){
@@ -1462,7 +1463,10 @@ document.getElementById('btnTop').addEventListener('click', () => {
                target: new Vector3(-60, 4, 16), t:0 };
   }
 });
-document.getElementById('btnFly').addEventListener('click', () => setFly(!flyMode));
+document.getElementById('btnFly').addEventListener('click', () => {
+  if(ercOn){ setErcAlto(!ERCOLANO.inVolo()); return; }
+  setFly(!flyMode);
+});
 document.getElementById('btnSection').addEventListener('click', toggleSection);
 
 function toggleLabels(){
@@ -1595,6 +1599,30 @@ document.getElementById('btnCompare').addEventListener('click', () => setCompare
 
 /* --------------------------------------------------------- Ercolano */
 let ercOn = false;
+// Dentro Ercolano «Dall'alto» e «Volo» comandano la stessa cosa: salire.
+// Da terra la forma dello scavo non si vede — è un cardo di cinque metri
+// fra due insulae — e senza questa il visitatore resta davanti a un muro.
+function setErcAlto(on){
+  const v = ERCOLANO.dallAlto(on);
+  document.getElementById('btnTop').classList.toggle('on', v);
+  document.getElementById('btnFly').classList.toggle('on', v);
+  document.getElementById('btnFly').textContent = t(v ? 'ui.tool.volo' : 'ui.tool.cammina');
+  if(v && document.pointerLockElement) document.exitPointerLock();
+}
+
+// I comandi che a Ercolano non hanno niente su cui agire vengono spenti
+// invece di restare accesi e inerti: la sezione taglia il deposito di
+// Pompei, l'elenco dei luoghi e il tour sono di Pompei, la presentazione
+// scorre le otto fasi che qui non esistono, e il sole di questa scena è
+// fisso perché l'orientamento della griglia non è verificato.
+const INERTI_A_ERCOLANO = ['btnRail','btnSection','btnLabels','btnTour','btnPresent','btnClock'];
+function aggiornaComandiErcolano(){
+  for(const id of INERTI_A_ERCOLANO){
+    const b = document.getElementById(id);
+    if(b) b.disabled = ercOn;
+  }
+}
+
 function setErc(v){
   ercOn = !!v;
   document.body.classList.toggle('erc-on', ercOn);
@@ -1606,6 +1634,8 @@ function setErc(v){
     if(sectionOn) toggleSection();
     if(document.pointerLockElement) document.exitPointerLock();
     closePanel();
+    if(document.body.classList.contains('rail-open'))
+      document.body.classList.remove('rail-open');
     ERCOLANO.resize(innerWidth, innerHeight);
     ERCOLANO.enter(renderer.domElement, {
       openPanel: openPanel,
@@ -1618,10 +1648,17 @@ function setErc(v){
     ERCOLANO.exit();
     closePanel();
   }
+  setErcAlto(false);
+  aggiornaComandiErcolano();
+  if(!ercOn){
+    document.getElementById('btnTop').classList.toggle('on', overview);
+    document.getElementById('btnFly').classList.toggle('on', flyMode);
+    document.getElementById('btnFly').textContent = t(flyMode ? 'ui.tool.volo' : 'ui.tool.cammina');
+  }
 }
 document.getElementById('btnErc').addEventListener('click', () => setErc(!ercOn));
 document.getElementById('ercExit').addEventListener('click', () => setErc(false));
-document.getElementById('ercReset').addEventListener('click', () => ERCOLANO.reset());
+document.getElementById('ercReset').addEventListener('click', () => setErcAlto(false));
 {
   const fwd = document.getElementById('ercFwd'), back = document.getElementById('ercBack');
   const hold = (el, v) => {
