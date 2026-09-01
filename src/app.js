@@ -928,11 +928,11 @@ function makeLabel(text, color, weight, px, mul){
   const pad = 10, fs = px || 46, M = mul || 1;
   const c = document.createElement('canvas');
   const ctx = c.getContext('2d');
-  ctx.font = `${weight||600} ${fs}px "IBM Plex Sans", sans-serif`;
+  ctx.font = `${weight||600} ${fs}px system-ui, -apple-system, "Segoe UI", sans-serif`;
   const w = Math.ceil(ctx.measureText(text).width) + pad*2;
   c.width = w; c.height = fs + pad*2;
   const g = c.getContext('2d');
-  g.font = `${weight||600} ${fs}px "IBM Plex Sans", sans-serif`;
+  g.font = `${weight||600} ${fs}px system-ui, -apple-system, "Segoe UI", sans-serif`;
   g.textBaseline = 'middle';
   g.fillStyle = 'rgba(14,18,16,.62)';
   g.fillRect(0,0,c.width,c.height);
@@ -1069,6 +1069,7 @@ function applyEpoch(i, silent){
   epoch = i;
   const e = EPOCHS[i];
   aggiornaSezioneVuota();
+  aggiornaQuotaCorpo();
   depositTarget = e.deposit;
   roofsA.visible = !!e.roofsA;
   roofsB.visible = !!e.roofsB;
@@ -1377,6 +1378,41 @@ SEC_MARKS.forEach(m => {
   m.sprite = sp;
 });
 
+/* ------------------------------------- la quota del corpo, in sezione
+
+   «Circa cinque metri» è un numero, e un numero non si vede. «Il deposito
+   ti arriva tre metri e venti sopra la testa» è un'immagine, e non
+   richiede nessun dato in più: è lo stesso spessore, misurato sull'altezza
+   di chi sta guardando invece che su una scala astratta.
+
+   La barra è alta 1,80 m nella scala del modello, sta in piedi sul piano
+   del 79 contro la colonna del deposito, e non è architettura: materiale
+   non illuminato e nessun piano di taglio, perché è un segno di disegno.  */
+
+const secCorpo = new Group(); scene.add(secCorpo); secCorpo.visible = false;
+const MAT_CORPO = new MeshBasicMaterial({ color: PAL.accent });
+{
+  const asta = new Mesh(new BoxGeometry(0.045, EYE, 0.045), MAT_CORPO);
+  asta.position.y = EYE/2;
+  const tacca = new Mesh(new BoxGeometry(0.55, 0.035, 0.045), MAT_CORPO);
+  tacca.position.set(0.25, EYE, 0);
+  const piede = new Mesh(new BoxGeometry(0.55, 0.03, 0.045), MAT_CORPO);
+  piede.position.set(0.25, 0.015, 0);
+  secCorpo.add(asta, tacca, piede);
+}
+
+let etOcchi = null, etSopra = null, sopraPrec = null;
+function aggiornaQuotaCorpo(){
+  const sopraM = Math.max(0, EPOCHS[epoch].deposit * 4 - 1.8);
+  const chiave = sopraM.toFixed(1);
+  if(chiave === sopraPrec) return;             // si ridisegna solo se cambia
+  sopraPrec = chiave;
+  if(etOcchi) secCorpo.remove(etOcchi, etSopra);
+  etOcchi = makeLabel(t('scena.corpo.occhi', { m: fmt().d(1.8) }), '#7FB8A3', 600, 40, 0.26);
+  etSopra = makeLabel(t('scena.corpo.sopra', { m: fmt().d(sopraM) }), '#EDEEE9', 600, 40, 0.30);
+  secCorpo.add(etOcchi, etSopra);
+}
+
 let sectionX = -60;
 function updateSection(){
   sectionZ = Math.max(-72, Math.min(78, sectionZ));
@@ -1384,8 +1420,8 @@ function updateSection(){
   document.getElementById('secZ').textContent =
     (sectionZ >= 0 ? '+' : '') + t('ui.sez.quota', { n: fmt().n(Math.round(sectionZ*4)) });
   flight = { from: camera.position.clone(),
-             to: new Vector3(sectionX + 2, 2.2, sectionZ + 16),
-             target: new Vector3(sectionX, 0.7, sectionZ - 3), t:0 };
+             to: new Vector3(sectionX + 5, 3.3, sectionZ + 21),
+             target: new Vector3(sectionX + 5, 1.3, sectionZ - 3), t:0 };
 }
 document.getElementById('secMinus').addEventListener('click', () => { sectionZ -= 6; updateSection(); });
 document.getElementById('secPlus').addEventListener('click',  () => { sectionZ += 6; updateSection(); });
@@ -1917,6 +1953,25 @@ function tick(){
       m.sprite.scale.set(h * m.sprite.userData.aspect, h, 1);
       m.sprite.material.opacity = 0.95;
     });
+  }
+
+  // la barra alta come un uomo, contro la colonna del deposito
+  secCorpo.visible = sectionOn && depositCurrent > 0.05 && !!etOcchi;
+  if(secCorpo.visible){
+    // Colonna a sé, fra la camera e le quote degli strati: le due serie
+    // stanno su verticali diverse e non si accavallano.
+    secCorpo.position.set(sectionX + 1, 0, sectionZ + 0.7);
+    const d = camera.position.distanceTo(secCorpo.position);
+    const k = Math.max(0.8, Math.min(1.6, d/22));   // come le quote degli strati
+    // occhi alla tacca, «sopra la testa» in cima alla colonna: così la
+    // distanza fra le due etichette è il deposito stesso, e non si toccano
+    etOcchi.position.set(0.75, EYE, 0);
+    etSopra.position.set(0.75, depositCurrent + 0.40, 0);
+    for(const sp of [etOcchi, etSopra]){
+      const h = sp.userData.h * k;
+      sp.scale.set(h * sp.userData.aspect, h, 1);
+      sp.material.opacity = 0.95;
+    }
   }
 
   if(!POST.render(renderer, scene, camera)) renderer.render(scene, camera);
