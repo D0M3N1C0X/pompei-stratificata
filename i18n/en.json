@@ -123,6 +123,10 @@
   },
   "scena": {
     "vesuvio": "Vesuvius",
+    "corpo": {
+      "occhi": "your eyes · {m} m",
+      "sopra": "above your head · {m} m"
+    },
     "strati": {
       "correnti": "pyroclastic density currents",
       "grigi": "grey lapilli",

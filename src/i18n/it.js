@@ -356,6 +356,10 @@ export default {
   },
   "scena": {
     "vesuvio": "Vesuvio",
+    "corpo": {
+      "occhi": "i tuoi occhi · {m} m",
+      "sopra": "sopra la testa · {m} m"
+    },
     "strati": {
       "correnti": "correnti piroclastiche",
       "grigi": "lapilli grigi",
