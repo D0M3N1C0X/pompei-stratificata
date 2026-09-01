@@ -1,0 +1,343 @@
+{
+  "ui": {
+    "titoloPagina": "Après 79 — Pompéi et Herculanum",
+    "caricamento": "Construction de la ville…",
+    "touch": {
+      "run": "Courir",
+      "hint": "faites glisser l'écran pour regarder autour de vous",
+      "levettaAria": "Manette de déplacement"
+    },
+    "brand": {
+      "titolo": "Après 79 — Pompéi et Herculanum",
+      "nota": "v8 · deux villes · modèle schématique · 1 unité = 4 m · ce n'est pas un relevé"
+    },
+    "tool": {
+      "luoghi": "Lieux",
+      "cammina": "Marcher",
+      "volo": "Voler",
+      "sezione": "Coupe",
+      "dallAlto": "Vue aérienne",
+      "etichette": "Étiquettes",
+      "qualita": "Qualité",
+      "controller": "Manette",
+      "ora": "Heure",
+      "sonoro": "Son",
+      "confronto": "Comparer",
+      "ercolano": "Herculanum",
+      "tour": "Parcours",
+      "presenta": "Présenter",
+      "comandi": "Commandes"
+    },
+    "presenta": { "esci": "Quitter la présentation" },
+    "rail": {
+      "titolo": "Lieux documentés",
+      "cerca": "Chercher un lieu…",
+      "cercaAria": "Chercher un lieu",
+      "vuoto": "Aucun lieu de ce nom.",
+      "fuoriFase": " · hors de cette phase"
+    },
+    "erc": {
+      "nome": "Herculanum — le chantier",
+      "sepolto": "Regarder sous la ville",
+      "incrocio": "Retour au carrefour",
+      "esci": "Retour à Pompéi",
+      "avanti": "▲ avant",
+      "indietro": "▼ arrière",
+      "nota": "Vous ne marchez <b>que là où l'on a réellement fouillé</b> : quatre insulae\nentières plus les deux Orientalis. Tout le reste est du dépôt, et il est dessiné\ncomme du dépôt — avec la ville moderne au-dessus. <span class=\"ercWarn\">La scène\nest construite selon la convention du site (Decumanus Maximus en amont, mer en\naval) : l'orientation réelle n'est pas vérifiée.</span>",
+      "comandi": "<span><kbd>Z Q S D</kbd> marcher</span><span><kbd>souris</kbd> regarder</span>\n<span><kbd>clic</kbd> ouvrir la fiche</span><span><kbd>Échap</kbd> libérer</span>"
+    },
+    "cmp": {
+      "titolo": "Pourquoi Herculanum n'est pas Pompéi",
+      "titoli": "<div class=\"cmpT\"><b>POMPÉI</b><span>environ 5 m de dépôt, dont 3,1–3,3 m de lapilli ponceux</span><em>l'étage reste au-dessus</em></div>\n<div class=\"cmpT\"><b>HERCULANUM</b><span>environ 20 m de coulées pyroclastiques : la maison disparaît entièrement</span><em>au-dessus, la ville moderne — Resina jusqu'en 1969</em></div>",
+      "corpo": "<p><b>Pompéi</b> reçoit d'abord une retombée plinienne de ponces, puis les coulées\npyroclastiques : environ <b>5 m</b> dans le secteur étudié, dont 3,1–3,3 m de lapilli.\nUn rez-de-chaussée de 4 m disparaît ; l'étage, non.</p>\n<p><b>Herculanum</b> n'est pas touchée par la phase de retombée — l'axe de dispersion\npointe vers le sud-est, vers Pompéi — et reçoit <b>des coulées pyroclastiques dès le\ndébut</b> : environ <b>20 m</b>. La maison disparaît entièrement, et il y a encore 12 m de\ndépôt au-dessus.</p>\n<p class=\"cmpKey\">Pompéi est devenue <b>illisible</b>. Herculanum est devenue\n<b>inaccessible</b>. C'est la même éruption, et ce sont deux histoires de fouille\ndifférentes.</p>\n<p class=\"cmpWarn\">Sur l'épaisseur à Herculanum <b>les sources divergent</b> : environ 20 m\ndans la littérature évaluée par les pairs et sur le site du Parc, 25 m dans la\nvulgarisation de la Herculaneum Society, «16 mètres et plus» dans la notice Treccani.\nElle est dessinée ici à 20 m, la valeur modale. Le conflit est déclaré, non résolu.</p>\n<p class=\"cmpSrc\">Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12 ·\nPensa et al. 2023, <em>Scientific Reports</em> 13, 5622 ·\nCamardo 2007, <em>Conservation and Management of Archaeological Sites</em> 8(4) ·\nPetrone 2019, <em>JASs</em> 97 · UNESCO WHC, liste 829 ·\nParco Archeologico di Ercolano, <em>Area archeologica</em></p>",
+      "bottoni": "<button class=\"tourBtn\" id=\"cmpReset\">Reprendre la rotation</button>\n<button class=\"tourBtn\" id=\"cmpClose\">Retour à la ville</button>"
+    },
+    "clock": {
+      "adesso": "Maintenant",
+      "aria": "Heure du jour",
+      "fonte": "Pompéi 40,75° N · formules NOAA · paramètres orbitaux actuels",
+      "nota": {
+        "reale": "heure de Pompéi",
+        "scelta": "heure choisie",
+        "sole": "soleil à {gradi}°"
+      }
+    },
+    "bussola": { "nord": "nord", "mare": "côté mer" },
+    "sez": {
+      "taglio": "Coupe",
+      "quota": "{n} m",
+      "versoNord": "Déplacer la coupe vers le nord",
+      "versoSud": "Déplacer la coupe vers le sud",
+      "suggerimento": "molette de la souris pour faire glisser la coupe · C pour sortir",
+      "legenda": "<div><i style=\"background:var(--lay-surge)\"></i>coulées pyroclastiques · ≈ 1,8 m</div>\n<div><i style=\"background:var(--lay-grey)\"></i>lapilli ponceux gris</div>\n<div><i style=\"background:var(--lay-white)\"></i>lapilli ponceux blancs · 3,1–3,3 m au total</div>",
+      "vuota": {
+        "vigilia": "à cette phase le dépôt n'existe pas encore — allez à l'ensevelissement",
+        "scavato": "à cette phase le dépôt a été enlevé par la fouille"
+      }
+    },
+    "tour": {
+      "etichetta": "Parcours",
+      "indietro": "Précédent",
+      "avanti": "Suivant",
+      "chiudi": "Fermer",
+      "posizione": "{i} / {n}"
+    },
+    "panel": {
+      "fonte": "Source",
+      "aria": "Fiche du lieu",
+      "chiudi": "Fermer la fiche"
+    },
+    "epoche": { "aria": "Phases chronologiques" },
+    "qualita": { "alta": "Qualité haute", "bilanciata": "Équilibrée", "batteria": "Batterie" },
+    "joypad": { "acceso": "Manette ●", "collegato": "Connectée : " },
+    "lingua": { "etichetta": "Langue", "aria": "Choisir la langue" },
+    "intro": {
+      "occhiello": "Explorateur v8 · dossier Pompéi après 79",
+      "titolo": "Seize siècles, en huit étapes",
+      "entra": "Entrer dans la ville",
+      "confronto": "Voir la comparaison",
+      "dossier": "Lire le dossier",
+      "p1": "Vous marchez dans les rues de Pompéi — les murs vous arrêtent — et vous parcourez les phases le long du bandeau du bas. À chaque étape ce que vous voyez change : <b>le dépôt monte de cinq mètres et les rez-de-chaussée disparaissent</b>, les toits sont dépouillés, des structures des IV<sup>e</sup>–V<sup>e</sup> siècles apparaissent sur les étages émergents, la colline se couvre de cultures, le canal de Fontana la traverse, les tas de déblais bourboniens s'ouvrent.",
+      "p2": "Les cônes verts marquent les points où le dossier possède une donnée : approchez-vous et cliquez. <b>Coupe</b> ouvre le terrain et vous laisse regarder la stratigraphie de l'intérieur.",
+      "p3": "Vous arrivez <b>à neuf heures et demie</b>, le soleil bas : c'est l'heure où les ombres détachent les volumes et où la ville devient lisible. <b>Heure</b> ouvre l'horloge — choisissez l'aube, midi ou la nuit — et <b>Maintenant</b> bascule sur l'<b>heure réelle de Pompéi</b>, le soleil là où il serait au-dessus du site en ce moment, calculé pour la latitude 40,75° N avec les formules NOAA. <b>Manette</b> active les commandes à l'écran ; une manette Bluetooth est reconnue toute seule.",
+      "tastiera": "<div><kbd>Z Q S D</kbd><span>marcher</span></div>\n<div><kbd>Maj</kbd><span>courir</span></div>\n<div><kbd>souris</kbd><span>regarder</span></div>\n<div><kbd>C</kbd><span>coupe</span></div>\n<div><kbd>F</kbd><span>vol libre</span></div>\n<div><kbd>L</kbd><span>étiquettes</span></div>\n<div><kbd>1 – 8</kbd><span>changer de phase</span></div>\n<div><kbd>Échap</kbd><span>libérer la souris</span></div>\n<div><kbd>manette</kbd><span>joysticks et gâchettes</span></div>",
+      "tatto": "<div><kbd>joystick</kbd><span>marcher</span></div>\n<div><kbd>glisser</kbd><span>regarder</span></div>\n<div><kbd>toucher le cône</kbd><span>ouvrir la fiche</span></div>\n<div><kbd>bandeau du bas</kbd><span>changer de phase</span></div>\n<div><kbd>Coupe</kbd><span>ouvrir le terrain</span></div>\n<div><kbd>manette</kbd><span>joysticks et gâchettes</span></div>",
+      "avvertenza": "Le plan suit le tracé urbain réel — neuf <em>regiones</em>, les axes de rues, sept portes, la position des monuments — mais les volumes sont schématiques et la trame a été redressée. Les seules proportions tirées de mesures publiées sont celles de la Grande Palestre. Les textures sont dessinées par le code, non relevées sur les matériaux réels. Le tracé du canal de Fontana est inventé : aucune source scientifique ne le documente. Ne vous en servez pas comme documentation archéologique : servez-vous-en pour rendre un raisonnement visible."
+    }
+  },
+  "scena": {
+    "vesuvio": "Vésuve",
+    "corpo": {
+      "occhi": "vos yeux · {m} m",
+      "sopra": "au-dessus de votre tête · {m} m"
+    },
+    "strati": {
+      "correnti": "coulées pyroclastiques",
+      "grigi": "lapilli gris",
+      "bianchi": "lapilli blancs",
+      "piano": "niveau de sol de 79"
+    }
+  },
+  "epoche": [
+    {
+      "tag": "79 apr. J.-C.",
+      "name": "La veille",
+      "caption": "La ville vivante. La zone archéologique couvre environ <b>66 hectares</b> ; les estimations de population au moment de la destruction vont de 12 000 à 30 000 habitants. Neuf <em>regiones</em>, sept portes.",
+      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi</em>"
+    },
+    {
+      "tag": "79 apr. J.-C.",
+      "name": "L'ensevelissement",
+      "caption": "Environ <b>5 m</b> de dépôt dans le secteur étudié, dont 3,1–3,3 m de lapilli ponceux. Les rez-de-chaussée disparaissent. <b>Les étages et les toits restent au-dessus.</b> Pompéi n'a jamais été invisible : elle est devenue illisible.",
+      "src": "Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12 · DOI 10.3389/feart.2024.1386960"
+    },
+    {
+      "tag": "I<sup>er</sup>–III<sup>e</sup> s.",
+      "name": "Récupérations et galeries",
+      "caption": "On creuse aussitôt. Les propriétaires récupèrent ; puis le dépouillement devient systématique : marbres, blocs et plomb sortent des thermes, du Forum, des théâtres et de l'Amphithéâtre. Restent les brèches dans les murs des pièces vidées.",
+      "src": "Parco Archeologico di Pompei, <em>Pompei dopo l’eruzione</em>"
+    },
+    {
+      "tag": "IV<sup>e</sup>–V<sup>e</sup> s.",
+      "name": "La réoccupation",
+      "caption": "On revient habiter les étages émergents, en utilisant les niveaux ensevelis comme caves. Fours à pain aménagés dans des citernes, foyers, meules à main, lampes au monogramme constantinien.",
+      "src": "Zuchtriegel, Borsa, Onesti, Salvatori, Scarpati 2025, <em>E-Journal degli Scavi di Pompei</em>"
+    },
+    {
+      "tag": "XV<sup>e</sup>–XVI<sup>e</sup> s.",
+      "name": "Civita",
+      "caption": "La colline s'appelle <em>Civita</em>. Elle n'est pas déserte : céramique glaçurée campanienne du XV<sup>e</sup> siècle dans la zone au sud de la Basilique. Le lieu ne fut pas oublié — ce qui se perdit, c'est la correspondance entre le lieu et le nom.",
+      "src": "<em>Pompei oltre il 79 d.C.</em>, E-Journal degli Scavi di Pompei 2026.09"
+    },
+    {
+      "tag": "1592–1600",
+      "name": "Le canal de Fontana",
+      "caption": "Le comte Muzio Tuttavilla charge Domenico Fontana de construire le canal du Comte. Son tracé coupe la colline. Des monnaies et des restes de bâtiments apparaissent. <b>Personne ne comprend qu'on est à l'intérieur de Pompéi.</b>",
+      "src": "Parco Archeologico di Pompei · <em>Manifatture in Campania</em>, Giunti 1983, pp. 126–127"
+    },
+    {
+      "tag": "1748–1763",
+      "name": "La fouille bourbonienne",
+      "caption": "23 mars 1748 : premier chantier systématique à Civita, pour extraire des pièces destinées au palais royal de Portici. Alcubierre croit être à Stabies. Le nom arrive en <b>1763</b>, avec l'inscription <em>rei publicae Pompeianorum</em>.",
+      "src": "Parslow 1995 · Britannica, <em>History of excavations</em>"
+    },
+    {
+      "tag": "Aujourd'hui",
+      "name": "Le chantier ouvert",
+      "caption": "Des quelque <b>66 hectares</b> de la zone archéologique, environ <b>45</b> ont été fouillés. Dans l'Insula Meridionalis, la fouille stratigraphique récupère les phases postérieures à 79 que les campagnes précédentes avaient enlevées pour atteindre le niveau de 79 : l'«inconscient archéologique».",
+      "src": "Zuchtriegel et al. 2025 · <em>Guida agli scavi di Pompei</em>"
+    }
+  ],
+  "luoghi": {
+    "vesuvio": {
+      "label": "Vésuve",
+      "sub": "au nord de la ville",
+      "body": "<p>L'éruption est racontée par <b>Pline le Jeune</b> (<em>Ep.</em> 6.16 et 6.20), qui décrit la mort de son oncle mais pas la suite. <b>Dion Cassius</b> nomme explicitement les deux villes détruites : «il ensevelit deux villes entières, Herculanum et Pompéi» (66.23.3).</p>\n    <p class=\"warn\">La date est controversée. Dion (66.21.1) place l'événement à la fin de l'été ; les manuscrits pliniens divergent ; l'inscription au charbon trouvée en 2018 dans la Regio V a rouvert le débat. Déclarez-la controversée, ne la tranchez pas.</p>\n    <p class=\"warn\">Le profil du mont est schématique et hors échelle : il sert à vous orienter, pas à représenter le Somma-Vésuve avant 79.</p>",
+      "src": "Cassio Dione 66.21–23 · Plinio il Giovane, <em>Ep.</em> 6.16; 6.20"
+    },
+    "soccorsi": {
+      "label": "Forum — les secours de Titus",
+      "sub": "Regio VII/VIII",
+      "body": "<p class=\"lat\">Curatores restituendae Campaniae e consularium numero sorte duxit; bona oppressorum in Vesuvio, quorum heredes non exstabant, restitutioni afflictarum civitatum attribuit.</p>\n    <p>«Il tira au sort, parmi les anciens consuls, des curateurs pour la restauration de la Campanie ; il attribua les biens de ceux qui avaient péri sur le Vésuve sans laisser d'héritiers à la reconstruction des cités frappées.» Dion Cassius le confirme : deux anciens consuls, de l'argent public, les biens des morts sans héritiers aux survivants.</p>\n    <p class=\"key\">L'objet de l'intervention impériale est la <b>Campanie comme région</b>. Aucune source antique ne documente une tentative de reconstruire Pompéi. L'aide va aux vivants, pas aux ruines.</p>",
+      "src": "Svetonio, <em>Tit.</em> 8.4 · Cassio Dione 66.24"
+    },
+    "stratigrafia": {
+      "label": "Insula des Chastes Amants",
+      "sub": "Regio IX, insula 12",
+      "body": "<p>La donnée matérielle qui conditionne tout le reste. Dans le secteur étudié, l'ensevelissement atteint <b>environ 5 m</b>, dont <b>3,1–3,3 m</b> de lapilli ponceux ; le reste vient des coulées pyroclastiques. L'épaisseur maximale du seul dépôt de retombée est de 2,8–2,9 m.</p>\n    <p class=\"key\">Avec cinq mètres, un rez-de-chaussée de quatre mètres disparaît et l'étage, non. C'est la raison physique pour laquelle la ville est restée accessible — aux récupérateurs, aux pilleurs et, quatre siècles plus tard, à ceux qui sont revenus y habiter.</p>\n    <p class=\"hint\">Appuyez sur <b>C</b> pour ouvrir le terrain et regarder la stratigraphie en coupe.</p>\n    <p class=\"warn\">L'épaisseur varie d'un point à l'autre de la ville. La mesure vaut pour le secteur publié, pas pour tout Pompéi.</p>",
+      "src": "Sparice, Amoretti, Galadini, Di Vito, Terracciano, Scarpati, Zuchtriegel 2024 · DOI 10.3389/feart.2024.1386960"
+    },
+    "popidius": {
+      "label": "Maison de N. Popidius Priscus",
+      "sub": "VII.2.20, Vico del Panettiere",
+      "body": "<p>À l'entrée, du côté sud du Vico del Panettiere, Fiorelli a relevé un graffite gravé au clou et l'a lu comme le signal laissé par ceux qui avaient déjà vidé le bâtiment, situant l'opération «probablement à l'époque des Antonins».</p>\n    <p class=\"warn\"><b>Le graffite était en grec.</b> <em class=\"lat\">Domus pertusa</em> n'est pas le texte de l'inscription : c'est l'équivalent latin qu'en a donné Fiorelli. Les sources accessibles ne reproduisent pas le texte grec, et du numéro <em>CIL</em> IV je n'ai trouvé aucune trace.</p>\n    <p class=\"warn\">L'Ancient Graffiti Project n'enregistre aucun graffite pour cette propriété, mais cela ne prouve rien : de Pompéi il ne couvre que le Lupanar, le campus de la palestre, la Regio I ins. 8, la Regio V ins. 1 et toute la Regio VIII. <b>La Regio VII n'est pas couverte.</b> Cherchez dans le <em>CIL</em> IV imprimé et dans les suppléments De Gruyter.</p>",
+      "src": "Fiorelli, <em>Guida di Pompei</em>, Roma 1877, p. 59 · Ancient Graffiti Project"
+    },
+    "casa-giardino": {
+      "label": "Maison au Jardin",
+      "sub": "Regio V, fouilles de 2018",
+      "body": "<p>Dans une pièce, au moins six individus trouvés «retournés, tordus et traînés» par ceux qui cherchaient des objets. Des bagues et de petits objets échappés au pillage avaient été détachés des corps. Les galeries documentent une activité de fouille bien antérieure à 1748.</p>\n    <p class=\"key\">Ce n'est pas un détail macabre : c'est la preuve que quelqu'un savait où était la ville, savait qu'il y avait de quoi prendre, et savait comment y arriver. Seize siècles d'«oubli» ne tiennent pas devant cette pièce.</p>",
+      "src": "Parco Archeologico di Pompei, comunicato del 24/10/2018"
+    },
+    "foro": {
+      "label": "Forum",
+      "sub": "le cœur dépouillé",
+      "body": "<p>Le site devient une carrière. Marbres, blocs de pierre et plomb sont enlevés des thermes, du Forum, des théâtres et de l'Amphithéâtre. Le Forum, qui portait la plus grande surface de marbre de la ville, est aussi le plus rentable à démonter.</p>\n    <p class=\"key\">Première raison pour laquelle personne n'a fouillé «pour savoir» : quand l'archéologie devient pensable, la valeur récupérable a quitté le site depuis longtemps.</p>",
+      "src": "Parco Archeologico di Pompei, <em>Pompei dopo l’eruzione</em>"
+    },
+    "anfiteatro": {
+      "label": "Amphithéâtre",
+      "sub": "Regio II",
+      "body": "<p>Construit en <b>70 av. J.-C.</b>, il pouvait accueillir jusqu'à <b>20 000 spectateurs</b> : c'est le plus ancien amphithéâtre en pierre connu du monde romain. Il reste partiellement émergent et il est dépouillé de ses blocs.</p>\n    <p>C'est aussi l'un des premiers points repérés quand la fouille reprend : en <b>1748</b>, le chantier de Civita reconnaît une partie de l'Amphithéâtre et la nécropole de la Porta Ercolano.</p>",
+      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi</em> · Pompeii Perspectives (da Parslow 1995)"
+    },
+    "palestra": {
+      "label": "Grande Palestre",
+      "sub": "Regio II, époque augustéenne",
+      "body": "<p>Une grande place carrée à ciel ouvert d'environ <b>140 × 140 m</b>, avec au centre un bassin de <b>23 × 35 m</b>. Construite à l'époque augustéenne, au début du I<sup>er</sup> siècle apr. J.-C.</p>\n    <p class=\"hint\">C'est le seul bâtiment du modèle dont les proportions viennent de mesures publiées par le Parc. Tout le reste est schématique.</p>",
+      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em>"
+    },
+    "horrea": {
+      "label": "Horrea et Temple de Vénus",
+      "sub": "Insula Meridionalis, extrémité ouest",
+      "body": "<p>Première phase de fréquentation documentée : <b>fin I<sup>er</sup> – début III<sup>e</sup> siècle apr. J.-C.</b> Sigillée africaine dans les formes Hayes 5–23, fragments de marbre réemployés, et une monnaie de l'époque de Marc Aurèle (<b>161 apr. J.-C.</b>).</p>\n    <p class=\"key\">Quatre-vingt-deux ans après l'éruption, quelqu'un perdait des monnaies là-dedans. La ville n'était pas un désert scellé : c'était un lieu fréquenté.</p>",
+      "src": "Zuchtriegel, Borsa, Onesti, Salvatori, Scarpati 2025"
+    },
+    "mosaici": {
+      "label": "Maison des Mosaïques Géométriques",
+      "sub": "Regio VIII, Insula Meridionalis",
+      "body": "<p>Deuxième phase, <b>IV<sup>e</sup>–V<sup>e</sup> siècle</b> : installation stable. Dans la pièce III, un <b>four à pain aménagé dans une citerne désaffectée</b>, daté du V<sup>e</sup> siècle ; foyers et four secondaire associés à un <em>follis</em> de Constantin II (<b>326 apr. J.-C.</b>). Aux niveaux inférieurs, céramique culinaire de l'Antiquité tardive, sigillée africaine du IV<sup>e</sup> siècle, trous de poteau pour des structures en bois, une meule à main en pierre de lave et un fuseau en os travaillé.</p>\n    <p class=\"key\">Le bassin glaçuré du <b>XV<sup>e</sup> siècle</b> vient aussi d'ici : une même maison documente mille quatre cents ans de fréquentation discontinue.</p>",
+      "src": "Zuchtriegel et al. 2025 · <em>Pompei oltre il 79 d.C.</em>, E-Journal 2026.09"
+    },
+    "quadriportico": {
+      "label": "Quadriportique des Théâtres",
+      "sub": "Insula Meridionalis, extrémité est",
+      "body": "<p>Extrémité orientale de l'Insula Meridionalis, le quartier qui va d'ici à la Villa Imperiale à l'ouest. C'est le secteur du chantier de consolidation ouvert en <b>septembre 2023</b>, d'où viennent toutes les traces postérieures à 79 de cette reconstitution.</p>\n    <p class=\"key\">La thèse des auteurs : les traces postérieures à 79 <b>ont été enlevées</b> par les fouilles précédentes, parce que chaque campagne visait le niveau de 79. La documentation qui répondrait à la question a été détruite par la discipline qui devait la recueillir.</p>",
+      "src": "Zuchtriegel et al. 2025, «inconscio archeologico»"
+    },
+    "lacuna": {
+      "label": "La colonne que personne n'a étudiée",
+      "sub": "Insula Meridionalis — une lacune déclarée",
+      "body": "<p>Sous vos pieds, entre le niveau de 79 et la surface, il y a environ cinq mètres de dépôt et mille six cents ans de fréquentation. Ce modèle vient de vous montrer ce qu'il y a dedans.</p>\n    <p class=\"warn\"><b>Aucune étude géoarchéologique de la colonne stratigraphique au-dessus du niveau de 79 à l'intérieur des murs de Pompéi ne semble avoir été publiée.</b> Cela est apparu en cherchant une source pour une autre affirmation, et la recherche s'est arrêtée dans une impasse.</p>\n    <p class=\"key\">Pourquoi cela compte. Tout ce que ce modèle dit de l'épaisseur vient d'<em>un seul secteur publié</em> — l'Insula des Chastes Amants, Sparice et al. 2024. Pour le reste de la ville, cette donnée n'existe pas, et elle est ici étendue par nécessité de représentation, non parce qu'elle est documentée. Les phases que vous venez de traverser reposent sur une colonne que personne n'a mesurée.</p>\n    <p class=\"hint\">Ce cône ne marque pas une découverte. Il marque un trou, et c'est le seul endroit du modèle qui le fasse.</p>",
+      "src": "Registro delle verifiche del dossier · <b>aucune source identifiée</b>"
+    },
+    "basilica": {
+      "label": "Zone au sud de la Basilique",
+      "sub": "Regio VIII",
+      "body": "<p>Niveaux de fréquentation avec structures en bois signalées par des trous de poteau, et de la céramique : un <b>bassin glaçuré intact, émail blanc et décor vert, production campanienne du XV<sup>e</sup> siècle</b> ; fragments d'une gourde à deux anses et d'un pichet glaçurés des XV<sup>e</sup>–XVI<sup>e</sup> siècles.</p>\n    <p class=\"key\">C'est l'objet qui renverse la prémisse. Pendant qu'on construisait la coupole à Florence, quelqu'un mangeait là-dedans.</p>",
+      "src": "<em>Pompei oltre il 79 d.C.</em>, E-Journal degli Scavi di Pompei 2026.09, 21/08/2026"
+    },
+    "canale": {
+      "label": "Canal du Comte de Sarno",
+      "sub": "1592–1600",
+      "body": "<p>En <b>1592</b>, le comte Muzio Tuttavilla charge <b>Domenico Fontana</b> de construire un canal pour amener l'eau aux moulins de Torre Annunziata. Entre <b>1594 et 1600</b>, son tracé traverse la colline de Civita et livre des monnaies et des restes de bâtiments. Personne ne relie ces restes à la ville romaine.</p>\n    <p class=\"warn\"><b>Le tracé que vous voyez est inventé.</b> En cherchant une source scientifique sur le parcours exact sous la ville, je n'ai rien trouvé : le seul traitement étendu qui existe est auto-publié et lié à une thèse de redatation de Pompéi, donc inutilisable. La version selon laquelle Fontana aurait recoupé fresques et inscriptions est elle aussi répétée partout sans source primaire.</p>",
+      "src": "Parco Archeologico di Pompei · <em>Manifatture in Campania</em>, Giunti 1983, pp. 126–127"
+    },
+    "porta-ercolano": {
+      "label": "Porta Ercolano",
+      "sub": "nécropole suburbaine",
+      "body": "<p><b>23 mars 1748.</b> Le premier chantier systématique à Civita repère une partie de l'Amphithéâtre et la nécropole de la Porta Ercolano. Puis il est suspendu : trop peu d'objets de valeur.</p>\n    <p class=\"key\">Le but déclaré n'était pas de savoir. C'était d'extraire des œuvres d'art et des objets pour décorer le palais royal de Portici. Alcubierre croyait d'ailleurs être à Stabies.</p>",
+      "src": "Pompeii Perspectives (da Parslow 1995) · Britannica"
+    },
+    "giulia-felice": {
+      "label": "Praedia de Julia Felix",
+      "sub": "Regio II, insula 4",
+      "body": "<p>Première propriété fouillée sur la Via dell'Abbondanza, <b>1755–1757</b>, sous la direction de <b>Karl Jakob Weber</b>. Weber produit des plans détaillés — trois versions conservées dans les archives de Naples — et des inventaires hebdomadaires des trouvailles.</p>\n    <p class=\"key\">C'est le moment où la chasse au trésor commence à devenir documentation. Pas encore de l'archéologie : mais la première fois que quelqu'un enregistre <em>où</em> il a trouvé une chose.</p>",
+      "src": "Parslow 1995, <em>Rediscovering Antiquity</em>, Cambridge University Press"
+    },
+    "nome": {
+      "label": "L'inscription de 1763",
+      "sub": "la ville retrouve son nom",
+      "body": "<p>La découverte d'une inscription portant la formule <em class=\"lat\">rei publicae Pompeianorum</em> identifie enfin le site.</p>\n    <p class=\"key\"><b>1 684 ans</b> ont passé depuis l'éruption et <b>15 ans</b> depuis le début de la fouille. Pendant quinze ans, on a fouillé Pompéi sans savoir que c'était Pompéi.</p>",
+      "src": "Britannica, <em>Pompeii — History of excavations</em>"
+    },
+    "sicilo": {
+      "label": "L'épitaphe de Seikilos",
+      "sub": "pourquoi vous n'entendez pas de mélodie",
+      "body": "<p>Le son de ce modèle reproduit le <b>timbre</b> d'instruments attestés dans la région vésuvienne. <b>Il ne joue aucune mélodie antique</b>, et il faut dire pourquoi.</p>\n    <p>De la musique gréco-romaine, très peu de documents notés survivent. Le plus complet est l'<b>épitaphe de Seikilos</b> : une stèle inscrite trouvée vers 1883 pendant les travaux du chemin de fer à <b>Tralles</b>, près de l'actuelle Aydın en Turquie, aujourd'hui au <b>Nationalmuseet de Copenhague, inv. 14897</b>. Haute de 61 cm. Douze lignes : cinq de dédicace, sept portant le poème avec la notation vocale alphabétique écrite au-dessus des mots.</p>\n    <p class=\"lat\">ὅσον ζῇς, φαίνου· μηδὲν ὅλως σὺ λυποῦ·<br>πρὸς ὀλίγον ἐστὶ τὸ ζῆν, τὸ τέλος ὁ χρόνος ἀπαιτεῖ.</p>\n    <p>«Tant que tu vis, brille ; ne t'afflige de rien ; la vie ne dure qu'un peu, et le temps réclame son dû.» <span class=\"cite-in\">texte tel qu'imprimé dans Rohland 2022, CUP ; traduction française de l'auteur</span></p>\n    <p class=\"key\">Voilà pourquoi vous ne l'entendez pas. <b>Je n'ai pas vérifié la suite des signes ni les durées sur l'édition critique</b> — Pöhlmann &amp; West, <em>Documents of Ancient Greek Music</em>, Clarendon 2001, n° 23, pp. 88–91. Jouer une mélodie que je n'ai pas contrôlée reviendrait à mettre dans ce projet la seule chose sans source, après que tout le reste a été annoté ligne par ligne. La place de la mélodie existe, et elle reste vide tant que ce volume n'a pas été ouvert.</p>\n    <p class=\"warn\">Restent ouvertes aussi : la <b>datation</b> (I<sup>er</sup> siècle selon Mathiesen, II<sup>e</sup> selon Pöhlmann &amp; West, tous deux sur base paléographique) et le <b>découvreur</b> (Purser selon l'édition standard, Ramsay selon d'autres sources ; Ramsay est en tout cas celui qui a publié, dans <em>BCH</em> 7, 1883). Conflits déclarés, non résolus.</p>",
+      "src": "Rohland 2022, <em>Carpe Diem</em>, Cambridge University Press · Nationalmuseet, inv. 14897 · Pöhlmann &amp; West 2001, nr. 23 <b>[à vérifier]</b>"
+    },
+    "strumenti": {
+      "label": "Les instruments que vous entendez",
+      "sub": "objet fouillé ou iconographie",
+      "body": "<p>Chaque instrument du son porte avec lui sa <b>catégorie de preuve</b>, et il ne faut pas confondre les deux.</p>\n    <p class=\"key\"><b>Objet fouillé</b> — des objets réellement mis au jour.<br>\n    <b>Tibiae</b> : environ soixante-dix trouvailles attribuables à des tibiae à Pompéi, dont <b>quinze instruments complets</b>. Les quatre célèbres sont au MANN, inv. 76891–76894, fouillées en 1867 : tuyaux d'ivoire gainés de métal, avec des anneaux tournants alternant argent et alliage cuivreux.<br>\n    <b>Cornua</b> : <b>cinq</b> exemplaires de Pompéi au MANN.<br>\n    <b>Cymbala</b> : <b>six paires et trois exemplaires isolés</b> des sites pompéiens, disques concaves en bronze, la plupart des paires encore réunies par leur chaînette.</p>\n    <p class=\"warn\"><b>Iconographie seulement</b> — la <b>cithare</b>. À Pompéi et à Herculanum, <b>aucun instrument à cordes ne subsiste</b> : le bois et le boyau ne tiennent pas. La cithare est partout sur les murs et dans la statuaire, et dans aucune vitrine. La <b>Maison du Citharède</b> (I.4.5) tire son nom d'une statue de bronze d'Apollon jouant de la cithare, non d'un instrument trouvé là : c'est le cas qui tient les deux catégories ensemble en une seule ligne.</p>\n    <p class=\"warn\"><b>Laissés dehors</b> : la harpe et le luth. Ils n'apparaissent ni comme objets fouillés ni dans l'iconographie pompéienne. C'est une absence de preuve, non une preuve d'absence — mais tant que la preuve manque, ils restent dehors. Dehors aussi le <b>tympanum</b> : il paraît dans les fresques, pas parmi les trouvailles.</p>\n    <p class=\"warn\">Les <b>hauteurs</b> employées par la cithare sont une convention moderne, non une reconstitution. L'<b>ambiance</b> — foule, lapilli, vent, pioches — est une évocation déclarée : aucune source ne décrit le paysage sonore de Pompéi.</p>",
+      "src": "Mungari &amp; Wysłucha 2021, <em>Open Arts Journal</em> 10 · Hagel 2008, <em>JHS</em> 128 · Pelosi et al. 2016, <em>IJCS</em> 7(SI2) · Schiattone et al. 2024, <em>Heritage</em> 7(5) · Soprintendenza Pompei, <em>Guida agli scavi</em> 2015"
+    }
+  },
+  "ercolano": {
+    "fronte": {
+      "label": "Le front de fouille",
+      "sub": "au-dessus : Corso Resina",
+      "body": "<p>Ce mur de dépôt est la limite de la fouille. Le <b>Decumanus Maximus</b>, la rue devant vous, «marque aujourd'hui la démarcation entre la zone fouillée et celle encore ensevelie <b>sous le Corso Resina</b>».</p>\n      <p>Le Corso Resina est l'ancienne <em>Strada Regia delle Calabrie</em>, la route de Naples, partie du Miglio d'Oro. Dessous se trouvent le reste de la ville, le théâtre et la Villa des Papyrus.</p>\n      <p class=\"key\">L'UNESCO le dit sans détour : l'intégrité du site «serait améliorée par l'inclusion dans le bien du théâtre et de la plus grande partie de la ville antique avec ses monuments publics les plus importants, encore ensevelis sous l'Herculanum moderne».</p>\n      <p class=\"warn\">La hauteur du front est dessinée ici à <b>20 m</b>, la valeur modale de l'épaisseur du dépôt. ⚠️ Je n'ai trouvé aucune mesure publiée de la hauteur de l'escarpement en tant que telle, distincte de l'épaisseur du dépôt : les chiffres d'épaisseur vont de «16 mètres et plus» (Maiuri 1960) à «environ 20 m» (le Parc) et «jusqu'à 30 m sous la ville moderne» (D'Andrea et al. 2019). <b>À vérifier</b> sur une coupe de l'Herculaneum Conservation Project.</p>",
+      "src": "Parco Archeologico di Ercolano, <em>Area archeologica</em> · UNESCO WHC, lista 829 · D’Andrea et al. 2019, <em>ISPRS Archives</em> XLII-2/W15, 359–364"
+    },
+    "fornici": {
+      "label": "Les douze chambres à bateaux",
+      "sub": "la plage antique",
+      "body": "<p><b>Douze</b> chambres voûtées sur la plage antique, six à l'ouest et six à l'est de l'escalier, probablement des remises pour le matériel de pêche et un abri pour de petites embarcations.</p>\n      <p>Depuis <b>1980</b>, on y a trouvé des restes humains, dans <b>neuf des douze</b> : ceux qui n'ont pas réussi à embarquer. Avec eux, des bijoux, des paniers, des bourses avec des monnaies, des clés de maison, des amulettes, des outils de travail et une trousse chirurgicale. Sur la plage, une barque en bois et le pronaos effondré du temple de Vénus.</p>\n      <p class=\"warn\">⚠️ <b>Le nombre de morts n'est pas une donnée stable.</b> Le Parc dit environ <b>300</b> ; Pappalardo écrivait en 1994 <b>230</b> en tout, dont une soixantaine sur la plage ; la Wikipédia anglaise rapporte une progression 55 → 296 → 340. Une partie de l'écart tient probablement à la date de publication et non à un désaccord de fond — mais aucune source ne le dit, et je ne le tiens pas pour réglé.</p>\n      <p class=\"key\">C'est ici que se joue la différence avec Pompéi, en une ligne : à Pompéi on meurt surtout sous les effondrements et dans les coulées, après des heures de chute de ponces qui laissent le temps de fuir. À Herculanum, les coulées pyroclastiques arrivent <b>en premier</b>, et ceux qui étaient descendus sur la plage attendre les bateaux n'ont pas eu ce temps.</p>",
+      "src": "Parco Archeologico di Ercolano, <em>I fuggiaschi</em> · Pappalardo 1994, <em>Enciclopedia dell’Arte Antica</em> · Guidobaldi &amp; Esposito 2013, pp. 21–26 · Martyn et al. 2020, <em>Antiquity</em> 94(373), 76–91"
+    },
+    "cervi": {
+      "label": "Maison des Cerfs",
+      "sub": "IV.21",
+      "body": "<p>À l'extrémité sud de l'<b>Insula IV</b>, avec son entrée sur le Cardo V et une terrasse ouverte sur le golfe. Environ <b>1 190 m²</b> : l'une des plus grandes maisons de la fouille, orientée non sur la rue mais sur la vue.</p>\n      <p>Elle tire son nom des deux groupes sculptés de cerfs attaqués par des chiens trouvés dans le jardin.</p>\n      <p class=\"warn\">Les volumes sont ici schématiques : la surface est la seule mesure publiée que j'aie vérifiée, et le reste du contour est reconstitué à vue d'après le plan. Ne vous en servez pas comme relevé.</p>",
+      "src": "De Vos &amp; De Vos 1982, via it.wikipedia <b>[fonte terziaria]</b> · pianta: herculaneum.uk, Insula IV"
+    },
+    "palestra": {
+      "label": "La Palestre",
+      "sub": "Insula Orientalis II",
+      "body": "<p>Le terrain mesure <b>77 × 47 m</b> — c'est la mesure publiée la plus solide dont je dispose pour un bâtiment d'Herculanum. Entrée par le Cardo V (Ins. Or. II.4), sortie vers le Decumanus Inferior.</p>\n      <p class=\"key\">C'est l'endroit où l'on voit le mieux ce que fouiller à Herculanum veut dire : le terrain est <b>encore en grande partie enseveli</b>, et le bassin cruciforme du centre a été atteint en creusant <b>comme dans une grotte</b> sous le dépôt, non par le haut. Dans le modèle, le côté encore enseveli est dessiné comme du dépôt, pas comme un bâtiment.</p>",
+      "src": "Maiuri 1960, <em>Enciclopedia dell’Arte Antica</em>, voce «Ercolano» · Parco Archeologico di Ercolano"
+    },
+    "graticcio": {
+      "label": "Maison à Treillis",
+      "sub": "III.14 — le bois qui tient",
+      "body": "<p>Insula III, sur le Cardo IV Inferiore. Construite en <b>opus craticium</b> : ossature de bois remplie de roseaux et de mortier, la construction économique romaine.</p>\n      <p class=\"key\">À Pompéi, un bâtiment pareil n'existerait pas : le bois ne survit pas. À Herculanum, les coulées pyroclastiques ont <b>carbonisé</b> au lieu de brûler, et poutres, cloisons, portes, lits et jusqu'à un berceau nous sont parvenus. C'est l'autre face des vingt mètres de dépôt : ils ensevelissent plus mal et conservent mieux.</p>\n      <p class=\"warn\">⚠️ L'adresse est en conflit entre les sources : <b>III.14</b> selon herculaneum.uk, <b>III.15</b> selon le Madain Project. Je ne l'ai pas tranché.</p>",
+      "src": "herculaneum.uk, Insula III <b>[fonte documentaria, non peer-reviewed]</b> · Madain Project <b>[terziaria]</b>"
+    },
+    "teatro": {
+      "label": "Le théâtre",
+      "sub": "il n'est pas ici : il est sous la ville",
+      "body": "<p>Vous ne le voyez pas parce qu'il n'est pas dans la fouille à ciel ouvert : il se trouve <b>sous le centre historique moderne</b>, avec son entrée sur le Corso Resina, à environ <b>25 m sous le niveau de la rue</b>. On n'y accède que par les puits et les galeries creusés par les ingénieurs bourboniens.</p>\n      <p class=\"key\">Ce fut le <b>premier monument trouvé</b>, en 1738, quand commença l'exploration systématique : l'histoire de la fouille d'Herculanum commence par un bâtiment qu'aujourd'hui encore on ne peut pas voir d'en haut.</p>\n      <p class=\"warn\">⚠️ Sur la profondeur, les sources divergent : <b>25 m</b> sur la page du Parc, <b>20 m</b> dans une présentation vidéo du directeur Sirano diffusée en 2020. J'ai retenu le chiffre du Parc.</p>",
+      "src": "Parco Archeologico di Ercolano, <em>Il Teatro di Ercolano</em> e <em>La scoperta e gli scavi</em>"
+    },
+    "papiri": {
+      "label": "Villa des Papyrus",
+      "sub": "elle aussi encore ensevelie",
+      "body": "<p>De ce côté, au-delà du front de fouille. Elle se développe sur un front de <b>plus de 250 m</b>, parallèle au trait de côte, sur au moins <b>trois niveaux de terrasses</b>.</p>\n      <p>Elle fut explorée au XVIII<sup>e</sup> siècle par galeries — <b>le plan de Karl Weber date de 1754</b> — et c'est de là que vinrent les bronzes et les <b>rouleaux de papyrus carbonisés</b> qui lui donnent son nom. À ciel ouvert, elle n'a été fouillée que très peu : l'atrium en partie entre <b>1996 et 1998</b>, le pavillon sur la mer en <b>2007</b>.</p>\n      <p class=\"warn\">⚠️ Sur sa position, les sources officielles ne s'accordent pas entre elles : le Ministère la place «à l'extrême limite <b>nord</b>» des fouilles nouvelles, Maiuri la situe «à l'<b>ouest</b> de l'agglomération». Les deux ne sont compatibles que si l'on entend nord-ouest, mais aucune ne le dit. Dans le modèle, elle est indiquée sur le côté, sans prétention de position exacte. La distance à la ville, je ne l'ai trouvée publiée nulle part.</p>",
+      "src": "Ministero della cultura, <em>Villa dei Papiri</em> · Parco Archeologico di Ercolano · Maiuri 1960 · Pappalardo 1994"
+    },
+    "quanto": {
+      "label": "Ce qui est fouillé",
+      "sub": "et pourquoi pas le reste",
+      "body": "<p>Vous êtes sur le <b>Decumanus Inferior</b>, au centre de la zone archéologique. Ce que vous pouvez parcourir est presque tout ce qu'il y a : <b>quatre insulae entières</b> (III, IV, V, VI) plus les deux Insulae Orientalis, et en partie la II et la VII.</p>\n      <p>De la ville antique, <b>un peu plus de 4 hectares</b> sont visibles selon le Parc. Sur l'étendue totale, les sources ne s'accordent pas : le Parc dit «environ vingt hectares», en le déclarant hypothétique ; <b>Maiuri</b> donnait en 1960 un rectangle de <b>370 × 320 m</b>, soit 11–12 hectares y compris les bâtiments extra-muros. Je ne les concilie pas : ce sont la seule donnée métrique publiée et une estimation déclarée comme telle.</p>\n      <p class=\"key\">Pourquoi le reste n'est pas fouillé est la vraie question, et la réponse n'est pas archéologique : il y a une ville vivante au-dessus. Fouiller Herculanum, c'est exproprier et démolir Ercolano.</p>\n      <p class=\"warn\">⚠️ Sur la surface fouillée aussi il y a une divergence : «plus de quatre hectares» pour le Parc, «environ 60 000 m²» (6 ha) dans le travail SIG de l'Herculaneum Conservation Project. Aucune source n'explique l'écart.</p>",
+      "src": "Parco Archeologico di Ercolano, <em>Area archeologica</em> · Maiuri 1960, <em>Enc. dell’Arte Antica</em> · D’Andrea et al. 2019, <em>ISPRS Archives</em> XLII-2/W15"
+    },
+    "griglia": {
+      "label": "Cardines et decumani",
+      "sub": "comment lire le plan",
+      "body": "<p>La ville a <b>trois decumani</b>, dont <b>deux fouillés</b>, et <b>cinq cardines</b>, dont le <b>troisième, le quatrième et le cinquième</b> sont visibles. Les Cardo I et II ne sont connus que par les plans bourboniens.</p>\n      <p>Les decumani courent parallèlement à la côte, les cardines perpendiculairement. Le Decumanus Maximus, en amont, était fermé aux chariots : ouvert aux seuls piétons, avec des trottoirs bas et larges et un portique ombragé.</p>\n      <p class=\"warn\">⚠️ <b>L'orientation réelle n'est pas vérifiée.</b> Le Parc et Maiuri placent la côte à l'ouest, sur un axe NO–SE ; une source universitaire britannique donne la route côtière orientée NE–SO. Je ne l'ai pas tranché, donc cette scène est construite selon la <b>convention du site</b> — Decumanus Maximus en amont, mer en aval — et non selon le nord vrai. La boussole dit ici «côté mer», pas «nord». Un plan géoréférencé avec l'azimut déclaré comblerait la lacune.</p>",
+      "src": "Parco Archeologico di Ercolano · Maiuri, citato in herculaneum.uk, <em>Decumanus Maximus</em> · it.wikipedia <b>[terziaria]</b>"
+    }
+  }
+}

@@ -16,6 +16,12 @@ I dati di un dossier documentario sono ancorati ai luoghi in cui sono stati racc
 **[▶ Apri il simulatore](https://d0m3n1c0x.github.io/pompei-stratificata/)** ·
 **[Leggi il dossier](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/)**
 
+[English](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=en) ·
+[Français](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=fr) ·
+[Deutsch](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=de) ·
+[Español](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=es) ·
+[Português](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=pt)
+
 ---
 
 ## La domanda
@@ -121,6 +127,41 @@ limiti.
   Cervi (circa 1.190 m²). Tutto il resto della sagoma è dedotto dalle piante.
 - **La posizione del sole usa i parametri orbitali odierni**, non quelli del 79 d.C.
 
+## Lingue
+
+Sei: italiano, inglese, francese, tedesco, spagnolo e portoghese. Il simulatore
+sceglie da solo — parametro `?lang=`, poi la scelta salvata, poi la lingua del
+browser — e il selettore in barra la cambia. Il codice finisce nell'indirizzo,
+quindi un link a una lingua si può passare a qualcuno:
+`…/pompei-stratificata/?lang=de`.
+
+Il portoghese è scritto in variante europea ma è etichettato `pt`, che per la
+formattazione dei numeri segue la convenzione brasiliana (`12.000`): la prosa è
+stata scritta coerente con quella, non con lo spazio di `pt-PT`.
+
+I dati non contengono testo. In `src/data/` restano coordinate, spessori e quali
+gruppi accendere; tutta la prosa sta in `src/i18n/it.js` e in `i18n/*.json`, con
+la stessa forma. Aggiungere una lingua significa copiare `i18n/en.json`,
+tradurlo e aggiungere una riga a `LINGUE` in `src/i18n/index.js`. Le chiavi che
+mancano ricadono sull'italiano, così una traduzione incompleta resta leggibile
+e il buco si vede; `npm run check` fallisce se una lingua dichiarata pronta non
+ha tutte le chiavi.
+
+Tre cose che **non** si traducono, ed è voluto:
+
+- **I toponimi disegnati nella scena.** Via dell'Abbondanza, Porta Marina,
+  REGIO IX restano tali: è così che li chiama anche la letteratura in inglese.
+- **Le fonti.** Titoli di opere, nomi di riviste, «E-Journal degli Scavi di
+  Pompei»: sono riferimenti bibliografici, non testo.
+- **I numeri.** «3,1–3,3 m» e «12.000» non vengono riscritti a mano: passano da
+  `Intl.NumberFormat`, che in inglese dà «3.1–3.3 m» e «12,000».
+
+Le formule di cautela — «dichiarata, non risolta», «[da verificare]», «le fonti
+divergono» — sono portanti e vanno mantenute in ogni lingua. Il lessico tecnico
+inglese è quello dei lavori già citati: *pyroclastic density currents*, *Plinian
+fallout*, *pumice lapilli*, *African Red Slip ware*, e *insula*, *regio*,
+*cardo*, *decumanus* invariati.
+
 ## Metodo
 
 Ogni affermazione nel dossier porta la fonte a fianco. Dove una fonte non è stata
@@ -186,7 +227,9 @@ index.html              il simulatore (autosufficiente: motore 3D, città, dati)
 manifest.webmanifest    metadati per l'installazione come applicazione
 sw.js                   service worker: mette tutto in cache, poi funziona offline
 icon-*.png              icone dell'applicazione
-dossier/index.html      il dossier documentario
+dossier/index.html      il dossier documentario (scritto a mano, niente build)
+i18n/*.json             i testi delle altre cinque lingue, a richiesta
+scripts/                pubblicazione del prodotto e controlli
 ```
 
 Nessuna dipendenza da installare, nessun passaggio di compilazione. Il motore 3D
