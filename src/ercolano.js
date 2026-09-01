@@ -3,6 +3,8 @@ import {
   BoxGeometry,
   Color,
   ConeGeometry,
+  CylinderGeometry,
+  DoubleSide,
   DirectionalLight,
   Fog,
   Group,
@@ -256,6 +258,49 @@ export const ERCOLANO = (function(){
   casa(-27, 18, 8, 6, 1, M.tufo);
   box(-34, 0, 13, 5, m(6.0), 22, M.dep2);        // oltre: Cardo II, non scavato
 
+  /* ---------------------------------------------------- ciò che è sotto
+
+     Il fatto più forte di questa scena era solo testo: il teatro fu il primo
+     monumento trovato, nel 1738, e sta venticinque metri sotto il centro
+     storico moderno, raggiungibile ancora oggi soltanto per pozzi e gallerie.
+     Adesso si può guardare: la città moderna diventa trasparente e sotto
+     compare la cavea.
+
+     Le proporzioni sono schematiche. La quota viene dal Parco — circa 25 m
+     dal piano stradale moderno, contro i 20 m di deposito — quindi
+     l'orchestra sta all'incirca cinque metri sotto il piano antico, il che è
+     coerente con un teatro scavato nel pendio.
+
+     La Villa dei Papiri NON è disegnata qui, ed è una scelta: la sua
+     posizione è dichiarata incerta nella sua stessa scheda, con le fonti
+     ufficiali che la mettono una a nord e l'altra a ovest. Disegnare un
+     volume dove non si sa che cosa ci sia sarebbe invenzione. */
+  const TEATRO_X = -14, TEATRO_Z = DEC_MAX - 6.5;
+  const sepolto = new Group(); eRoot.add(sepolto); sepolto.visible = false;
+  const M_SEPOLTO = new MeshBasicMaterial({
+    color: 0x9fe6cb, transparent:true, opacity:0.62, depthWrite:false, side:DoubleSide
+  });
+  {
+    // (TEATRO_X è dichiarato appena sopra il gruppo)
+    const ORCHESTRA_Y = -1.25;            // ~25 m sotto la strada moderna
+    // cavea: mezzo cilindro, raggio ~27 m
+    const cavea = new Mesh(
+      new CylinderGeometry(6.75, 4.2, 1.7, 28, 1, true, 0, Math.PI), M_SEPOLTO);
+    cavea.position.set(TEATRO_X, ORCHESTRA_Y + 0.85, TEATRO_Z);
+    cavea.rotation.y = Math.PI;           // aperto verso valle, come il pendio
+    // scaena: il fondale, sul lato aperto
+    const scaena = new Mesh(new BoxGeometry(1,1,1), M_SEPOLTO);
+    scaena.position.set(TEATRO_X, ORCHESTRA_Y + 1.1, TEATRO_Z + 6.2);
+    scaena.scale.set(13.5, 2.2, 1.1);
+    // il piano dell'orchestra
+    const orch = new Mesh(new CylinderGeometry(4.2, 4.2, 0.08, 28), M_SEPOLTO);
+    orch.position.set(TEATRO_X, ORCHESTRA_Y, TEATRO_Z);
+    // i pozzi borbonici: l'unico modo per arrivarci, allora e adesso
+    const pozzo = new Mesh(new CylinderGeometry(0.22, 0.22, SCARP_H - ORCHESTRA_Y, 10), M_SEPOLTO);
+    pozzo.position.set(TEATRO_X + 3.0, (SCARP_H + ORCHESTRA_Y)/2, TEATRO_Z + 1.4);
+    sepolto.add(cavea, scaena, orch, pozzo);
+  }
+
   /* ------------------------------------------ la città moderna, sopra */
   const modern = new Group(); eRoot.add(modern);
   // corso Resina: l'antica Strada Regia delle Calabrie, sopra la città sepolta
@@ -491,6 +536,33 @@ export const ERCOLANO = (function(){
   }
   function inVolo(){ return volo; }
 
+  let sepoltoOn = false;
+  // Due gradi di trasparenza, non uno: la città moderna quasi sparisce
+  // perché è ciò che impedisce di vedere, il deposito resta leggibile
+  // perché è ciò di cui la scena parla.
+  const VELATI = [
+    { m:[M.moderno, M.tettoM, M.asfalto],        a:0.16 },
+    { m:[M.dep1, M.dep2, M.dep3, M.terra],       a:0.40 }
+  ];
+  function mostraSepolto(on){
+    sepoltoOn = !!on;
+    sepolto.visible = sepoltoOn;
+    if(sepoltoOn){
+      // ci si porta dove il teatro si vede: oltre il fronte, guardando a
+      // monte e in basso. Da qualunque altro punto resta dietro il deposito.
+      volo = true; vx = vy = vz = 0;
+      pos.x = TEATRO_X + 2; pos.z = -6; pos.y = 15;
+      yaw = 0; pitch = -0.58;
+    }
+    for(const g of VELATI) for(const m of g.m){
+      m.transparent = sepoltoOn;
+      m.opacity = sepoltoOn ? g.a : 1;
+      m.depthWrite = !sepoltoOn;
+      m.needsUpdate = true;
+    }
+    return sepoltoOn;
+  }
+  function sepoltoAttivo(){ return sepoltoOn; }
   function reset(){
     volo = false; vy = 0;
     // In piedi sul Cardo IV, rivolto verso monte: la prima cosa che si
@@ -524,6 +596,7 @@ export const ERCOLANO = (function(){
   }
 
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
-           setGo, apri, textures, dallAlto, inVolo, luoghi: LUOGHI,
+           setGo, apri, textures, dallAlto, inVolo,
+           mostraSepolto, sepoltoAttivo, luoghi: LUOGHI,
            isActive: () => active };
 })();

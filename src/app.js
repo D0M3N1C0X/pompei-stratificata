@@ -1718,6 +1718,14 @@ function setErc(v){
 document.getElementById('btnErc').addEventListener('click', () => setErc(!ercOn));
 document.getElementById('ercExit').addEventListener('click', () => setErc(false));
 document.getElementById('ercReset').addEventListener('click', () => setErcAlto(false));
+// Il teatro di Ercolano è il primo monumento trovato, nel 1738, e sta
+// venticinque metri sotto il centro storico: finora era solo una riga di
+// testo. Qui la città moderna diventa trasparente e sotto si vede.
+document.getElementById('ercBuried').addEventListener('click', () => {
+  const v = ERCOLANO.mostraSepolto(!ERCOLANO.sepoltoAttivo());
+  document.getElementById('ercBuried').classList.toggle('on', v);
+  if(v && !ERCOLANO.inVolo()) setErcAlto(true);   // da terra non si vedrebbe
+});
 {
   const fwd = document.getElementById('ercFwd'), back = document.getElementById('ercBack');
   const hold = (el, v) => {
