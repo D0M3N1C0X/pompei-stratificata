@@ -1,7 +1,7 @@
 {
-  "name": "Pompei Stratificata",
-  "short_name": "Pompei",
-  "description": "Pompei esplorabile: otto fasi dal 79 d.C. al cantiere di oggi, con i dati del dossier ancorati ai luoghi.",
+  "name": "Dopo il 79 — Pompei ed Ercolano",
+  "short_name": "Dopo il 79",
+  "description": "Modello urbano navigabile di Pompei e dello scavo di Ercolano, con il dossier documentario ancorato ai luoghi.",
   "lang": "it",
   "start_url": "./index.html",
   "scope": "./",

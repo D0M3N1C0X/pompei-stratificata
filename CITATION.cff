@@ -1,21 +1,22 @@
 cff-version: 1.2.0
 message: "Se usi questo software o il dossier che lo accompagna, cita come segue."
-title: "Pompei stratificata: un modello navigabile della città dal 79 d.C. al cantiere di oggi"
+title: "Dopo il 79: Pompei ed Ercolano, due storie di scavo in un modello navigabile"
 abstract: >-
   Modello urbano navigabile di Pompei articolato in otto fasi cronologiche, dalla
-  vigilia dell'eruzione del 79 d.C. allo scavo contemporaneo, con i dati di un
-  dossier documentario ancorati ai luoghi. Include una modalità sezione che mostra
-  la stratigrafia del deposito e una simulazione della posizione solare calcolata
-  per la latitudine del sito. Modello dichiaratamente schematico, non un rilievo
-  archeologico.
+  vigilia dell'eruzione del 79 d.C. allo scavo contemporaneo, affiancato dallo scavo
+  di Ercolano percorribile e da una sezione che confronta le due colonne
+  stratigrafiche nella stessa scala. I dati di un dossier documentario sono ancorati
+  ai luoghi in cui sono stati raccolti. Di Ercolano si modella solo la parte
+  effettivamente scavata: il resto è disegnato come deposito, con la citta moderna
+  sopra. Modello dichiaratamente schematico, non un rilievo archeologico.
 type: software
 authors:
   - family-names: Perroni
     given-names: Domenico
     # Inserisci il tuo ORCID e togli il cancelletto:
     # orcid: "https://orcid.org/0000-0000-0000-0000"
-version: 4.0.0
-date-released: "2026-08-24"
+version: 7.0.0
+date-released: "2026-08-30"
 license: MIT
 keywords:
   - Pompei
@@ -25,6 +26,8 @@ keywords:
   - visualizzazione 3D
   - storia dell'archeologia
   - WebGL
+  - Ercolano
+  - archeologia musicale
 repository-code: "https://github.com/D0M3N1C0X/pompei-stratificata"
 url: "https://d0m3n1c0x.github.io/pompei-stratificata/"
 # Dopo il primo rilascio archiviato su Zenodo, aggiungi qui il DOI:
