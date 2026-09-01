@@ -29,8 +29,12 @@ import { LUOGHI as ERC_LUOGHI } from '../data/ercolano-places.js';
 // annunciate: mostrare una voce che poi ricade in italiano è peggio che
 // non mostrarla, quindi qui c'è solo ciò che esiste davvero.
 export const LINGUE = [
-  { cod:'it', nome:'Italiano', pronta:true  },
-  { cod:'en', nome:'English',  pronta:true  }
+  { cod:'it', nome:'Italiano',   pronta:true },
+  { cod:'en', nome:'English',    pronta:true },
+  { cod:'fr', nome:'Français',   pronta:true },
+  { cod:'de', nome:'Deutsch',    pronta:true },
+  { cod:'es', nome:'Español',    pronta:true },
+  { cod:'pt', nome:'Português',  pronta:true }
 ];
 
 const PREDEFINITA = 'it';
