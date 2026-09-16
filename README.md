@@ -247,6 +247,8 @@ da `file://` l'app funziona, ma non si installa.
 - **Codice**: MIT — vedi [LICENSE](LICENSE)
 - **Testi, dossier e contenuti documentari**: CC BY 4.0 — vedi
   [LICENSE-CONTENUTI.md](LICENSE-CONTENUTI.md)
+- **three.js**, incluso in `index.html`: MIT, dei suoi autori — vedi
+  [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
 
 ## Citare
 
@@ -255,4 +257,11 @@ usa il DOI della versione che hai consultato.
 
 ## Autore
 
-Domenico Perroni
+Domenico Perroni — HR, people analytics e media education, a Cracovia.
+[Profilo GitHub](https://github.com/D0M3N1C0X) · [LinkedIn](https://www.linkedin.com/in/domenico-perroni)
+
+Altri progetti dello stesso portfolio (in inglese):
+
+- [hr-people-analytics](https://github.com/D0M3N1C0X/hr-people-analytics) — perché le persone se ne vanno, quanto è difendibile la retribuzione secondo la direttiva UE sulla trasparenza retributiva, come funziona il servizio HR; [report online](https://d0m3n1c0x.github.io/hr-people-analytics/)
+- [engagement-survey-analytics](https://github.com/D0M3N1C0X/engagement-survey-analytics) — un'indagine di clima analizzata dall'inizio alla fine, con una [dashboard interattiva](https://d0m3n1c0x.github.io/engagement-survey-analytics/)
+- [job-search-agent](https://github.com/D0M3N1C0X/job-search-agent) — la ricerca di lavoro trattata come una pipeline di dati
