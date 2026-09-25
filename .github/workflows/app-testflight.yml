@@ -1,0 +1,112 @@
+name: App su TestFlight
+
+# Firma l'applicazione e la carica su App Store Connect, da dove arriva a
+# TestFlight. Si lancia solo a mano, dalla scheda Actions.
+#
+# Serve un account Apple Developer Program e quattro secrets nel repository
+# (Settings → Secrets and variables → Actions). Finché mancano, il flusso si
+# ferma al primo passo e dice quali. Come ottenerli: app/README.md.
+#
+# La firma è quella automatica di Xcode con certificati gestiti da Apple
+# (cloud signing): nessun certificato o profilo da esportare a mano, basta
+# una chiave API di App Store Connect con ruolo Admin.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  testflight:
+    runs-on: macos-latest
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - name: Ci sono le chiavi?
+        run: |
+          mancano=""
+          for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8 APPLE_TEAM_ID; do
+            [ -z "${!v}" ] && mancano="$mancano $v"
+          done
+          if [ -n "$mancano" ]; then
+            echo "::error::Mancano i secrets:$mancano. Vedi app/README.md, «Per pubblicarla davvero»."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # Dal 28 aprile 2026 App Store Connect accetta solo build fatte con
+      # Xcode 26 o successivi: meglio fermarsi qui che dopo l'archivio.
+      - name: Xcode abbastanza recente?
+        run: |
+          xcodebuild -version
+          major=$(xcodebuild -version | head -1 | sed -E 's/Xcode ([0-9]+).*/\1/')
+          if [ "$major" -lt 26 ]; then
+            echo "::error::Il runner ha Xcode $major; App Store Connect chiede Xcode 26 o successivi."
+            exit 1
+          fi
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Prepara i file dell'app e sincronizza Capacitor
+        run: npm run app
+
+      - name: Chiave API
+        run: |
+          mkdir -p "$RUNNER_TEMP/asc"
+          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/asc/AuthKey_$ASC_KEY_ID.p8"
+
+      # Il numero di build deve crescere a ogni caricamento: usa il numero
+      # progressivo di questo flusso. La versione visibile (MARKETING_VERSION)
+      # resta quella del progetto Xcode.
+      - name: Archivia
+        run: |
+          xcodebuild \
+            -project app/ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/asc/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            archive
+
+      - name: Esporta e carica su App Store Connect
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>$APPLE_TEAM_ID</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+          </dict>
+          </plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/asc/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+
+      - name: Cancella la chiave
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/asc"
