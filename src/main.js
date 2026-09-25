@@ -27,3 +27,15 @@ document.documentElement.style.setProperty(
   '--fuori-fase', JSON.stringify(testi.ui.rail.fuoriFase));
 
 avvia();
+
+/* Il service worker rende il sito installabile e leggibile offline. La
+   registrazione è andata persa con il caricamento del primo settembre 2026,
+   insieme al resto del file: per tre settimane sw.js è stato pubblicato
+   senza che nessuno lo accendesse. Solo su http(s): da file:// non esiste,
+   e nell'applicazione per iPhone i file sono già dentro il pacchetto. */
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  // l'await in cima al file può far arrivare qui dopo il «load»
+  const registra = () => navigator.serviceWorker.register('./sw.js').catch(() => {});
+  if(document.readyState === 'complete') registra();
+  else addEventListener('load', registra, { once: true });
+}

@@ -46,6 +46,10 @@ if(existsSync(join(root, 'dossier/index.html'))){
         'sono identici: il simulatore è stato sovrascritto');
 }
 
+// ── il service worker va anche acceso, non solo pubblicato: la
+//    registrazione era sparita con lo stesso caricamento del primo settembre
+esigi(/serviceWorker\.register\(/.test(index), 'index.html registra il service worker');
+
 // ── nessun collegamento che funzioni solo per chi l'ha scritto
 esigi(!/claude\.ai\/code\/artifact/.test(index),
       'nessun collegamento a un artifact privato');
