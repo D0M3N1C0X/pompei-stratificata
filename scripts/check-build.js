@@ -101,6 +101,22 @@ for(const cod of LINGUE_PRONTE)
   esigi(read('sw.js').includes(`./i18n/${cod}.json`),
         `il service worker mette in cache i18n/${cod}.json`);
 
+// ── il dossier inglese: esiste, è in inglese, e il simulatore ci porta
+//    chi legge in una lingua diversa dall'italiano
+if(existsSync(join(root, 'dossier/en/index.html'))){
+  const en = read('dossier/en/index.html');
+  esigi(/<html lang="en">/.test(en), 'dossier/en/index.html dichiara lang="en"');
+  esigi(en !== index, 'dossier/en/index.html non è il simulatore');
+  esigi(read('sw.js').includes('./dossier/en/index.html'),
+        'il service worker mette in cache il dossier inglese');
+  for(const cod of LINGUE_PRONTE){
+    let tr = {};
+    try { tr = JSON.parse(read(`i18n/${cod}.json`)); } catch(e){}
+    esigi(tr?.ui?.intro?.dossierLink === './dossier/en/',
+          `in ${cod} il collegamento al dossier porta alla versione inglese`);
+  }
+}
+
 // ── il manifest resta leggibile
 try { JSON.parse(read('manifest.webmanifest')); ok.push('manifest.webmanifest è JSON valido'); }
 catch(e){ errori.push(`manifest.webmanifest non è JSON valido — ${e.message}`); }
