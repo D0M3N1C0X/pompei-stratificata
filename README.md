@@ -240,6 +240,8 @@ dossier/en/index.html   lo stesso dossier in inglese
 i18n/*.json             i testi delle altre cinque lingue, a richiesta
 scripts/                pubblicazione del prodotto e controlli
 ricerca/piste.md        quaderno delle ricerche aperte: piste, non fonti
+app/                    l'applicazione per iPhone, iPad e Mac (Capacitor) — vedi app/README.md
+capacitor.config.json   configurazione dell'applicazione
 ```
 
 Nessuna dipendenza da installare, nessun passaggio di compilazione. Il motore 3D
