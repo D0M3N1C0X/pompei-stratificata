@@ -97,6 +97,7 @@
       "entra": "Entrer dans la ville",
       "confronto": "Voir la comparaison",
       "dossier": "Lire le dossier",
+      "dossierLink": "./dossier/en/",
       "p1": "Vous marchez dans les rues de Pompéi — les murs vous arrêtent — et vous parcourez les phases le long du bandeau du bas. À chaque étape ce que vous voyez change : <b>le dépôt monte de cinq mètres et les rez-de-chaussée disparaissent</b>, les toits sont dépouillés, des structures des IV<sup>e</sup>–V<sup>e</sup> siècles apparaissent sur les étages émergents, la colline se couvre de cultures, le canal de Fontana la traverse, les tas de déblais bourboniens s'ouvrent.",
       "p2": "Les cônes verts marquent les points où le dossier possède une donnée : approchez-vous et cliquez. <b>Coupe</b> ouvre le terrain et vous laisse regarder la stratigraphie de l'intérieur.",
       "p3": "Vous arrivez <b>à neuf heures et demie</b>, le soleil bas : c'est l'heure où les ombres détachent les volumes et où la ville devient lisible. <b>Heure</b> ouvre l'horloge — choisissez l'aube, midi ou la nuit — et <b>Maintenant</b> bascule sur l'<b>heure réelle de Pompéi</b>, le soleil là où il serait au-dessus du site en ce moment, calculé pour la latitude 40,75° N avec les formules NOAA. <b>Manette</b> active les commandes à l'écran ; une manette Bluetooth est reconnue toute seule.",
