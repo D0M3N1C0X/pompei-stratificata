@@ -41,6 +41,22 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if(e.request.method !== 'GET') return;
+
+  // navigazioni: prima la rete, la cache solo se la rete non risponde
+  if(e.request.mode === 'navigate'){
+    e.respondWith(
+      fetch(e.request).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+        return res;
+      }).catch(() =>
+        caches.match(e.request, { ignoreSearch: true })
+          .then(hit => hit || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // tutto il resto: prima la cache
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then(hit => {
       if(hit) return hit;
@@ -48,7 +64,7 @@ self.addEventListener('fetch', e => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
         return res;
-      }).catch(() => caches.match('./index.html'));
+      });
     })
   );
 });
