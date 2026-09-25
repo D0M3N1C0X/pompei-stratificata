@@ -1,0 +1,58 @@
+name: App iOS
+
+# Compila l'applicazione per il simulatore, senza firma. Serve a sapere che
+# il progetto Xcode in app/ios regge con un Xcode vero, visto che chi lo
+# mantiene lavora su un Mac che l'Xcode attuale non lo installa più.
+#
+# Non pubblica niente: per l'App Store servono la firma e un account
+# sviluppatore, e quel passaggio è descritto in app/README.md.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'app/ios/**'
+      - 'capacitor.config.json'
+      - 'scripts/app-www.js'
+      - 'package.json'
+      - '.github/workflows/app-ios.yml'
+  pull_request:
+    paths:
+      - 'app/ios/**'
+      - 'capacitor.config.json'
+      - 'scripts/app-www.js'
+      - 'package.json'
+      - '.github/workflows/app-ios.yml'
+
+jobs:
+  simulatore:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Versioni disponibili
+        run: |
+          xcodebuild -version
+          sw_vers
+
+      - name: Prepara i file dell'app e sincronizza Capacitor
+        run: npm run app
+
+      - name: Compila per il simulatore
+        run: |
+          xcodebuild \
+            -project app/ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
