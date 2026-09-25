@@ -46,6 +46,10 @@ if(existsSync(join(root, 'dossier/index.html'))){
         'sono identici: il simulatore è stato sovrascritto');
 }
 
+// ── il service worker va anche acceso, non solo pubblicato: la
+//    registrazione era sparita con lo stesso caricamento del primo settembre
+esigi(/serviceWorker\.register\(/.test(index), 'index.html registra il service worker');
+
 // ── nessun collegamento che funzioni solo per chi l'ha scritto
 esigi(!/claude\.ai\/code\/artifact/.test(index),
       'nessun collegamento a un artifact privato');
@@ -100,6 +104,22 @@ if(IT_JSON) for(const cod of LINGUE_PRONTE){
 for(const cod of LINGUE_PRONTE)
   esigi(read('sw.js').includes(`./i18n/${cod}.json`),
         `il service worker mette in cache i18n/${cod}.json`);
+
+// ── il dossier inglese: esiste, è in inglese, e il simulatore ci porta
+//    chi legge in una lingua diversa dall'italiano
+if(existsSync(join(root, 'dossier/en/index.html'))){
+  const en = read('dossier/en/index.html');
+  esigi(/<html lang="en">/.test(en), 'dossier/en/index.html dichiara lang="en"');
+  esigi(en !== index, 'dossier/en/index.html non è il simulatore');
+  esigi(read('sw.js').includes('./dossier/en/index.html'),
+        'il service worker mette in cache il dossier inglese');
+  for(const cod of LINGUE_PRONTE){
+    let tr = {};
+    try { tr = JSON.parse(read(`i18n/${cod}.json`)); } catch(e){}
+    esigi(tr?.ui?.intro?.dossierLink === './dossier/en/',
+          `in ${cod} il collegamento al dossier porta alla versione inglese`);
+  }
+}
 
 // ── il manifest resta leggibile
 try { JSON.parse(read('manifest.webmanifest')); ok.push('manifest.webmanifest è JSON valido'); }

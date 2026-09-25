@@ -97,6 +97,7 @@
       "entra": "Die Stadt betreten",
       "confronto": "Den Vergleich ansehen",
       "dossier": "Das Dossier lesen",
+      "dossierLink": "./dossier/en/",
       "p1": "Sie gehen durch die Straßen von Pompeji — die Mauern halten Sie auf — und bewegen sich über das Band unten durch die Phasen. Mit jedem Schritt ändert sich, was Sie sehen: <b>die Ablagerung steigt um fünf Meter und die Erdgeschosse verschwinden</b>, die Dächer werden abgetragen, auf den herausragenden Obergeschossen erscheinen Bauten des 4. und 5. Jahrhunderts, der Hügel wird zu Ackerland, Fontanas Kanal schneidet ihn durch, die bourbonischen Abraumhalden öffnen sich.",
       "p2": "Die grünen Kegel markieren die Punkte, an denen das Dossier einen Befund hat: hingehen und klicken. <b>Schnitt</b> öffnet den Boden und lässt Sie die Schichtung von innen sehen.",
       "p3": "Sie kommen <b>um halb zehn</b> an, bei tief stehender Sonne: das ist die Stunde, in der die Schatten die Baukörper trennen und die Stadt lesbar wird. <b>Uhrzeit</b> öffnet die Uhr — wählen Sie Morgengrauen, Mittag oder Nacht — und <b>Jetzt</b> schaltet auf die <b>tatsächliche Zeit in Pompeji</b> um, mit der Sonne dort, wo sie in diesem Augenblick über dem Gelände stünde, berechnet für 40,75° N mit den NOAA-Formeln. <b>Controller</b> schaltet die Bildschirmsteuerung ein; ein Bluetooth-Gamepad wird von selbst erkannt.",

@@ -118,7 +118,8 @@ export default {
       "avvertenza": "La pianta segue l'impianto urbano reale — nove <em>regiones</em>, assi stradali, sette porte, posizione dei monumenti — ma le volumetrie sono schematiche e la griglia è raddrizzata. Le uniche proporzioni prese da misure pubblicate sono quelle della Palestra Grande. Le texture sono disegnate dal codice, non rilevate dai materiali reali. Il tracciato del canale di Fontana è inventato: nessuna fonte scientifica lo documenta. Non usarlo come documentazione archeologica: usalo per far vedere un ragionamento.",
       "entra": "Entra in città",
       "confronto": "Vedi il confronto",
-      "dossier": "Vai al dossier"
+      "dossier": "Vai al dossier",
+      "dossierLink": "./dossier/"
     },
     "caricamento": "Costruzione della città…",
     "epoche": {

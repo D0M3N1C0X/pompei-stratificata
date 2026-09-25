@@ -1,0 +1,10 @@
+{
+  "appId": "io.github.d0m3n1c0x.dopo79",
+  "appName": "Dopo il 79",
+  "webDir": "app/www",
+  "ios": {
+    "path": "app/ios",
+    "contentInset": "never",
+    "backgroundColor": "#101412"
+  }
+}
