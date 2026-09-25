@@ -13,13 +13,14 @@
 //
 // Cambiando CACHE si forza lo svuotamento: tienila allineata alla versione
 // dichiarata in index.html.
-const CACHE = 'dopo79-v8-2026-09-02';
+const CACHE = 'dopo79-v8-2026-09-25';
 
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-1024.png',
   './icon-maskable-512.png', './apple-touch-icon.png',
   './dossier/', './dossier/index.html',
+  './dossier/en/', './dossier/en/index.html',
   // le lingue diverse dall'italiano sono file a parte: senza queste righe
   // l'applicazione installata ricadrebbe in italiano appena va offline
   './i18n/en.json', './i18n/fr.json', './i18n/de.json',
@@ -40,6 +41,22 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if(e.request.method !== 'GET') return;
+
+  // navigazioni: prima la rete, la cache solo se la rete non risponde
+  if(e.request.mode === 'navigate'){
+    e.respondWith(
+      fetch(e.request).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+        return res;
+      }).catch(() =>
+        caches.match(e.request, { ignoreSearch: true })
+          .then(hit => hit || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // tutto il resto: prima la cache
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then(hit => {
       if(hit) return hit;
@@ -47,7 +64,7 @@ self.addEventListener('fetch', e => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
         return res;
-      }).catch(() => caches.match('./index.html'));
+      });
     })
   );
 });

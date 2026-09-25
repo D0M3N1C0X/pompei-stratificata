@@ -14,7 +14,8 @@ I dati di un dossier documentario sono ancorati ai luoghi in cui sono stati racc
 > l'indirizzo di GitHub Pages, che non viene reindirizzato dopo un cambio di nome.
 
 **[▶ Apri il simulatore](https://d0m3n1c0x.github.io/pompei-stratificata/)** ·
-**[Leggi il dossier](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/)**
+**[Leggi il dossier](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/)** ·
+**[Read the dossier in English](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/en/)**
 
 [English](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=en) ·
 [Français](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=fr) ·
@@ -147,6 +148,13 @@ mancano ricadono sull'italiano, così una traduzione incompleta resta leggibile
 e il buco si vede; `npm run check` fallisce se una lingua dichiarata pronta non
 ha tutte le chiavi.
 
+Il **dossier** esiste in italiano e in inglese (`dossier/en/`). Chi usa il
+simulatore in una lingua diversa dall'italiano viene mandato alla versione
+inglese: circa seimila parole di apparato critico non sono state tradotte in altre
+quattro lingue, e l'inglese è quella che un lettore francese, tedesco, spagnolo
+o portoghese ha più probabilità di leggere. Il testo di riferimento resta
+l'italiano.
+
 Tre cose che **non** si traducono, ed è voluto:
 
 - **I toponimi disegnati nella scena.** Via dell'Abbondanza, Porta Marina,
@@ -228,8 +236,12 @@ manifest.webmanifest    metadati per l'installazione come applicazione
 sw.js                   service worker: mette tutto in cache, poi funziona offline
 icon-*.png              icone dell'applicazione
 dossier/index.html      il dossier documentario (scritto a mano, niente build)
+dossier/en/index.html   lo stesso dossier in inglese
 i18n/*.json             i testi delle altre cinque lingue, a richiesta
 scripts/                pubblicazione del prodotto e controlli
+ricerca/piste.md        quaderno delle ricerche aperte: piste, non fonti
+app/                    l'applicazione per iPhone, iPad e Mac (Capacitor) — vedi app/README.md
+capacitor.config.json   configurazione dell'applicazione
 ```
 
 Nessuna dipendenza da installare, nessun passaggio di compilazione. Il motore 3D

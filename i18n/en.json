@@ -114,6 +114,7 @@
       "entra": "Enter the city",
       "confronto": "See the comparison",
       "dossier": "Read the dossier",
+      "dossierLink": "./dossier/en/",
       "p1": "You walk the streets of Pompeii — the walls stop you — and move through the phases along the strip at the bottom. At every step what you see changes: <b>the deposit rises by five metres and the ground floors disappear</b>, the roofs are stripped, fourth- and fifth-century structures appear on the emerging upper floors, the hill turns to farmland, Fontana's canal cuts through it, the Bourbon spoil heaps open up.",
       "p2": "The green cones mark the points where the dossier has evidence: walk up and click. <b>Section</b> cuts the ground open and lets you look at the stratigraphy from inside.",
       "p3": "You arrive <b>at half past nine</b>, with the sun low: that is the hour when the shadows separate the volumes and the city becomes readable. <b>Time</b> opens the clock — pick dawn, noon or night — and <b>Now</b> switches to the <b>real time at Pompeii</b>, with the sun where it would be over the site at this moment, computed for latitude 40.75° N with the NOAA formulae. <b>Controller</b> turns on the on-screen controls; a Bluetooth gamepad is recognised on its own.",
