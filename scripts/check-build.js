@@ -60,6 +60,14 @@ esigi(index.includes(`v${major} · due città`), `la testata dichiara v${major}`
 esigi(index.includes(`Esploratore v${major}`), `la scheda d'ingresso dichiara v${major}`);
 esigi(read('sw.js').includes(`dopo79-v${major}`), `la cache del service worker dichiara v${major}`);
 
+// ── senza il collegamento al manifest l'applicazione non si installa, e il
+//    README dichiara da sempre che si installa. È il tipo di difetto che non
+//    si vede guardando la pagina.
+esigi(/rel="manifest"/.test(index), 'index.html collega il manifest');
+esigi(/<meta name="description"/.test(index), 'index.html ha una descrizione');
+esigi(/property="og:image"/.test(index), 'index.html ha un\'immagine per la condivisione');
+esigi(/rel="canonical"/.test(index), 'index.html dichiara l\'indirizzo canonico');
+
 // ── chi cita il progetto deve citare una versione che esiste. CITATION.cff
 //    era rimasto a 7.0.0 mentre package.json diceva 8.0.0: ventiquattro
 //    controlli sul prodotto e nessuno sul file che serve a citarlo.
