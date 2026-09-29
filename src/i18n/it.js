@@ -122,6 +122,11 @@ export default {
       "dossierLink": "./dossier/"
     },
     "caricamento": "Costruzione della città…",
+    "guasto": {
+      "titolo": "Questo computer non riesce ad avviare il modello 3D",
+      "spiega": "Il modello ha bisogno di WebGL. Può mancare perché la scheda grafica è esclusa dal browser, perché il browser è vecchio, o perché l'accelerazione hardware è spenta. Il dossier documentario non ha questo vincolo: è testo, e contiene l'apparato completo delle fonti.",
+      "dossier": "Vai al dossier"
+    },
     "epoche": {
       "aria": "Fasi cronologiche"
     },
@@ -254,8 +259,8 @@ export default {
     "lacuna": {
       "label": "La colonna che nessuno ha studiato",
       "sub": "Insula Meridionalis — una lacuna dichiarata",
-      "body": "<p>Sotto i tuoi piedi, fra il piano del 79 e la superficie, ci sono circa cinque metri di deposito e milleseicento anni di frequentazione. Questo modello ti ha appena mostrato che cosa c\u2019\u00e8 dentro.</p>\n    <p class=\"warn\"><b>Non risulta per\u00f2 pubblicato uno studio geoarcheologico della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei.</b> \u00c8 emerso cercando una fonte per un\u2019altra affermazione, e la ricerca \u00e8 finita in un vicolo cieco.</p>\n    <p class=\"key\">Perch\u00e9 conta. Tutto quello che questo modello dice sullo spessore viene da <em>un solo settore pubblicato</em> \u2014 l\u2019Insula dei Casti Amanti, Sparice et al. 2024. Per il resto della citt\u00e0 quel dato non esiste, e qui viene esteso per necessit\u00e0 di rappresentazione, non perch\u00e9 sia documentato. Le sei fasi che hai attraversato poggiano su una colonna che nessuno ha misurato.</p>\n    <p class=\"hint\">Questo cono non segna una scoperta. Segna un buco, ed \u00e8 l\u2019unico luogo del modello che lo fa.</p>",
-      "src": "Registro delle verifiche del dossier \u00b7 <b>nessuna fonte individuata</b>"
+      "body": "<p>Sotto i tuoi piedi, fra il piano del 79 e la superficie, ci sono circa cinque metri di deposito e milleseicento anni di frequentazione. Questo modello ti ha appena mostrato che cosa c’è dentro.</p>\n    <p class=\"warn\"><b>Non risulta però pubblicato uno studio geoarcheologico della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei.</b> È emerso cercando una fonte per un’altra affermazione, e la ricerca è finita in un vicolo cieco.</p>\n    <p class=\"key\">Perché conta. Tutto quello che questo modello dice sullo spessore viene da <em>un solo settore pubblicato</em> — l’Insula dei Casti Amanti, Sparice et al. 2024. Per il resto della città quel dato non esiste, e qui viene esteso per necessità di rappresentazione, non perché sia documentato. Le sei fasi che hai attraversato poggiano su una colonna che nessuno ha misurato.</p>\n    <p class=\"hint\">Questo cono non segna una scoperta. Segna un buco, ed è l’unico luogo del modello che lo fa.</p>",
+      "src": "Registro delle verifiche del dossier · <b>nessuna fonte individuata</b>"
     },
     "quadriportico": {
       "label": "Quadriportico dei Teatri",

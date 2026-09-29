@@ -447,8 +447,36 @@
     background:#101412;transition:opacity .4s;
   }
   #loading.gone{opacity:0;pointer-events:none}
-  #loading span{
+  #loading > span{
     font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  /* Se il modello non parte, il velo non deve restare lì per sempre: diventa
+     una pagina che spiega e offre una via d'uscita. */
+  #guasto{
+    max-width:34rem;padding:0 1.6rem;text-align:left;
+  }
+  #guasto[hidden]{display:none}
+  #guasto h2{
+    margin:0 0 .8rem;font-size:1.15rem;font-weight:600;letter-spacing:-.015em;color:var(--ink);
+  }
+  #guasto p{
+    margin:0 0 .9rem;font-family:var(--serif);font-size:.95rem;line-height:1.6;color:var(--ink-soft);
+  }
+  #guasto a{
+    font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-dim);padding-bottom:.15rem;
+  }
+  #guastoDett{
+    margin-top:1.2rem;font-family:var(--mono);font-size:.6rem;line-height:1.5;
+    color:var(--ink-faint);white-space:pre-wrap;word-break:break-word;
+    max-height:7rem;overflow:auto;
+  }
+  #senzaScript{
+    position:fixed;inset:0;z-index:60;display:grid;place-items:center;
+    background:#101412;padding:2rem;
+  }
+  #senzaScript p{
+    max-width:30rem;font-family:var(--serif);font-size:.95rem;line-height:1.6;color:var(--ink-soft);
   }
 
   /* -------------------------------------------------------- telefono */
@@ -760,8 +788,57 @@ body.erc-on #crosshair{ display:block !important; }
   </div>
 </div>
 
-<div id="loading"><span data-i18n="ui.caricamento">Costruzione della città…</span></div>
+<div id="loading">
+  <span data-i18n="ui.caricamento">Costruzione della città…</span>
+  <div id="guasto" hidden>
+    <h2 data-i18n="ui.guasto.titolo">Questo computer non riesce ad avviare il modello 3D</h2>
+    <p data-i18n="ui.guasto.spiega">Il modello ha bisogno di WebGL. Può mancare perché la scheda grafica è esclusa dal browser, perché il browser è vecchio, o perché l'accelerazione hardware è spenta. Il dossier documentario non ha questo vincolo: è testo, e contiene l'apparato completo delle fonti.</p>
+    <p><a href="./dossier/" data-i18n="ui.guasto.dossier">Vai al dossier</a></p>
+    <pre id="guastoDett"></pre>
+  </div>
+</div>
 
+<noscript>
+  <div id="senzaScript">
+    <p>Questo modello ha bisogno di JavaScript per funzionare. Il dossier
+       documentario invece è testo e si legge senza:
+       <a href="./dossier/">vai al dossier</a>.</p>
+  </div>
+</noscript>
+
+<script>
+/* Rete di sicurezza, registrata PRIMA del modulo e apposta in uno script
+   classico. Un errore durante la valutazione dei moduli — per esempio una
+   texture costruita su un canvas che il browser nega — avviene prima che il
+   corpo di main.js cominci, quindi il try/catch che sta lì dentro non lo
+   vedrebbe mai: il velo di caricamento resterebbe su «Costruzione della
+   città…» all'infinito, senza che chi guarda capisca se sta caricando o se
+   è rotto. Questo invece intercetta tutto, comprese le promesse rifiutate.
+
+   Si attiva solo finché l'applicazione non è partita: dopo, un errore è
+   un problema da console, non un motivo per coprire la scena. */
+(function(){
+  var mostrato = false;
+  function mostra(dettaglio){
+    if(mostrato || window.__avviato) return;
+    mostrato = true;
+    var velo = document.getElementById('loading');
+    var box  = document.getElementById('guasto');
+    if(!velo || !box) return;
+    velo.classList.remove('gone');
+    var attesa = velo.querySelector('span');
+    if(attesa) attesa.hidden = true;
+    box.hidden = false;
+    var dett = document.getElementById('guastoDett');
+    if(dett) dett.textContent = dettaglio || '';
+  }
+  window.__guasto = mostra;
+  addEventListener('error', function(e){ mostra(e && e.message); });
+  addEventListener('unhandledrejection', function(e){
+    mostra(e && e.reason && (e.reason.message || String(e.reason)));
+  });
+})();
+</script>
 <script type="module" src="./main.js"></script>
 
 </body>

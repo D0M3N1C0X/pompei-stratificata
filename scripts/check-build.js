@@ -60,6 +60,15 @@ esigi(index.includes(`v${major} · due città`), `la testata dichiara v${major}`
 esigi(index.includes(`Esploratore v${major}`), `la scheda d'ingresso dichiara v${major}`);
 esigi(read('sw.js').includes(`dopo79-v${major}`), `la cache del service worker dichiara v${major}`);
 
+// ── chi cita il progetto deve citare una versione che esiste. CITATION.cff
+//    era rimasto a 7.0.0 mentre package.json diceva 8.0.0: ventiquattro
+//    controlli sul prodotto e nessuno sul file che serve a citarlo.
+const cff = read('CITATION.cff');
+const cffVer = (cff.match(/^version:\s*(\S+)\s*$/m) || [])[1];
+esigi(cffVer === JSON.parse(read('package.json')).version,
+      'CITATION.cff dichiara la stessa versione di package.json',
+      `cff dice ${cffVer}, package.json dice ${JSON.parse(read('package.json')).version}`);
+
 // ── ogni lingua dichiarata pronta deve avere davvero tutte le chiavi.
 //    Le mancanti ricadono sull'italiano e restano leggibili, ma è un buco
 //    che va visto qui e non da un lettore.

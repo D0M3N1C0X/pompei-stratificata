@@ -2,6 +2,11 @@
   "ui": {
     "titoloPagina": "Nach 79 — Pompeji und Herculaneum",
     "caricamento": "Die Stadt wird gebaut…",
+    "guasto": {
+      "titolo": "Dieser Rechner kann das 3D-Modell nicht starten",
+      "spiega": "Das Modell braucht WebGL. Es kann fehlen, weil die Grafikkarte vom Browser ausgeschlossen ist, weil der Browser alt ist, oder weil die Hardwarebeschleunigung abgeschaltet ist. Das Dossier hat diese Voraussetzung nicht: es ist Text und trägt den vollständigen Quellenapparat.",
+      "dossier": "Das Dossier lesen"
+    },
     "touch": {
       "run": "Laufen",
       "hint": "über den Bildschirm ziehen, um sich umzusehen",
@@ -28,7 +33,9 @@
       "presenta": "Vorführen",
       "comandi": "Steuerung"
     },
-    "presenta": { "esci": "Vorführung beenden" },
+    "presenta": {
+      "esci": "Vorführung beenden"
+    },
     "rail": {
       "titolo": "Orte mit Befunden",
       "cerca": "Ort suchen…",
@@ -62,7 +69,10 @@
         "sole": "Sonne bei {gradi}°"
       }
     },
-    "bussola": { "nord": "Norden", "mare": "seewärts" },
+    "bussola": {
+      "nord": "Norden",
+      "mare": "seewärts"
+    },
     "sez": {
       "taglio": "Schnitt",
       "quota": "{n} m",
@@ -87,10 +97,22 @@
       "aria": "Ortskarte",
       "chiudi": "Karte schließen"
     },
-    "epoche": { "aria": "Zeitliche Phasen" },
-    "qualita": { "alta": "Hohe Qualität", "bilanciata": "Ausgewogen", "batteria": "Akku" },
-    "joypad": { "acceso": "Gamepad ●", "collegato": "Verbunden: " },
-    "lingua": { "etichetta": "Sprache", "aria": "Sprache wählen" },
+    "epoche": {
+      "aria": "Zeitliche Phasen"
+    },
+    "qualita": {
+      "alta": "Hohe Qualität",
+      "bilanciata": "Ausgewogen",
+      "batteria": "Akku"
+    },
+    "joypad": {
+      "acceso": "Gamepad ●",
+      "collegato": "Verbunden: "
+    },
+    "lingua": {
+      "etichetta": "Sprache",
+      "aria": "Sprache wählen"
+    },
     "intro": {
       "occhiello": "Explorer v8 · Dossier Pompeji nach 79",
       "titolo": "Sechzehn Jahrhunderte, in acht Schritten",

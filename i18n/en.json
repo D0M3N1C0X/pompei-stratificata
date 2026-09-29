@@ -2,6 +2,11 @@
   "ui": {
     "titoloPagina": "After AD 79 — Pompeii and Herculaneum",
     "caricamento": "Building the city…",
+    "guasto": {
+      "titolo": "This computer cannot start the 3D model",
+      "spiega": "The model needs WebGL. It may be unavailable because the graphics card is blocklisted by the browser, because the browser is old, or because hardware acceleration is switched off. The dossier has no such requirement: it is text, and it carries the full apparatus of sources.",
+      "dossier": "Read the dossier"
+    },
     "touch": {
       "run": "Run",
       "hint": "drag the screen to look around",
