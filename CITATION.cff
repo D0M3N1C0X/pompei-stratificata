@@ -15,8 +15,8 @@ authors:
     given-names: Domenico
     # Inserisci il tuo ORCID e togli il cancelletto:
     # orcid: "https://orcid.org/0000-0000-0000-0000"
-version: 7.0.0
-date-released: "2026-08-30"
+version: 8.0.0
+date-released: "2026-09-29"
 license: MIT
 keywords:
   - Pompei

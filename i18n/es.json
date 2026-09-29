@@ -2,6 +2,11 @@
   "ui": {
     "titoloPagina": "Después del 79 — Pompeya y Herculano",
     "caricamento": "Construyendo la ciudad…",
+    "guasto": {
+      "titolo": "Este ordenador no puede iniciar el modelo 3D",
+      "spiega": "El modelo necesita WebGL. Puede faltar porque la tarjeta gráfica está excluida por el navegador, porque el navegador es antiguo, o porque la aceleración por hardware está desactivada. El dosier no tiene esa exigencia: es texto, y lleva el aparato completo de fuentes.",
+      "dossier": "Leer el dosier"
+    },
     "touch": {
       "run": "Correr",
       "hint": "arrastra la pantalla para mirar alrededor",
@@ -28,7 +33,9 @@
       "presenta": "Presentar",
       "comandi": "Controles"
     },
-    "presenta": { "esci": "Salir de la presentación" },
+    "presenta": {
+      "esci": "Salir de la presentación"
+    },
     "rail": {
       "titolo": "Lugares con datos",
       "cerca": "Buscar un lugar…",
@@ -62,7 +69,10 @@
         "sole": "sol a {gradi}°"
       }
     },
-    "bussola": { "nord": "norte", "mare": "lado del mar" },
+    "bussola": {
+      "nord": "norte",
+      "mare": "lado del mar"
+    },
     "sez": {
       "taglio": "Corte",
       "quota": "{n} m",
@@ -87,10 +97,22 @@
       "aria": "Ficha del lugar",
       "chiudi": "Cerrar la ficha"
     },
-    "epoche": { "aria": "Fases cronológicas" },
-    "qualita": { "alta": "Calidad alta", "bilanciata": "Equilibrada", "batteria": "Batería" },
-    "joypad": { "acceso": "Mando ●", "collegato": "Conectado: " },
-    "lingua": { "etichetta": "Idioma", "aria": "Elegir el idioma" },
+    "epoche": {
+      "aria": "Fases cronológicas"
+    },
+    "qualita": {
+      "alta": "Calidad alta",
+      "bilanciata": "Equilibrada",
+      "batteria": "Batería"
+    },
+    "joypad": {
+      "acceso": "Mando ●",
+      "collegato": "Conectado: "
+    },
+    "lingua": {
+      "etichetta": "Idioma",
+      "aria": "Elegir el idioma"
+    },
     "intro": {
       "occhiello": "Explorador v8 · dosier Pompeya después del 79",
       "titolo": "Dieciséis siglos, en ocho pasos",

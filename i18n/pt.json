@@ -2,6 +2,11 @@
   "ui": {
     "titoloPagina": "Depois de 79 — Pompeia e Herculano",
     "caricamento": "A construir a cidade…",
+    "guasto": {
+      "titolo": "Este computador não consegue iniciar o modelo 3D",
+      "spiega": "O modelo precisa de WebGL. Pode faltar porque a placa gráfica está excluída pelo navegador, porque o navegador é antigo, ou porque a aceleração por hardware está desligada. O dossiê não tem essa exigência: é texto, e traz o aparato completo das fontes.",
+      "dossier": "Ler o dossiê"
+    },
     "touch": {
       "run": "Correr",
       "hint": "arraste o ecrã para olhar em redor",
@@ -28,7 +33,9 @@
       "presenta": "Apresentar",
       "comandi": "Comandos"
     },
-    "presenta": { "esci": "Sair da apresentação" },
+    "presenta": {
+      "esci": "Sair da apresentação"
+    },
     "rail": {
       "titolo": "Lugares com dados",
       "cerca": "Procurar um lugar…",
@@ -62,7 +69,10 @@
         "sole": "sol a {gradi}°"
       }
     },
-    "bussola": { "nord": "norte", "mare": "lado do mar" },
+    "bussola": {
+      "nord": "norte",
+      "mare": "lado do mar"
+    },
     "sez": {
       "taglio": "Corte",
       "quota": "{n} m",
@@ -87,10 +97,22 @@
       "aria": "Ficha do lugar",
       "chiudi": "Fechar a ficha"
     },
-    "epoche": { "aria": "Fases cronológicas" },
-    "qualita": { "alta": "Qualidade alta", "bilanciata": "Equilibrada", "batteria": "Bateria" },
-    "joypad": { "acceso": "Comando ●", "collegato": "Ligado: " },
-    "lingua": { "etichetta": "Idioma", "aria": "Escolher o idioma" },
+    "epoche": {
+      "aria": "Fases cronológicas"
+    },
+    "qualita": {
+      "alta": "Qualidade alta",
+      "bilanciata": "Equilibrada",
+      "batteria": "Bateria"
+    },
+    "joypad": {
+      "acceso": "Comando ●",
+      "collegato": "Ligado: "
+    },
+    "lingua": {
+      "etichetta": "Idioma",
+      "aria": "Escolher o idioma"
+    },
     "intro": {
       "occhiello": "Explorador v8 · dossiê Pompeia depois de 79",
       "titolo": "Dezasseis séculos, em oito passos",

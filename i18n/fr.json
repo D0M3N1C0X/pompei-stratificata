@@ -2,6 +2,11 @@
   "ui": {
     "titoloPagina": "Après 79 — Pompéi et Herculanum",
     "caricamento": "Construction de la ville…",
+    "guasto": {
+      "titolo": "Cet ordinateur n'arrive pas à démarrer le modèle 3D",
+      "spiega": "Le modèle a besoin de WebGL. Il peut manquer parce que la carte graphique est exclue par le navigateur, parce que le navigateur est ancien, ou parce que l'accélération matérielle est désactivée. Le dossier n'a pas cette contrainte : c'est du texte, et il porte l'appareil complet des sources.",
+      "dossier": "Lire le dossier"
+    },
     "touch": {
       "run": "Courir",
       "hint": "faites glisser l'écran pour regarder autour de vous",
@@ -28,7 +33,9 @@
       "presenta": "Présenter",
       "comandi": "Commandes"
     },
-    "presenta": { "esci": "Quitter la présentation" },
+    "presenta": {
+      "esci": "Quitter la présentation"
+    },
     "rail": {
       "titolo": "Lieux documentés",
       "cerca": "Chercher un lieu…",
@@ -62,7 +69,10 @@
         "sole": "soleil à {gradi}°"
       }
     },
-    "bussola": { "nord": "nord", "mare": "côté mer" },
+    "bussola": {
+      "nord": "nord",
+      "mare": "côté mer"
+    },
     "sez": {
       "taglio": "Coupe",
       "quota": "{n} m",
@@ -87,10 +97,22 @@
       "aria": "Fiche du lieu",
       "chiudi": "Fermer la fiche"
     },
-    "epoche": { "aria": "Phases chronologiques" },
-    "qualita": { "alta": "Qualité haute", "bilanciata": "Équilibrée", "batteria": "Batterie" },
-    "joypad": { "acceso": "Manette ●", "collegato": "Connectée : " },
-    "lingua": { "etichetta": "Langue", "aria": "Choisir la langue" },
+    "epoche": {
+      "aria": "Phases chronologiques"
+    },
+    "qualita": {
+      "alta": "Qualité haute",
+      "bilanciata": "Équilibrée",
+      "batteria": "Batterie"
+    },
+    "joypad": {
+      "acceso": "Manette ●",
+      "collegato": "Connectée : "
+    },
+    "lingua": {
+      "etichetta": "Langue",
+      "aria": "Choisir la langue"
+    },
     "intro": {
       "occhiello": "Explorateur v8 · dossier Pompéi après 79",
       "titolo": "Seize siècles, en huit étapes",
