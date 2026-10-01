@@ -27,6 +27,7 @@
       "controller": "Mando",
       "ora": "Hora",
       "sonoro": "Sonido",
+      "sonoroAcceso": "Sonido activado",
       "confronto": "Comparar",
       "ercolano": "Herculano",
       "tour": "Recorrido",

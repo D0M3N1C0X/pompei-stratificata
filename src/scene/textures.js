@@ -1,13 +1,25 @@
 import {
   CanvasTexture,
+  TextureLoader,
   RepeatWrapping,
   SRGBColorSpace
 } from 'three';
 import { PAL } from './palette.js';
 
+import cobbleColorUrl from '../assets/pbr/pompeii/cobblestone-diffuse.webp';
+import cobbleNormalUrl from '../assets/pbr/pompeii/cobblestone-normal.webp';
+import cobbleRoughUrl from '../assets/pbr/pompeii/cobblestone-roughness.webp';
+import plasterColorUrl from '../assets/pbr/pompeii/plaster-diffuse.webp';
+import plasterNormalUrl from '../assets/pbr/pompeii/plaster-normal.webp';
+import plasterRoughUrl from '../assets/pbr/pompeii/plaster-roughness.webp';
+import roofColorUrl from '../assets/pbr/pompeii/roof-diffuse.webp';
+import roofNormalUrl from '../assets/pbr/pompeii/roof-normal.webp';
+import roofRoughUrl from '../assets/pbr/pompeii/roof-roughness.webp';
 
-/* --------------------------------------------------- texture procedurali */
-// Disegnate dal codice: nessun file esterno, il pacchetto resta autosufficiente.
+
+/* --------------------------------------------------------- texture */
+// Le superfici minute sono procedurali; le mappe PBR principali sono asset
+// locali CC0, incorporati da Vite nel singolo HTML per conservare l'offline.
 // Quasi isotrope, perché i blocchi hanno proporzioni molto diverse e un motivo
 // direzionale si stirerebbe.
 export function px(n){ const c = document.createElement('canvas'); c.width = c.height = n; return c; }
@@ -20,6 +32,28 @@ function toTex(c, rep){
   t.anisotropy = 4;
   return t;
 }
+
+const imageLoader = new TextureLoader();
+function pbrSet(colorUrl, normalUrl, roughnessUrl, repeat){
+  const color = imageLoader.load(colorUrl);
+  color.colorSpace = SRGBColorSpace;
+  const normal = imageLoader.load(normalUrl);
+  const roughness = imageLoader.load(roughnessUrl);
+  for(const map of [color, normal, roughness]){
+    map.wrapS = map.wrapT = RepeatWrapping;
+    map.repeat.set(repeat, repeat);
+    map.anisotropy = 8;
+  }
+  return { color, normal, roughness };
+}
+
+// Mappe PBR CC0: materiale fotografico denso, affiancato alle superfici
+// procedurali qui sotto. Le JPEG sono incorporate nel bundle offline da Vite.
+export const PBR = {
+  basalt: pbrSet(cobbleColorUrl, cobbleNormalUrl, cobbleRoughUrl, 6),
+  plaster: pbrSet(plasterColorUrl, plasterNormalUrl, plasterRoughUrl, 10),
+  tile: pbrSet(roofColorUrl, roofNormalUrl, roofRoughUrl, 5)
+};
 
 // pallino morbido per le particelle: senza, i punti si vedono come quadratini
 function dotTexture(){

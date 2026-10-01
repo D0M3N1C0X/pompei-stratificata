@@ -27,6 +27,7 @@
       "controller": "Manette",
       "ora": "Heure",
       "sonoro": "Son",
+      "sonoroAcceso": "Son activé",
       "confronto": "Comparer",
       "ercolano": "Herculanum",
       "tour": "Parcours",
