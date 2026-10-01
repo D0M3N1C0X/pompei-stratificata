@@ -250,6 +250,23 @@ export const AUDIO = (function(){
     burst(when, 2.2, 'lowpass', 240, 0.7, gain*0.7, 70);
   }
   function step_(when, gain){ burst(when, 0.11, 'bandpass', rnd(240,420), 1.4, gain); }
+  function dogBark_(when, gain){
+    const n = Math.random() < 0.62 ? 2 : 1;
+    for(let i=0;i<n;i++){
+      const t = when + i*rnd(0.14,0.22), dur = rnd(0.13,0.19);
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      const formant = ctx.createBiquadFilter();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(rnd(135,205), t);
+      o.frequency.exponentialRampToValueAtTime(rnd(75,115), t+dur);
+      formant.type = 'bandpass'; formant.frequency.value = rnd(500,780); formant.Q.value = 1.15;
+      o.connect(formant).connect(g);
+      env(g, t, 0.012, 0.035, gain, gain*0.55, 0.075, dur);
+      g.connect(dry); g.connect(wet);
+      o.start(t); o.stop(t+dur+0.08);
+      burst(t, 0.035, 'highpass', 1300, 0.8, gain*0.18);
+    }
+  }
   function crackle_(when, gain){
     const n = Math.floor(rnd(1,4));
     for(let i=0;i<n;i++) burst(when + i*rnd(0.02,0.09), 0.05, 'bandpass', rnd(1200,3000), 3, gain*rnd(0.4,1));
@@ -309,7 +326,8 @@ export const AUDIO = (function(){
       beds:[ {type:'bandpass', f:480, q:0.6, g:0.055, verb:1, mod:{rate:0.07, depth:120}},
              {type:'lowpass',  f:320, q:0.5, g:0.030} ],
       events:[ [voice_,1.6,4.5,0.030], [step_,1.2,3.4,0.026], [bird_,3.5,9,0.020],
-               [cymbala,14,30,0.028], [cetraNote,8,17,0.055], [tibiaCall,26,60,0.032] ]
+               [cymbala,14,30,0.028], [cetraNote,8,17,0.055], [tibiaCall,26,60,0.032],
+               [dogBark_,20,48,0.018] ]
     },
     { // 1 — il seppellimento
       beds:[ {type:'lowpass', f:190, q:0.6, g:0.115},
@@ -417,13 +435,18 @@ export const AUDIO = (function(){
     if(ready && on) planScene(i);
   }
 
+  function playFootstep(intensity=1){
+    if(!ready || !on) return;
+    step_(now()+0.015, 0.028*Math.max(0.45, Math.min(1.2, intensity)));
+  }
+
   document.addEventListener('visibilitychange', () => {
     if(!ready || !on) return;
     if(document.hidden) master.gain.setTargetAtTime(0, now(), 0.25);
     else master.gain.setTargetAtTime(0.9, now(), 0.5);
   });
 
-  return { init, setEnabled, setEpoch, isOn: () => on, isReady: () => ready };
+  return { init, setEnabled, setEpoch, playFootstep, isOn: () => on, isReady: () => ready };
 })();
 
 /* =====================================================================

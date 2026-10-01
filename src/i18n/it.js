@@ -37,6 +37,7 @@ export default {
       "controller": "Controller",
       "ora": "Ora",
       "sonoro": "Sonoro",
+      "sonoroAcceso": "Sonoro acceso",
       "confronto": "Confronto",
       "ercolano": "Ercolano",
       "tour": "Tour",

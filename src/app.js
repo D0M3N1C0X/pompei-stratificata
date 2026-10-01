@@ -16,6 +16,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
+  MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
   PCFSoftShadowMap,
@@ -40,7 +41,8 @@ import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
 import { POST } from './post.js';
 import { PAL } from './scene/palette.js';
-import { DOT, TEX, TEXMAP, px } from './scene/textures.js';
+import { DOT, PBR, TEX, TEXMAP, px } from './scene/textures.js';
+import { createInhabitants } from './scene/inhabitants.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -633,14 +635,23 @@ for(const b of [...buckets.values()]){
 
 const cityGroup = new Group();
 scene.add(cityGroup);
+const inhabitants = createInhabitants();
+scene.add(inhabitants.group);
 
 const dummy = new Object3D();
 const allMaterials = [];
 const tintColor = new Color();
 function bake(list, color, geo, parent, shadows, vary){
   const texName = TEXMAP.get(color);
-  const mat = new MeshLambertMaterial({ color, clippingPlanes:[clipPlane], clipShadows:true });
-  if(texName && TEX[texName]) mat.map = TEX[texName];
+  const pbr = PBR[texName];
+  const mat = pbr
+    ? new MeshStandardMaterial({
+        color, map:pbr.color, normalMap:pbr.normal, normalScale:new Vector2(0.55,0.55),
+        roughnessMap:pbr.roughness, roughness:1, metalness:0,
+        clippingPlanes:[clipPlane], clipShadows:true
+      })
+    : new MeshLambertMaterial({ color, clippingPlanes:[clipPlane], clipShadows:true });
+  if(!pbr && texName && TEX[texName]) mat.map = TEX[texName];
   allMaterials.push(mat);
   const mesh = new InstancedMesh(geo, mat, list.length);
   list.forEach((b,i) => {
@@ -1081,6 +1092,7 @@ function applyEpoch(i, silent){
   ashGroup.visible = !!e.ash;
   smoke.points.visible = !!e.shanty;
   birds.visible = (i === 0 || i === 4 || i === 7);
+  inhabitants.group.visible = i === 0;
   applyLight();
 
   document.querySelectorAll('.ep').forEach((el,k) => {
@@ -1171,7 +1183,7 @@ let flyMode = false;                 // false = camminata con collisioni
 const EYE = 0.45;                    // 1,8 m
 const RADIUS = 0.34;
 const vel = new Vector3();           // velocità con inerzia
-let bobPhase = 0, bobAmt = 0;
+let bobPhase = 0, bobAmt = 0, footstepTimer = 0;
 const stick = { x:0, y:0 };          // levetta touch, in [-1,1]
 let touchRun = false;
 function setLook(y, p){ yaw = yawT = y; pitch = pitchT = p; }
@@ -1633,7 +1645,8 @@ const btnAudio = document.getElementById('btnAudio');
 btnAudio.addEventListener('click', () => {
   const v = AUDIO.setEnabled(!AUDIO.isOn());
   btnAudio.classList.toggle('on', v);
-  btnAudio.textContent = v ? 'Sonoro acceso' : 'Sonoro';
+  btnAudio.textContent = t(v ? 'ui.tool.sonoroAcceso' : 'ui.tool.sonoro');
+  btnAudio.setAttribute('aria-pressed', String(v));
   if(v) AUDIO.setEpoch(epoch);
 });
 
@@ -1842,6 +1855,7 @@ function tick(){
     g.position.y = depositCurrent;
 
   stepParticles(dt, t);
+  inhabitants.update(t, dt);
 
   // cenere
   if(ashGroup.visible){
@@ -1916,6 +1930,7 @@ function tick(){
     if(flyMode){
       camera.position.addScaledVector(vel, dt);
       camera.position.y = Math.max(0.6, Math.min(320, camera.position.y));
+      footstepTimer = 0;
     } else {
       tryMove(vel.x*dt, vel.z*dt);
       // passo: oscillazione minima, proporzionale alla velocità
@@ -1924,6 +1939,13 @@ function tick(){
       bobPhase += dt * (6.5 + speed*0.9);
       const bob = Math.sin(bobPhase) * 0.022 * bobAmt;
       camera.position.set(player.x, groundY() + EYE + bob, player.z);
+      if(speed > 0.12){
+        footstepTimer -= dt;
+        if(footstepTimer <= 0){
+          AUDIO.playFootstep(Math.min(1, speed/2.4));
+          footstepTimer = 0.50 / Math.max(0.65, speed);
+        }
+      } else footstepTimer = 0;
     }
   }
 
