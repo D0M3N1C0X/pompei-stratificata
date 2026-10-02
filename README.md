@@ -57,6 +57,7 @@ diversi di sparire, dalla stessa eruzione.
 | | |
 |---|---|
 | **Otto fasi** | 79 d.C. (vigilia e seppellimento) · I–III sec. · IV–V sec. · XV–XVI sec. · 1592–1600 · 1748–1763 · oggi |
+| **Popolazioni** | persone, cani e piccioni animati per fase, con soste individuali e fuga durante l’eruzione; densità sceniche, non censimenti |
 | **Quindici luoghi** | ciascuno con la scheda dei dati e la fonte in fondo al pannello |
 | **Modalità sezione** | taglia il terreno e mostra la stratigrafia dall'interno, con le quote sulla faccia del taglio |
 | **Sole reale** | posizione solare calcolata per Pompei (40,75° N) sull'ora di Europe/Rome |

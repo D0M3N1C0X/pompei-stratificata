@@ -133,15 +133,15 @@ function animatedMaterial(color=0xffffff){
       shader.uniforms.uWalkTime = WALK;
       shader.vertexShader = shader.vertexShader.replace(
         '#include <common>',
-        '#include <common>\nattribute vec3 aPivot;\nattribute vec3 aAxis;\nattribute float aSwing;\nattribute float instancePhase;\nattribute float instanceStrideFrequency;\nuniform float uWalkTime;'
+        '#include <common>\nattribute vec3 aPivot;\nattribute vec3 aAxis;\nattribute float aSwing;\nattribute float instancePhase;\nattribute float instanceStrideFrequency;\nattribute float instanceWalkBlend;\nuniform float uWalkTime;'
       );
       shader.vertexShader = shader.vertexShader.replace(
         '#include <begin_vertex>',
-        '#include <begin_vertex>\nfloat walkAngle = sin(uWalkTime * instanceStrideFrequency + instancePhase) * aSwing * 0.42;\nvec3 walkAxis = normalize(aAxis);\nvec3 walkLocal = transformed - aPivot;\nfloat walkC = cos(walkAngle);\nfloat walkS = sin(walkAngle);\ntransformed = aPivot + walkLocal * walkC + cross(walkAxis, walkLocal) * walkS + walkAxis * dot(walkAxis, walkLocal) * (1.0 - walkC);'
+        '#include <begin_vertex>\nfloat walkAngle = sin(uWalkTime * instanceStrideFrequency + instancePhase) * aSwing * 0.42 * instanceWalkBlend;\nvec3 walkAxis = normalize(aAxis);\nvec3 walkLocal = transformed - aPivot;\nfloat walkC = cos(walkAngle);\nfloat walkS = sin(walkAngle);\ntransformed = aPivot + walkLocal * walkC + cross(walkAxis, walkLocal) * walkS + walkAxis * dot(walkAxis, walkLocal) * (1.0 - walkC);'
       );
     }
   });
-  material.customProgramCacheKey = () => 'pompeii-crowd-gait-v2';
+  material.customProgramCacheKey = () => 'pompeii-crowd-gait-v3';
   return material;
 }
 
@@ -174,6 +174,12 @@ function makeAgents(count, species, routes, random, flow){
     const speed=species==='people' ? 0.86+random()*0.52 :
       species==='dogs' ? 0.65+random()*0.90 : 2.2+random()*1.8;
     const stride=species==='people' ? 0.72 : species==='dogs' ? 0.50 : 0.46;
+    // Le soste sono regia scenica, non tempi storici misurati; nell'eruzione
+    // il flusso in uscita resta continuo.
+    const pauseChance=flow==='out' || species==='birds' ? 0 : species==='dogs' ? 0.38 : 0.22;
+    const idle=random()<pauseChance;
+    const pauseDuration=2.0+random()*4.5;
+    const walkDuration=species==='dogs' ? 4+random()*10 : 7+random()*22;
     return {
       route, speed,
       strideFrequency:species==='birds' ? 27+random()*8 : speed/stride*Math.PI*2,
@@ -184,6 +190,9 @@ function makeAgents(count, species, routes, random, flow){
       scale:species==='people' ? 0.92+random()*0.16 : species==='dogs' ? 0.88+random()*0.24 : 0.86+random()*0.28,
       offset:species==='birds' ? 1.0+random()*1.8 : 0,
       laneOffset:(random()-0.5)*Math.min(route.width*0.36,0.9),
+      pauseChance, idle, pauseDuration, walkDuration,
+      stateRemaining:random()*(idle ? pauseDuration : walkDuration),
+      walkBlend:idle ? 0 : 1,
       hover:species==='birds',
       index
     };
@@ -194,12 +203,17 @@ function populationMesh(geometry, material, agents, name){
   const model = geometry.clone();
   const phases = new Float32Array(agents.length);
   const strideFrequencies = new Float32Array(agents.length);
+  const walkBlends = new Float32Array(agents.length);
   agents.forEach((actor,i) => {
     phases[i]=actor.phase;
     strideFrequencies[i]=actor.strideFrequency;
+    walkBlends[i]=actor.walkBlend;
   });
   model.setAttribute('instancePhase', new InstancedBufferAttribute(phases,1));
   model.setAttribute('instanceStrideFrequency', new InstancedBufferAttribute(strideFrequencies,1));
+  const walkBlendAttribute = new InstancedBufferAttribute(walkBlends,1);
+  walkBlendAttribute.setUsage(DynamicDrawUsage);
+  model.setAttribute('instanceWalkBlend', walkBlendAttribute);
   const mesh = new InstancedMesh(model,material,Math.max(1,agents.length));
   mesh.name=name;
   mesh.instanceMatrix.setUsage(DynamicDrawUsage);
@@ -212,6 +226,8 @@ function populationMesh(geometry, material, agents, name){
 
 function updateMesh(mesh, agents, count, delta, flow){
   mesh.count=count;
+  const walkBlends=mesh.geometry.getAttribute('instanceWalkBlend');
+  let walkBlendDirty=false;
   for(let i=0;i<count;i++){
     const actor=agents[i], route=actor.route;
     if(flow==='out' && actor.exited){
@@ -222,8 +238,22 @@ function updateMesh(mesh, agents, count, delta, flow){
       mesh.setMatrixAt(i,TEMP.matrix);
       continue;
     }
+    if(actor.pauseChance>0 && flow!=='out'){
+      actor.stateRemaining-=delta;
+      if(actor.stateRemaining<=0){
+        actor.idle=!actor.idle;
+        actor.stateRemaining=actor.idle ? actor.pauseDuration : actor.walkDuration;
+      }
+      const target=actor.idle ? 0 : 1;
+      const blend=actor.walkBlend+(target-actor.walkBlend)*Math.min(1,delta*3.5);
+      if(Math.abs(blend-actor.walkBlend)>0.001){
+        actor.walkBlend=blend;
+        walkBlends.array[i]=blend;
+        walkBlendDirty=true;
+      }
+    }
     const cycle=flow==='out' ? route.length : route.length*2;
-    actor.distance+=actor.speed*delta;
+    actor.distance+=actor.speed*delta*actor.walkBlend;
     if(flow==='out' && actor.distance>=route.length){
       actor.exited=true;
       TEMP.position.set(route.b[0],actor.offset,route.b[1]);
@@ -249,6 +279,7 @@ function updateMesh(mesh, agents, count, delta, flow){
     mesh.setMatrixAt(i,TEMP.matrix);
   }
   if(count) mesh.instanceMatrix.needsUpdate=true;
+  if(walkBlendDirty) walkBlends.needsUpdate=true;
 }
 
 export function createInhabitants({ streets=[] }={}){
@@ -262,8 +293,8 @@ export function createInhabitants({ streets=[] }={}){
   for(const profile of POPULATIONS){
     const random=seeded(0x51f15e + profile.epoch*997);
     const people=makeAgents(profile.people,'people',routes,random,profile.flow);
-    const dogs=makeAgents(profile.dogs,'dogs',routes,random);
-    const birds=makeAgents(profile.pigeons,'birds',routes,random);
+    const dogs=makeAgents(profile.dogs,'dogs',routes,random,profile.flow);
+    const birds=makeAgents(profile.pigeons,'birds',routes,random,profile.flow);
     const epochGroup=new Group();
     epochGroup.name=profile.name;
     epochGroup.visible=profile.epoch===0;
@@ -284,11 +315,13 @@ export function createInhabitants({ streets=[] }={}){
       this.epoch=index;
       populationGroups.forEach(item => {
         item.group.visible=item.profile.epoch===index;
-        if(item.group.visible && item.profile.flow==='out')
-          item.people.forEach(actor => {
-            actor.exited=false;
-            actor.distance=actor.initialDistance;
-          });
+        if(item.group.visible && item.profile.flow==='out'){
+          for(const actors of [item.people,item.dogs,item.birds])
+            actors.forEach(actor => {
+              actor.exited=false;
+              actor.distance=actor.initialDistance;
+            });
+        }
       });
     },
     setDensity(value){
@@ -301,8 +334,8 @@ export function createInhabitants({ streets=[] }={}){
       if(!active || !active.group.visible) return;
       const count=(agents)=>Math.floor(agents.length*this.density);
       updateMesh(active.human,active.people,count(active.people),delta,active.profile.flow);
-      updateMesh(active.dogMesh,active.dogs,count(active.dogs),delta);
-      updateMesh(active.birdMesh,active.birds,count(active.birds),delta);
+      updateMesh(active.dogMesh,active.dogs,count(active.dogs),delta,active.profile.flow);
+      updateMesh(active.birdMesh,active.birds,count(active.birds),delta,active.profile.flow);
     }
   };
 }
