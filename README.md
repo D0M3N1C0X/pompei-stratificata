@@ -57,6 +57,7 @@ diversi di sparire, dalla stessa eruzione.
 | | |
 |---|---|
 | **Otto fasi** | 79 d.C. (vigilia e seppellimento) · I–III sec. · IV–V sec. · XV–XVI sec. · 1592–1600 · 1748–1763 · oggi |
+| **Popolazioni** | persone, cani e piccioni animati per fase, con soste individuali e fuga durante l’eruzione; densità sceniche, non censimenti |
 | **Quindici luoghi** | ciascuno con la scheda dei dati e la fonte in fondo al pannello |
 | **Modalità sezione** | taglia il terreno e mostra la stratigrafia dall'interno, con le quote sulla faccia del taglio |
 | **Sole reale** | posizione solare calcolata per Pompei (40,75° N) sull'ora di Europe/Rome |
@@ -97,7 +98,13 @@ limiti.
   scientifica sul percorso esatto sotto la città non ne ho trovate: l'unica
   trattazione estesa è autopubblicata e legata a una tesi di ridatazione di Pompei,
   quindi inutilizzabile. Nel modello è dichiarato tale nella scheda del luogo.
-- **Le texture sono disegnate dal codice**, non rilevate dai materiali reali.
+- **Le texture non sono scansioni archeologiche.** Basalto, intonaco e tegole
+  usano mappe PBR CC0 locali; il colore del tufo usa una texture generata con AI,
+  documentata in `src/assets/pbr/pompeii/ATTRIBUTIONS.md`; le altre superfici
+  restano procedurali.
+- **Gli abitanti animati sono ancora modelli procedurali provvisori.** Le
+  densità per epoca sono scelte sceniche, non stime demografiche; non sono ancora
+  integrati modelli umani e animali fotorealistici con provenienza e attribuzione.
 - **Il profilo del Vesuvio è schematico e fuori scala.**
 - **Il sonoro non è una ricostruzione.** Riproduce il *timbro* di strumenti che
   esistono come reperto — circa settanta rinvenimenti riferibili a tibiae da Pompei,
