@@ -74,49 +74,55 @@ function humanGeometry(style, clothing){
   const parts = [];
   const longCoat = style==='cloak' || style==='coat';
   const modern = style==='modern';
-  const hem = modern ? 0.135 : (longCoat ? 0.09 : 0.105);
-  const height = 0.34-hem;
+  const hem = modern ? 0.76 : (longCoat ? 0.28 : 0.52);
+  const height = 1.40-hem;
   const tunic = style==='work' ? 0x887254 : clothing;
-  parts.push(piece(new CylinderGeometry(0.055,0.075,height,8), [0,hem+height/2,0], [1,1,1], tunic));
-  parts.push(piece(SHAPES.sphere, [0,0.414,0], [0.041,0.046,0.039], COLORS.skin));
-  parts.push(piece(SHAPES.sphere, [0,0.439,0.003], [0.043,0.022,0.041], COLORS.hair));
+  parts.push(piece(new CylinderGeometry(0.19,0.26,height,10), [0,(1.40+hem)/2,0], [1,1,1], tunic));
+  parts.push(piece(new CylinderGeometry(0.045,0.052,0.10,8), [0,1.39,0], [1,1,1], COLORS.skin));
+  parts.push(piece(SHAPES.sphere, [0,1.555,0], [0.088,0.118,0.086], COLORS.skin));
+  parts.push(piece(SHAPES.sphere, [0,1.63,0.003], [0.091,0.058,0.089], COLORS.hair));
   if(modern){
-    parts.push(piece(SHAPES.sphere, [0,0.454,0], [0.050,0.014,0.046], 0xb6a17c));
+    parts.push(piece(SHAPES.sphere, [0,1.687,0], [0.108,0.027,0.103], 0xb6a17c));
   }
   for(const side of [-1,1]){
-    const legPivot=[side*0.028,0.15,0];
-    parts.push(piece(new CylinderGeometry(0.012,0.016,0.12,6), [side*0.028,0.09,0], [1,1,1], modern ? COLORS.trousers : COLORS.skin, side, legPivot));
-    parts.push(piece(SHAPES.box, [side*0.028,0.018,-0.009], [0.038,0.018,0.057], COLORS.sandals));
-    const armPivot=[side*0.066,0.318,0];
-    parts.push(piece(new CylinderGeometry(0.011,0.015,0.112,6), [side*0.069,0.262,0], [1,1,1], COLORS.sleeve, -side*0.72, armPivot));
-    parts.push(piece(SHAPES.sphere, [side*0.070,0.201,-0.002], [0.012,0.014,0.013], COLORS.skin));
+    const hip=side*0.105;
+    const legPivot=[hip,0.89,0];
+    parts.push(piece(new CylinderGeometry(0.064,0.049,0.85,8), [hip,0.45,0], [1,1,1], modern ? COLORS.trousers : COLORS.skin, side, legPivot));
+    parts.push(piece(SHAPES.box, [hip,0.036,0.045], [0.12,0.055,0.24], COLORS.sandals));
+    const armPivot=[side*0.22,1.36,0];
+    parts.push(piece(new CylinderGeometry(0.054,0.066,0.47,8), [side*0.265,1.11,0], [1,1,1], COLORS.sleeve, -side*0.72, armPivot));
+    parts.push(piece(SHAPES.sphere, [side*0.28,0.84,0], [0.052,0.06,0.05], COLORS.skin));
   }
   return merge(parts);
 }
 
 function dogGeometry(){
   const parts=[
-    piece(SHAPES.sphere,[0,0.105,0.015],[0.056,0.043,0.10],COLORS.dog),
-    piece(SHAPES.sphere,[0,0.143,-0.077],[0.037,0.035,0.039],COLORS.dog),
-    piece(SHAPES.sphere,[0,0.129,-0.110],[0.023,0.015,0.026],0xb59a79)
+    piece(SHAPES.sphere,[0,0.34,0.025],[0.14,0.115,0.25],COLORS.dog),
+    piece(SHAPES.sphere,[0,0.39,-0.205],[0.092,0.092,0.105],COLORS.dog),
+    piece(SHAPES.sphere,[0,0.345,-0.295],[0.067,0.046,0.09],0xb59a79),
+    piece(SHAPES.sphere,[-0.057,0.438,-0.225],[0.028,0.052,0.04],COLORS.dog),
+    piece(SHAPES.sphere,[0.057,0.438,-0.225],[0.028,0.052,0.04],COLORS.dog)
   ];
-  for(const x of [-0.034,0.034]) for(const z of [-0.055,0.062]){
+  for(const x of [-0.082,0.082]) for(const z of [-0.145,0.165]){
     const side = x<0 ? -1 : 1;
-    const gait = side*(z<0 ? -1 : 1);
-    parts.push(piece(new CylinderGeometry(0.009,0.012,0.065,5),[x,0.057,z],[1,1,1],COLORS.dog,gait,[x,0.086,z]));
+    const gait = side*(z<0 ? -1 : 1)*0.8;
+    parts.push(piece(new CylinderGeometry(0.034,0.027,0.29,6),[x,0.15,z],[1,1,1],COLORS.dog,gait,[x,0.285,z]));
   }
-  parts.push(piece(SHAPES.cone,[0,0.139,0.111],[0.013,0.048,0.013],COLORS.dog,0.3,[0,0.14,0.09]));
+  parts.push(piece(SHAPES.cone,[0,0.43,0.235],[0.035,0.14,0.035],COLORS.dog,0.3,[0,0.38,0.20]));
   return merge(parts);
 }
 
 function pigeonGeometry(){
+  const beak = new ConeGeometry(0.012,0.034,5);
+  beak.rotateX(-Math.PI/2);
   const parts=[
-    piece(SHAPES.sphere,[0,0.05,0],[0.026,0.018,0.039],COLORS.bird),
-    piece(SHAPES.sphere,[0,0.066,-0.030],[0.015,0.014,0.016],COLORS.bird),
-    piece(SHAPES.cone,[0,0.064,-0.050],[0.004,0.012,0.004],COLORS.beak)
+    piece(SHAPES.sphere,[0,0.09,0],[0.06,0.07,0.115],COLORS.bird),
+    piece(SHAPES.sphere,[0,0.14,-0.105],[0.042,0.043,0.045],COLORS.bird),
+    piece(beak,[0,0.135,-0.15],[1,1,1],COLORS.beak)
   ];
   for(const side of [-1,1])
-    parts.push(piece(SHAPES.sphere,[side*0.017,0.055,0.002],[0.025,0.005,0.029],COLORS.wing,side*1.7,[side*0.010,0.056,0.004],[0,0,1]));
+    parts.push(piece(SHAPES.sphere,[side*0.09,0.105,0],[0.14,0.018,0.115],COLORS.wing,side*1.2,[side*0.035,0.11,0],[0,0,1]));
   return merge(parts);
 }
 
@@ -127,15 +133,15 @@ function animatedMaterial(color=0xffffff){
       shader.uniforms.uWalkTime = WALK;
       shader.vertexShader = shader.vertexShader.replace(
         '#include <common>',
-        '#include <common>\nattribute vec3 aPivot;\nattribute vec3 aAxis;\nattribute float aSwing;\nattribute float instancePhase;\nuniform float uWalkTime;'
+        '#include <common>\nattribute vec3 aPivot;\nattribute vec3 aAxis;\nattribute float aSwing;\nattribute float instancePhase;\nattribute float instanceStrideFrequency;\nuniform float uWalkTime;'
       );
       shader.vertexShader = shader.vertexShader.replace(
         '#include <begin_vertex>',
-        '#include <begin_vertex>\nfloat walkAngle = sin(uWalkTime * 5.2 + instancePhase) * aSwing * 0.42;\nvec3 walkAxis = normalize(aAxis);\nvec3 walkLocal = transformed - aPivot;\nfloat walkC = cos(walkAngle);\nfloat walkS = sin(walkAngle);\ntransformed = aPivot + walkLocal * walkC + cross(walkAxis, walkLocal) * walkS + walkAxis * dot(walkAxis, walkLocal) * (1.0 - walkC);'
+        '#include <begin_vertex>\nfloat walkAngle = sin(uWalkTime * instanceStrideFrequency + instancePhase) * aSwing * 0.42;\nvec3 walkAxis = normalize(aAxis);\nvec3 walkLocal = transformed - aPivot;\nfloat walkC = cos(walkAngle);\nfloat walkS = sin(walkAngle);\ntransformed = aPivot + walkLocal * walkC + cross(walkAxis, walkLocal) * walkS + walkAxis * dot(walkAxis, walkLocal) * (1.0 - walkC);'
       );
     }
   });
-  material.customProgramCacheKey = () => 'pompeii-crowd-gait-v1';
+  material.customProgramCacheKey = () => 'pompeii-crowd-gait-v2';
   return material;
 }
 
@@ -151,7 +157,7 @@ function seeded(seed){
 function routeTable(streets){
   return (streets || []).filter(s => s.a && s.b).map((street,index) => {
     const dx=street.b[0]-street.a[0], dz=street.b[1]-street.a[1];
-    return { a:street.a, b:street.b, length:Math.hypot(dx,dz), dx, dz, index };
+    return { a:street.a, b:street.b, length:Math.hypot(dx,dz), dx, dz, width:street.w || 2.2, index };
   }).filter(r => r.length > 1);
 }
 
@@ -165,14 +171,19 @@ function makeAgents(count, species, routes, random, flow){
       if(pick<=0){ route=routes[i]; break; }
     }
     const initialDistance=random()*route.length*(flow==='out'?1:2);
+    const speed=species==='people' ? 0.86+random()*0.52 :
+      species==='dogs' ? 0.65+random()*0.90 : 2.2+random()*1.8;
+    const stride=species==='people' ? 0.72 : species==='dogs' ? 0.50 : 0.46;
     return {
-      route, speed:species==='people' ? 0.16+random()*0.15 : 0.20+random()*0.20,
+      route, speed,
+      strideFrequency:species==='birds' ? 27+random()*8 : speed/stride*Math.PI*2,
       phase:random()*Math.PI*2,
       distance:initialDistance,
       initialDistance,
       exited:false,
-      scale:species==='people' ? 0.88+random()*0.24 : 0.84+random()*0.32,
-      offset:0.065,
+      scale:species==='people' ? 0.92+random()*0.16 : species==='dogs' ? 0.88+random()*0.24 : 0.86+random()*0.28,
+      offset:species==='birds' ? 1.0+random()*1.8 : 0,
+      laneOffset:(random()-0.5)*Math.min(route.width*0.36,0.9),
       hover:species==='birds',
       index
     };
@@ -182,8 +193,13 @@ function makeAgents(count, species, routes, random, flow){
 function populationMesh(geometry, material, agents, name){
   const model = geometry.clone();
   const phases = new Float32Array(agents.length);
-  agents.forEach((actor,i) => { phases[i]=actor.phase; });
+  const strideFrequencies = new Float32Array(agents.length);
+  agents.forEach((actor,i) => {
+    phases[i]=actor.phase;
+    strideFrequencies[i]=actor.strideFrequency;
+  });
   model.setAttribute('instancePhase', new InstancedBufferAttribute(phases,1));
+  model.setAttribute('instanceStrideFrequency', new InstancedBufferAttribute(strideFrequencies,1));
   const mesh = new InstancedMesh(model,material,Math.max(1,agents.length));
   mesh.name=name;
   mesh.instanceMatrix.setUsage(DynamicDrawUsage);
@@ -223,9 +239,9 @@ function updateMesh(mesh, agents, count, delta, flow){
     const t=route.length ? d/route.length : 0;
     const direction=reverse ? -1 : 1;
     TEMP.position.set(
-      route.a[0]+route.dx*t,
+      route.a[0]+route.dx*t-route.dz/route.length*actor.laneOffset,
       actor.offset+(actor.hover ? Math.abs(Math.sin(WALK.value*3.2+actor.phase))*0.018 : 0),
-      route.a[1]+route.dz*t
+      route.a[1]+route.dz*t+route.dx/route.length*actor.laneOffset
     );
     TEMP.rotation.set(0,Math.atan2(-direction*route.dx,-direction*route.dz),0);
     TEMP.scale.setScalar(actor.scale);
