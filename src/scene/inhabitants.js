@@ -37,7 +37,7 @@ function rgb(hex){
   return [color.r, color.g, color.b];
 }
 
-function piece(geometry, position, scale, color, swing=0, pivot=[0,0,0]){
+function piece(geometry, position, scale, color, swing=0, pivot=[0,0,0], axis=[1,0,0]){
   const result = geometry.toNonIndexed();
   result.deleteAttribute('uv');
   MODEL.compose(
@@ -48,14 +48,17 @@ function piece(geometry, position, scale, color, swing=0, pivot=[0,0,0]){
   result.applyMatrix4(MODEL);
   const count = result.attributes.position.count;
   const c = rgb(color), colors = new Float32Array(count*3);
-  const pivots = new Float32Array(count*3), swings = new Float32Array(count);
+  const pivots = new Float32Array(count*3), axes = new Float32Array(count*3);
+  const swings = new Float32Array(count);
   for(let i=0;i<count;i++){
     colors[i*3]=c[0]; colors[i*3+1]=c[1]; colors[i*3+2]=c[2];
     pivots[i*3]=pivot[0]; pivots[i*3+1]=pivot[1]; pivots[i*3+2]=pivot[2];
+    axes[i*3]=axis[0]; axes[i*3+1]=axis[1]; axes[i*3+2]=axis[2];
     swings[i]=swing;
   }
   result.setAttribute('color', new BufferAttribute(colors,3));
   result.setAttribute('aPivot', new BufferAttribute(pivots,3));
+  result.setAttribute('aAxis', new BufferAttribute(axes,3));
   result.setAttribute('aSwing', new BufferAttribute(swings,1));
   return result;
 }
@@ -99,9 +102,10 @@ function dogGeometry(){
   ];
   for(const x of [-0.034,0.034]) for(const z of [-0.055,0.062]){
     const side = x<0 ? -1 : 1;
-    parts.push(piece(new CylinderGeometry(0.009,0.012,0.065,5),[x,0.057,z],[1,1,1],COLORS.dog,side,[x,0.086,z]));
+    const gait = side*(z<0 ? -1 : 1);
+    parts.push(piece(new CylinderGeometry(0.009,0.012,0.065,5),[x,0.057,z],[1,1,1],COLORS.dog,gait,[x,0.086,z]));
   }
-  parts.push(piece(SHAPES.cone,[0,0.139,0.111],[0.013,0.048,0.013],COLORS.dog));
+  parts.push(piece(SHAPES.cone,[0,0.139,0.111],[0.013,0.048,0.013],COLORS.dog,0.3,[0,0.14,0.09]));
   return merge(parts);
 }
 
@@ -112,7 +116,7 @@ function pigeonGeometry(){
     piece(SHAPES.cone,[0,0.064,-0.050],[0.004,0.012,0.004],COLORS.beak)
   ];
   for(const side of [-1,1])
-    parts.push(piece(SHAPES.sphere,[side*0.017,0.055,0.002],[0.025,0.005,0.029],COLORS.wing,side*1.7,[side*0.010,0.056,0.004]));
+    parts.push(piece(SHAPES.sphere,[side*0.017,0.055,0.002],[0.025,0.005,0.029],COLORS.wing,side*1.7,[side*0.010,0.056,0.004],[0,0,1]));
   return merge(parts);
 }
 
@@ -123,11 +127,11 @@ function animatedMaterial(color=0xffffff){
       shader.uniforms.uWalkTime = WALK;
       shader.vertexShader = shader.vertexShader.replace(
         '#include <common>',
-        '#include <common>\nattribute vec3 aPivot;\nattribute float aSwing;\nattribute float instancePhase;\nuniform float uWalkTime;'
+        '#include <common>\nattribute vec3 aPivot;\nattribute vec3 aAxis;\nattribute float aSwing;\nattribute float instancePhase;\nuniform float uWalkTime;'
       );
       shader.vertexShader = shader.vertexShader.replace(
         '#include <begin_vertex>',
-        '#include <begin_vertex>\nfloat walkAngle = sin(uWalkTime * 5.2 + instancePhase) * aSwing * 0.42;\nvec3 walkLocal = transformed - aPivot;\nfloat walkC = cos(walkAngle);\nfloat walkS = sin(walkAngle);\ntransformed = vec3(walkLocal.x, walkC * walkLocal.y - walkS * walkLocal.z, walkS * walkLocal.y + walkC * walkLocal.z) + aPivot;'
+        '#include <begin_vertex>\nfloat walkAngle = sin(uWalkTime * 5.2 + instancePhase) * aSwing * 0.42;\nvec3 walkAxis = normalize(aAxis);\nvec3 walkLocal = transformed - aPivot;\nfloat walkC = cos(walkAngle);\nfloat walkS = sin(walkAngle);\ntransformed = aPivot + walkLocal * walkC + cross(walkAxis, walkLocal) * walkS + walkAxis * dot(walkAxis, walkLocal) * (1.0 - walkC);'
       );
     }
   });
