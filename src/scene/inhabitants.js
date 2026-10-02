@@ -1,212 +1,383 @@
 import {
+  BoxGeometry,
+  BufferAttribute,
+  Color,
   ConeGeometry,
   CylinderGeometry,
+  DynamicDrawUsage,
   Group,
-  Mesh,
+  InstancedBufferAttribute,
+  InstancedMesh,
+  Matrix4,
   MeshStandardMaterial,
-  SphereGeometry
+  Object3D,
+  SphereGeometry,
+  Vector3
 } from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { POPULATIONS } from '../data/populations.js';
+import { PLACES } from '../data/places.js';
 
-// Forme leggere, scalate sulla scena (1 unità = 4 m). I corpi restano
-// volutamente sobri: colori e abiti sono una ricostruzione interpretativa.
-const SPHERE = new SphereGeometry(1, 10, 8);
-const LIMB = new CylinderGeometry(0.72, 1, 1, 8);
-const TUNIC = new CylinderGeometry(0.72, 1, 1, 10);
-const BEAK = new ConeGeometry(1, 1, 5);
-
-const MAT = {
-  skin: new MeshStandardMaterial({ color:0xb88763, roughness:0.88 }),
-  hair: new MeshStandardMaterial({ color:0x392b22, roughness:0.94 }),
-  cloth: [
-    0xc8b48d, 0x9d624b, 0x76817a, 0xb28b4d, 0xaaa397, 0x596b72
-  ].map(color => new MeshStandardMaterial({ color, roughness:0.96 })),
-  sandal: new MeshStandardMaterial({ color:0x584536, roughness:0.92 }),
-  dog: [0x8b6546, 0x4f443b, 0xc1ad8e].map(color => new MeshStandardMaterial({ color, roughness:0.94 })),
-  pigeon: new MeshStandardMaterial({ color:0x737a77, roughness:0.88 }),
-  wing: new MeshStandardMaterial({ color:0x4e5958, roughness:0.9 }),
-  beak: new MeshStandardMaterial({ color:0x997848, roughness:0.86 })
+const WALK = { value:0 };
+const COLORS = {
+  skin:0xb88763, hair:0x392b22, sandals:0x514436,
+  trousers:0x6f6255, sleeve:0x88735d, bird:0x737a77,
+  beak:0x997848, wing:0x4e5958, dog:0x8b6546
 };
+const SHAPES = {
+  sphere: new SphereGeometry(1, 8, 6),
+  cylinder: new CylinderGeometry(1, 1, 1, 7),
+  cone: new ConeGeometry(1, 1, 6),
+  box: new BoxGeometry(1, 1, 1)
+};
+const TEMP = new Object3D();
+const MODEL = new Matrix4();
 
-function part(parent, material, position, scale, geometry=SPHERE){
-  const mesh = new Mesh(geometry, material);
-  mesh.position.set(...position);
-  mesh.scale.set(...scale);
-  mesh.castShadow = false;
-  mesh.receiveShadow = true;
-  parent.add(mesh);
+function rgb(hex){
+  const color = new Color(hex);
+  return [color.r, color.g, color.b];
+}
+
+function piece(geometry, position, scale, color, swing=0, pivot=[0,0,0], axis=[1,0,0]){
+  const result = geometry.toNonIndexed();
+  result.deleteAttribute('uv');
+  MODEL.compose(
+    new Vector3(position[0],position[1],position[2]),
+    TEMP.quaternion.set(0,0,0,1),
+    new Vector3(scale[0],scale[1],scale[2])
+  );
+  result.applyMatrix4(MODEL);
+  const count = result.attributes.position.count;
+  const c = rgb(color), colors = new Float32Array(count*3);
+  const pivots = new Float32Array(count*3), axes = new Float32Array(count*3);
+  const swings = new Float32Array(count);
+  for(let i=0;i<count;i++){
+    colors[i*3]=c[0]; colors[i*3+1]=c[1]; colors[i*3+2]=c[2];
+    pivots[i*3]=pivot[0]; pivots[i*3+1]=pivot[1]; pivots[i*3+2]=pivot[2];
+    axes[i*3]=axis[0]; axes[i*3+1]=axis[1]; axes[i*3+2]=axis[2];
+    swings[i]=swing;
+  }
+  result.setAttribute('color', new BufferAttribute(colors,3));
+  result.setAttribute('aPivot', new BufferAttribute(pivots,3));
+  result.setAttribute('aAxis', new BufferAttribute(axes,3));
+  result.setAttribute('aSwing', new BufferAttribute(swings,1));
+  return result;
+}
+
+function merge(pieces){
+  const geometry = mergeGeometries(pieces, false);
+  pieces.forEach(g => g.dispose());
+  geometry.computeBoundingSphere();
+  return geometry;
+}
+
+function humanGeometry(style, clothing){
+  const parts = [];
+  const longCoat = style==='cloak' || style==='coat';
+  const modern = style==='modern';
+  const hem = modern ? 0.76 : (longCoat ? 0.28 : 0.52);
+  const height = 1.40-hem;
+  const tunic = style==='work' ? 0x887254 : clothing;
+  parts.push(piece(new CylinderGeometry(0.19,0.26,height,10), [0,(1.40+hem)/2,0], [1,1,1], tunic));
+  parts.push(piece(new CylinderGeometry(0.045,0.052,0.10,8), [0,1.39,0], [1,1,1], COLORS.skin));
+  parts.push(piece(SHAPES.sphere, [0,1.555,0], [0.088,0.118,0.086], COLORS.skin));
+  parts.push(piece(SHAPES.sphere, [0,1.63,0.003], [0.091,0.058,0.089], COLORS.hair));
+  if(modern){
+    parts.push(piece(SHAPES.sphere, [0,1.687,0], [0.108,0.027,0.103], 0xb6a17c));
+  }
+  for(const side of [-1,1]){
+    const hip=side*0.105;
+    const legPivot=[hip,0.89,0];
+    parts.push(piece(new CylinderGeometry(0.064,0.049,0.85,8), [hip,0.45,0], [1,1,1], modern ? COLORS.trousers : COLORS.skin, side, legPivot));
+    parts.push(piece(SHAPES.box, [hip,0.036,0.045], [0.12,0.055,0.24], COLORS.sandals));
+    const armPivot=[side*0.22,1.36,0];
+    parts.push(piece(new CylinderGeometry(0.054,0.066,0.47,8), [side*0.265,1.11,0], [1,1,1], COLORS.sleeve, -side*0.72, armPivot));
+    parts.push(piece(SHAPES.sphere, [side*0.28,0.84,0], [0.052,0.06,0.05], COLORS.skin));
+  }
+  return merge(parts);
+}
+
+function dogGeometry(){
+  const parts=[
+    piece(SHAPES.sphere,[0,0.34,0.025],[0.14,0.115,0.25],COLORS.dog),
+    piece(SHAPES.sphere,[0,0.39,-0.205],[0.092,0.092,0.105],COLORS.dog),
+    piece(SHAPES.sphere,[0,0.345,-0.295],[0.067,0.046,0.09],0xb59a79),
+    piece(SHAPES.sphere,[-0.057,0.438,-0.225],[0.028,0.052,0.04],COLORS.dog),
+    piece(SHAPES.sphere,[0.057,0.438,-0.225],[0.028,0.052,0.04],COLORS.dog)
+  ];
+  for(const x of [-0.082,0.082]) for(const z of [-0.145,0.165]){
+    const side = x<0 ? -1 : 1;
+    const gait = side*(z<0 ? -1 : 1)*0.8;
+    parts.push(piece(new CylinderGeometry(0.034,0.027,0.29,6),[x,0.15,z],[1,1,1],COLORS.dog,gait,[x,0.285,z]));
+  }
+  parts.push(piece(SHAPES.cone,[0,0.43,0.235],[0.035,0.14,0.035],COLORS.dog,0.3,[0,0.38,0.20]));
+  return merge(parts);
+}
+
+function pigeonGeometry(){
+  const beak = new ConeGeometry(0.012,0.034,5);
+  beak.rotateX(-Math.PI/2);
+  const parts=[
+    piece(SHAPES.sphere,[0,0.09,0],[0.06,0.07,0.115],COLORS.bird),
+    piece(SHAPES.sphere,[0,0.14,-0.105],[0.042,0.043,0.045],COLORS.bird),
+    piece(beak,[0,0.135,-0.15],[1,1,1],COLORS.beak)
+  ];
+  for(const side of [-1,1])
+    parts.push(piece(SHAPES.sphere,[side*0.09,0.105,0],[0.14,0.018,0.115],COLORS.wing,side*1.2,[side*0.035,0.11,0],[0,0,1]));
+  return merge(parts);
+}
+
+function animatedMaterial(color=0xffffff){
+  const material = new MeshStandardMaterial({
+    color, vertexColors:true, roughness:0.91, metalness:0,
+    onBeforeCompile(shader){
+      shader.uniforms.uWalkTime = WALK;
+      shader.vertexShader = shader.vertexShader.replace(
+        '#include <common>',
+        '#include <common>\nattribute vec3 aPivot;\nattribute vec3 aAxis;\nattribute float aSwing;\nattribute float instancePhase;\nattribute float instanceStrideFrequency;\nattribute float instanceWalkBlend;\nuniform float uWalkTime;'
+      );
+      shader.vertexShader = shader.vertexShader.replace(
+        '#include <begin_vertex>',
+        '#include <begin_vertex>\nfloat walkAngle = sin(uWalkTime * instanceStrideFrequency + instancePhase) * aSwing * 0.42 * instanceWalkBlend;\nvec3 walkAxis = normalize(aAxis);\nvec3 walkLocal = transformed - aPivot;\nfloat walkC = cos(walkAngle);\nfloat walkS = sin(walkAngle);\ntransformed = aPivot + walkLocal * walkC + cross(walkAxis, walkLocal) * walkS + walkAxis * dot(walkAxis, walkLocal) * (1.0 - walkC);'
+      );
+    }
+  });
+  material.customProgramCacheKey = () => 'pompeii-crowd-gait-v3';
+  return material;
+}
+
+const HUMAN_MATERIAL = animatedMaterial();
+const DOG_MATERIAL = animatedMaterial();
+const BIRD_MATERIAL = animatedMaterial();
+
+function seeded(seed){
+  let state = seed >>> 0;
+  return () => (state = (state*1664525 + 1013904223) >>> 0) / 4294967296;
+}
+
+function routeTable(streets){
+  return (streets || []).filter(s => s.a && s.b).map((street,index) => {
+    const dx=street.b[0]-street.a[0], dz=street.b[1]-street.a[1];
+    return { a:street.a, b:street.b, length:Math.hypot(dx,dz), dx, dz, width:street.w || 2.2, index };
+  }).filter(r => r.length > 1);
+}
+
+const ACTIVITY_PLACE_IDS = new Set([
+  'casa-giardino','foro','anfiteatro','palestra','horrea','mosaici',
+  'quadriportico','basilica','canale','porta-ercolano','giulia-felice'
+]);
+function activitySites(epoch, routes){
+  if(!routes.length) return [];
+  return PLACES.filter(p => ACTIVITY_PLACE_IDS.has(p.id) && p.from<=epoch && p.to>=epoch)
+    .map(place => {
+      let best=null;
+      for(const route of routes){
+        const t=Math.max(0,Math.min(1,
+          ((place.x-route.a[0])*route.dx+(place.z-route.a[1])*route.dz)/(route.length*route.length)));
+        const x=route.a[0]+route.dx*t, z=route.a[1]+route.dz*t;
+        const distanceSquared=(place.x-x)**2+(place.z-z)**2;
+        if(!best || distanceSquared<best.distanceSquared)
+          best={placeId:place.id,route,distance:t*route.length,distanceSquared};
+      }
+      return best;
+    })
+    .filter(site => site && site.distanceSquared<=18*18);
+}
+
+function makeAgents(count, species, routes, random, flow, sites=[]){
+  if(!routes.length || count<=0) return [];
+  const weights=routes.map(r=>r.length), total=weights.reduce((a,b)=>a+b,0);
+  return Array.from({length:count},(_,index)=>{
+    const siteChance=flow==='out' || species==='birds' ? 0 : species==='dogs' ? 0.16 : 0.12;
+    const site=sites.length && random()<siteChance ? sites[Math.floor(random()*sites.length)] : null;
+    let route=site?.route;
+    if(!route){
+      let pick=random()*total;
+      route=routes[0];
+      for(let i=0;i<routes.length;i++){
+        pick-=weights[i];
+        if(pick<=0){ route=routes[i]; break; }
+      }
+    }
+    const wanderRadius=site ? 3.5+random()*5.5 : 0;
+    const lowDistance=site ? Math.max(0,site.distance-wanderRadius) : 0;
+    const highDistance=site ? Math.min(route.length,site.distance+wanderRadius) : route.length;
+    const initialDistance=site
+      ? Math.max(lowDistance,Math.min(highDistance,site.distance+(random()-0.5)*wanderRadius))
+      : random()*route.length*(flow==='out'?1:2);
+    const speed=species==='people' ? 0.86+random()*0.52 :
+      species==='dogs' ? 0.65+random()*0.90 : 2.2+random()*1.8;
+    const stride=species==='people' ? 0.72 : species==='dogs' ? 0.50 : 0.46;
+    // Le soste sono regia scenica, non tempi storici misurati; nell'eruzione
+    // il flusso in uscita resta continuo.
+    const pauseChance=flow==='out' || species==='birds' ? 0 : species==='dogs' ? 0.38 : 0.22;
+    const idle=!!site || random()<pauseChance;
+    const pauseDuration=site ? 8+random()*14 : 2.0+random()*4.5;
+    const walkDuration=site ? 6+random()*14 : species==='dogs' ? 4+random()*10 : 7+random()*22;
+    return {
+      route, speed,
+      strideFrequency:species==='birds' ? 27+random()*8 : speed/stride*Math.PI*2,
+      phase:random()*Math.PI*2,
+      distance:initialDistance,
+      initialDistance,
+      exited:false,
+      scale:species==='people' ? 0.92+random()*0.16 : species==='dogs' ? 0.88+random()*0.24 : 0.86+random()*0.28,
+      offset:species==='birds' ? 1.0+random()*1.8 : 0,
+      laneOffset:(random()-0.5)*Math.min(route.width*0.36,0.9),
+      pauseChance, idle, pauseDuration, walkDuration,
+      stateRemaining:idle && site ? pauseDuration : random()*(idle ? pauseDuration : walkDuration),
+      walkBlend:idle ? 0 : 1,
+      activityPlace:site?.placeId || null,
+      activityRange:site ? { low:lowDistance, high:highDistance } : null,
+      hover:species==='birds',
+      index
+    };
+  });
+}
+
+function populationMesh(geometry, material, agents, name){
+  const model = geometry.clone();
+  const phases = new Float32Array(agents.length);
+  const strideFrequencies = new Float32Array(agents.length);
+  const walkBlends = new Float32Array(agents.length);
+  agents.forEach((actor,i) => {
+    phases[i]=actor.phase;
+    strideFrequencies[i]=actor.strideFrequency;
+    walkBlends[i]=actor.walkBlend;
+  });
+  model.setAttribute('instancePhase', new InstancedBufferAttribute(phases,1));
+  model.setAttribute('instanceStrideFrequency', new InstancedBufferAttribute(strideFrequencies,1));
+  const walkBlendAttribute = new InstancedBufferAttribute(walkBlends,1);
+  walkBlendAttribute.setUsage(DynamicDrawUsage);
+  model.setAttribute('instanceWalkBlend', walkBlendAttribute);
+  const mesh = new InstancedMesh(model,material,Math.max(1,agents.length));
+  mesh.name=name;
+  mesh.instanceMatrix.setUsage(DynamicDrawUsage);
+  mesh.castShadow=false;
+  mesh.receiveShadow=false;
+  mesh.frustumCulled=false;
+  mesh.count=agents.length;
   return mesh;
 }
 
-function person(clothIndex, phase){
-  const root = new Group();
-  const body = new Group(); root.add(body);
-  const tunic = part(body, MAT.cloth[clothIndex], [0,0.255,0], [0.070,0.205,0.052], TUNIC);
-  part(body, MAT.skin, [0,0.405,0], [0.043,0.046,0.040]);
-  part(body, MAT.hair, [0,0.434,0.003], [0.044,0.024,0.042]);
-
-  const legs = [], arms = [];
-  for(const side of [-1,1]){
-    const leg = new Group(); leg.position.set(side*0.030,0.155,0); body.add(leg);
-    part(leg, MAT.skin, [0,-0.057,0], [0.014,0.070,0.015], LIMB);
-    part(leg, MAT.sandal, [0,-0.126,-0.015], [0.020,0.012,0.034]);
-    legs.push(leg);
-
-    const arm = new Group(); arm.position.set(side*0.068,0.329,0); body.add(arm);
-    part(arm, MAT.skin, [0,-0.057,0], [0.013,0.069,0.013], LIMB);
-    part(arm, MAT.skin, [0,-0.119,-0.002], [0.013,0.016,0.014]);
-    arms.push(arm);
-  }
-  return {
-    root,
-    updateWalk(time, moving){
-      const gait = moving ? Math.sin(time*5.2 + phase) : 0;
-      legs[0].rotation.x = gait*0.48;
-      legs[1].rotation.x = -gait*0.48;
-      arms[0].rotation.x = -gait*0.34;
-      arms[1].rotation.x = gait*0.34;
-      body.position.y = moving ? Math.max(0,gait)*0.006 : Math.sin(time*1.1+phase)*0.002;
+function updateMesh(mesh, agents, count, delta, flow){
+  mesh.count=count;
+  const walkBlends=mesh.geometry.getAttribute('instanceWalkBlend');
+  let walkBlendDirty=false;
+  for(let i=0;i<count;i++){
+    const actor=agents[i], route=actor.route;
+    if(flow==='out' && actor.exited){
+      TEMP.position.set(route.b[0],actor.offset,route.b[1]);
+      TEMP.rotation.set(0,0,0);
+      TEMP.scale.setScalar(0);
+      TEMP.updateMatrix();
+      mesh.setMatrixAt(i,TEMP.matrix);
+      continue;
     }
-  };
-}
-
-function dog(coatIndex, phase){
-  const root = new Group();
-  const body = new Group(); root.add(body);
-  part(body, MAT.dog[coatIndex], [0,0.105,0.005], [0.055,0.046,0.105]);
-  part(body, MAT.dog[coatIndex], [0,0.142,-0.092], [0.038,0.038,0.043]);
-  part(body, MAT.dog[coatIndex], [0,0.126,-0.123], [0.023,0.018,0.028]);
-  const ears = [];
-  for(const side of [-1,1]){
-    const ear = part(body, MAT.dog[coatIndex], [side*0.027,0.166,-0.099], [0.012,0.026,0.014], BEAK);
-    ear.rotation.z = side*0.28;
-    ears.push(ear);
-  }
-  const legs = [];
-  for(const x of [-0.035,0.035]) for(const z of [-0.060,0.064]){
-    const leg = new Group(); leg.position.set(x,0.092,z); body.add(leg);
-    part(leg, MAT.dog[coatIndex], [0,-0.041,0], [0.012,0.052,0.013], LIMB);
-    legs.push(leg);
-  }
-  const tail = new Group(); tail.position.set(0,0.13,0.101); body.add(tail);
-  part(tail, MAT.dog[coatIndex], [0,0.012,0.032], [0.012,0.014,0.050]);
-  return {
-    root,
-    updateWalk(time, moving){
-      const swing = moving ? Math.sin(time*5.8+phase)*0.42 : Math.sin(time*1.7+phase)*0.10;
-      legs.forEach((leg,i) => { leg.rotation.x = swing * ((i===0 || i===3) ? 1 : -1); });
-      tail.rotation.x = Math.sin(time*3.2+phase)*0.26;
-      body.position.y = moving ? Math.max(0,swing)*0.004 : 0;
+    if(actor.pauseChance>0 && flow!=='out'){
+      actor.stateRemaining-=delta;
+      if(actor.stateRemaining<=0){
+        actor.idle=!actor.idle;
+        actor.stateRemaining=actor.idle ? actor.pauseDuration : actor.walkDuration;
+      }
+      const target=actor.idle ? 0 : 1;
+      const blend=actor.walkBlend+(target-actor.walkBlend)*Math.min(1,delta*3.5);
+      if(Math.abs(blend-actor.walkBlend)>0.001){
+        actor.walkBlend=blend;
+        walkBlends.array[i]=blend;
+        walkBlendDirty=true;
+      }
     }
-  };
-}
-
-function pigeon(phase){
-  const root = new Group();
-  part(root, MAT.pigeon, [0,0.055,0], [0.025,0.019,0.040]);
-  part(root, MAT.pigeon, [0,0.071,-0.030], [0.015,0.015,0.016]);
-  part(root, MAT.beak, [0,0.067,-0.050], [0.004,0.004,0.012], BEAK).rotation.x = -Math.PI/2;
-  const wings = [];
-  for(const side of [-1,1]){
-    const wing = part(root, MAT.wing, [side*0.019,0.062,0.005], [0.029,0.006,0.031]);
-    wings.push({ mesh:wing, side });
-  }
-  return {
-    root,
-    updateWalk(time){
-      wings.forEach(({mesh,side}) => { mesh.rotation.z = side*(0.10 + Math.sin(time*8+phase)*0.08); });
-      root.position.y = 0.002 + Math.abs(Math.sin(time*2+phase))*0.004;
+    const cycle=flow==='out' ? route.length : route.length*2;
+    actor.distance+=actor.speed*delta*actor.walkBlend;
+    if(flow==='out' && actor.distance>=route.length){
+      actor.exited=true;
+      TEMP.position.set(route.b[0],actor.offset,route.b[1]);
+      TEMP.rotation.set(0,0,0);
+      TEMP.scale.setScalar(0);
+      TEMP.updateMatrix();
+      mesh.setMatrixAt(i,TEMP.matrix);
+      continue;
     }
-  };
-}
-
-function routeLength(route){
-  let length = 0;
-  for(let i=1;i<route.length;i++) length += Math.hypot(route[i][0]-route[i-1][0],route[i][1]-route[i-1][1]);
-  return length;
-}
-
-function putOnRoute(agent, route, distance){
-  const length = routeLength(route);
-  const closed = route.length > 2 && route[0][0]===route.at(-1)[0] && route[0][1]===route.at(-1)[1];
-  let d, direction = 1;
-  if(closed) d = ((distance % length) + length) % length;
-  else {
-    const cycle = length*2;
-    d = ((distance % cycle) + cycle) % cycle;
-    if(d > length){ d = cycle-d; direction = -1; }
-  }
-  for(let i=1;i<route.length;i++){
-    const [x0,z0] = route[i-1], [x1,z1] = route[i];
-    const segment = Math.hypot(x1-x0,z1-z0);
-    if(d <= segment || i===route.length-1){
-      const t = segment ? d/segment : 0;
-      agent.root.position.x = x0 + (x1-x0)*t;
-      agent.root.position.z = z0 + (z1-z0)*t;
-      agent.root.rotation.y = Math.atan2(-direction*(x1-x0), -direction*(z1-z0));
-      return;
+    actor.distance%=cycle;
+    let reverse=flow!=='out' && actor.distance>route.length;
+    let d=reverse ? cycle-actor.distance : actor.distance;
+    if(actor.activityRange && flow!=='out'){
+      const {low,high}=actor.activityRange;
+      if(!reverse && d>=high){ actor.distance=cycle-high; reverse=true; d=high; }
+      else if(reverse && d<=low){ actor.distance=low; reverse=false; d=low; }
     }
-    d -= segment;
+    const t=route.length ? d/route.length : 0;
+    const direction=reverse ? -1 : 1;
+    TEMP.position.set(
+      route.a[0]+route.dx*t-route.dz/route.length*actor.laneOffset,
+      actor.offset+(actor.hover ? Math.abs(Math.sin(WALK.value*3.2+actor.phase))*0.018 : 0),
+      route.a[1]+route.dz*t+route.dx/route.length*actor.laneOffset
+    );
+    TEMP.rotation.set(0,Math.atan2(-direction*route.dx,-direction*route.dz),0);
+    TEMP.scale.setScalar(actor.scale);
+    TEMP.updateMatrix();
+    mesh.setMatrixAt(i,TEMP.matrix);
   }
+  if(count) mesh.instanceMatrix.needsUpdate=true;
+  if(walkBlendDirty) walkBlends.needsUpdate=true;
 }
 
-export function createInhabitants(){
+export function createInhabitants({ streets=[] }={}){
   const group = new Group();
-  group.name = 'vita-quotidiana-79';
-  group.visible = false;
-  const walkers = [];
-  const people = [
-    { route:[[-72,17],[-72,33]], speed:0.22 },
-    { route:[[-67,13],[-57,13]], speed:0.24 },
-    { route:[[-41,-30],[-29,-30]], speed:0.19 },
-    { route:[[72,22],[72,38]], speed:0.20 },
-    { route:[[-21,-49],[-21,-34]], speed:0.18 },
-    { route:[[-94,-52],[-82,-52]], speed:0.21 }
-  ];
-  people.forEach((spec,i) => {
-    const actor = person(i%MAT.cloth.length, i*1.71);
-    group.add(actor.root);
-    walkers.push({ ...actor, ...spec, phase:i*2.2, distance:i*2.7 });
-  });
+  group.name='popolazioni-per-epoca';
+  const routes=routeTable(streets), entries=[];
+  const geometries=new Map();
+  const sharedDog=dogGeometry(), sharedBird=pigeonGeometry();
+  const populationGroups=[];
 
-  const dogs = [
-    { route:[[-71,19],[-71,29]], speed:0.14 },
-    { route:[[-42,-30],[-31,-30]], speed:0.12 },
-    { route:[[74,36],[74,48]], speed:0.13 }
-  ];
-  dogs.forEach((spec,i) => {
-    const actor = dog(i, i*2.6);
-    group.add(actor.root);
-    walkers.push({ ...actor, ...spec, phase:i*2.6, distance:i*3.1 });
-  });
-
-  const flocks = [
-    { center:[-71,14], radius:1.1 },
-    { center:[-35,-30], radius:1.25 },
-    { center:[72,30], radius:1.0 }
-  ];
-  flocks.forEach((flock,f) => {
-    for(let i=0;i<3;i++){
-      const phase = f*2.4 + i*2.1;
-      const actor = pigeon(phase);
-      group.add(actor.root);
-      const a = phase;
-      const route = [0,1,2,3,4].map(k => [
-        flock.center[0]+Math.cos(a + k*Math.PI/2)*flock.radius,
-        flock.center[1]+Math.sin(a + k*Math.PI/2)*flock.radius
-      ]);
-      walkers.push({ ...actor, route, speed:0.065, phase, distance:i*0.8 });
-    }
-  });
-
+  for(const profile of POPULATIONS){
+    const random=seeded(0x51f15e + profile.epoch*997);
+    const sites=activitySites(profile.epoch,routes);
+    const people=makeAgents(profile.people,'people',routes,random,profile.flow,sites);
+    const dogs=makeAgents(profile.dogs,'dogs',routes,random,profile.flow,sites);
+    const birds=makeAgents(profile.pigeons,'birds',routes,random,profile.flow,sites);
+    const epochGroup=new Group();
+    epochGroup.name=profile.name;
+    epochGroup.visible=profile.epoch===0;
+    const key=profile.style+':'+profile.cloth;
+    if(!geometries.has(key)) geometries.set(key,humanGeometry(profile.style,profile.cloth));
+    const human=populationMesh(geometries.get(key),HUMAN_MATERIAL,people,'persone-'+profile.name);
+    const dogMesh=populationMesh(sharedDog,DOG_MATERIAL,dogs,'cani-'+profile.name);
+    const birdMesh=populationMesh(sharedBird,BIRD_MATERIAL,birds,'piccioni-'+profile.name);
+    epochGroup.add(human,dogMesh,birdMesh);
+    group.add(epochGroup);
+    populationGroups.push({ profile, group:epochGroup, people, dogs, birds, human, dogMesh, birdMesh });
+  }
   return {
     group,
-    update(time, delta){
+    epoch:0,
+    density:1,
+    setEpoch(index){
+      this.epoch=index;
+      populationGroups.forEach(item => {
+        item.group.visible=item.profile.epoch===index;
+        if(item.group.visible && item.profile.flow==='out'){
+          for(const actors of [item.people,item.dogs,item.birds])
+            actors.forEach(actor => {
+              actor.exited=false;
+              actor.distance=actor.initialDistance;
+            });
+        }
+      });
+    },
+    setDensity(value){
+      this.density=Math.max(0,Math.min(1,value));
+    },
+    update(time,delta){
       if(!group.visible) return;
-      for(const actor of walkers){
-        actor.distance += actor.speed*delta;
-        putOnRoute(actor, actor.route, actor.distance);
-        actor.updateWalk(time, actor.speed > 0.08);
-      }
+      WALK.value=time;
+      const active=populationGroups[this.epoch];
+      if(!active || !active.group.visible) return;
+      const count=(agents)=>Math.floor(agents.length*this.density);
+      updateMesh(active.human,active.people,count(active.people),delta,active.profile.flow);
+      updateMesh(active.dogMesh,active.dogs,count(active.dogs),delta,active.profile.flow);
+      updateMesh(active.birdMesh,active.birds,count(active.birds),delta,active.profile.flow);
     }
   };
 }

@@ -15,7 +15,6 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
-  MeshLambertMaterial,
   MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
@@ -635,7 +634,7 @@ for(const b of [...buckets.values()]){
 
 const cityGroup = new Group();
 scene.add(cityGroup);
-const inhabitants = createInhabitants();
+const inhabitants = createInhabitants({ streets:STREETS });
 scene.add(inhabitants.group);
 
 const dummy = new Object3D();
@@ -644,14 +643,16 @@ const tintColor = new Color();
 function bake(list, color, geo, parent, shadows, vary){
   const texName = TEXMAP.get(color);
   const pbr = PBR[texName];
-  const mat = pbr
-    ? new MeshStandardMaterial({
-        color, map:pbr.color, normalMap:pbr.normal, normalScale:new Vector2(0.55,0.55),
-        roughnessMap:pbr.roughness, roughness:1, metalness:0,
-        clippingPlanes:[clipPlane], clipShadows:true
-      })
-    : new MeshLambertMaterial({ color, clippingPlanes:[clipPlane], clipShadows:true });
-  if(!pbr && texName && TEX[texName]) mat.map = TEX[texName];
+  const mat = new MeshStandardMaterial({
+    color:texName === 'tuff' ? 0xffffff : color,
+    map:pbr ? pbr.color : (texName ? TEX[texName] : null),
+    normalMap:pbr ? pbr.normal : null,
+    normalScale:new Vector2(0.55,0.55),
+    roughnessMap:pbr ? pbr.roughness : null,
+    roughness:pbr ? 1 : 0.92,
+    metalness:0,
+    clippingPlanes:[clipPlane], clipShadows:true
+  });
   allMaterials.push(mat);
   const mesh = new InstancedMesh(geo, mat, list.length);
   list.forEach((b,i) => {
@@ -1092,7 +1093,7 @@ function applyEpoch(i, silent){
   ashGroup.visible = !!e.ash;
   smoke.points.visible = !!e.shanty;
   birds.visible = (i === 0 || i === 4 || i === 7);
-  inhabitants.group.visible = i === 0;
+  inhabitants.setEpoch(i);
   applyLight();
 
   document.querySelectorAll('.ep').forEach((el,k) => {
@@ -1610,6 +1611,7 @@ function applyQuality(i){
   scene.fog.far = q.fogFar;
   shadowsOn = q.shadows;
   setParticleDensity(q.parts);
+  inhabitants.setDensity(q.parts);
   renderScaleTarget = q.rs;
   renderScale = q.rs;
   POST.setQuality(q.ao, q.sharp, q.vig);
@@ -2045,7 +2047,9 @@ addEventListener('resize', () => {
 });
 
 setPad(isTouch);
-applyQuality(isMobile ? 1 : 0);
+// Il profilo massimo è il punto di partenza anche sui telefoni di riferimento;
+// la risoluzione dinamica e i gradini inferiori restano la rete di sicurezza.
+applyQuality(0);
 setClockUI(!isMobile);
 document.getElementById('clockSlider').value = ORA_INGRESSO * 60;
 updateSun();
