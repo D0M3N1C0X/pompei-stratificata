@@ -97,7 +97,12 @@ limiti.
   scientifica sul percorso esatto sotto la città non ne ho trovate: l'unica
   trattazione estesa è autopubblicata e legata a una tesi di ridatazione di Pompei,
   quindi inutilizzabile. Nel modello è dichiarato tale nella scheda del luogo.
-- **Le texture sono disegnate dal codice**, non rilevate dai materiali reali.
+- **La maggior parte delle texture è procedurale.** Basalto, intonaco e tegole
+  usano mappe PBR CC0 locali; le altre superfici non sono scansioni di materiali
+  archeologici.
+- **Gli abitanti animati sono ancora modelli procedurali provvisori.** Le
+  densità per epoca sono scelte sceniche, non stime demografiche; non sono ancora
+  integrati modelli umani e animali fotorealistici con provenienza e attribuzione.
 - **Il profilo del Vesuvio è schematico e fuori scala.**
 - **Il sonoro non è una ricostruzione.** Riproduce il *timbro* di strumenti che
   esistono come reperto — circa settanta rinvenimenti riferibili a tibiae da Pompei,

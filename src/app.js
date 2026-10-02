@@ -635,7 +635,7 @@ for(const b of [...buckets.values()]){
 
 const cityGroup = new Group();
 scene.add(cityGroup);
-const inhabitants = createInhabitants();
+const inhabitants = createInhabitants({ streets:STREETS });
 scene.add(inhabitants.group);
 
 const dummy = new Object3D();
@@ -1092,7 +1092,7 @@ function applyEpoch(i, silent){
   ashGroup.visible = !!e.ash;
   smoke.points.visible = !!e.shanty;
   birds.visible = (i === 0 || i === 4 || i === 7);
-  inhabitants.group.visible = i === 0;
+  inhabitants.setEpoch(i);
   applyLight();
 
   document.querySelectorAll('.ep').forEach((el,k) => {
@@ -1610,6 +1610,7 @@ function applyQuality(i){
   scene.fog.far = q.fogFar;
   shadowsOn = q.shadows;
   setParticleDensity(q.parts);
+  inhabitants.setDensity(q.parts);
   renderScaleTarget = q.rs;
   renderScale = q.rs;
   POST.setQuality(q.ao, q.sharp, q.vig);
@@ -2045,7 +2046,9 @@ addEventListener('resize', () => {
 });
 
 setPad(isTouch);
-applyQuality(isMobile ? 1 : 0);
+// Il profilo massimo è il punto di partenza anche sui telefoni di riferimento;
+// la risoluzione dinamica e i gradini inferiori restano la rete di sicurezza.
+applyQuality(0);
 setClockUI(!isMobile);
 document.getElementById('clockSlider').value = ORA_INGRESSO * 60;
 updateSun();
