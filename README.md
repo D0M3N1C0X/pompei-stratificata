@@ -97,9 +97,10 @@ limiti.
   scientifica sul percorso esatto sotto la città non ne ho trovate: l'unica
   trattazione estesa è autopubblicata e legata a una tesi di ridatazione di Pompei,
   quindi inutilizzabile. Nel modello è dichiarato tale nella scheda del luogo.
-- **La maggior parte delle texture è procedurale.** Basalto, intonaco e tegole
-  usano mappe PBR CC0 locali; le altre superfici non sono scansioni di materiali
-  archeologici.
+- **Le texture non sono scansioni archeologiche.** Basalto, intonaco e tegole
+  usano mappe PBR CC0 locali; il colore del tufo usa una texture generata con AI,
+  documentata in `src/assets/pbr/pompeii/ATTRIBUTIONS.md`; le altre superfici
+  restano procedurali.
 - **Gli abitanti animati sono ancora modelli procedurali provvisori.** Le
   densità per epoca sono scelte sceniche, non stime demografiche; non sono ancora
   integrati modelli umani e animali fotorealistici con provenienza e attribuzione.

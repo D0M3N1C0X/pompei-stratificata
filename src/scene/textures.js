@@ -2,6 +2,7 @@ import {
   CanvasTexture,
   TextureLoader,
   RepeatWrapping,
+  ClampToEdgeWrapping,
   SRGBColorSpace
 } from 'three';
 import { PAL } from './palette.js';
@@ -15,6 +16,7 @@ import plasterRoughUrl from '../assets/pbr/pompeii/plaster-roughness.webp';
 import roofColorUrl from '../assets/pbr/pompeii/roof-diffuse.webp';
 import roofNormalUrl from '../assets/pbr/pompeii/roof-normal.webp';
 import roofRoughUrl from '../assets/pbr/pompeii/roof-roughness.webp';
+import tuffColorUrl from '../assets/pbr/pompeii/tuff-color.webp';
 
 
 /* --------------------------------------------------------- texture */
@@ -128,7 +130,13 @@ TEX.tile    = toTex(grain(256, 0.84, 1.0, 37, 10, 0.07), 4);
 TEX.basalt  = toTex(chunks(256, 41, 130, 0.028, 0.062, 124, 0.74, 0.96), 3);
 TEX.marble  = toTex(veined(256, 53), 2);
 TEX.stone   = toTex(grain(256, 0.90, 1.0, 61, 10, 0.045), 3);
-TEX.tuff    = toTex(grain(256, 0.84, 1.0, 71, 16, 0.07), 4);
+// La mappa AI è applicata una sola volta per faccia: evita giunzioni da tile.
+TEX.tuff    = imageLoader.load(tuffColorUrl);
+TEX.tuff.colorSpace = SRGBColorSpace;
+TEX.tuff.wrapS = TEX.tuff.wrapT = ClampToEdgeWrapping;
+TEX.tuff.repeat.set(1, 1);
+TEX.tuff.anisotropy = 8;
+TEX.tuffNoise = toTex(grain(256, 0.84, 1.0, 71, 16, 0.07), 4);
 TEX.pumiceW = toTex(grain(256, 0.76, 1.0, 83, 0), 5);
 TEX.pumiceG = toTex(grain(256, 0.78, 1.0, 97, 8, 0.06), 5);
 TEX.ash     = toTex(grain(256, 0.86, 1.0, 103, 12, 0.06), 4);
@@ -139,10 +147,10 @@ export const TEXMAP = new Map([
   [PAL.roof,'tile'],[PAL.roof2,'tile'],
   [PAL.street,'basalt'],[PAL.kerb,'stone'],
   [PAL.stone,'stone'],[PAL.column,'marble'],[PAL.civic,'stone'],
-  [PAL.terrace,'tuff'],[0x8f8776,'tuff'],[0x847c6b,'tuff'],[0x6f6b60,'tuff'],
+  [PAL.terrace,'tuff'],[0x8f8776,'tuff'],[0x847c6b,'tuff'],
   [PAL.depWhite,'pumiceW'],[PAL.depGrey,'pumiceG'],[PAL.depSurge,'ash'],
   [0x4c4639,'ash'],[PAL.mountain,'ash'],[0x6d6a64,'ash'],[0x555350,'ash'],
   [PAL.veg,'veg'],[PAL.crude,'plaster'],[PAL.spoil,'tuff'],
-  [0x3a342c,'plaster'],[0x5a4a37,'tuff'],[0x54633f,'veg'],[0x5f6e48,'veg'],
+  [0x3a342c,'plaster'],[0x5a4a37,'tuffNoise'],[0x54633f,'veg'],[0x5f6e48,'veg'],
   [0x8f8674,'tuff'],[0x5d7278,'stone'],[0x6d8286,'stone']
 ]);

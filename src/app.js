@@ -644,7 +644,7 @@ function bake(list, color, geo, parent, shadows, vary){
   const texName = TEXMAP.get(color);
   const pbr = PBR[texName];
   const mat = new MeshStandardMaterial({
-    color,
+    color:texName === 'tuff' ? 0xffffff : color,
     map:pbr ? pbr.color : (texName ? TEX[texName] : null),
     normalMap:pbr ? pbr.normal : null,
     normalScale:new Vector2(0.55,0.55),
