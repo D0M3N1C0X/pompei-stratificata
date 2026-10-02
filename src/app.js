@@ -15,7 +15,6 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
-  MeshLambertMaterial,
   MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
@@ -644,14 +643,16 @@ const tintColor = new Color();
 function bake(list, color, geo, parent, shadows, vary){
   const texName = TEXMAP.get(color);
   const pbr = PBR[texName];
-  const mat = pbr
-    ? new MeshStandardMaterial({
-        color, map:pbr.color, normalMap:pbr.normal, normalScale:new Vector2(0.55,0.55),
-        roughnessMap:pbr.roughness, roughness:1, metalness:0,
-        clippingPlanes:[clipPlane], clipShadows:true
-      })
-    : new MeshLambertMaterial({ color, clippingPlanes:[clipPlane], clipShadows:true });
-  if(!pbr && texName && TEX[texName]) mat.map = TEX[texName];
+  const mat = new MeshStandardMaterial({
+    color,
+    map:pbr ? pbr.color : (texName ? TEX[texName] : null),
+    normalMap:pbr ? pbr.normal : null,
+    normalScale:new Vector2(0.55,0.55),
+    roughnessMap:pbr ? pbr.roughness : null,
+    roughness:pbr ? 1 : 0.92,
+    metalness:0,
+    clippingPlanes:[clipPlane], clipShadows:true
+  });
   allMaterials.push(mat);
   const mesh = new InstancedMesh(geo, mat, list.length);
   list.forEach((b,i) => {
