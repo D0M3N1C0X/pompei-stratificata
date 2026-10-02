@@ -16,6 +16,7 @@ import {
 } from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { POPULATIONS } from '../data/populations.js';
+import { PLACES } from '../data/places.js';
 
 const WALK = { value:0 };
 const COLORS = {
@@ -161,25 +162,58 @@ function routeTable(streets){
   }).filter(r => r.length > 1);
 }
 
-function makeAgents(count, species, routes, random, flow){
+const ACTIVITY_PLACE_IDS = new Set([
+  'casa-giardino','foro','anfiteatro','palestra','horrea','mosaici',
+  'quadriportico','basilica','canale','porta-ercolano','giulia-felice'
+]);
+function activitySites(epoch, routes){
+  if(!routes.length) return [];
+  return PLACES.filter(p => ACTIVITY_PLACE_IDS.has(p.id) && p.from<=epoch && p.to>=epoch)
+    .map(place => {
+      let best=null;
+      for(const route of routes){
+        const t=Math.max(0,Math.min(1,
+          ((place.x-route.a[0])*route.dx+(place.z-route.a[1])*route.dz)/(route.length*route.length)));
+        const x=route.a[0]+route.dx*t, z=route.a[1]+route.dz*t;
+        const distanceSquared=(place.x-x)**2+(place.z-z)**2;
+        if(!best || distanceSquared<best.distanceSquared)
+          best={placeId:place.id,route,distance:t*route.length,distanceSquared};
+      }
+      return best;
+    })
+    .filter(site => site && site.distanceSquared<=18*18);
+}
+
+function makeAgents(count, species, routes, random, flow, sites=[]){
   if(!routes.length || count<=0) return [];
   const weights=routes.map(r=>r.length), total=weights.reduce((a,b)=>a+b,0);
   return Array.from({length:count},(_,index)=>{
-    let pick=random()*total, route=routes[0];
-    for(let i=0;i<routes.length;i++){
-      pick-=weights[i];
-      if(pick<=0){ route=routes[i]; break; }
+    const siteChance=flow==='out' || species==='birds' ? 0 : species==='dogs' ? 0.16 : 0.12;
+    const site=sites.length && random()<siteChance ? sites[Math.floor(random()*sites.length)] : null;
+    let route=site?.route;
+    if(!route){
+      let pick=random()*total;
+      route=routes[0];
+      for(let i=0;i<routes.length;i++){
+        pick-=weights[i];
+        if(pick<=0){ route=routes[i]; break; }
+      }
     }
-    const initialDistance=random()*route.length*(flow==='out'?1:2);
+    const wanderRadius=site ? 3.5+random()*5.5 : 0;
+    const lowDistance=site ? Math.max(0,site.distance-wanderRadius) : 0;
+    const highDistance=site ? Math.min(route.length,site.distance+wanderRadius) : route.length;
+    const initialDistance=site
+      ? Math.max(lowDistance,Math.min(highDistance,site.distance+(random()-0.5)*wanderRadius))
+      : random()*route.length*(flow==='out'?1:2);
     const speed=species==='people' ? 0.86+random()*0.52 :
       species==='dogs' ? 0.65+random()*0.90 : 2.2+random()*1.8;
     const stride=species==='people' ? 0.72 : species==='dogs' ? 0.50 : 0.46;
     // Le soste sono regia scenica, non tempi storici misurati; nell'eruzione
     // il flusso in uscita resta continuo.
     const pauseChance=flow==='out' || species==='birds' ? 0 : species==='dogs' ? 0.38 : 0.22;
-    const idle=random()<pauseChance;
-    const pauseDuration=2.0+random()*4.5;
-    const walkDuration=species==='dogs' ? 4+random()*10 : 7+random()*22;
+    const idle=!!site || random()<pauseChance;
+    const pauseDuration=site ? 8+random()*14 : 2.0+random()*4.5;
+    const walkDuration=site ? 6+random()*14 : species==='dogs' ? 4+random()*10 : 7+random()*22;
     return {
       route, speed,
       strideFrequency:species==='birds' ? 27+random()*8 : speed/stride*Math.PI*2,
@@ -191,8 +225,10 @@ function makeAgents(count, species, routes, random, flow){
       offset:species==='birds' ? 1.0+random()*1.8 : 0,
       laneOffset:(random()-0.5)*Math.min(route.width*0.36,0.9),
       pauseChance, idle, pauseDuration, walkDuration,
-      stateRemaining:random()*(idle ? pauseDuration : walkDuration),
+      stateRemaining:idle && site ? pauseDuration : random()*(idle ? pauseDuration : walkDuration),
       walkBlend:idle ? 0 : 1,
+      activityPlace:site?.placeId || null,
+      activityRange:site ? { low:lowDistance, high:highDistance } : null,
       hover:species==='birds',
       index
     };
@@ -264,8 +300,13 @@ function updateMesh(mesh, agents, count, delta, flow){
       continue;
     }
     actor.distance%=cycle;
-    const reverse=flow!=='out' && actor.distance>route.length;
-    const d=reverse ? cycle-actor.distance : actor.distance;
+    let reverse=flow!=='out' && actor.distance>route.length;
+    let d=reverse ? cycle-actor.distance : actor.distance;
+    if(actor.activityRange && flow!=='out'){
+      const {low,high}=actor.activityRange;
+      if(!reverse && d>=high){ actor.distance=cycle-high; reverse=true; d=high; }
+      else if(reverse && d<=low){ actor.distance=low; reverse=false; d=low; }
+    }
     const t=route.length ? d/route.length : 0;
     const direction=reverse ? -1 : 1;
     TEMP.position.set(
@@ -292,9 +333,10 @@ export function createInhabitants({ streets=[] }={}){
 
   for(const profile of POPULATIONS){
     const random=seeded(0x51f15e + profile.epoch*997);
-    const people=makeAgents(profile.people,'people',routes,random,profile.flow);
-    const dogs=makeAgents(profile.dogs,'dogs',routes,random,profile.flow);
-    const birds=makeAgents(profile.pigeons,'birds',routes,random,profile.flow);
+    const sites=activitySites(profile.epoch,routes);
+    const people=makeAgents(profile.people,'people',routes,random,profile.flow,sites);
+    const dogs=makeAgents(profile.dogs,'dogs',routes,random,profile.flow,sites);
+    const birds=makeAgents(profile.pigeons,'birds',routes,random,profile.flow,sites);
     const epochGroup=new Group();
     epochGroup.name=profile.name;
     epochGroup.visible=profile.epoch===0;
