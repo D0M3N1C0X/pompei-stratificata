@@ -332,34 +332,40 @@ export const AUDIO = (function(){
     { // 1 — il seppellimento
       beds:[ {type:'lowpass', f:190, q:0.6, g:0.115},
              {type:'highpass', f:2200, q:0.5, g:0.060} ],
-      events:[ [tick_,0.03,0.13,0.055], [boom_,16,34,0.085], [voice_,7,20,0.016] ]
+      events:[ [tick_,0.03,0.13,0.055], [boom_,16,34,0.085], [voice_,7,20,0.016],
+               [dogBark_,28,64,0.016] ]
     },
     { // 2 — recuperi e cunicoli
       beds:[ {type:'lowpass', f:340, q:0.5, g:0.038, mod:{rate:0.05, depth:90}} ],
-      events:[ [pick_,1.1,3.6,0.055], [voice_,9,24,0.020], [creak_,12,28,0.030] ]
+      events:[ [pick_,1.1,3.6,0.055], [voice_,9,24,0.020], [creak_,12,28,0.030],
+               [bird_,8,22,0.014], [dogBark_,28,64,0.012] ]
     },
     { // 3 — la rioccupazione
       beds:[ {type:'lowpass', f:300, q:0.5, g:0.034},
              {type:'bandpass', f:1100, q:0.4, g:0.022, verb:1} ],
-      events:[ [crackle_,0.35,1.4,0.030], [voice_,11,28,0.018], [bird_,6,15,0.014] ]
+      events:[ [crackle_,0.35,1.4,0.030], [voice_,11,28,0.018], [bird_,6,15,0.014],
+               [dogBark_,28,60,0.012] ]
     },
     { // 4 — Civita
       beds:[ {type:'lowpass', f:420, q:0.4, g:0.070, mod:{rate:0.045, depth:170}} ],
-      events:[ [bird_,2.4,7,0.024], [tick_,4,11,0.012] ]
+      events:[ [bird_,2.4,7,0.024], [tick_,4,11,0.012], [dogBark_,24,54,0.014] ]
     },
     { // 5 — il canale di Fontana
       beds:[ {type:'lowpass', f:380, q:0.4, g:0.042, mod:{rate:0.05, depth:120}},
              {type:'bandpass', f:1800, q:0.5, g:0.038, verb:1} ],
-      events:[ [drop_,0.9,3.4,0.030], [pick_,2.2,6,0.042], [voice_,12,30,0.016] ]
+      events:[ [drop_,0.9,3.4,0.030], [pick_,2.2,6,0.042], [voice_,12,30,0.016],
+               [bird_,7,18,0.014], [dogBark_,28,60,0.012] ]
     },
     { // 6 — lo scavo borbonico
       beds:[ {type:'lowpass', f:360, q:0.5, g:0.040, mod:{rate:0.05, depth:100}} ],
-      events:[ [pick_,0.8,2.3,0.055], [creak_,10,24,0.034], [voice_,6,16,0.024], [step_,2,5,0.020] ]
+      events:[ [pick_,0.8,2.3,0.055], [creak_,10,24,0.034], [voice_,6,16,0.024],
+               [step_,2,5,0.020], [bird_,8,20,0.012], [dogBark_,30,65,0.010] ]
     },
     { // 7 — il cantiere aperto
       beds:[ {type:'lowpass', f:400, q:0.4, g:0.052, mod:{rate:0.04, depth:130}},
              {type:'lowpass', f:150, q:0.5, g:0.026} ],
-      events:[ [trowel_,2,6,0.036], [bird_,5,13,0.018], [voice_,14,34,0.014] ]
+      events:[ [trowel_,2,6,0.036], [bird_,5,13,0.018], [voice_,14,34,0.014],
+               [dogBark_,32,70,0.010] ]
     }
   ];
 
