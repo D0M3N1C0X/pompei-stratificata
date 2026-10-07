@@ -292,6 +292,10 @@
   #secLegend{display:flex;flex-direction:column;gap:.18rem}
   #secLegend div{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.58rem;color:var(--ink-soft);letter-spacing:.04em}
   #secLegend i{width:14px;height:9px;flex:0 0 auto;border-radius:1px}
+  #secSuolo{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.58rem;color:var(--ink-soft);letter-spacing:.04em}
+  #secSuolo[hidden]{display:none}
+  #secSuolo i{width:14px;height:9px;flex:0 0 auto;border-radius:1px;
+    background:repeating-linear-gradient(135deg,rgba(124,106,82,.75) 0 2px,rgba(236,226,206,.9) 2px 4px)}
   #secHint{font-family:var(--mono);font-size:.56rem;color:var(--ink-faint);letter-spacing:.06em}
   #secEmpty{
     font-family:var(--mono);font-size:.58rem;letter-spacing:.05em;color:var(--flag);
@@ -746,6 +750,7 @@ body.erc-on #crosshair{ display:block !important; }
         <div><i style="background:var(--lay-grey)"></i>lapilli pomicei grigi</div>
         <div><i style="background:var(--lay-white)"></i>lapilli pomicei bianchi · 3,1–3,3 m insieme</div>
       </div>
+      <div id="secSuolo" hidden><i></i><span data-i18n="ui.sez.suolo">suolo dopo il 79 · spessore non documentato, disegnato sottile apposta</span></div>
       <span id="secEmpty" hidden></span>
       <span id="secHint" data-i18n="ui.sez.suggerimento">rotella del mouse per far scorrere il taglio · C per uscire</span>
     </div>

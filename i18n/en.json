@@ -85,7 +85,8 @@
       "vuota": {
         "vigilia": "in this phase the deposit is not there yet — go to the burial",
         "scavato": "in this phase the deposit has been dug away"
-      }
+      },
+      "suolo": "soil after AD 79 · thickness not documented, drawn thin on purpose"
     },
     "tour": {
       "etichetta": "Tour",
@@ -142,7 +143,8 @@
       "correnti": "pyroclastic density currents",
       "grigi": "grey lapilli",
       "bianchi": "white lapilli",
-      "piano": "AD 79 ground level"
+      "piano": "AD 79 ground level",
+      "suolo": "soil after AD 79 · thickness ?"
     }
   },
   "epoche": [

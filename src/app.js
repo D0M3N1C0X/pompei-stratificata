@@ -1431,6 +1431,50 @@ function aggiornaQuotaCorpo(){
   secCorpo.add(etOcchi, etSopra);
 }
 
+/* -------------------------------------- il suolo dopo il 79, dichiarato
+
+   Fra la fase II e la VI il deposito del 79 restava identico per sedici
+   secoli — 1,25 unità dalla mattina dell'eruzione al canale di Fontana —
+   e la Sezione mostrava sopra le correnti piroclastiche il nulla. Eppure
+   in quei secoli sulla collina si è abitato, coltivato, scavato: un suolo
+   si è formato di sicuro. Quanto spesso, non si sa — è la lacuna che il
+   progetto dichiara nel cono dell'Insula Meridionalis.
+
+   Quindi lo si disegna come ciò che è: una banda tratteggiata e
+   semitrasparente, sottile apposta, con la quota «?». Non cambia spessore
+   fra le fasi, perché farlo vorrebbe dire inventare il dato che manca.
+   Sta solo sulla faccia del taglio, come la barra del corpo: è un segno di
+   disegno, non terreno su cui camminare. */
+
+// Spessore di disegno, NON un dato. Un metro nella scala del modello: quanto
+// basta perché la banda si legga dalla camera della sezione (a 0,12 unità era
+// alta due pixel), e abbastanza meno dei cinque metri del 79 da non suggerire
+// un ordine di grandezza. L'incertezza la portano il tratteggio e il «?».
+const SUOLO_H = 0.25;
+const MAT_SUOLO = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d');
+  g.fillStyle = 'rgba(124,106,82,0.55)'; g.fillRect(0, 0, 64, 64);
+  g.strokeStyle = 'rgba(236,226,206,0.85)'; g.lineWidth = 5;
+  for(let k = -64; k < 128; k += 16){
+    g.beginPath(); g.moveTo(k, 64); g.lineTo(k + 64, 0); g.stroke();
+  }
+  const tx = new CanvasTexture(c);
+  tx.colorSpace = SRGBColorSpace;
+  tx.wrapS = tx.wrapT = 1000;            // RepeatWrapping
+  tx.repeat.set(160, 2);
+  return new MeshBasicMaterial({ map:tx, transparent:true, depthWrite:false });
+})();
+const fasciaSuolo = new Mesh(new BoxGeometry(1, 1, 1), MAT_SUOLO);
+fasciaSuolo.visible = false;
+scene.add(fasciaSuolo);
+const etSuolo = makeLabel(t('scena.strati.suolo'), '#ECE2CE', 600, 40, 0.30);
+etSuolo.visible = false;
+scene.add(etSuolo);
+// le fasi in cui un suolo post-79 esiste: dopo il seppellimento, prima che lo
+// scavo moderno lo tolga
+function suoloEsiste(){ return epoch >= 2 && epoch <= 6; }
+
 let sectionX = -60;
 function updateSection(){
   sectionZ = Math.max(-72, Math.min(78, sectionZ));
@@ -2023,6 +2067,21 @@ function tick(){
   }
 
   // la barra alta come un uomo, contro la colonna del deposito
+  // la banda del suolo sulla faccia del taglio, sopra le correnti
+  const suolo = sectionOn && depositCurrent > 0.05 && suoloEsiste();
+  fasciaSuolo.visible = etSuolo.visible = suolo;
+  document.getElementById('secSuolo').hidden = !(sectionOn && suoloEsiste());
+  if(suolo){
+    fasciaSuolo.scale.set(420, SUOLO_H, 1.6);
+    fasciaSuolo.position.set(0, depositCurrent + SUOLO_H/2, sectionZ - 0.8);
+    etSuolo.position.set(sectionX + 9, depositCurrent + SUOLO_H + 0.30, sectionZ + 0.7);
+    const d = camera.position.distanceTo(etSuolo.position);
+    const k = Math.max(0.8, Math.min(1.6, d/22));
+    const h = etSuolo.userData.h * k;
+    etSuolo.scale.set(h * etSuolo.userData.aspect, h, 1);
+    etSuolo.material.opacity = 0.95;
+  }
+
   secCorpo.visible = sectionOn && depositCurrent > 0.05 && !!etOcchi;
   if(secCorpo.visible){
     // Colonna a sé, fra la camera e le quote degli strati: le due serie

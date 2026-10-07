@@ -85,7 +85,8 @@
       "vuota": {
         "vigilia": "in dieser Phase gibt es die Ablagerung noch nicht — gehen Sie zur Verschüttung",
         "scavato": "in dieser Phase ist die Ablagerung abgegraben worden"
-      }
+      },
+      "suolo": "Boden nach 79 · Mächtigkeit nicht belegt, absichtlich dünn gezeichnet"
     },
     "tour": {
       "etichetta": "Rundgang",
@@ -142,7 +143,8 @@
       "correnti": "pyroklastische Ströme",
       "grigi": "graue Lapilli",
       "bianchi": "weiße Lapilli",
-      "piano": "Gehniveau von 79"
+      "piano": "Gehniveau von 79",
+      "suolo": "Boden nach 79 · Mächtigkeit ?"
     }
   },
   "epoche": [

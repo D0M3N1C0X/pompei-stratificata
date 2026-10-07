@@ -85,7 +85,8 @@
       "vuota": {
         "vigilia": "à cette phase le dépôt n'existe pas encore — allez à l'ensevelissement",
         "scavato": "à cette phase le dépôt a été enlevé par la fouille"
-      }
+      },
+      "suolo": "sol après 79 · épaisseur non documentée, dessinée mince exprès"
     },
     "tour": {
       "etichetta": "Parcours",
@@ -142,7 +143,8 @@
       "correnti": "coulées pyroclastiques",
       "grigi": "lapilli gris",
       "bianchi": "lapilli blancs",
-      "piano": "niveau de sol de 79"
+      "piano": "niveau de sol de 79",
+      "suolo": "sol après 79 · épaisseur ?"
     }
   },
   "epoche": [
