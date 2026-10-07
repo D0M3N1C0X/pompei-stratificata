@@ -1079,6 +1079,7 @@ function applyLight(){
 
 function applyEpoch(i, silent){
   epoch = i;
+  scriviStato();
   const e = EPOCHS[i];
   aggiornaSezioneVuota();
   aggiornaQuotaCorpo();
@@ -1159,6 +1160,7 @@ function renderPlaceList(){
 
 const panel = document.getElementById('panel');
 function openPanel(p){
+  luogoAperto = p.id || null;
   document.getElementById('pTitle').textContent = p.label;
   document.getElementById('pSub').textContent = p.sub;
   document.getElementById('pBody').innerHTML = p.body;
@@ -1166,11 +1168,14 @@ function openPanel(p){
   panel.classList.add('open');
   panel.setAttribute('aria-hidden','false');
   document.body.classList.add('panel-open');
+  scriviStato();
 }
 function closePanel(){
+  luogoAperto = null;
   panel.classList.remove('open');
   panel.setAttribute('aria-hidden','true');
   document.body.classList.remove('panel-open');
+  scriviStato();
 }
 document.getElementById('pClose').addEventListener('click', closePanel);
 
@@ -1668,6 +1673,7 @@ function setCompare(v){
     CONFRONTO.resize(innerWidth, innerHeight);
     CONFRONTO.reset();
   }
+  scriviStato();
 }
 document.getElementById('btnCompare').addEventListener('click', () => setCompare(!compareOn));
 
@@ -1715,7 +1721,7 @@ function setErc(v){
       openPanel: openPanel,
       onNear: nome => {
         const el = document.getElementById('ercNear');
-        if(el) el.textContent = nome ? ('▸ ' + nome + ' — clicca') : '';
+        if(el) el.textContent = nome ? t('ui.erc.vicino', { nome }) : '';
       }
     });
   } else {
@@ -1729,6 +1735,7 @@ function setErc(v){
     document.getElementById('btnFly').classList.toggle('on', flyMode);
     document.getElementById('btnFly').textContent = t(flyMode ? 'ui.tool.volo' : 'ui.tool.cammina');
   }
+  scriviStato();
 }
 document.getElementById('btnErc').addEventListener('click', () => setErc(!ercOn));
 document.getElementById('ercExit').addEventListener('click', () => setErc(false));
@@ -2046,6 +2053,87 @@ addEventListener('resize', () => {
   POST.setSize(renderer, innerWidth, innerHeight, renderScale);
 });
 
+/* --------------------------------------------------- collegamenti diretti
+
+   L'indirizzo dice dove sei: ?fase=1…8 (gli stessi numeri dei tasti),
+   ?luogo=basilica, ?vista=confronto|ercolano, accanto al ?lang= che c'era già.
+   Si legge una volta all'avvio e si riscrive a ogni cambio, con replaceState:
+   nessuna voce in più nella cronologia, nessun ricaricamento.
+
+   Serve a tre cose che prima non si potevano fare. Un docente manda la classe
+   sulla ceramica del Quattrocento con un link invece di dettare «premi 5,
+   apri Luoghi, cerca Basilica». Chi cita il progetto cita un punto preciso.
+   E cambiare lingua — che ricarica la pagina — non riporta più all'inizio,
+   perché scegliLingua() riparte dall'indirizzo corrente.
+
+   I valori sbagliati si ignorano in silenzio: un link vecchio o storpiato
+   apre il modello all'inizio, non una pagina rotta. */
+
+var statoPronto = false;   // var e non let: applyEpoch la legge anche prima
+var luogoAperto = null;
+
+function scriviStato(){
+  if(!statoPronto || presenting) return;
+  const u = new URL(location.href);
+  const q = u.searchParams;
+  ['fase','luogo','vista'].forEach(k => q.delete(k));
+  if(ercOn) q.set('vista', 'ercolano');
+  else if(compareOn) q.set('vista', 'confronto');
+  if(!ercOn && !compareOn && (epoch !== 0 || luogoAperto)) q.set('fase', String(epoch + 1));
+  if(luogoAperto && !compareOn) q.set('luogo', luogoAperto);
+  const nuovo = u.pathname + (q.toString() ? '?' + q.toString() : '') + u.hash;
+  if(nuovo !== location.pathname + location.search + location.hash)
+    history.replaceState(null, '', nuovo);
+}
+
+function applicaCollegamento(){
+  const q = new URLSearchParams(location.search);
+  const vista = q.get('vista'), luogo = q.get('luogo');
+  const faseNum = parseInt(q.get('fase'), 10);
+  const fase = Number.isInteger(faseNum) && faseNum >= 1 && faseNum <= EPOCHS.length
+    ? faseNum - 1 : null;
+  let usato = false;
+
+  if(vista === 'confronto'){ setCompare(true); usato = true; }
+  else if(vista === 'ercolano'){
+    setErc(true); usato = true;
+    if(luogo && ERCOLANO.luoghi.some(p => p.id === luogo)) ERCOLANO.apri(luogo);
+  } else {
+    const h = luogo ? byId[luogo] : null;
+    if(h){
+      const d = h.data;
+      // la fase chiesta vale se il luogo ci esiste; altrimenti quella del racconto
+      const f = (fase !== null && fase >= d.from && fase <= d.to)
+        ? fase : (TOUR_EPOCH[luogo] ?? d.from);
+      applyEpoch(f);
+      flyTo(d);
+      openPanel(d);
+      usato = true;
+    } else if(fase !== null){
+      applyEpoch(fase);
+      usato = true;
+    }
+  }
+  // Chi arriva da un collegamento diretto vuole atterrare lì, non leggere
+  // la scheda d'ingresso: resta raggiungibile da «Comandi».
+  if(usato) document.getElementById('intro').classList.add('gone');
+  statoPronto = true;
+  scriviStato();
+}
+
+// «Copia il link»: l'indirizzo è già quello giusto, basta prenderlo
+document.getElementById('pLink').addEventListener('click', async () => {
+  const btn = document.getElementById('pLink');
+  try {
+    await navigator.clipboard.writeText(location.href);
+    btn.textContent = t('ui.panel.copiato');
+  } catch(e){
+    // senza permesso agli appunti si mostra l'indirizzo da copiare a mano
+    prompt(t('ui.panel.copiaLink'), location.href);
+  }
+  setTimeout(() => { btn.textContent = t('ui.panel.copiaLink'); }, 1800);
+});
+
 setPad(isTouch);
 // Il profilo massimo è il punto di partenza anche sui telefoni di riferimento;
 // la risoluzione dinamica e i gradini inferiori restano la rete di sicurezza.
@@ -2061,6 +2149,7 @@ if(isTouch){
 }
 applyEpoch(0);
 setFly(false);
+applicaCollegamento();
 document.getElementById('loading').classList.add('gone');
 tick();
 

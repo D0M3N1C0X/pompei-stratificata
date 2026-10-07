@@ -52,7 +52,8 @@
       "avanti": "▲ avançar",
       "indietro": "▼ recuar",
       "nota": "Caminha <b>apenas onde se escavou de facto</b>: quatro insulae inteiras\nmais as duas Orientalis. Todo o resto é depósito, e está desenhado como depósito —\ncom a cidade moderna por cima. <span class=\"ercWarn\">A cena está construída segundo\na convenção do sítio (Decumanus Maximus a montante, mar a jusante): a orientação\nreal não está verificada.</span>",
-      "comandi": "<span><kbd>W A S D</kbd> caminhar</span><span><kbd>rato</kbd> olhar</span>\n<span><kbd>clique</kbd> abrir a ficha</span><span><kbd>Esc</kbd> libertar</span>"
+      "comandi": "<span><kbd>W A S D</kbd> caminhar</span><span><kbd>rato</kbd> olhar</span>\n<span><kbd>clique</kbd> abrir a ficha</span><span><kbd>Esc</kbd> libertar</span>",
+      "vicino": "▸ {nome} — clique"
     },
     "cmp": {
       "titolo": "Porque é que Herculano não é Pompeia",
@@ -96,7 +97,9 @@
     "panel": {
       "fonte": "Fonte",
       "aria": "Ficha do lugar",
-      "chiudi": "Fechar a ficha"
+      "chiudi": "Fechar a ficha",
+      "copiaLink": "Copiar a ligação",
+      "copiato": "Ligação copiada"
     },
     "epoche": {
       "aria": "Fases cronológicas"
