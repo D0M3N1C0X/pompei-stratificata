@@ -243,8 +243,8 @@
     "palestra": {
       "label": "Grande Palestre",
       "sub": "Regio II, époque augustéenne",
-      "body": "<p>Une grande place carrée à ciel ouvert d'environ <b>140 × 140 m</b>, avec au centre un bassin de <b>23 × 35 m</b>. Construite à l'époque augustéenne, au début du I<sup>er</sup> siècle apr. J.-C.</p>\n    <p class=\"hint\">C'est le seul bâtiment du modèle dont les proportions viennent de mesures publiées par le Parc. Tout le reste est schématique.</p>",
-      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em>"
+      "body": "<p>Une grande place à ciel ouvert, avec en son centre un bassin de <b>23 × 35 m</b>. Construite à l’époque augustéenne, au début du I<sup>er</sup> siècle apr. J.-C.</p>\n    <p class=\"key\">Le bassin est la première pièce du modèle construite dans Blender, et il a sa géométrie réelle parce que sa mesure est publiée. Le <b>contour vert</b> qui l’entoure signifie exactement cela : <b>mesure publiée</b>. Le portique tout autour reste schématique — l’entraxe et la hauteur des colonnes n’ont pas de source — et la différence doit se voir.</p>\n    <p class=\"warn\">⚠️ <b>Sur la forme de la place, les sources divergent.</b> Le guide officiel du Parc dit «environ 140 × 140 m», et c’est ce que le modèle dessine. D’autres sources donnent <b>141 × 107 m</b>, et le compte des colonnes — 35 sur deux côtés, 48 sur le troisième — fait penser à un rectangle plutôt qu’à un carré. Ce sont des sources tertiaires, je ne change donc pas la forme sur leur seule foi ; mais le conflit est réel, et le plan à l’échelle du Parc le trancherait.</p>\n    <p class=\"warn\">Profondeur du bassin : un fond incliné de 1 à 2,6 m selon un guide, un maximum d’environ 2 m selon un autre. Le modèle dessine le fond de 1 à 2 m et l’eau presque opaque, parce que la profondeur n’est pas la donnée.</p>",
+      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em> · mesures alternatives : it.wikipedia, <em>Palestra Grande</em> ; Planet Pompeii <b>[tertiaires]</b>"
     },
     "horrea": {
       "label": "Horrea et Temple de Vénus",

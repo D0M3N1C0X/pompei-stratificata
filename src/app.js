@@ -30,6 +30,8 @@ import {
   SpriteMaterial,
   Vector2,
   Vector3,
+  LineLoop,
+  LineBasicMaterial,
   WebGLRenderer
 } from 'three';
 import { AUDIO } from './audio.js';
@@ -42,6 +44,8 @@ import { POST } from './post.js';
 import { PAL } from './scene/palette.js';
 import { DOT, PBR, TEX, TEXMAP, px } from './scene/textures.js';
 import { createInhabitants } from './scene/inhabitants.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -320,12 +324,35 @@ const TERRACE = WALLS.map(([x,z]) => [CX + (x-CX)*1.30, CZ + (z-CZ)*1.30]);
 
 block(-20, -3.9, -110, 1400, 1.8, 1000, 0x6f6b60);
 
+// La piscina della Palestra Grande scende sotto il piano: il terreno, fatto
+// di blocchi pieni fino a quota 0, va aperto dove sta lei. Misure in unità
+// (1 = 4 m): vasca 35 × 23 m più il bordo di Blender, 0,7 m per lato.
+const POZZO = { x:87.5, z:41.5, hx:35/8 + 0.7/4, hz:23/8 + 0.7/4 };
+const tocca = (x, z, m) => Math.abs(x - POZZO.x) < POZZO.hx + m && Math.abs(z - POZZO.z) < POZZO.hz + m;
+let buco = null;   // i limiti delle celle tolte, per richiudere attorno al bordo
+
 for(let x=-210; x<210; x+=4){
   for(let z=-125; z<128; z+=4){
     if(!inPoly(x,z,TERRACE)) continue;
+    if(tocca(x, z, 2.1)){
+      buco = buco || { x0:Infinity, x1:-Infinity, z0:Infinity, z1:-Infinity };
+      buco.x0 = Math.min(buco.x0, x-2.1); buco.x1 = Math.max(buco.x1, x+2.1);
+      buco.z0 = Math.min(buco.z0, z-2.1); buco.z1 = Math.max(buco.z1, z+2.1);
+      continue;
+    }
     const v = ((x*7 + z*13) % 3);
     block(x, -2.4, z, 4.2, 2.4, 4.2, v===0 ? 0x8f8776 : (v===1 ? PAL.terrace : 0x847c6b));
   }
+}
+if(buco){
+  // quattro fasce dal bordo delle celle al bordo della piscina, e un fondo sotto
+  const ax = POZZO.x - POZZO.hx, bx = POZZO.x + POZZO.hx, az = POZZO.z - POZZO.hz, bz = POZZO.z + POZZO.hz;
+  const fascia = (x0, x1, z0, z1) => block((x0+x1)/2, -2.4, (z0+z1)/2, x1-x0, 2.4, z1-z0, PAL.terrace);
+  fascia(buco.x0, buco.x1, buco.z0, az);
+  fascia(buco.x0, buco.x1, bz, buco.z1);
+  fascia(buco.x0, ax, az, bz);
+  fascia(bx, buco.x1, az, bz);
+  block(POZZO.x, -2.4, POZZO.z, bx-ax, 1.85, bz-az, PAL.terrace);
 }
 
 for(const s of STREETS){
@@ -498,9 +525,14 @@ block(-48, 2.6, 3, 12, 0.9, 10, PAL.stone);
 block(-90, 0, -18, 12, 2.4, 10, PAL.civic);
 block(-90, 2.4, -18, 10, 0.8, 8, PAL.stone);
 
-// Palestra Grande: 140 x 140 m = 35 x 35 unità; piscina 23 x 35 m ≈ 6 x 9
-colonnade(70, 24, 35, 34, 3.4, 2.4, PAL.column);
-block(87.5, 0.05, 41, 9, 0.1, 6, 0x6d8286);
+// Palestra Grande: 140 x 140 m = 35 x 35 unità secondo la guida del Parco.
+// Era disegnata 35 x 34, cioè 140 x 136 m: nemmeno l'unico edificio
+// «misurato» rispettava la sua misura. Altre fonti danno 141 x 107 m, e le
+// colonne contate (35 + 35 + 48) suggeriscono un rettangolo: il conflitto è
+// dichiarato nella scheda, non risolto qui. Interasse e altezza delle colonne
+// non hanno fonte: il portico resta schematico, ed è la differenza visibile
+// con la piscina, che invece viene da Blender sulla misura pubblicata.
+colonnade(70, 24, 35, 35, 3.4, 2.4, PAL.column);
 
 for(let r=0;r<8;r++){
   const rx = 6 + r*1.9, rz = 4.6 + r*1.55, h = 0.6 + r*0.5;
@@ -634,6 +666,51 @@ for(const b of [...buckets.values()]){
 
 const cityGroup = new Group();
 scene.add(cityGroup);
+
+/* ------------------------------------ la piscina della Palestra Grande
+
+   Il primo pezzo costruito in Blender (strumenti/blender/palestra_piscina.py,
+   «npm run modelli») e il pilota della regola: realismo solo dove c'è una
+   misura pubblicata. La pianta, 35 × 23 m, è della guida ufficiale del Parco
+   e le altre fonti concordano entro un metro; profondità, bordo e materiali
+   non sono documentati e lo script lo dice riga per riga.
+
+   Attorno corre un contorno sottile color accento: è il segno «misura
+   pubblicata», lo stesso linguaggio della barra del corpo e della banda del
+   suolo. Il portico tutt'intorno resta schematico, e la differenza si vede:
+   è il modello che dichiara il proprio grado di certezza. */
+
+const piscina = new Group();
+piscina.position.set(POZZO.x, 0, POZZO.z);
+cityGroup.add(piscina);
+new GLTFLoader().load(piscinaUrl, gltf => {
+  gltf.scene.traverse(o => {
+    if(!o.isMesh) return;
+    o.castShadow = o.receiveShadow = true;
+    if(o.name.startsWith('acqua')){
+      // quasi opaca apposta: la profondità non è il dato
+      o.material = new MeshStandardMaterial({
+        color:0x1d3d44, roughness:0.08, transparent:true, opacity:0.9,
+        clippingPlanes:[clipPlane]
+      });
+      o.castShadow = false;
+    } else {
+      o.material.clippingPlanes = [clipPlane];
+      o.material.clipShadows = true;
+    }
+  });
+  piscina.add(gltf.scene);
+}, undefined, e => console.warn('Piscina della Palestra Grande non caricata:', e));
+
+const contornoMisura = (() => {
+  const hx = 35/4/2, hz = 23/4/2, y = 0.075;
+  const g = new BufferGeometry().setFromPoints([
+    new Vector3(-hx, y, -hz), new Vector3(hx, y, -hz),
+    new Vector3(hx, y, hz),   new Vector3(-hx, y, hz)
+  ]);
+  return new LineLoop(g, new LineBasicMaterial({ color:PAL.accent }));
+})();
+piscina.add(contornoMisura);
 const inhabitants = createInhabitants({ streets:STREETS });
 scene.add(inhabitants.group);
 
@@ -1885,9 +1962,15 @@ function autoQuality(dt){
   } else settle = 0;
 }
 
+// dtFisso esiste solo per ?debug: fa avanzare la scena a passi uguali senza
+// aspettare i fotogrammi del browser (un Chrome senza schermo non ne disegna)
+let dtFisso = null;
 function tick(){
   requestAnimationFrame(tick);
-  const dt = Math.min(clock.getDelta(), 0.05);
+  passo();
+}
+function passo(){
+  const dt = dtFisso ?? Math.min(clock.getDelta(), 0.05);
   const t = clock.elapsedTime;
   if(ercOn){
     ERCOLANO.update(dt, t);
@@ -1904,6 +1987,7 @@ function tick(){
   pollGamepad(dt);
 
   depositCurrent += (depositTarget - depositCurrent) * Math.min(1, dt*2.2);
+  contornoMisura.visible = depositCurrent < 0.05;   // sepolta, la misura non si vede
   for(const g of [depositGroup, shantyGroup, vegGroup, canalGroup, spoilGroup])
     g.position.y = depositCurrent;
 
@@ -2180,6 +2264,44 @@ function applicaCollegamento(){
   scriviStato();
 }
 
+/* Inquadrature riproducibili, solo con ?debug nell'indirizzo. Servono per
+   le verifiche visive e per gli screenshot dello store, che devono poter
+   essere rifatti identici quando il modello cambia:
+     pompei.guarda(px,py,pz, tx,ty,tz)   camera in p, guarda verso t
+     pompei.fase(i)                      fase 0…7
+     pompei.foto(n)                      n passi di scena, poi l'immagine PNG
+     pompei.scena                        la scena, per controllare cosa c'è
+   foto() non aspetta i fotogrammi del browser: funziona anche in una scheda
+   nascosta o in un Chrome senza schermo, dove requestAnimationFrame tace.
+   Senza ?debug non esiste niente di tutto questo. */
+if(new URLSearchParams(location.search).has('debug')){
+  window.pompei = {
+    guarda(px, py, pz, tx, ty, tz){
+      setFly(true);
+      flight = { from: camera.position.clone(), to: new Vector3(px, py, pz),
+                 target: new Vector3(tx, ty, tz), t:0 };
+    },
+    fase(i){ applyEpoch(i); },
+    scena: scene,
+    // avanza la scena di n passi da 1/30 s e restituisce l'immagine del canvas,
+    // letta nello stesso giro in cui è stata disegnata
+    foto(n = 60){
+      dtFisso = 1/30;
+      for(let i = 0; i < n; i++) passo();
+      dtFisso = null;
+      return renderer.domElement.toDataURL('image/png');
+    }
+  };
+}
+// ?debug&cam=px,py,pz,tx,ty,tz — l'inquadratura scritta nell'indirizzo, così
+// un browser senza interfaccia può scattare la stessa foto ogni volta
+function applicaCamera(){
+  const q = new URLSearchParams(location.search);
+  if(!q.has('debug') || !q.get('cam')) return;
+  const v = q.get('cam').split(',').map(Number);
+  if(v.length === 6 && v.every(Number.isFinite)) window.pompei.guarda(...v);
+}
+
 // «Copia il link»: l'indirizzo è già quello giusto, basta prenderlo
 document.getElementById('pLink').addEventListener('click', async () => {
   const btn = document.getElementById('pLink');
@@ -2209,6 +2331,7 @@ if(isTouch){
 applyEpoch(0);
 setFly(false);
 applicaCollegamento();
+applicaCamera();
 document.getElementById('loading').classList.add('gone');
 tick();
 

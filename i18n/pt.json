@@ -243,8 +243,8 @@
     "palestra": {
       "label": "Palestra Grande",
       "sub": "Regio II, época augustana",
-      "body": "<p>Uma grande praça quadrada a céu aberto de cerca de <b>140 × 140 m</b>, com uma piscina de <b>23 × 35 m</b> ao centro. Construída em época augustana, no início do século I d.C.</p>\n    <p class=\"hint\">É o único edifício do modelo cujas proporções vêm de medidas publicadas pelo Parque. Todo o resto é esquemático.</p>",
-      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em>"
+      "body": "<p>Uma grande praça a céu aberto, com uma piscina de <b>23 × 35 m</b> ao centro. Construída em época augustana, no início do século I d.C.</p>\n    <p class=\"key\">A piscina é a primeira peça do modelo construída no Blender, e tem a sua geometria real porque a sua medida está publicada. O <b>contorno verde</b> que a rodeia significa exatamente isso: <b>medida publicada</b>. O pórtico em redor continua esquemático — o intercolúnio e a altura das colunas não têm fonte — e a diferença deve ver-se.</p>\n    <p class=\"warn\">⚠️ <b>Sobre a forma da praça as fontes divergem.</b> O guia oficial do Parque diz «cerca de 140 × 140 m», e é o que o modelo desenha. Outras fontes dão <b>141 × 107 m</b>, e a contagem das colunas — 35 em dois lados, 48 no terceiro — aponta mais para um retângulo do que para um quadrado. São fontes terciárias, por isso não mudo a forma com base nelas; mas o conflito é real, e a planta à escala do Parque resolvê-lo-ia.</p>\n    <p class=\"warn\">Profundidade da piscina: um fundo inclinado de 1 a 2,6 m segundo um guia, um máximo de cerca de 2 m segundo outro. O modelo desenha o fundo de 1 a 2 m e a água quase opaca, porque a profundidade não é o dado.</p>",
+      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em> · medidas alternativas: it.wikipedia, <em>Palestra Grande</em>; Planet Pompeii <b>[terciárias]</b>"
     },
     "horrea": {
       "label": "Horrea e Templo de Vénus",
