@@ -52,7 +52,8 @@
       "avanti": "▲ avant",
       "indietro": "▼ arrière",
       "nota": "Vous ne marchez <b>que là où l'on a réellement fouillé</b> : quatre insulae\nentières plus les deux Orientalis. Tout le reste est du dépôt, et il est dessiné\ncomme du dépôt — avec la ville moderne au-dessus. <span class=\"ercWarn\">La scène\nest construite selon la convention du site (Decumanus Maximus en amont, mer en\naval) : l'orientation réelle n'est pas vérifiée.</span>",
-      "comandi": "<span><kbd>Z Q S D</kbd> marcher</span><span><kbd>souris</kbd> regarder</span>\n<span><kbd>clic</kbd> ouvrir la fiche</span><span><kbd>Échap</kbd> libérer</span>"
+      "comandi": "<span><kbd>Z Q S D</kbd> marcher</span><span><kbd>souris</kbd> regarder</span>\n<span><kbd>clic</kbd> ouvrir la fiche</span><span><kbd>Échap</kbd> libérer</span>",
+      "vicino": "▸ {nome} — cliquez"
     },
     "cmp": {
       "titolo": "Pourquoi Herculanum n'est pas Pompéi",
@@ -96,7 +97,9 @@
     "panel": {
       "fonte": "Source",
       "aria": "Fiche du lieu",
-      "chiudi": "Fermer la fiche"
+      "chiudi": "Fermer la fiche",
+      "copiaLink": "Copier le lien",
+      "copiato": "Lien copié"
     },
     "epoche": {
       "aria": "Phases chronologiques"

@@ -52,7 +52,8 @@
       "avanti": "▲ adelante",
       "indietro": "▼ atrás",
       "nota": "Caminas <b>solo por donde se ha excavado de verdad</b>: cuatro insulae\nenteras más las dos Orientalis. Todo lo demás es depósito, y está dibujado como\ndepósito — con la ciudad moderna encima. <span class=\"ercWarn\">La escena está\nconstruida según la convención del yacimiento (Decumanus Maximus hacia el monte,\nmar hacia abajo): la orientación real no está verificada.</span>",
-      "comandi": "<span><kbd>W A S D</kbd> caminar</span><span><kbd>ratón</kbd> mirar</span>\n<span><kbd>clic</kbd> abrir la ficha</span><span><kbd>Esc</kbd> soltar</span>"
+      "comandi": "<span><kbd>W A S D</kbd> caminar</span><span><kbd>ratón</kbd> mirar</span>\n<span><kbd>clic</kbd> abrir la ficha</span><span><kbd>Esc</kbd> soltar</span>",
+      "vicino": "▸ {nome} — haz clic"
     },
     "cmp": {
       "titolo": "Por qué Herculano no es Pompeya",
@@ -96,7 +97,9 @@
     "panel": {
       "fonte": "Fuente",
       "aria": "Ficha del lugar",
-      "chiudi": "Cerrar la ficha"
+      "chiudi": "Cerrar la ficha",
+      "copiaLink": "Copiar el enlace",
+      "copiato": "Enlace copiado"
     },
     "epoche": {
       "aria": "Fases cronológicas"

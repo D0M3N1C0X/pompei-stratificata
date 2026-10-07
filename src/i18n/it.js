@@ -62,7 +62,8 @@ export default {
       "nota": "Cammini <b>solo dove si è scavato davvero</b>: quattro insulae intere più le due\nOrientalis. Tutto il resto è deposito, ed è disegnato come deposito — con la città\nmoderna sopra. <span class=\"ercWarn\">La scena è costruita nella convenzione di sito\n(Decumano Massimo a monte, mare a valle): l'orientamento vero non è verificato.</span>",
       "comandi": "<span><kbd>W A S D</kbd> cammina</span><span><kbd>mouse</kbd> guarda</span>\n<span><kbd>clic</kbd> apri la scheda</span><span><kbd>Esc</kbd> sblocca</span>",
       "avanti": "▲ avanti",
-      "indietro": "▼ indietro"
+      "indietro": "▼ indietro",
+      "vicino": "▸ {nome} — clicca"
     },
     "cmp": {
       "titoli": "<div class=\"cmpT\"><b>POMPEI</b><span>circa 5 m di deposito, di cui 3,1–3,3 m di lapilli pomicei</span><em>il piano superiore resta fuori</em></div>\n<div class=\"cmpT\"><b>ERCOLANO</b><span>circa 20 m di correnti piroclastiche: la casa sparisce tutta</span><em>sopra, la città moderna — Resina fino al 1969</em></div>",
@@ -106,7 +107,9 @@ export default {
     "panel": {
       "fonte": "Fonte",
       "aria": "Scheda del luogo",
-      "chiudi": "Chiudi la scheda"
+      "chiudi": "Chiudi la scheda",
+      "copiaLink": "Copia il link",
+      "copiato": "Link copiato"
     },
     "intro": {
       "occhiello": "Esploratore v8 · dossier Pompei dopo il 79",

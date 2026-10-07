@@ -238,6 +238,12 @@
   #pSub{display:block;margin-top:.2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.09em;color:var(--ink-faint)}
   #pClose{font-family:var(--mono);font-size:.85rem;color:var(--ink-faint);padding:.1rem .3rem;flex:0 0 auto;line-height:1}
   #pClose:hover{color:var(--accent)}
+  .pLink{
+    font-family:var(--mono);font-size:.56rem;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--ink-faint);border:1px solid var(--line);border-radius:2px;
+    padding:.3rem .45rem;flex:0 0 auto;white-space:nowrap;
+  }
+  .pLink:hover{color:var(--accent);border-color:var(--accent-dim)}
   #pBody{
     padding:1rem 1.2rem;overflow-y:auto;flex:1;
     font-family:var(--serif);font-size:.93rem;line-height:1.62;color:var(--ink-soft);
@@ -769,6 +775,7 @@ body.erc-on #crosshair{ display:block !important; }
       <h2 id="pTitle"></h2>
       <span id="pSub"></span>
     </div>
+    <button id="pLink" class="pLink" data-i18n="ui.panel.copiaLink">Copia il link</button>
     <button id="pClose" aria-label="Chiudi la scheda" data-i18n-attr="aria-label: ui.panel.chiudi">✕</button>
   </div>
   <div id="pBody"></div>

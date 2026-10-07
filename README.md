@@ -135,6 +135,22 @@ limiti.
   Cervi (circa 1.190 m²). Tutto il resto della sagoma è dedotto dalle piante.
 - **La posizione del sole usa i parametri orbitali odierni**, non quelli del 79 d.C.
 
+## Collegamenti diretti
+
+L'indirizzo dice dove sei, e si può passare a qualcuno:
+
+| | |
+|---|---|
+| `?fase=5` | apre la quinta fase (gli stessi numeri dei tasti 1–8) |
+| `?luogo=basilica` | apre la scheda del luogo, nella fase in cui esiste |
+| `?vista=confronto` | apre il confronto stratigrafico |
+| `?vista=ercolano&luogo=teatro` | entra a Ercolano e apre la scheda del teatro |
+
+Si combinano con `?lang=`. L'indirizzo si aggiorna da solo mentre navighi, e
+nella scheda di ogni luogo c'è «Copia il link». Chi arriva da un collegamento
+diretto salta la scheda d'ingresso; un valore sbagliato viene ignorato e il
+modello parte dall'inizio.
+
 ## Lingue
 
 Sei: italiano, inglese, francese, tedesco, spagnolo e portoghese. Il simulatore

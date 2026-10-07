@@ -52,7 +52,8 @@
       "avanti": "▲ vor",
       "indietro": "▼ zurück",
       "nota": "Sie gehen <b>nur dort, wo wirklich gegraben wurde</b>: vier vollständige\nInsulae und die beiden Orientalis. Alles andere ist Ablagerung und ist auch als\nAblagerung gezeichnet — mit der modernen Stadt darüber. <span class=\"ercWarn\">Die\nSzene folgt der Ortskonvention (Decumanus Maximus hangaufwärts, Meer hangabwärts):\ndie tatsächliche Ausrichtung ist nicht überprüft.</span>",
-      "comandi": "<span><kbd>W A S D</kbd> gehen</span><span><kbd>Maus</kbd> umsehen</span>\n<span><kbd>Klick</kbd> Karte öffnen</span><span><kbd>Esc</kbd> freigeben</span>"
+      "comandi": "<span><kbd>W A S D</kbd> gehen</span><span><kbd>Maus</kbd> umsehen</span>\n<span><kbd>Klick</kbd> Karte öffnen</span><span><kbd>Esc</kbd> freigeben</span>",
+      "vicino": "▸ {nome} — klicken"
     },
     "cmp": {
       "titolo": "Warum Herculaneum nicht Pompeji ist",
@@ -96,7 +97,9 @@
     "panel": {
       "fonte": "Quelle",
       "aria": "Ortskarte",
-      "chiudi": "Karte schließen"
+      "chiudi": "Karte schließen",
+      "copiaLink": "Link kopieren",
+      "copiato": "Link kopiert"
     },
     "epoche": {
       "aria": "Zeitliche Phasen"

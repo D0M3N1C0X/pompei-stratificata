@@ -52,7 +52,8 @@
       "avanti": "▲ forward",
       "indietro": "▼ back",
       "nota": "You can walk <b>only where the site has actually been dug</b>: four\ncomplete insulae plus the two Orientalis. Everything else is deposit, and is\ndrawn as deposit — with the modern town on top. <span class=\"ercWarn\">The scene\nis built to the site convention (Decumanus Maximus uphill, sea downhill): the\ntrue orientation is unverified.</span>",
-      "comandi": "<span><kbd>W A S D</kbd> walk</span><span><kbd>mouse</kbd> look</span>\n<span><kbd>click</kbd> open the card</span><span><kbd>Esc</kbd> release</span>"
+      "comandi": "<span><kbd>W A S D</kbd> walk</span><span><kbd>mouse</kbd> look</span>\n<span><kbd>click</kbd> open the card</span><span><kbd>Esc</kbd> release</span>",
+      "vicino": "▸ {nome} — click"
     },
     "cmp": {
       "titolo": "Why Herculaneum is not Pompeii",
@@ -96,7 +97,9 @@
     "panel": {
       "fonte": "Source",
       "aria": "Place card",
-      "chiudi": "Close the card"
+      "chiudi": "Close the card",
+      "copiaLink": "Copy link",
+      "copiato": "Link copied"
     },
     "epoche": {
       "aria": "Chronological phases"
