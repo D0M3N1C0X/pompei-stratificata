@@ -95,7 +95,8 @@ export default {
         "vigilia": "in questa fase il deposito non c’è ancora — vai al seppellimento",
         "scavato": "in questa fase il deposito è stato scavato via"
       },
-      "quota": "{n} m"
+      "quota": "{n} m",
+      "suolo": "suolo dopo il 79 · spessore non documentato, disegnato sottile apposta"
     },
     "tour": {
       "etichetta": "Tour",
@@ -381,7 +382,8 @@ export default {
       "correnti": "correnti piroclastiche",
       "grigi": "lapilli grigi",
       "bianchi": "lapilli bianchi",
-      "piano": "piano del 79 d.C."
+      "piano": "piano del 79 d.C.",
+      "suolo": "suolo dopo il 79 · spessore ?"
     }
   }
 };
