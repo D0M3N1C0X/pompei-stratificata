@@ -10,7 +10,8 @@
     "build": "vite build && node scripts/publish.js",
     "preview": "vite preview",
     "check": "node scripts/check-build.js",
-    "app": "npm run build && node scripts/app-www.js && npx cap sync ios"
+    "app": "npm run build && node scripts/app-www.js && npx cap sync ios",
+    "modelli": "~/Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup --python strumenti/blender/palestra_piscina.py -- src/assets/modelli/palestra-piscina.glb"
   },
   "dependencies": {
     "three": "0.169.0"

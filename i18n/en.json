@@ -243,8 +243,8 @@
     "palestra": {
       "label": "Large Palaestra",
       "sub": "Regio II, Augustan age",
-      "body": "<p>A large open square of about <b>140 × 140 m</b>, with a <b>23 × 35 m</b> swimming pool at its centre. Built in the Augustan age, at the beginning of the first century AD.</p>\n    <p class=\"hint\">It is the only building in the model whose proportions come from measurements published by the Park. Everything else is schematic.</p>",
-      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em>"
+      "body": "<p>A large open square with a <b>23 × 35 m</b> swimming pool at its centre. Built in the Augustan age, at the beginning of the first century AD.</p>\n    <p class=\"key\">The pool is the first piece of the model built in Blender, and it has its true geometry because its measurement is published. The <b>green outline</b> around it means exactly that: <b>published measurement</b>. The portico all around stays schematic — column spacing and height have no source — and the difference is meant to show.</p>\n    <p class=\"warn\">⚠️ <b>On the shape of the square the sources disagree.</b> The Park's official guide says «about 140 × 140 m», and that is what the model draws. Other sources give <b>141 × 107 m</b>, and the column counts — 35 on two sides, 48 on the third — point to a rectangle rather than a square. Those are tertiary sources, so I am not changing the shape on their authority; but the conflict is real, and the Park's scaled plan would settle it.</p>\n    <p class=\"warn\">Depth of the pool: a floor sloping from 1 to 2.6 m according to one guide, a maximum of about 2 m according to another. The model draws the floor from 1 to 2 m and the water nearly opaque, because the depth is not the point.</p>",
+      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em> · alternative measurements: it.wikipedia, <em>Palestra Grande</em>; Planet Pompeii <b>[tertiary]</b>"
     },
     "horrea": {
       "label": "Horrea and Temple of Venus",

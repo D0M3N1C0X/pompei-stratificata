@@ -243,8 +243,8 @@
     "palestra": {
       "label": "Große Palästra",
       "sub": "Regio II, augusteische Zeit",
-      "body": "<p>Ein großer offener quadratischer Platz von etwa <b>140 × 140 m</b>, mit einem Becken von <b>23 × 35 m</b> in der Mitte. Erbaut in augusteischer Zeit, zu Beginn des 1. Jahrhunderts n. Chr.</p>\n    <p class=\"hint\">Es ist das einzige Gebäude des Modells, dessen Proportionen aus vom Park veröffentlichten Maßen stammen. Alles andere ist schematisch.</p>",
-      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em>"
+      "body": "<p>Ein großer offener Platz mit einem Becken von <b>23 × 35 m</b> in der Mitte. Erbaut in augusteischer Zeit, zu Beginn des 1. Jahrhunderts n. Chr.</p>\n    <p class=\"key\">Das Becken ist das erste Stück des Modells, das in Blender gebaut wurde, und es hat seine wahre Geometrie, weil sein Maß veröffentlicht ist. Die <b>grüne Umrisslinie</b> darum bedeutet genau das: <b>veröffentlichtes Maß</b>. Die Säulenhalle ringsum bleibt schematisch — Säulenabstand und -höhe haben keine Quelle — und der Unterschied soll sichtbar sein.</p>\n    <p class=\"warn\">⚠️ <b>Zur Form des Platzes gehen die Quellen auseinander.</b> Der offizielle Führer des Parks sagt «etwa 140 × 140 m», und das zeichnet das Modell. Andere Quellen geben <b>141 × 107 m</b> an, und die gezählten Säulen — 35 an zwei Seiten, 48 an der dritten — deuten eher auf ein Rechteck als auf ein Quadrat. Das sind Tertiärquellen, deshalb ändere ich die Form nicht auf ihre Grundlage; aber der Widerspruch ist echt, und der maßstäbliche Plan des Parks würde ihn klären.</p>\n    <p class=\"warn\">Tiefe des Beckens: ein von 1 bis 2,6 m abfallender Boden nach einem Führer, höchstens etwa 2 m nach einem anderen. Das Modell zeichnet den Boden von 1 bis 2 m und das Wasser fast undurchsichtig, weil die Tiefe nicht der Befund ist.</p>",
+      "src": "Parco Archeologico di Pompei, <em>Guida agli scavi di Pompei</em> · abweichende Maße: it.wikipedia, <em>Palestra Grande</em>; Planet Pompeii <b>[Tertiärquellen]</b>"
     },
     "horrea": {
       "label": "Horrea und Venustempel",
