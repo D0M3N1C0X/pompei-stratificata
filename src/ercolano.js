@@ -591,13 +591,7 @@ export const ERCOLANO = (function(){
   function mostraSepolto(on){
     sepoltoOn = !!on;
     sepolto.visible = sepoltoOn;
-    if(sepoltoOn){
-      // ci si porta dove il teatro si vede: oltre il fronte, guardando a
-      // monte e in basso. Da qualunque altro punto resta dietro il deposito.
-      volo = true; vx = vy = vz = 0;
-      pos.x = TEATRO_X + 2; pos.z = -6; pos.y = 15;
-      yaw = 0; pitch = -0.58;
-    }
+    if(sepoltoOn) guardaSotto('teatro');
     for(const g of VELATI) for(const m of g.m){
       m.transparent = sepoltoOn;
       m.opacity = sepoltoOn ? g.a : 1;
@@ -607,6 +601,14 @@ export const ERCOLANO = (function(){
     return sepoltoOn;
   }
   function sepoltoAttivo(){ return sepoltoOn; }
+  // Due cose sepolte, due inquadrature. Da qualunque altro punto restano
+  // dietro il deposito: il teatro si vede da oltre il fronte, guardando a
+  // monte e in basso; la vasca dall'alto, dal lato del mare.
+  function guardaSotto(dove){
+    volo = true; vx = vy = vz = 0;
+    if(dove === 'vasca'){ pos.x = PX; pos.y = 16; pos.z = PZ + 15; yaw = 0; pitch = -0.72; }
+    else { pos.x = TEATRO_X + 2; pos.z = -6; pos.y = 15; yaw = 0; pitch = -0.58; }
+  }
   // solo per ?debug: un'inquadratura fissa, in volo, per le foto di verifica
   function inquadra(x, y, z, imbardata, beccheggio){
     volo = true; vx = vy = vz = 0;
@@ -646,6 +648,6 @@ export const ERCOLANO = (function(){
 
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, apri, textures, dallAlto, inVolo,
-           mostraSepolto, sepoltoAttivo, inquadra, luoghi: LUOGHI,
+           mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, luoghi: LUOGHI,
            isActive: () => active };
 })();

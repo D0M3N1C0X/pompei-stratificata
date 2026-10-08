@@ -47,6 +47,8 @@
     "erc": {
       "nome": "Herculaneum — the excavation",
       "sepolto": "Look under the town",
+      "sottoTeatro": "Theatre",
+      "sottoVasca": "Palaestra pool",
       "incrocio": "Back to the crossroads",
       "esci": "Back to Pompeii",
       "avanti": "▲ forward",
@@ -255,7 +257,7 @@
     "mosaici": {
       "label": "House of the Geometric Mosaics",
       "sub": "Regio VIII, Insula Meridionalis",
-      "body": "<p>Second phase, <b>fourth to fifth century</b>: settled occupation. In room III a <b>bread oven built into a disused cistern</b>, dated to the fifth century; hearths and a secondary oven associated with a <em>follis</em> of Constantine II (<b>AD 326</b>). At the lower levels, late antique cooking ware, fourth-century African Red Slip ware, postholes for timber structures, a lava-stone hand mill and a worked bone spindle.</p>\n    <p class=\"key\">The fifteenth-century glazed basin comes from here too: a single house documents fourteen hundred years of intermittent use.</p>",
+      "body": "<p>Second phase, <b>fourth to fifth century</b>: settled occupation. In room III a <b>bread oven built into a disused cistern</b>, dated to the fifth century; hearths and a secondary oven associated with a <em>follis</em> of Constantine II (<b>AD 326</b>). At the lower levels, late antique cooking ware, fourth-century African Red Slip ware, postholes for timber structures, a lava-stone hand mill and a worked bone spindle.</p>\n    <p class=\"key\">The <b>fifteenth-century</b> glazed basin comes from here too: a single house documents fourteen hundred years of intermittent use.</p>",
       "src": "Zuchtriegel et al. 2025 · <em>Pompei oltre il 79 d.C.</em>, E-Journal 2026.09"
     },
     "lacuna": {

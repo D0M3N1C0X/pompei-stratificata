@@ -8,7 +8,8 @@
 
    Esce con codice 1 al primo fallimento, così l'azione GitHub si ferma.
 */
-import { readFileSync, existsSync, statSync } from 'node:fs';
+import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -115,6 +116,23 @@ if(IT_JSON) for(const cod of LINGUE_PRONTE){
   const mancanti = attese.filter(k => !presenti.has(k));
   esigi(mancanti.length === 0, `${f} ha tutte le ${attese.length} chiavi`,
         `mancano ${mancanti.length}: ${mancanti.slice(0,6).join(', ')}${mancanti.length>6 ? '…' : ''}`);
+}
+
+// ── il nome della cache porta l'impronta di ciò che è pubblicato: se non
+//    corrisponde, publish.js non è stato rieseguito dopo l'ultima modifica e
+//    le app già installate terrebbero i testi vecchi (successo fino all'8
+//    ottobre 2026). E le lingue devono andare in rete per prime.
+{
+  const h = createHash('sha256');
+  h.update(readFileSync(join(root, 'index.html')));
+  for(const f of readdirSync(join(root, 'i18n')).filter(f => f.endsWith('.json')).sort())
+    h.update(readFileSync(join(root, 'i18n', f)));
+  const atteso = h.digest('hex').slice(0, 10);
+  esigi(read('sw.js').includes(`-${atteso}'`),
+        'la cache del service worker porta l\'impronta della pagina e delle lingue',
+        `atteso …-${atteso}: rilanciare npm run build`);
+  esigi(/json\|webmanifest/.test(read('sw.js')),
+        'il service worker chiede alla rete per prime le lingue e il manifest');
 }
 
 // ── il service worker deve conoscere le lingue, o offline si rompe lì

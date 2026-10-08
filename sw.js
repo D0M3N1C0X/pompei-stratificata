@@ -2,18 +2,20 @@
 //
 // Due strategie, non una.
 //
-//   · le NAVIGAZIONI (index.html, dossier/) vanno in rete per prime, con la
-//     cache come rete di sicurezza. Chi è online vede sempre l'ultima versione;
-//     chi è offline continua a vedere l'ultima che ha scaricato.
-//   · tutto il RESTO (icone, manifest, testi) esce dalla cache per primo: non
-//     cambia quasi mai e non vale un giro di rete.
+//   · ciò che CAMBIA con i contenuti — le navigazioni (index.html, dossier/),
+//     i testi delle lingue, il manifest — va in rete per primo, con la cache
+//     come rete di sicurezza. Chi è online vede sempre l'ultima versione; chi
+//     è offline continua a vedere l'ultima che ha scaricato.
+//   · le IMMAGINI (icone) escono dalla cache per prime: non cambiano quasi
+//     mai e non valgono un giro di rete.
 //
-// La versione precedente serviva anche le pagine dalla cache, e il risultato
-// era che un aggiornamento non arrivava mai a chi aveva già aperto il sito.
-//
-// Cambiando CACHE si forza lo svuotamento: tienila allineata alla versione
-// dichiarata in index.html.
-const CACHE = 'dopo79-v8-2026-09-25';
+// Fino all'8 ottobre 2026 anche i testi delle lingue uscivano prima dalla
+// cache, e il nome della cache andava cambiato a mano: era fermo al 25
+// settembre, quindi chi aveva già aperto il sito in un'altra lingua riceveva
+// la pagina nuova con i testi vecchi. Adesso il nome lo scrive
+// scripts/publish.js a ogni pubblicazione, con un'impronta di index.html e
+// delle lingue: non c'è più niente da ricordare.
+const CACHE = 'dopo79-v8-b4b4e223e4';
 
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',
@@ -42,8 +44,11 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if(e.request.method !== 'GET') return;
 
-  // navigazioni: prima la rete, la cache solo se la rete non risponde
-  if(e.request.mode === 'navigate'){
+  // navigazioni, lingue, manifest: prima la rete, la cache solo se la rete
+  // non risponde
+  const cambia = e.request.mode === 'navigate' ||
+    /\.(json|webmanifest)$/.test(new URL(e.request.url).pathname);
+  if(cambia){
     e.respondWith(
       fetch(e.request).then(res => {
         const copy = res.clone();
@@ -51,12 +56,14 @@ self.addEventListener('fetch', e => {
         return res;
       }).catch(() =>
         caches.match(e.request, { ignoreSearch: true })
-          .then(hit => hit || caches.match('./index.html')))
+          // la pagina come ultima risorsa solo per le navigazioni: a chi
+          // chiede una lingua l'HTML romperebbe il JSON
+          .then(hit => hit || (e.request.mode === 'navigate' ? caches.match('./index.html') : hit)))
     );
     return;
   }
 
-  // tutto il resto: prima la cache
+  // le immagini: prima la cache
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then(hit => {
       if(hit) return hit;
