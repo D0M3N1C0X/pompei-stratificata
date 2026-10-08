@@ -2283,6 +2283,7 @@ if(new URLSearchParams(location.search).has('debug')){
     },
     fase(i){ applyEpoch(i); },
     scena: scene,
+    ercolano: ERCOLANO,
     // avanza la scena di n passi da 1/30 s e restituisce l'immagine del canvas,
     // letta nello stesso giro in cui è stata disegnata
     foto(n = 60){
@@ -2295,11 +2296,20 @@ if(new URLSearchParams(location.search).has('debug')){
 }
 // ?debug&cam=px,py,pz,tx,ty,tz — l'inquadratura scritta nell'indirizzo, così
 // un browser senza interfaccia può scattare la stessa foto ogni volta
+// (con &vista=ercolano: cam=x,y,z,imbardata,beccheggio, e &sotto)
 function applicaCamera(){
   const q = new URLSearchParams(location.search);
   if(!q.has('debug') || !q.get('cam')) return;
   const v = q.get('cam').split(',').map(Number);
-  if(v.length === 6 && v.every(Number.isFinite)) window.pompei.guarda(...v);
+  if(!v.every(Number.isFinite)) return;
+  if(ercOn){
+    // a Ercolano: x,y,z,imbardata,beccheggio; con &sotto la città si fa trasparente
+    if(q.has('sotto')){
+      ERCOLANO.mostraSepolto(true);
+      document.getElementById('ercBuried').classList.add('on');
+    }
+    if(v.length === 5) ERCOLANO.inquadra(...v);
+  } else if(v.length === 6) window.pompei.guarda(...v);
 }
 
 // «Copia il link»: l'indirizzo è già quello giusto, basta prenderlo

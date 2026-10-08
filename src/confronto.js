@@ -260,6 +260,8 @@ export const CONFRONTO = (function(){
    · Insulae esposte: quattro intere (III, IV, V, VI) più Insulae
      Orientalis I e II; VII e II solo in parte
    · Palestra 77 × 47 m — Maiuri, Enc. dell'Arte Antica, 1960
+   · Vasca cruciforme della Palestra, bracci 50 e 30 m — Deiss 1968;
+     De Vos & De Vos 1982; ancora sotto il deposito
    · Basilica Noniana 29 × 16 m · Casa dei Cervi circa 1.190 m²
    · Dodici fornici sulla spiaggia antica, sei a ovest e sei a est della
      scalinata — Pappalardo 1994; Guidobaldi & Esposito 2013
