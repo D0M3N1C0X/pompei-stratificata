@@ -17,8 +17,14 @@ import {
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { POPULATIONS } from '../data/populations.js';
 import { PLACES } from '../data/places.js';
+import { mescolaFigure, ORA } from './figure.js';
 
 const WALK = { value:0 };
+// Figure, passi e velocità qui sotto sono scritti in metri; il modello misura
+// in unità da 4 m (l'occhio di chi cammina sta a 0,45 = 1,8 m). Fino all'8
+// ottobre 2026 la conversione mancava: gli abitanti erano alti 6,75 m e
+// camminavano a 3,4–5,5 m/s. Ogni misura in metri passa da qui.
+const METRO = 0.25;
 const COLORS = {
   skin:0xb88763, hair:0x392b22, sandals:0x514436,
   trousers:0x6f6255, sleeve:0x88735d, bird:0x737a77,
@@ -205,8 +211,10 @@ function makeAgents(count, species, routes, random, flow, sites=[]){
     const initialDistance=site
       ? Math.max(lowDistance,Math.min(highDistance,site.distance+(random()-0.5)*wanderRadius))
       : random()*route.length*(flow==='out'?1:2);
-    const speed=species==='people' ? 0.86+random()*0.52 :
+    // metri al secondo: chi passeggia va a 0,9–1,4 m/s
+    const speedMetres=species==='people' ? 0.86+random()*0.52 :
       species==='dogs' ? 0.65+random()*0.90 : 2.2+random()*1.8;
+    const speed=speedMetres*METRO;
     const stride=species==='people' ? 0.72 : species==='dogs' ? 0.50 : 0.46;
     // Le soste sono regia scenica, non tempi storici misurati; nell'eruzione
     // il flusso in uscita resta continuo.
@@ -215,14 +223,14 @@ function makeAgents(count, species, routes, random, flow, sites=[]){
     const pauseDuration=site ? 8+random()*14 : 2.0+random()*4.5;
     const walkDuration=site ? 6+random()*14 : species==='dogs' ? 4+random()*10 : 7+random()*22;
     return {
-      route, speed,
-      strideFrequency:species==='birds' ? 27+random()*8 : speed/stride*Math.PI*2,
+      route, speed, speedMetres,
+      strideFrequency:species==='birds' ? 27+random()*8 : speedMetres/stride*Math.PI*2,
       phase:random()*Math.PI*2,
       distance:initialDistance,
       initialDistance,
       exited:false,
-      scale:species==='people' ? 0.92+random()*0.16 : species==='dogs' ? 0.88+random()*0.24 : 0.86+random()*0.28,
-      offset:species==='birds' ? 1.0+random()*1.8 : 0,
+      scale:METRO*(species==='people' ? 0.92+random()*0.16 : species==='dogs' ? 0.88+random()*0.24 : 0.86+random()*0.28),
+      offset:species==='birds' ? METRO*(1.0+random()*1.8) : 0,
       laneOffset:(random()-0.5)*Math.min(route.width*0.36,0.9),
       pauseChance, idle, pauseDuration, walkDuration,
       stateRemaining:idle && site ? pauseDuration : random()*(idle ? pauseDuration : walkDuration),
@@ -260,7 +268,7 @@ function populationMesh(geometry, material, agents, name){
   return mesh;
 }
 
-function updateMesh(mesh, agents, count, delta, flow){
+function updateMesh(mesh, agents, count, delta, flow, suolo=0){
   mesh.count=count;
   const walkBlends=mesh.geometry.getAttribute('instanceWalkBlend');
   let walkBlendDirty=false;
@@ -311,10 +319,12 @@ function updateMesh(mesh, agents, count, delta, flow){
     const direction=reverse ? -1 : 1;
     TEMP.position.set(
       route.a[0]+route.dx*t-route.dz/route.length*actor.laneOffset,
-      actor.offset+(actor.hover ? Math.abs(Math.sin(WALK.value*3.2+actor.phase))*0.018 : 0),
+      suolo+actor.offset+(actor.hover ? Math.abs(Math.sin(WALK.value*3.2+actor.phase))*0.018*METRO : 0),
       route.a[1]+route.dz*t+route.dx/route.length*actor.laneOffset
     );
-    TEMP.rotation.set(0,Math.atan2(-direction*route.dx,-direction*route.dz),0);
+    // i manichini guardano verso −Z, le figure di Blender verso +Z: per
+    // loro mezzo giro in più, o camminerebbero all'indietro (misurato)
+    TEMP.rotation.set(0,Math.atan2(-direction*route.dx,-direction*route.dz)+(mesh.userData.fronte||0),0);
     TEMP.scale.setScalar(actor.scale);
     TEMP.updateMatrix();
     mesh.setMatrixAt(i,TEMP.matrix);
@@ -366,18 +376,55 @@ export function createInhabitants({ streets=[] }={}){
         }
       });
     },
+    // Le figure di Blender prendono il posto dei manichini nelle fasi in cui
+    // l'abito è documentato: il 79, l'eruzione e i recuperi del I–III secolo,
+    // che vestono allo stesso modo. Ai recuperi lavorano uomini: niente donne
+    // né cittadini col pallio [scelta di regia]. Le altre fasi tengono i
+    // manichini finché le loro vesti non hanno una fonte, e la differenza si
+    // vede: è la regola del progetto, realismo solo dove è documentato.
+    usaFigure(fig){
+      const FASI = { 0:null, 1:null, 2:['popolano','servo','ragazzo'] };
+      for(const item of populationGroups){
+        if(!(item.profile.epoch in FASI)) continue;
+        const ruoli = FASI[item.profile.epoch];
+        const varianti = fig.varianti.filter(v => !ruoli || ruoli.includes(v.ruolo));
+        if(!varianti.length) continue;
+        const random = seeded(0xf16 + item.profile.epoch*31);
+        const gruppi = varianti.map(() => []);
+        item.people.forEach(a => gruppi[Math.floor(random()*varianti.length)].push(a));
+        item.figure = varianti.map((v,i) => {
+          const agents = gruppi[i];
+          const mesh = mescolaFigure(v, agents.length);
+          mesh.userData.fronte = Math.PI;
+          const g = mesh.geometry;
+          agents.forEach((a,j) => {
+            g.getAttribute('instancePhase').array[j] = a.phase/(Math.PI*2);
+            // il passo registrato va a 1,1 m/s: lo si accelera o rallenta
+            // con la persona, così i piedi non scivolano
+            g.getAttribute('instanceRate').array[j] = a.speedMetres/fig.velocitaPasso;
+            g.getAttribute('instanceWalkBlend').array[j] = a.walkBlend;
+          });
+          item.group.add(mesh);
+          return { mesh, agents };
+        }).filter(x => x.agents.length);
+        item.human.visible = false;
+      }
+    },
     setDensity(value){
       this.density=Math.max(0,Math.min(1,value));
     },
-    update(time,delta){
+    update(time,delta,suolo=0){
       if(!group.visible) return;
       WALK.value=time;
       const active=populationGroups[this.epoch];
       if(!active || !active.group.visible) return;
       const count=(agents)=>Math.floor(agents.length*this.density);
-      updateMesh(active.human,active.people,count(active.people),delta,active.profile.flow);
-      updateMesh(active.dogMesh,active.dogs,count(active.dogs),delta,active.profile.flow);
-      updateMesh(active.birdMesh,active.birds,count(active.birds),delta,active.profile.flow);
+      ORA.value=time;
+      if(active.figure)
+        for(const part of active.figure) updateMesh(part.mesh,part.agents,count(part.agents),delta,active.profile.flow,suolo);
+      else updateMesh(active.human,active.people,count(active.people),delta,active.profile.flow,suolo);
+      updateMesh(active.dogMesh,active.dogs,count(active.dogs),delta,active.profile.flow,suolo);
+      updateMesh(active.birdMesh,active.birds,count(active.birds),delta,active.profile.flow,suolo);
     }
   };
 }

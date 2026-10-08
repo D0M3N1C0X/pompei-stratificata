@@ -1,0 +1,314 @@
+[
+ {
+  "n": 0,
+  "ruolo": "popolano",
+  "sesso": "m",
+  "eta": 0.501,
+  "seme": 79,
+  "palla": false,
+  "velo": false,
+  "capelli": "short03",
+  "maniche": "corte",
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "orlo": 0.42,
+  "altezza": 1.698,
+  "anche": 0.8993,
+  "file": "romana-00.glb",
+  "vertici": 3694
+ },
+ {
+  "n": 1,
+  "ruolo": "popolano",
+  "sesso": "m",
+  "eta": 0.737,
+  "seme": 116,
+  "palla": false,
+  "velo": false,
+  "capelli": "short04",
+  "maniche": "corte",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "orlo": 0.34,
+  "altezza": 1.678,
+  "anche": 0.9,
+  "file": "romana-01.glb",
+  "vertici": 3548
+ },
+ {
+  "n": 2,
+  "ruolo": "popolano",
+  "sesso": "m",
+  "eta": 0.798,
+  "seme": 153,
+  "palla": false,
+  "velo": false,
+  "capelli": "short04",
+  "maniche": "corte",
+  "pelle": [
+   0.68,
+   0.5,
+   0.38
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "orlo": 0.36,
+  "altezza": 1.734,
+  "anche": 0.9365,
+  "file": "romana-02.glb",
+  "vertici": 3548
+ },
+ {
+  "n": 3,
+  "ruolo": "servo",
+  "sesso": "m",
+  "eta": 0.376,
+  "seme": 190,
+  "palla": false,
+  "velo": false,
+  "capelli": "short03",
+  "maniche": "corte",
+  "pelle": [
+   0.74,
+   0.56,
+   0.42
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "orlo": 0.56,
+  "altezza": 1.496,
+  "anche": 0.7828,
+  "file": "romana-03.glb",
+  "vertici": 3694
+ },
+ {
+  "n": 4,
+  "ruolo": "servo",
+  "sesso": "m",
+  "eta": 0.49,
+  "seme": 227,
+  "palla": false,
+  "velo": false,
+  "capelli": "short01",
+  "maniche": "corte",
+  "pelle": [
+   0.68,
+   0.5,
+   0.38
+  ],
+  "colore_capelli": [
+   0.12,
+   0.09,
+   0.07
+  ],
+  "orlo": 0.55,
+  "altezza": 1.714,
+  "anche": 0.9093,
+  "file": "romana-04.glb",
+  "vertici": 5667
+ },
+ {
+  "n": 5,
+  "ruolo": "cittadino",
+  "sesso": "m",
+  "eta": 0.718,
+  "seme": 264,
+  "palla": false,
+  "velo": false,
+  "capelli": "short02",
+  "maniche": "corte",
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "orlo": 0.34,
+  "altezza": 1.625,
+  "anche": 0.862,
+  "file": "romana-05.glb",
+  "vertici": 4438
+ },
+ {
+  "n": 6,
+  "ruolo": "cittadino",
+  "sesso": "m",
+  "eta": 0.658,
+  "seme": 301,
+  "palla": true,
+  "velo": false,
+  "capelli": "short04",
+  "maniche": "corte",
+  "pelle": [
+   0.8,
+   0.62,
+   0.48
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "orlo": 0.34,
+  "altezza": 1.61,
+  "anche": 0.8504,
+  "file": "romana-06.glb",
+  "vertici": 3765
+ },
+ {
+  "n": 7,
+  "ruolo": "donna",
+  "sesso": "f",
+  "eta": 0.462,
+  "seme": 338,
+  "palla": true,
+  "velo": true,
+  "capelli": null,
+  "maniche": "lunghe",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "orlo": 0.05,
+  "altezza": 1.514,
+  "anche": 0.7845,
+  "file": "romana-07.glb",
+  "vertici": 3117
+ },
+ {
+  "n": 8,
+  "ruolo": "donna",
+  "sesso": "f",
+  "eta": 0.509,
+  "seme": 375,
+  "palla": false,
+  "velo": true,
+  "capelli": null,
+  "maniche": "lunghe",
+  "pelle": [
+   0.74,
+   0.56,
+   0.42
+  ],
+  "colore_capelli": [
+   0.12,
+   0.09,
+   0.07
+  ],
+  "orlo": 0.05,
+  "altezza": 1.484,
+  "anche": 0.7596,
+  "file": "romana-08.glb",
+  "vertici": 2844
+ },
+ {
+  "n": 9,
+  "ruolo": "matrona",
+  "sesso": "f",
+  "eta": 0.622,
+  "seme": 412,
+  "palla": true,
+  "velo": true,
+  "capelli": null,
+  "maniche": "lunghe",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "colore_capelli": [
+   0.06,
+   0.05,
+   0.05
+  ],
+  "orlo": 0.02,
+  "altezza": 1.462,
+  "anche": 0.7451,
+  "file": "romana-09.glb",
+  "vertici": 3061
+ },
+ {
+  "n": 10,
+  "ruolo": "ragazza",
+  "sesso": "f",
+  "eta": 0.235,
+  "seme": 449,
+  "palla": false,
+  "velo": false,
+  "capelli": "braid01",
+  "maniche": "lunghe",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "colore_capelli": [
+   0.06,
+   0.05,
+   0.05
+  ],
+  "orlo": 0.07,
+  "altezza": 1.245,
+  "anche": 0.6672,
+  "file": "romana-10.glb",
+  "vertici": 7066
+ },
+ {
+  "n": 11,
+  "ruolo": "ragazzo",
+  "sesso": "m",
+  "eta": 0.182,
+  "seme": 486,
+  "palla": false,
+  "velo": false,
+  "capelli": "short03",
+  "maniche": "corte",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "orlo": 0.46,
+  "altezza": 1.207,
+  "anche": 0.6202,
+  "file": "romana-11.glb",
+  "vertici": 3570
+ }
+]

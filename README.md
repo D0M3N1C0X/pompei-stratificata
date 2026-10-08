@@ -241,6 +241,12 @@ della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
   Project. *International Journal of Conservation Science*, 7(SI2), 847–856.
 - Rohland, R. A. (2022). *Carpe diem: The poetics of presence in Greek and Latin
   literature*. Cambridge University Press.
+- Brown, S. *Clothing in Roman Art*. Archaeological Institute of America,
+  Roman Clothing Project (J. Paul Getty Museum) — le vesti degli abitanti del 79.
+- Pilli, E., et al. (2024). Ancient DNA challenges prevailing interpretations of
+  the Pompeii plaster casts. *Current Biology*, 34, 5307–5318.
+  https://doi.org/10.1016/j.cub.2024.10.007 — carnagioni e capelli degli abitanti,
+  come approssimazione.
 - Parco Archeologico di Pompei, *Guida agli scavi di Pompei* e schede del sito
   ufficiale · Parco Archeologico di Ercolano, *Area archeologica* · UNESCO World
   Heritage Centre, lista 829.
@@ -284,6 +290,8 @@ da `file://` l'app funziona, ma non si installa.
   [LICENSE-CONTENUTI.md](LICENSE-CONTENUTI.md)
 - **three.js**, incluso in `index.html`: MIT, dei suoi autori — vedi
   [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
+- **Figure** (MakeHuman, CC0) e **movimenti** (CMU Motion Capture Database):
+  vedi [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
 
 ## Citare
 
