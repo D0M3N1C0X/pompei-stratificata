@@ -15,7 +15,7 @@
 // la pagina nuova con i testi vecchi. Adesso il nome lo scrive
 // scripts/publish.js a ogni pubblicazione, con un'impronta di index.html e
 // delle lingue: non c'è più niente da ricordare.
-const CACHE = 'dopo79-v8-b4b4e223e4';
+const CACHE = 'dopo79-v8-9ab5b4c73e';
 
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',

@@ -44,6 +44,7 @@ import { POST } from './post.js';
 import { PAL } from './scene/palette.js';
 import { DOT, PBR, TEX, TEXMAP, px } from './scene/textures.js';
 import { createInhabitants } from './scene/inhabitants.js';
+import { caricaFigure } from './scene/figure.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
@@ -355,13 +356,15 @@ if(buco){
   block(POZZO.x, -2.4, POZZO.z, bx-ax, 1.85, bz-az, PAL.terrace);
 }
 
+// il basolato è un blocco sopra il terreno: chi cammina ci sta sopra
+const STRADA_H = 0.12;
 for(const s of STREETS){
   const [ax,az]=s.a,[bx,bz]=s.b;
   const dx=bx-ax, dz=bz-az, len = Math.hypot(dx,dz), steps = Math.ceil(len/2);
   for(let i=0;i<=steps;i++){
     const t=i/steps, x=ax+dx*t, z=az+dz*t;
     if(!inPoly(x,z,WALLS)) continue;
-    block(x, 0, z, Math.abs(dx)>Math.abs(dz)?2.2:s.w, 0.12,
+    block(x, 0, z, Math.abs(dx)>Math.abs(dz)?2.2:s.w, STRADA_H,
              Math.abs(dx)>Math.abs(dz)?s.w:2.2, PAL.street);
   }
 }
@@ -713,6 +716,10 @@ const contornoMisura = (() => {
 piscina.add(contornoMisura);
 const inhabitants = createInhabitants({ streets:STREETS });
 scene.add(inhabitants.group);
+// le figure di Blender arrivano dopo il primo disegno: fino ad allora, e se
+// qualcosa va storto, restano i manichini
+caricaFigure().then(f => { inhabitants.usaFigure(f); if(window.pompei) window.pompei.figure = f; })
+  .catch(e => console.warn('Figure del 79 non caricate:', e));
 
 const dummy = new Object3D();
 const allMaterials = [];
@@ -2015,7 +2022,9 @@ function passo(){
     g.position.y = depositCurrent;
 
   stepParticles(dt, t);
-  inhabitants.update(t, dt);
+  // a piedi sul basolato prima del 79, sul deposito dopo: a scala vera chi
+  // lavora ai recuperi sparirebbe sotto la cenere
+  inhabitants.update(t, dt, Math.max(STRADA_H, depositCurrent));
 
   // cenere
   if(ashGroup.visible){

@@ -37,3 +37,25 @@ la licenza non li richiede.
 - `Cobblestone Pavement` — https://polyhaven.com/a/cobblestone_pavement
 - `Plastered Wall 05` — https://polyhaven.com/a/plastered_wall_05
 - `Roof Tiles` — https://polyhaven.com/a/roof_tiles
+
+## Figure umane — MakeHuman / MPFB
+
+I corpi, gli occhi, le sopracciglia, i capelli e le texture della pelle degli
+abitanti del 79 (`src/assets/figure/romana-*.glb`) vengono dagli asset di
+sistema di MakeHuman, usati con l'estensione MPFB 2 per Blender, distribuiti
+con licenza CC0 1.0. Le vesti sono costruite dallo script
+`strumenti/blender/figure_romane.py` di questo progetto.
+
+- MakeHuman — https://static.makehumancommunity.org/
+- MPFB 2 — https://static.makehumancommunity.org/mpfb.html
+
+## Movimenti — CMU Graphics Lab Motion Capture Database
+
+Il passo e la sosta degli abitanti (`src/assets/figure/movimenti.glb`) vengono
+dalle registrazioni 35_01 e 77_02 del CMU Graphics Lab Motion Capture
+Database, http://mocap.cs.cmu.edu/ — «The data used in this project was
+obtained from mocap.cs.cmu.edu. The database was created with funding from
+NSF EIA-0196217.» L'uso è libero, anche in prodotti; i file grezzi non si
+ridistribuiscono, e qui non ci sono: c'è solo il risultato del trasferimento
+sullo scheletro di MakeHuman, fatto dal progetto Firenze 1216 dello stesso
+autore (conversione BVH di B. Hahne).
