@@ -318,6 +318,7 @@
     font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
   }
   .tourBtn:hover:not([disabled]){border-color:var(--accent);color:var(--accent)}
+  .tourBtn.on{border-color:var(--accent);color:var(--accent)}
 
   /* --------------------------------------------------- orologio solare */
   #clock{
@@ -550,6 +551,35 @@
     #rail{width:min(17rem,86vw)}
     #panel{width:min(22rem,94vw)}
   }
+  /* -------------------------------------------------------- dita
+     44 px è il bersaglio tattile minimo delle linee guida Apple. Misurati
+     l'8 ottobre 2026 su 375 px: comandi alti 24–27 px, la X della scheda
+     18 × 17. Vale per qualunque schermo toccato col dito, anche largo. */
+  @media (pointer: coarse){
+    .tool, .tourBtn, .pLink, #clockNow, #search, #btnStart, #btnStartCompare{min-height:2.75rem}
+    #pClose{min-width:2.75rem;min-height:2.75rem;font-size:1.15rem;
+      display:inline-flex;align-items:center;justify-content:center}
+    #clockSlider{height:2.75rem}
+  }
+  /* La barra dei comandi, stretta, scorre di lato: lo dice una sfumatura a
+     destra, che sparisce in fondo. La lingua viene per prima: chi non legge
+     l'italiano deve trovarla senza cercarla, e prima era l'ultima di 15. */
+  @media (max-width:52rem){
+    #tools{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 2.4rem),transparent);
+           mask-image:linear-gradient(to right,#000 calc(100% - 2.4rem),transparent)}
+    #tools.fine{-webkit-mask-image:none;mask-image:none}
+    #lang{order:-1}
+  }
+  /* Su un telefono il riquadro di Ercolano copriva più di metà dello schermo
+     (431 px su 812): la nota resta, ma in due righe, e un tocco la apre. */
+  @media (max-width:44rem){
+    .ercNote{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+      overflow:hidden;cursor:pointer;font-size:11.5px}
+    .ercNote.aperta{display:block}
+    .ercBar{gap:6px;padding:7px 9px}
+  }
+  .ercSotto{display:inline-flex;gap:6px}
+  .ercSotto[hidden]{display:none}
   #touchHint{transition:opacity .6s;opacity:1}
   #touchHint.faded{opacity:0}
   @media (prefers-reduced-motion:reduce){
@@ -659,6 +689,10 @@ body.erc-on #crosshair{ display:block !important; }
     <span class="ercName" data-i18n="ui.erc.nome">Ercolano — lo scavo</span>
     <span class="ercNear" id="ercNear"></span>
     <button class="tourBtn" id="ercBuried" data-i18n="ui.erc.sepolto">Guarda sotto la città</button>
+    <span class="ercSotto" id="ercSotto" hidden>
+      <button class="tourBtn" id="ercSottoTeatro" data-i18n="ui.erc.sottoTeatro">Teatro</button>
+      <button class="tourBtn" id="ercSottoVasca" data-i18n="ui.erc.sottoVasca">Vasca della Palestra</button>
+    </span>
     <button class="tourBtn" id="ercReset" data-i18n="ui.erc.incrocio">Torna all'incrocio</button>
     <button class="tourBtn" id="ercExit" data-i18n="ui.erc.esci">Torna a Pompei</button>
   </div>

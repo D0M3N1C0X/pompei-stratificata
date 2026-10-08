@@ -57,6 +57,8 @@ export default {
     "erc": {
       "nome": "Ercolano — lo scavo",
       "sepolto": "Guarda sotto la città",
+      "sottoTeatro": "Teatro",
+      "sottoVasca": "Vasca della Palestra",
       "incrocio": "Torna all'incrocio",
       "esci": "Torna a Pompei",
       "nota": "Cammini <b>solo dove si è scavato davvero</b>: quattro insulae intere più le due\nOrientalis. Tutto il resto è deposito, ed è disegnato come deposito — con la città\nmoderna sopra. <span class=\"ercWarn\">La scena è costruita nella convenzione di sito\n(Decumano Massimo a monte, mare a valle): l'orientamento vero non è verificato.</span>",

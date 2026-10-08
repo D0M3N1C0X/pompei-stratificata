@@ -1864,11 +1864,34 @@ document.getElementById('ercReset').addEventListener('click', () => setErcAlto(f
 // Il teatro di Ercolano è il primo monumento trovato, nel 1738, e sta
 // venticinque metri sotto il centro storico: finora era solo una riga di
 // testo. Qui la città moderna diventa trasparente e sotto si vede.
+// Dall'8 ottobre 2026 le cose sepolte sono due — il teatro e la vasca della
+// Palestra — e il pulsante apre due voci: prima portava sempre al teatro, e
+// la vasca andava cercata volando.
+function segnaSotto(v, dove){
+  document.getElementById('ercBuried').classList.toggle('on', v);
+  document.getElementById('ercSotto').hidden = !v;
+  document.getElementById('ercSottoTeatro').classList.toggle('on', v && dove === 'teatro');
+  document.getElementById('ercSottoVasca').classList.toggle('on', v && dove === 'vasca');
+}
 document.getElementById('ercBuried').addEventListener('click', () => {
   const v = ERCOLANO.mostraSepolto(!ERCOLANO.sepoltoAttivo());
-  document.getElementById('ercBuried').classList.toggle('on', v);
+  segnaSotto(v, 'teatro');
   if(v && !ERCOLANO.inVolo()) setErcAlto(true);   // da terra non si vedrebbe
 });
+for(const dove of ['teatro', 'vasca'])
+  document.getElementById(dove === 'teatro' ? 'ercSottoTeatro' : 'ercSottoVasca')
+    .addEventListener('click', () => { ERCOLANO.guardaSotto(dove); segnaSotto(true, dove); });
+document.querySelector('#ercHud .ercNote')
+  .addEventListener('click', e => e.currentTarget.classList.toggle('aperta'));
+{
+  // la sfumatura della barra sparisce quando si è arrivati in fondo
+  const tools = document.getElementById('tools');
+  const fine = () => tools.classList.toggle('fine',
+    tools.scrollLeft + tools.clientWidth >= tools.scrollWidth - 2);
+  tools.addEventListener('scroll', fine, { passive:true });
+  addEventListener('resize', fine);
+  fine();
+}
 {
   const fwd = document.getElementById('ercFwd'), back = document.getElementById('ercBack');
   const hold = (el, v) => {
@@ -2270,6 +2293,7 @@ function applicaCollegamento(){
      pompei.guarda(px,py,pz, tx,ty,tz)   camera in p, guarda verso t
      pompei.fase(i)                      fase 0…7
      pompei.foto(n)                      n passi di scena, poi l'immagine PNG
+     pompei.apri(id), .vista(v), .luoghi()  il giro di verifica, senza ricaricare
      pompei.scena                        la scena, per controllare cosa c'è
    foto() non aspetta i fotogrammi del browser: funziona anche in una scheda
    nascosta o in un Chrome senza schermo, dove requestAnimationFrame tace.
@@ -2284,6 +2308,14 @@ if(new URLSearchParams(location.search).has('debug')){
     fase(i){ applyEpoch(i); },
     scena: scene,
     ercolano: ERCOLANO,
+    // per il giro di verifica: ogni luogo, fase e vista senza ricaricare
+    luoghi: () => Object.keys(byId),
+    apri(id){ const d = byId[id].data; applyEpoch(TOUR_EPOCH[id] ?? d.from); openPanel(d); },
+    vista(v){
+      setErc(false); setCompare(false);
+      if(v === 'confronto') setCompare(true);
+      if(v === 'ercolano') setErc(true);
+    },
     // avanza la scena di n passi da 1/30 s e restituisce l'immagine del canvas,
     // letta nello stesso giro in cui è stata disegnata
     foto(n = 60){
@@ -2306,7 +2338,7 @@ function applicaCamera(){
     // a Ercolano: x,y,z,imbardata,beccheggio; con &sotto la città si fa trasparente
     if(q.has('sotto')){
       ERCOLANO.mostraSepolto(true);
-      document.getElementById('ercBuried').classList.add('on');
+      segnaSotto(true, 'teatro');
     }
     if(v.length === 5) ERCOLANO.inquadra(...v);
   } else if(v.length === 6) window.pompei.guarda(...v);
