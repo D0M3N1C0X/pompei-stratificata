@@ -1,6 +1,13 @@
 import { DEC_MAX, DEC_INF, C3, C4, C5, BEACH_Y, LUOGHI } from './data/ercolano-places.js';
+import { PAL } from './scene/palette.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
 import {
   BoxGeometry,
+  BufferGeometry,
+  LineBasicMaterial,
+  LineLoop,
+  Vector3,
   Color,
   ConeGeometry,
   CylinderGeometry,
@@ -182,17 +189,52 @@ export const ERCOLANO = (function(){
     box(9 + i*3, 0, 24.6, 0.5, m(3.6), 0.5, M.colonna);
 
   // ---- INSULA ORIENTALIS II — la Palestra
-  // Campo di 77 × 47 m: qui 19,25 × 11,75 unità. Il campo vero è in gran
-  // parte ancora sepolto; scavato è il fronte su Cardo V e il vestibolo.
+  // Campo di 77 × 47 m (Maiuri 1960, «l'area rettangolare della palestra»):
+  // qui 19,25 × 11,75 unità. I 105 × 70 m di altre fonti sono l'intero
+  // complesso, non il campo: misurano un'altra cosa, non lo contraddicono.
+  //
+  // All'aperto è scavato solo il lato su Cardo V: portico ovest, sala
+  // d'ingresso, vestibolo, sala absidata. Il campo e la vasca cruciforme
+  // stanno ancora sotto il deposito, svuotato «come una caverna» solo sopra
+  // la parte centrale (Deiss 1968). Fino all'8 ottobre 2026 qui c'era un
+  // prato con la vasca a cielo aperto, lunga la metà del vero: contraddiceva
+  // la scheda. Ora il deposito copre il campo, e la vasca — da Blender, sulla
+  // misura pubblicata dei bracci — si vede con «ciò che è sotto».
   const PX = 33, PZ = -12;
-  box(PX, 0, PZ - 6.4, 19.25, m(4.5), 1.4, M.mattone);     // portico nord
-  box(PX, 0, PZ + 6.4, 19.25, m(4.5), 1.4, M.mattone);     // portico sud
+  const CAMPO_X0 = PX - 19.25/2, CAMPO_X1 = PX + 19.25/2, CAMPO_D = 11.75;
+  const PORTICO = 1.4;                                     // striscia scavata: disegno, non misura
   box(PX - 10.0, 0, PZ, 1.4, m(4.5), 12.5, M.mattone);     // ala su Cardo V
-  box(PX + 10.0, 0, PZ, 1.4, m(6.5), 12.5, M.dep2);        // il resto: ancora sepolto
-  flat(PX, TOWN_Y, PZ, 18, 11.5, M.erba);
-  flat(PX, TOWN_Y + 0.04, PZ, 6.5, 1.2, M.acqua);          // vasca cruciforme
-  flat(PX, TOWN_Y + 0.04, PZ, 1.2, 5.5, M.acqua);
-  for(let i=-4;i<=4;i++) box(PX + i*2.2, 0, PZ - 5.6, 0.45, m(3.4), 0.45, M.colonna);
+  for(let i=-2;i<=2;i++)                                   // portico ovest, schematico
+    box(CAMPO_X0 + 0.7, 0, PZ + i*2.4, 0.45, m(3.4), 0.45, M.colonna);
+  flat(CAMPO_X0 + PORTICO/2, TOWN_Y, PZ, PORTICO, CAMPO_D, M.marcia);
+  // il campo sepolto: venti metri di deposito, come il fronte
+  // (la funzione scarpata è dichiarata più sotto, ma è hoisted)
+  // Materiali propri, gli stessi colori: con «Guarda sotto la città» le sei
+  // facce sovrapposte delle bande, a 0,40 l'una, sommate erano opache e la
+  // vasca non si vedeva. Questi si velano di più (VELATI, più sotto).
+  const DEP_CAMPO = [mat(0x86806f, 'ash'), mat(0x6e695d, 'ash'), mat(0x504c44, 'ash')];
+  scarpata((CAMPO_X0 + PORTICO + CAMPO_X1)/2, PZ, CAMPO_X1 - CAMPO_X0 - PORTICO, CAMPO_D, DEP_CAMPO);
+
+  const vasca = new Group();
+  vasca.position.set(PX, TOWN_Y, PZ);
+  eRoot.add(vasca);
+  // La geometria è quella di Blender; la superficie no: la vasca è sepolta e
+  // si mostra come il teatro, nel materiale di «ciò che è sotto» (più avanti
+  // il gruppo passa dentro «sepolto»). Così non c'è un secondo linguaggio
+  // per la stessa cosa.
+  new GLTFLoader().load(vascaUrl, gltf => {
+    gltf.scene.traverse(o => { if(o.isMesh){ o.material = M_SEPOLTO; o.castShadow = o.receiveShadow = false; } });
+    vasca.add(gltf.scene);
+  }, undefined, e => console.warn('Vasca della Palestra di Ercolano non caricata:', e));
+  {
+    // il contorno color accento: «misura pubblicata», come a Pompei
+    const hx = 50/U/2, hy = 30/U/2, w = 5.5/U/2, y = 0.07;
+    const croce = [[-hx,-w],[-w,-w],[-w,-hy],[w,-hy],[w,-w],[hx,-w],
+                   [hx,w],[w,w],[w,hy],[-w,hy],[-w,w],[-hx,w]];
+    vasca.add(new LineLoop(
+      new BufferGeometry().setFromPoints(croce.map(([x,z]) => new Vector3(x, y, z))),
+      new LineBasicMaterial({ color:PAL.accent })));
+  }
   casa(24.5, -22, 4, 6, 2, M.mattone);                     // vestibolo Ins. Or. II.4
 
   // ---- INSULA ORIENTALIS I — terrazze verso la spiaggia
@@ -233,14 +275,14 @@ export const ERCOLANO = (function(){
      Non un muro solo: corre lungo il Decumano Massimo e gira a nord-ovest
      sopra la Basilica Noniana. Sopra: corso Resina e la città moderna. */
   const SCARP_H = 5.0;                 // 20 m, valore modale delle fonti
-  function scarpata(x, z, w, d){
+  function scarpata(x, z, w, d, mat = [M.dep1, M.dep2, M.dep3]){
     const bande = [1.1, 0.9, 1.2, 0.8, 1.0];
     let y = 0;
     bande.forEach((h,i) => {
-      box(x, y, z, w, h, d, i%2 ? M.dep2 : M.dep1);
+      box(x, y, z, w, h, d, i%2 ? mat[1] : mat[0]);
       y += h;
     });
-    box(x, y, z, w*1.02, 0.35, d*1.02, M.dep3, false);
+    box(x, y, z, w*1.02, 0.35, d*1.02, mat[2], false);
     return y;
   }
   scarpata(2, DEC_MAX - 4.4, 104, 5);            // fronte lungo il Decumano Massimo
@@ -300,6 +342,7 @@ export const ERCOLANO = (function(){
     pozzo.position.set(TEATRO_X + 3.0, (SCARP_H + ORCHESTRA_Y)/2, TEATRO_Z + 1.4);
     sepolto.add(cavea, scaena, orch, pozzo);
   }
+  sepolto.add(vasca);                     // la vasca della Palestra, anch'essa sotto
 
   /* ------------------------------------------ la città moderna, sopra */
   const modern = new Group(); eRoot.add(modern);
@@ -542,7 +585,8 @@ export const ERCOLANO = (function(){
   // perché è ciò di cui la scena parla.
   const VELATI = [
     { m:[M.moderno, M.tettoM, M.asfalto],        a:0.16 },
-    { m:[M.dep1, M.dep2, M.dep3, M.terra],       a:0.40 }
+    { m:[M.dep1, M.dep2, M.dep3, M.terra],       a:0.40 },
+    { m:DEP_CAMPO,                               a:0.10 }   // sopra la vasca della Palestra
   ];
   function mostraSepolto(on){
     sepoltoOn = !!on;
@@ -563,6 +607,11 @@ export const ERCOLANO = (function(){
     return sepoltoOn;
   }
   function sepoltoAttivo(){ return sepoltoOn; }
+  // solo per ?debug: un'inquadratura fissa, in volo, per le foto di verifica
+  function inquadra(x, y, z, imbardata, beccheggio){
+    volo = true; vx = vy = vz = 0;
+    pos.x = x; pos.y = y; pos.z = z; yaw = imbardata; pitch = beccheggio;
+  }
   function reset(){
     volo = false; vy = 0;
     // In piedi sul Cardo IV, rivolto verso monte: la prima cosa che si
@@ -597,6 +646,6 @@ export const ERCOLANO = (function(){
 
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, apri, textures, dallAlto, inVolo,
-           mostraSepolto, sepoltoAttivo, luoghi: LUOGHI,
+           mostraSepolto, sepoltoAttivo, inquadra, luoghi: LUOGHI,
            isActive: () => active };
 })();
