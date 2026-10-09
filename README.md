@@ -241,6 +241,11 @@ della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
   Project. *International Journal of Conservation Science*, 7(SI2), 847–856.
 - Rohland, R. A. (2022). *Carpe diem: The poetics of presence in Greek and Latin
   literature*. Cambridge University Press.
+- Mau, A. (1899). *Pompeii, its Life and Art*, trad. F. W. Kelsey, cap. XXXI
+  (Project Gutenberg 42715) — larghezze delle vie, marciapiedi rialzati, pietre
+  di passaggio.
+- Poehler, E. E. (2017). *The Traffic Systems of Pompeii*. Oxford University
+  Press — altezza dei cordoli (quasi tutti fra 15 e 39 cm).
 - Brown, S. *Clothing in Roman Art*. Archaeological Institute of America,
   Roman Clothing Project (J. Paul Getty Museum) — le vesti degli abitanti del 79.
 - Pilli, E., et al. (2024). Ancient DNA challenges prevailing interpretations of

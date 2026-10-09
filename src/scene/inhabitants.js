@@ -164,7 +164,8 @@ function seeded(seed){
 function routeTable(streets){
   return (streets || []).filter(s => s.a && s.b).map((street,index) => {
     const dx=street.b[0]-street.a[0], dz=street.b[1]-street.a[1];
-    return { a:street.a, b:street.b, length:Math.hypot(dx,dz), dx, dz, width:street.w || 2.2, index };
+    return { a:street.a, b:street.b, length:Math.hypot(dx,dz), dx, dz, width:street.w || 2.2,
+             marciapiede:street.mw || 0.25, cordolo:street.hh || 0, index };
   }).filter(r => r.length > 1);
 }
 
@@ -231,7 +232,12 @@ function makeAgents(count, species, routes, random, flow, sites=[]){
       exited:false,
       scale:METRO*(species==='people' ? 0.92+random()*0.16 : species==='dogs' ? 0.88+random()*0.24 : 0.86+random()*0.28),
       offset:species==='birds' ? METRO*(1.0+random()*1.8) : 0,
-      laneOffset:(random()-0.5)*Math.min(route.width*0.36,0.9),
+      // le persone sui marciapiedi, un lato o l'altro; cani e piccioni in
+      // carreggiata, al livello del basolato
+      inStrada:species!=='people',
+      laneOffset:species==='people'
+        ? (random()<0.5 ? -1 : 1)*(route.width/2 + route.marciapiede*(0.3+random()*0.4))
+        : (random()-0.5)*route.width*0.7,
       pauseChance, idle, pauseDuration, walkDuration,
       stateRemaining:idle && site ? pauseDuration : random()*(idle ? pauseDuration : walkDuration),
       walkBlend:idle ? 0 : 1,
@@ -319,7 +325,7 @@ function updateMesh(mesh, agents, count, delta, flow, suolo=0){
     const direction=reverse ? -1 : 1;
     TEMP.position.set(
       route.a[0]+route.dx*t-route.dz/route.length*actor.laneOffset,
-      suolo+actor.offset+(actor.hover ? Math.abs(Math.sin(WALK.value*3.2+actor.phase))*0.018*METRO : 0),
+      (actor.inStrada ? Math.max(-route.cordolo, suolo) : Math.max(0, suolo))+actor.offset+(actor.hover ? Math.abs(Math.sin(WALK.value*3.2+actor.phase))*0.018*METRO : 0),
       route.a[1]+route.dz*t+route.dx/route.length*actor.laneOffset
     );
     // i manichini guardano verso −Z, le figure di Blender verso +Z: per
