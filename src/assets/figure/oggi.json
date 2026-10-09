@@ -1,0 +1,202 @@
+[
+ {
+  "n": 0,
+  "ruolo": "turista",
+  "sesso": "m",
+  "eta": 0.354,
+  "seme": 2026,
+  "maniche": "corte",
+  "gambe": "corte",
+  "capo": "berretto",
+  "capelli": "short02",
+  "pelle": [
+   0.86,
+   0.7,
+   0.58
+  ],
+  "colore_capelli": [
+   0.36,
+   0.26,
+   0.16
+  ],
+  "altezza": 1.673,
+  "anche": 0.898,
+  "file": "oggi-00.glb",
+  "vertici": 3667
+ },
+ {
+  "n": 1,
+  "ruolo": "turista",
+  "sesso": "m",
+  "eta": 0.341,
+  "seme": 2067,
+  "maniche": "corte",
+  "gambe": "lunghe",
+  "capo": "nudo",
+  "capelli": "short02",
+  "pelle": [
+   0.86,
+   0.7,
+   0.58
+  ],
+  "colore_capelli": [
+   0.55,
+   0.42,
+   0.25
+  ],
+  "altezza": 1.54,
+  "anche": 0.8127,
+  "file": "oggi-01.glb",
+  "vertici": 3566
+ },
+ {
+  "n": 2,
+  "ruolo": "turista",
+  "sesso": "f",
+  "eta": 0.616,
+  "seme": 2108,
+  "maniche": "corte",
+  "gambe": "corte",
+  "capo": "cappello",
+  "capelli": "long01",
+  "pelle": [
+   0.45,
+   0.32,
+   0.24
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "altezza": 1.647,
+  "anche": 0.8582,
+  "file": "oggi-02.glb",
+  "vertici": 5241
+ },
+ {
+  "n": 3,
+  "ruolo": "turista",
+  "sesso": "f",
+  "eta": 0.615,
+  "seme": 2149,
+  "maniche": "corte",
+  "gambe": "lunghe",
+  "capo": "nudo",
+  "capelli": "long01",
+  "pelle": [
+   0.86,
+   0.7,
+   0.58
+  ],
+  "colore_capelli": [
+   0.55,
+   0.42,
+   0.25
+  ],
+  "altezza": 1.564,
+  "anche": 0.8086,
+  "file": "oggi-03.glb",
+  "vertici": 5064
+ },
+ {
+  "n": 4,
+  "ruolo": "archeologo",
+  "sesso": "m",
+  "eta": 0.574,
+  "seme": 2190,
+  "maniche": "lunghe",
+  "gambe": "lunghe",
+  "capo": "cappello",
+  "capelli": "short03",
+  "pelle": [
+   0.45,
+   0.32,
+   0.24
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "altezza": 1.78,
+  "anche": 0.9556,
+  "file": "oggi-04.glb",
+  "vertici": 2979
+ },
+ {
+  "n": 5,
+  "ruolo": "archeologa",
+  "sesso": "f",
+  "eta": 0.549,
+  "seme": 2231,
+  "maniche": "lunghe",
+  "gambe": "lunghe",
+  "capo": "cappello",
+  "capelli": "bob01",
+  "pelle": [
+   0.86,
+   0.7,
+   0.58
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "altezza": 1.545,
+  "anche": 0.7999,
+  "file": "oggi-05.glb",
+  "vertici": 7205
+ },
+ {
+  "n": 6,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.445,
+  "seme": 2272,
+  "maniche": "corte",
+  "gambe": "lunghe",
+  "capo": "casco",
+  "capelli": null,
+  "pelle": [
+   0.45,
+   0.32,
+   0.24
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "altezza": 1.725,
+  "anche": 0.9233,
+  "file": "oggi-06.glb",
+  "vertici": 1932
+ },
+ {
+  "n": 7,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.653,
+  "seme": 2313,
+  "maniche": "lunghe",
+  "gambe": "lunghe",
+  "capo": "casco",
+  "capelli": null,
+  "pelle": [
+   0.9,
+   0.76,
+   0.66
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "altezza": 1.774,
+  "anche": 0.9566,
+  "file": "oggi-07.glb",
+  "vertici": 1932
+ }
+]
