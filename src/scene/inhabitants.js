@@ -384,7 +384,7 @@ export function createInhabitants({ streets=[] }={}){
     },
     // Le figure di Blender prendono il posto dei manichini nelle fasi in cui
     // l'abito è documentato: il 79, l'eruzione e i recuperi del I–III secolo,
-    // che vestono allo stesso modo, e oggi. Ai recuperi lavorano uomini: niente donne
+    // che vestono allo stesso modo, lo scavo borbonico (Fabris 1776) e oggi. Ai recuperi lavorano uomini: niente donne
     // né cittadini col pallio [scelta di regia]. Le altre fasi tengono i
     // manichini finché le loro vesti non hanno una fonte, e la differenza si
     // vede: è la regola del progetto, realismo solo dove è documentato.
@@ -394,6 +394,7 @@ export function createInhabitants({ streets=[] }={}){
       const FASI = {
         0:{ serie:'romane' }, 1:{ serie:'romane' },
         2:{ serie:'romane', ruoli:['popolano','servo','ragazzo'] },
+        6:{ serie:'borbonici' },
         7:{ serie:'oggi' }
       };
       for(const item of populationGroups){
@@ -402,8 +403,15 @@ export function createInhabitants({ streets=[] }={}){
         const varianti = fig.varianti.filter(v => v.serie === serie && (!ruoli || ruoli.includes(v.ruolo)));
         if(!varianti.length) continue;
         const random = seeded(0xf16 + item.profile.epoch*31);
+        // ogni variante pesa quanto dice il suo JSON (nello scavo borbonico
+        // gli operai sono molti, i visitatori un gruppo); di norma 1
+        const pesi = varianti.map(v => v.info.peso ?? 1), totale = pesi.reduce((a,b) => a+b, 0);
         const gruppi = varianti.map(() => []);
-        item.people.forEach(a => gruppi[Math.floor(random()*varianti.length)].push(a));
+        item.people.forEach(a => {
+          let x = random()*totale, i = 0;
+          while(i < pesi.length-1 && (x -= pesi[i]) > 0) i++;
+          gruppi[i].push(a);
+        });
         item.figure = varianti.map((v,i) => {
           const agents = gruppi[i];
           const mesh = mescolaFigure(v, agents.length);
