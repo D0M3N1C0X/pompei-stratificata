@@ -241,6 +241,9 @@ della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
   Project. *International Journal of Conservation Science*, 7(SI2), 847–856.
 - Rohland, R. A. (2022). *Carpe diem: The poetics of presence in Greek and Latin
   literature*. Cambridge University Press.
+- Fabris, P. (1776). *The discovery of the temple of Isis at Pompeii*, per
+  W. Hamilton, *Campi Phlegraei*. Wellcome Collection 43680i, pubblico dominio —
+  le vesti di operai e visitatori dello scavo borbonico.
 - Mau, A. (1899). *Pompeii, its Life and Art*, trad. F. W. Kelsey, cap. XXXI
   (Project Gutenberg 42715) — larghezze delle vie, marciapiedi rialzati, pietre
   di passaggio.

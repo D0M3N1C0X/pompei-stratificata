@@ -16,6 +16,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import ROMANE from '../assets/figure/romane.json';
 import OGGI from '../assets/figure/oggi.json';
+import BORBONICI from '../assets/figure/borbonici.json';
 import movimentiUrl from '../assets/figure/movimenti.glb?url';
 
 /* =====================================================================
@@ -36,11 +37,12 @@ import movimentiUrl from '../assets/figure/movimenti.glb?url';
    nel browser.
    ===================================================================== */
 
-const FILE = import.meta.glob(['../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb'], { eager:true, query:'?url', import:'default' });
+const FILE = import.meta.glob(['../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb', '../assets/figure/borb-*.glb'], { eager:true, query:'?url', import:'default' });
 // le serie: chi veste come, e da quale script di Blender viene
 const SERIE = [
   { nome:'romane', elenco:ROMANE },   // strumenti/blender/figure_romane.py — il 79
-  { nome:'oggi',   elenco:OGGI }      // strumenti/blender/figure_oggi.py — il cantiere aperto
+  { nome:'oggi',   elenco:OGGI },     // strumenti/blender/figure_oggi.py — il cantiere aperto
+  { nome:'borbonici', elenco:BORBONICI } // strumenti/blender/figure_borbonici.py — lo scavo 1748–1763
 ];
 
 const PASSO_F = 20;      // fotogrammi del passo (clip di circa 1 s)

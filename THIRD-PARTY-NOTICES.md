@@ -41,10 +41,11 @@ la licenza non li richiede.
 ## Figure umane — MakeHuman / MPFB
 
 I corpi, gli occhi, le sopracciglia, i capelli e le texture della pelle degli
-abitanti del 79 e di oggi (`src/assets/figure/romana-*.glb`, `oggi-*.glb`) vengono dagli asset di
+abitanti (`src/assets/figure/romana-*.glb`, `borb-*.glb`, `oggi-*.glb`) vengono dagli asset di
 sistema di MakeHuman, usati con l'estensione MPFB 2 per Blender, distribuiti
 con licenza CC0 1.0. Le vesti sono costruite dagli script
-`strumenti/blender/figure_romane.py` e `figure_oggi.py` di questo progetto.
+`strumenti/blender/figure_romane.py`, `figure_borbonici.py` e `figure_oggi.py`
+di questo progetto.
 
 - MakeHuman — https://static.makehumancommunity.org/
 - MPFB 2 — https://static.makehumancommunity.org/mpfb.html

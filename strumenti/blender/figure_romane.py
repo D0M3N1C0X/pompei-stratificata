@@ -236,6 +236,62 @@ def volto(base, r):
 # ---------------------------------------------------------------------
 # la figura romana
 # ---------------------------------------------------------------------
+def gonna(rig, corpo, fetta, B, orlo, m, mat, svasa=None, nome='gonna'):
+    """La gonna di una veste, dalla vita all'orlo, pesata su anche e gambe e
+    drappeggiata sul corpo. orlo: frazione d'altezza ×1,7 (0,5 ≈ ginocchio).
+    Usata dalla tunica romana, dalla marsina e dalla veste del Settecento."""
+    zh = B['Hips'].head_local.z
+    zv = zh + 0.1 * (zh / 0.874)
+    zg = B['LeftLeg'].head_local.z
+    altezza = B['Head'].tail_local.z
+    z_orlo = orlo * altezza / 1.7
+    fv = fetta(zv, 0.02) or (0, 0, 0.14, 0.1)
+    fianchi = [fetta(zv - 0.02 * i, 0.02) for i in range(1, 14)]
+    fianchi = [(f, zv - 0.02 * (i + 1)) for i, f in enumerate(fianchi) if f]
+    (fh, zfh) = max(fianchi, key=lambda x: x[0][2]) if fianchi else (fv, zv - 0.15)
+    if svasa is None: svasa = 0.16 if not m else 0.08
+    ring = []
+    k = 16
+    for i in range(k + 1):
+        t = i / k
+        z = zv + (z_orlo - zv) * t
+        if z >= zfh:
+            u = (zv - z) / max(1e-3, zv - zfh)
+            rx = fv[2] + 0.004 + (fh[2] + 0.02 - fv[2]) * math.sin(u * math.pi / 2)
+            ry = fv[3] + 0.006 + (fh[3] + 0.025 - fv[3]) * math.sin(u * math.pi / 2)
+        else:
+            u = (zfh - z) / max(1e-3, zfh - z_orlo)
+            rx = fh[2] + 0.02 + svasa * u
+            ry = fh[3] + 0.025 + svasa * 0.8 * u
+            f = fetta(z, 0.03)
+            if f:
+                rx = max(rx, f[2] + 0.03); ry = max(ry, f[3] + 0.04)
+        ring.append((z, rx, ry, fv[0], fv[1]))
+    cx0, cy0 = ring[0][3], ring[0][4]
+    segue = 0.85 if orlo > 0.35 else 0.6 if orlo > 0.15 else 0.4
+
+    def come_gonna(x, z):
+        t = smooth(zv, z_orlo, z) * segue
+        lato = smooth(-1.0, 1.0, (x - cx0) / 0.2)
+        basso = smooth(zg + 0.05, zg - 0.25, z) * 0.35
+        return [('Hips', 1 - t), ('LeftUpLeg', t * lato * (1 - basso)), ('RightUpLeg', t * (1 - lato) * (1 - basso)),
+                ('LeftLeg', t * lato * basso), ('RightLeg', t * (1 - lato) * basso)]
+
+    N = 48
+    verts, facce = tornio([(z, rx, ry) for (z, rx, ry, _, _) in ring], N, 0, 2 * math.pi, cx0, cy0, 1, 1, True)
+    lobi = 12 if orlo < 0.2 else 9
+    for i, (x, y, z) in enumerate(verts):
+        a = (i % N) / N * 2 * math.pi
+        t = smooth(zv, z_orlo, z)
+        kk = 1 + (0.012 + 0.05 * t) * math.sin(lobi * a)
+        verts[i] = (cx0 + (x - cx0) * kk, cy0 + (y - cy0) * kk, z)
+    gonna = nuova_mesh(nome, rig, verts, facce, [come_gonna(x, z) for (x, y, z) in verts], mat)
+    if PIEGHE:
+        drappeggia(gonna, corpo, range(2 * N), rigidezza=13, piega=1.2 if m else 0.6)
+    return gonna
+
+
+
 def crea(var):
     r = random.Random(var['seme'])
     pulisci()
@@ -309,50 +365,7 @@ def crea(var):
     altezza = B['Head'].tail_local.z
 
     # --- la gonna della tunica, come a Firenze
-    z_orlo = orlo * altezza / 1.7
-    fv = fetta(zv, 0.02) or (0, 0, 0.14, 0.1)
-    fianchi = [fetta(zv - 0.02 * i, 0.02) for i in range(1, 14)]
-    fianchi = [(f, zv - 0.02 * (i + 1)) for i, f in enumerate(fianchi) if f]
-    (fh, zfh) = max(fianchi, key=lambda x: x[0][2]) if fianchi else (fv, zv - 0.15)
-    svasa = 0.16 if not m else 0.08
-    ring = []
-    k = 16
-    for i in range(k + 1):
-        t = i / k
-        z = zv + (z_orlo - zv) * t
-        if z >= zfh:
-            u = (zv - z) / max(1e-3, zv - zfh)
-            rx = fv[2] + 0.004 + (fh[2] + 0.02 - fv[2]) * math.sin(u * math.pi / 2)
-            ry = fv[3] + 0.006 + (fh[3] + 0.025 - fv[3]) * math.sin(u * math.pi / 2)
-        else:
-            u = (zfh - z) / max(1e-3, zfh - z_orlo)
-            rx = fh[2] + 0.02 + svasa * u
-            ry = fh[3] + 0.025 + svasa * 0.8 * u
-            f = fetta(z, 0.03)
-            if f:
-                rx = max(rx, f[2] + 0.03); ry = max(ry, f[3] + 0.04)
-        ring.append((z, rx, ry, fv[0], fv[1]))
-    cx0, cy0 = ring[0][3], ring[0][4]
-    segue = 0.85 if orlo > 0.35 else 0.6 if orlo > 0.15 else 0.4
-
-    def come_gonna(x, z):
-        t = smooth(zv, z_orlo, z) * segue
-        lato = smooth(-1.0, 1.0, (x - cx0) / 0.2)
-        basso = smooth(zg + 0.05, zg - 0.25, z) * 0.35
-        return [('Hips', 1 - t), ('LeftUpLeg', t * lato * (1 - basso)), ('RightUpLeg', t * (1 - lato) * (1 - basso)),
-                ('LeftLeg', t * lato * basso), ('RightLeg', t * (1 - lato) * basso)]
-
-    N = 48
-    verts, facce = tornio([(z, rx, ry) for (z, rx, ry, _, _) in ring], N, 0, 2 * math.pi, cx0, cy0, 1, 1, True)
-    lobi = 12 if orlo < 0.2 else 9
-    for i, (x, y, z) in enumerate(verts):
-        a = (i % N) / N * 2 * math.pi
-        t = smooth(zv, z_orlo, z)
-        kk = 1 + (0.012 + 0.05 * t) * math.sin(lobi * a)
-        verts[i] = (cx0 + (x - cx0) * kk, cy0 + (y - cy0) * kk, z)
-    gonna = nuova_mesh('gonna', rig, verts, facce, [come_gonna(x, z) for (x, y, z) in verts], M['veste'])
-    if PIEGHE:
-        drappeggia(gonna, corpo, range(2 * N), rigidezza=13, piega=1.2 if m else 0.6)
+    gonna(rig, corpo, fetta, B, orlo, m, M['veste'])
 
     # --- la cintura: la tunica degli uomini è cinta (Brown); le donne a volte
     if m or r.random() < 0.5:

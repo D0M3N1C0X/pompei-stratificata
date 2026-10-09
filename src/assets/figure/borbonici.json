@@ -1,0 +1,163 @@
+[
+ {
+  "n": 0,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.681,
+  "seme": 1748,
+  "peso": 6.0,
+  "capelli": null,
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "altezza": 1.698,
+  "anche": 0.9066,
+  "file": "borb-00.glb",
+  "vertici": 1932
+ },
+ {
+  "n": 1,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.623,
+  "seme": 1791,
+  "peso": 6.0,
+  "capelli": null,
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "altezza": 1.686,
+  "anche": 0.8908,
+  "file": "borb-01.glb",
+  "vertici": 1932
+ },
+ {
+  "n": 2,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.455,
+  "seme": 1834,
+  "peso": 6.0,
+  "capelli": null,
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "altezza": 1.559,
+  "anche": 0.8122,
+  "file": "borb-02.glb",
+  "vertici": 1932
+ },
+ {
+  "n": 3,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.362,
+  "seme": 1877,
+  "peso": 6.0,
+  "capelli": null,
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "altezza": 1.433,
+  "anche": 0.7371,
+  "file": "borb-03.glb",
+  "vertici": 1932
+ },
+ {
+  "n": 4,
+  "ruolo": "visitatore",
+  "sesso": "m",
+  "eta": 0.623,
+  "seme": 1920,
+  "peso": 1.0,
+  "capelli": "short02",
+  "pelle": [
+   0.9,
+   0.76,
+   0.66
+  ],
+  "colore_capelli": [
+   0.08,
+   0.07,
+   0.06
+  ],
+  "altezza": 1.702,
+  "anche": 0.9072,
+  "file": "borb-04.glb",
+  "vertici": 4543
+ },
+ {
+  "n": 5,
+  "ruolo": "visitatore",
+  "sesso": "m",
+  "eta": 0.634,
+  "seme": 1963,
+  "peso": 1.0,
+  "capelli": "short02",
+  "pelle": [
+   0.9,
+   0.76,
+   0.66
+  ],
+  "colore_capelli": [
+   0.36,
+   0.26,
+   0.16
+  ],
+  "altezza": 1.588,
+  "anche": 0.8329,
+  "file": "borb-05.glb",
+  "vertici": 4543
+ },
+ {
+  "n": 6,
+  "ruolo": "visitatrice",
+  "sesso": "f",
+  "eta": 0.566,
+  "seme": 2006,
+  "peso": 0.8,
+  "capelli": "bob02",
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "colore_capelli": [
+   0.18,
+   0.12,
+   0.08
+  ],
+  "altezza": 1.541,
+  "anche": 0.7954,
+  "file": "borb-06.glb",
+  "vertici": 4294
+ }
+]
