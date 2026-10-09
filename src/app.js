@@ -438,7 +438,12 @@ for(const s of STREETS){
     if(!inPoly(x,z,WALLS)) continue;
     for(const sg of [1,-1]){
       const o = sg*(s.w/2 + K/2);
-      block(lungo ? x : x+o, -s.hh, lungo ? z+o : z, lungo ? 2.2 : K, s.hh+0.004, lungo ? K : 2.2, PAL.kerb);
+      const kx = lungo ? x : x+o, kz = lungo ? z+o : z;
+      // agli incroci il cordolo si interrompe: non attraversa la carreggiata
+      // dell'altra via (prima la tagliava come una trave)
+      if(CARREGGIATE.some(r => r.s !== s && kx > r.x0-1.1 && kx < r.x1+1.1 && kz > r.z0-1.1 && kz < r.z1+1.1 &&
+         (lungo ? (kz > r.z0 && kz < r.z1) : (kx > r.x0 && kx < r.x1)))) continue;
+      block(kx, -s.hh, kz, lungo ? 2.2 : K, s.hh+0.004, lungo ? K : 2.2, PAL.kerb);
     }
   }
 }

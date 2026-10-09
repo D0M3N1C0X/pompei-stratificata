@@ -14,7 +14,8 @@ import {
 } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import ELENCO from '../assets/figure/romane.json';
+import ROMANE from '../assets/figure/romane.json';
+import OGGI from '../assets/figure/oggi.json';
 import movimentiUrl from '../assets/figure/movimenti.glb?url';
 
 /* =====================================================================
@@ -35,7 +36,12 @@ import movimentiUrl from '../assets/figure/movimenti.glb?url';
    nel browser.
    ===================================================================== */
 
-const FILE = import.meta.glob('../assets/figure/romana-*.glb', { eager:true, query:'?url', import:'default' });
+const FILE = import.meta.glob(['../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb'], { eager:true, query:'?url', import:'default' });
+// le serie: chi veste come, e da quale script di Blender viene
+const SERIE = [
+  { nome:'romane', elenco:ROMANE },   // strumenti/blender/figure_romane.py — il 79
+  { nome:'oggi',   elenco:OGGI }      // strumenti/blender/figure_oggi.py — il cantiere aperto
+];
 
 const PASSO_F = 20;      // fotogrammi del passo (clip di circa 1 s)
 const SOSTA_F = 24;      // fotogrammi della sosta (clip di circa 5 s)
@@ -49,11 +55,13 @@ export async function caricaFigure(){
   const clip = Object.fromEntries(mov.animations.map(c => [c.name, c]));
   const anche0 = altezzaAnche(mov.scene);
   const varianti = [];
-  for(const info of ELENCO){
+  for(const serie of SERIE) for(const info of serie.elenco){
     const url = FILE[`../assets/figure/${info.file}`];
     if(!url) continue;
     const gltf = await loader.loadAsync(url);
-    varianti.push(prepara(gltf.scene, info, clip, altezzaAnche(gltf.scene) / anche0));
+    const v = prepara(gltf.scene, info, clip, altezzaAnche(gltf.scene) / anche0);
+    v.serie = serie.nome;
+    varianti.push(v);
     await new Promise(r => setTimeout(r, 0));   // lascia respirare il primo disegno
   }
   return { varianti, passo: clip.cammina2.duration, sosta: clip.fermo.duration, velocitaPasso: 1.104 };

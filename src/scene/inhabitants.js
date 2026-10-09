@@ -384,16 +384,22 @@ export function createInhabitants({ streets=[] }={}){
     },
     // Le figure di Blender prendono il posto dei manichini nelle fasi in cui
     // l'abito è documentato: il 79, l'eruzione e i recuperi del I–III secolo,
-    // che vestono allo stesso modo. Ai recuperi lavorano uomini: niente donne
+    // che vestono allo stesso modo, e oggi. Ai recuperi lavorano uomini: niente donne
     // né cittadini col pallio [scelta di regia]. Le altre fasi tengono i
     // manichini finché le loro vesti non hanno una fonte, e la differenza si
     // vede: è la regola del progetto, realismo solo dove è documentato.
     usaFigure(fig){
-      const FASI = { 0:null, 1:null, 2:['popolano','servo','ragazzo'] };
+      // fase → serie di figure, e se serve quali ruoli. La fase 8 è oggi:
+      // turisti, archeologi e operai (strumenti/blender/figure_oggi.py)
+      const FASI = {
+        0:{ serie:'romane' }, 1:{ serie:'romane' },
+        2:{ serie:'romane', ruoli:['popolano','servo','ragazzo'] },
+        7:{ serie:'oggi' }
+      };
       for(const item of populationGroups){
         if(!(item.profile.epoch in FASI)) continue;
-        const ruoli = FASI[item.profile.epoch];
-        const varianti = fig.varianti.filter(v => !ruoli || ruoli.includes(v.ruolo));
+        const { serie, ruoli } = FASI[item.profile.epoch];
+        const varianti = fig.varianti.filter(v => v.serie === serie && (!ruoli || ruoli.includes(v.ruolo)));
         if(!varianti.length) continue;
         const random = seeded(0xf16 + item.profile.epoch*31);
         const gruppi = varianti.map(() => []);
