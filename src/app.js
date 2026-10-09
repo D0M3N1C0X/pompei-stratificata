@@ -272,26 +272,47 @@ function inPoly(x,z,poly){
   return c;
 }
 
+/* Le vie. Fino al 9 ottobre 2026 le larghezze erano schematiche e 2–2,5 volte
+   il vero: la sola carreggiata di via dell'Abbondanza misurava 12,8 m, con
+   4,4 m di terreno libero per lato. Ora ogni via ha la sua larghezza totale,
+   da facciata a facciata, e la fonte accanto:
+   · Mau 1899 (trad. Kelsey, cap. XXXI): via di Mercurio, presso il Foro,
+     «nearly 32 feet» (9,75 m); Abbondanza e Nola «about 28 feet» (8,5 m);
+     tutte le altre «from 10 to 20 feet» (3–6 m). Wölfle (LMU 2011) misura
+     l'Abbondanza 8,47–8,53 m, con marciapiedi di 3,96–4,30 m: letti come
+     somma dei due lati, ~2 m l'uno [interpretazione]
+   · cordoli: Poehler 2017, quasi tutti fra 15 e 39 cm, in media oltre 30;
+     qui 30 cm. Via dell'Abbondanza 50–60 cm secondo una didascalia di cui
+     non ho verificato l'autore: 55 cm, [da verificare]
+   · le vie minori hanno un valore dentro i 10–20 piedi di Mau, scelto per
+     via ma non misurato, e marciapiedi di 1 m [ipotesi]
+   tot: larghezza totale in metri · marc: un marciapiede · h: il cordolo.
+   w (carreggiata) e mw (marciapiede) in unità sono calcolati sotto. */
 const STREETS = [
-  { a:[-100,14],  b:[141,14],   w:3.2, n:'Via dell’Abbondanza', lab:[-10,14] },
-  { a:[-100,-30], b:[126,-30],  w:2.8, n:'Via di Nola',         lab:[70,-30] },
-  { a:[-35,-78],  b:[-35,80],   w:3.0, n:'Via Stabiana',        lab:[-35,-58] },
-  { a:[72,14],    b:[74,78],    w:2.6, n:'Via di Nocera',       lab:[73,56] },
-  { a:[-95,-72],  b:[-95,-30],  w:2.6, n:'Via di Mercurio',     lab:[-95,-58] },
-  { a:[-146,4],   b:[-100,4],   w:2.6, n:'Via Marina',          lab:[-126,4] },
-  { a:[-72,14],   b:[-72,56],   w:2.2, n:'Via dei Teatri' },
-  { a:[-56,14],   b:[-56,48],   w:2.2, n:'Via del Tempio d’Iside' },
-  { a:[-119,-56], b:[-98,-30],  w:2.6, n:'Via Consolare',       lab:[-110,-45] },
-  { a:[-100,-52], b:[-35,-52],  w:2.2, n:'Vicolo di Mercurio' },
-  { a:[-20,-52],  b:[-20,-30],  w:1.8, n:'Vicolo dei Balconi' },
-  { a:[74,30],    b:[141,30],   w:2.6, n:'Viale dell’Anfiteatro' },
-  { a:[14,-78],   b:[14,14],    w:2.0, n:'vicolo' },
-  { a:[44,-72],   b:[44,14],    w:2.0, n:'vicolo' },
-  { a:[-70,-52],  b:[-70,-30],  w:1.8, n:'vicolo' },
-  { a:[36,14],    b:[36,72],    w:2.0, n:'vicolo' },
-  { a:[105,-40],  b:[105,14],   w:2.0, n:'vicolo' },
-  { a:[-100,38],  b:[-40,38],   w:2.2, n:'fronte meridionale' }
+  { a:[-100,14],  b:[141,14],   tot:8.5,  marc:2.0, h:0.55, n:'Via dell’Abbondanza', lab:[-10,14], fonte:'Mau 1899; Wölfle 2011; cordolo [da verificare]' },
+  { a:[-100,-30], b:[126,-30],  tot:8.5,  marc:2.0, h:0.30, n:'Via di Nola',         lab:[70,-30],  fonte:'Mau 1899' },
+  { a:[-35,-78],  b:[-35,80],   tot:6.0,  marc:1.5, h:0.30, n:'Via Stabiana',        lab:[-35,-58], fonte:'entro Mau 1899' },
+  { a:[72,14],    b:[74,78],    tot:5.5,  marc:1.2, h:0.30, n:'Via di Nocera',       lab:[73,56],   fonte:'entro Mau 1899' },
+  { a:[-95,-72],  b:[-95,-30],  tot:9.75, marc:2.0, h:0.30, n:'Via di Mercurio',     lab:[-95,-58], fonte:'Mau 1899' },
+  { a:[-146,4],   b:[-100,4],   tot:6.0,  marc:1.5, h:0.30, n:'Via Marina',          lab:[-126,4],  fonte:'entro Mau 1899' },
+  { a:[-72,14],   b:[-72,56],   tot:4.5,  marc:1.0, h:0.30, n:'Via dei Teatri' },
+  { a:[-56,14],   b:[-56,48],   tot:4.5,  marc:1.0, h:0.30, n:'Via del Tempio d’Iside' },
+  { a:[-119,-56], b:[-98,-30],  tot:6.0,  marc:1.5, h:0.30, n:'Via Consolare',       lab:[-110,-45], fonte:'entro Mau 1899' },
+  { a:[-100,-52], b:[-35,-52],  tot:4.5,  marc:1.0, h:0.30, n:'Vicolo di Mercurio' },
+  { a:[-20,-52],  b:[-20,-30],  tot:3.0,  marc:0.6, h:0.30, n:'Vicolo dei Balconi' },
+  { a:[74,30],    b:[141,30],   tot:6.0,  marc:1.5, h:0.30, n:'Viale dell’Anfiteatro' },
+  { a:[14,-78],   b:[14,14],    tot:3.6,  marc:0.8, h:0.30, n:'vicolo' },
+  { a:[44,-72],   b:[44,14],    tot:3.6,  marc:0.8, h:0.30, n:'vicolo' },
+  { a:[-70,-52],  b:[-70,-30],  tot:3.0,  marc:0.6, h:0.30, n:'vicolo' },
+  { a:[36,14],    b:[36,72],    tot:3.6,  marc:0.8, h:0.30, n:'vicolo' },
+  { a:[105,-40],  b:[105,14],   tot:3.6,  marc:0.8, h:0.30, n:'vicolo' },
+  { a:[-100,38],  b:[-40,38],   tot:4.5,  marc:1.0, h:0.30, n:'fronte meridionale' }
 ];
+for(const s of STREETS){
+  s.w  = (s.tot - 2*s.marc) / 4;     // carreggiata, in unità da 4 m
+  s.mw = s.marc / 4;                 // un marciapiede
+  s.hh = s.h / 4;                    // il dislivello del cordolo
+}
 
 const RESERVED = [
   [-119,-14,24,44],[-131,16,26,20],[-148,26,20,16],[-107,42,30,14],
@@ -307,7 +328,7 @@ function onStreet(x,z){
     let t = L2 ? ((x-ax)*dx + (z-az)*dz)/L2 : 0;
     t = Math.max(0, Math.min(1, t));
     const px=ax+t*dx, pz=az+t*dz;
-    if((x-px)**2 + (z-pz)**2 < (s.w/2+1.1)**2) return true;
+    if((x-px)**2 + (z-pz)**2 < (s.w/2+s.mw)**2) return true;
   }
   return false;
 }
@@ -321,6 +342,54 @@ function buildable(x,z){ return inPoly(x,z,WALLS) && !onStreet(x,z) && !reserved
 /* ------------------------------------------------------------- terreno */
 
 const CX = -4, CZ = 3;
+
+// La carreggiata scende sotto il marciapiede: a Pompei i marciapiedi sono
+// rialzati (Mau 1899: «on both sides are raised sidewalks»). Il terreno è
+// fatto di celle piene fino a quota 0, il piano dei marciapiedi; dove una
+// cella incontra una carreggiata la si spezza in rettangoli esatti, e sotto
+// la carreggiata il pieno si ferma alla quota del basolato.
+const CARREGGIATE = [];
+for(const s of STREETS){
+  const [ax,az]=s.a,[bx,bz]=s.b;
+  const dx=bx-ax, dz=bz-az, len=Math.hypot(dx,dz), steps=Math.ceil(len/2);
+  const lungo = Math.abs(dx) > Math.abs(dz);
+  for(let i=0;i<=steps;i++){
+    const t=i/steps, x=ax+dx*t, z=az+dz*t;
+    if(!inPoly(x,z,WALLS)) continue;
+    const hx = lungo ? 1.1 : s.w/2, hz = lungo ? s.w/2 : 1.1;
+    CARREGGIATE.push({ x0:x-hx, x1:x+hx, z0:z-hz, z1:z+hz, hh:s.hh, s });
+  }
+}
+function quotaCarreggiata(x, z){
+  for(const r of CARREGGIATE)
+    if(x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1) return -r.hh;
+  return null;
+}
+function cellaTerreno(cx, cz, colore){
+  const x0 = cx-2.1, x1 = cx+2.1, z0 = cz-2.1, z1 = cz+2.1;
+  const dentro = CARREGGIATE.filter(r => r.x1 > x0 && r.x0 < x1 && r.z1 > z0 && r.z0 < z1);
+  if(!dentro.length){ block(cx, -2.4, cz, 4.2, 2.4, 4.2, colore); return; }
+  // griglia compressa sui bordi delle carreggiate: rettangoli esatti
+  const xs = [...new Set([x0, x1, ...dentro.flatMap(r => [r.x0, r.x1]).filter(v => v > x0 && v < x1)])].sort((a,b) => a-b);
+  const zs = [...new Set([z0, z1, ...dentro.flatMap(r => [r.z0, r.z1]).filter(v => v > z0 && v < z1)])].sort((a,b) => a-b);
+  for(let j=0;j<zs.length-1;j++){
+    let inizio = 0, quota = null;
+    const chiudi = (fine) => {
+      if(fine <= inizio) return;
+      const top = quota === null ? 0 : quota - 0.02;   // sotto il basolato
+      const xa = xs[inizio], xb = xs[fine];
+      block((xa+xb)/2, -2.4, (zs[j]+zs[j+1])/2, xb-xa, 2.4+top, zs[j+1]-zs[j], colore);
+    };
+    for(let i=0;i<xs.length-1;i++){
+      const mx = (xs[i]+xs[i+1])/2, mz = (zs[j]+zs[j+1])/2;
+      let q = null;
+      for(const r of dentro) if(mx > r.x0 && mx < r.x1 && mz > r.z0 && mz < r.z1){ q = q === null ? -r.hh : Math.min(q, -r.hh); }
+      if(i === 0){ quota = q; continue; }
+      if(q !== quota){ chiudi(i); inizio = i; quota = q; }
+    }
+    chiudi(xs.length-1);
+  }
+}
 const TERRACE = WALLS.map(([x,z]) => [CX + (x-CX)*1.30, CZ + (z-CZ)*1.30]);
 
 block(-20, -3.9, -110, 1400, 1.8, 1000, 0x6f6b60);
@@ -342,7 +411,7 @@ for(let x=-210; x<210; x+=4){
       continue;
     }
     const v = ((x*7 + z*13) % 3);
-    block(x, -2.4, z, 4.2, 2.4, 4.2, v===0 ? 0x8f8776 : (v===1 ? PAL.terrace : 0x847c6b));
+    cellaTerreno(x, z, v===0 ? 0x8f8776 : (v===1 ? PAL.terrace : 0x847c6b));
   }
 }
 if(buco){
@@ -356,16 +425,21 @@ if(buco){
   block(POZZO.x, -2.4, POZZO.z, bx-ax, 1.85, bz-az, PAL.terrace);
 }
 
-// il basolato è un blocco sopra il terreno: chi cammina ci sta sopra
-const STRADA_H = 0.12;
+// il basolato: una lastra sottile alla quota della carreggiata, e lungo i
+// due bordi il cordolo, dal fondo della strada al piano del marciapiede
+for(const r of CARREGGIATE)
+  block((r.x0+r.x1)/2, -r.hh-0.02, (r.z0+r.z1)/2, r.x1-r.x0, 0.02, r.z1-r.z0, PAL.street);
 for(const s of STREETS){
   const [ax,az]=s.a,[bx,bz]=s.b;
-  const dx=bx-ax, dz=bz-az, len = Math.hypot(dx,dz), steps = Math.ceil(len/2);
+  const dx=bx-ax, dz=bz-az, len=Math.hypot(dx,dz), steps=Math.ceil(len/2);
+  const lungo = Math.abs(dx) > Math.abs(dz), K = 0.06;   // cordolo largo 24 cm [ipotesi]
   for(let i=0;i<=steps;i++){
     const t=i/steps, x=ax+dx*t, z=az+dz*t;
     if(!inPoly(x,z,WALLS)) continue;
-    block(x, 0, z, Math.abs(dx)>Math.abs(dz)?2.2:s.w, STRADA_H,
-             Math.abs(dx)>Math.abs(dz)?s.w:2.2, PAL.street);
+    for(const sg of [1,-1]){
+      const o = sg*(s.w/2 + K/2);
+      block(lungo ? x : x+o, -s.hh, lungo ? z+o : z, lungo ? 2.2 : K, s.hh+0.004, lungo ? K : 2.2, PAL.kerb);
+    }
   }
 }
 
@@ -398,13 +472,47 @@ let rngState = 20250806;
 function rnd(){ rngState = (rngState*1664525 + 1013904223) >>> 0; return rngState/4294967296; }
 
 const taken = [];
-function overlaps(x,z,w,d){
+// gap: distacco fra case. 0,8 unità (3,2 m) per il generatore casuale; sul
+// fronte stradale le case pompeiane hanno muri in comune, distacco quasi nullo
+function overlaps(x,z,w,d,gap=0.8){
   for(const [ax,az,aw,ad] of taken)
-    if(x < ax+aw+0.8 && x+w+0.8 > ax && z < az+ad+0.8 && z+d+0.8 > az) return true;
+    if(x < ax+aw+gap && x+w+gap > ax && z < az+ad+gap && z+d+gap > az) return true;
   return false;
 }
 
 const HOUSES = [];
+// Prima le case sul fronte stradale. A Pompei le facciate stanno sul filo
+// del marciapiede, una accanto all'altra; il generatore casuale qui sotto,
+// da solo, lasciava spiazzi vuoti fra strada e case, che con le larghezze
+// vere delle vie (9 ottobre 2026) saltavano all'occhio. Misure delle case:
+// larghezza 2–4,5 unità (8–18 m), profondità 3–6 (12–24 m) [ipotesi, ordine di
+// grandezza delle case pompeiane, non rilevato casa per casa].
+for(const st of STREETS){
+  const [ax,az]=st.a,[bx,bz]=st.b, dx=bx-ax, dz=bz-az;
+  const lungo = Math.abs(dx) > Math.abs(dz);
+  if(Math.min(Math.abs(dx), Math.abs(dz)) > 3) continue;          // le vie oblique restano al generatore
+  const L = lungo ? Math.abs(dx) : Math.abs(dz);
+  const a0 = lungo ? Math.min(ax,bx) : Math.min(az,bz);
+  const asse = lungo ? (az+bz)/2 : (ax+bx)/2;
+  const filo = st.w/2 + st.mw + 0.02;
+  for(const lato of [1,-1]){
+    let t = 0.5;
+    while(t < L - 2){
+      const w = 2 + Math.floor(rnd()*3) + (rnd() < 0.3 ? 0.5 : 0);
+      const d = 3 + Math.floor(rnd()*4);
+      const along = a0 + t;
+      const front = asse + lato*filo;
+      const x = lungo ? along : (lato > 0 ? front : front - d);
+      const z = lungo ? (lato > 0 ? front : front - d) : along;
+      const hw = lungo ? w : d, hd = lungo ? d : w;
+      let ok = !overlaps(x, z, hw, hd, 0.02);
+      for(let i=0;i<=hw && ok;i+=0.6) for(let j=0;j<=hd && ok;j+=0.6)
+        if(!buildable(x+i, z+j) && !(lungo ? Math.abs(z+j-front) < 0.05 : Math.abs(x+i-front) < 0.05)) ok = false;
+      if(ok){ taken.push([x,z,hw,hd]); HOUSES.push([x,z,hw,hd, hw>=8 || hd>=8]); }
+      t += w + 0.04 + (rnd() < 0.12 ? 1.2 : 0);                     // ogni tanto un vicolo o un cortile
+    }
+  }
+}
 for(const pass of [{step:4, min:8, span:5, skip:0.55}, {step:3, min:4, span:4, skip:0.22}]){
   for(let x=-148; x<144; x+=pass.step){
     for(let z=-80; z<84; z+=pass.step){
@@ -529,13 +637,29 @@ block(-90, 0, -18, 12, 2.4, 10, PAL.civic);
 block(-90, 2.4, -18, 10, 0.8, 8, PAL.stone);
 
 // Palestra Grande: 140 x 140 m = 35 x 35 unità secondo la guida del Parco.
-// Era disegnata 35 x 34, cioè 140 x 136 m: nemmeno l'unico edificio
-// «misurato» rispettava la sua misura. Altre fonti danno 141 x 107 m, e le
-// colonne contate (35 + 35 + 48) suggeriscono un rettangolo: il conflitto è
-// dichiarato nella scheda, non risolto qui. Interasse e altezza delle colonne
-// non hanno fonte: il portico resta schematico, ed è la differenza visibile
-// con la piscina, che invece viene da Blender sulla misura pubblicata.
-colonnade(70, 24, 35, 35, 3.4, 2.4, PAL.column);
+// Altre fonti danno 141 x 107 m: il conflitto è dichiarato nella scheda.
+//
+// Il portico (rifatto il 9 ottobre 2026; prima colonne alte 9,6 m, larghe
+// 2,8, a 13,6 m l'una dall'altra, su quattro lati):
+// · su tre lati, nord, ovest e sud: il quarto guarda l'anfiteatro ... FONTE
+// · interasse ~3 m ................................................. DEDOTTO
+//   dai conteggi: 48 fusti sul lato lungo (141 m) e 35 sui corti (107 m)
+//   danno 3,0 e 3,1 m. Sul quadrato di 140 m del Parco ne entrano 48 per
+//   lato: i conteggi sui lati corti non tornano, e nemmeno i 133 fusti di
+//   Maiuri. I conteggi, fra l'altro, stanno meglio con il rettangolo.
+// · diametro 0,6 m e altezza 4,2 m ................................. IPOTESI
+//   proporzioni dell'ordine tuscanico in Vitruvio (altezza 7 diametri), con
+//   intercolumnio largo, da architrave in legno
+function porticoTreLati(x0, z0, lato, passo, d, h, colore){
+  const n = Math.round(lato/passo);
+  for(let i=0;i<=n;i++){
+    const t = i*lato/n;
+    block(x0+t, 0, z0, d, h, d, colore, CYL);          // nord
+    block(x0+t, 0, z0+lato, d, h, d, colore, CYL);     // sud
+    if(i>0 && i<n) block(x0, 0, z0+t, d, h, d, colore, CYL);   // ovest
+  }
+}
+porticoTreLati(70, 24, 35, 0.75, 0.15, 1.05, PAL.column);
 
 for(let r=0;r<8;r++){
   const rx = 6 + r*1.9, rz = 4.6 + r*1.55, h = 0.6 + r*0.5;
@@ -573,21 +697,6 @@ for(let i=0;i<9;i++){
 
 const MAIN = STREETS.slice(0, 6);
 
-// marciapiedi rialzati lungo gli assi principali
-for(const s of MAIN){
-  const [ax,az]=s.a,[bx,bz]=s.b;
-  const dx=bx-ax, dz=bz-az, len=Math.hypot(dx,dz), n=Math.ceil(len/2);
-  const ux=dx/len, uz=dz/len, nx=-uz, nz=ux;
-  const off = s.w/2 + 0.6;
-  const horiz = Math.abs(ux) > Math.abs(uz);
-  for(let i=0;i<=n;i++){
-    const t=i/n, x=ax+dx*t, z=az+dz*t;
-    if(!inPoly(x,z,WALLS)) continue;
-    for(const sg of [1,-1])
-      block(x+nx*off*sg, 0, z+nz*off*sg, horiz?2.1:1.2, 0.3, horiz?1.2:2.1, PAL.kerb);
-  }
-}
-
 // incroci fra gli assi principali
 function crossPoint(s1, s2){
   const [x1,z1]=s1.a, [x2,z2]=s1.b, [x3,z3]=s2.a, [x4,z4]=s2.b;
@@ -601,23 +710,40 @@ function crossPoint(s1, s2){
 const CROSSINGS = [];
 for(let i=0;i<MAIN.length;i++) for(let j=i+1;j<MAIN.length;j++){
   const c = crossPoint(MAIN[i], MAIN[j]);
-  if(c && inPoly(c[0], c[1], WALLS)) CROSSINGS.push(c);
+  if(c && inPoly(c[0], c[1], WALLS)) CROSSINGS.push({ c, vie:[MAIN[i], MAIN[j]] });
 }
 
-// pietre di attraversamento e fontane pubbliche
-CROSSINGS.forEach(([cx,cz], i) => {
-  for(const [ox,oz] of [[2.6,0],[-2.6,0],[0,2.6],[0,-2.6]]){
-    for(let k=-1;k<=1;k++){
-      const px = cx + ox + (ox === 0 ? k*1.3 : 0);
-      const pz = cz + oz + (oz === 0 ? k*1.3 : 0);
-      block(px, 0.12, pz, 1.05, 0.34, 1.05, PAL.stone);
+// Pietre di attraversamento e fontane pubbliche. Mau 1899: pietre oblunghe
+// con gli angoli arrotondati, «the surface being on a level with the
+// sidewalk», il numero secondo la larghezza della carreggiata (fino a
+// cinque), sempre con il posto per le ruote. Qui, su ogni via dell'incrocio,
+// una fila appena fuori dall'incrocio: misura 1,0 × 0,55 m e posizione
+// esatta [ipotesi]. Prima erano blocchi di 4,2 × 4,2 m alti 1,36.
+CROSSINGS.forEach(({ c:[cx,cz], vie }, i) => {
+  vie.forEach((s, k) => {
+    const altra = vie[1-k];
+    const [ax,az]=s.a,[bx,bz]=s.b, L=Math.hypot(bx-ax,bz-az), ux=(bx-ax)/L, uz=(bz-az)/L;
+    const strada = s.w*4;                                  // carreggiata in metri
+    const n = strada >= 4.5 ? 3 : strada >= 3 ? 2 : 1;
+    for(const verso of [1,-1]){
+      const d = altra.w/2 + altra.mw + 0.3;                // oltre l'incrocio
+      const px0 = cx + ux*d*verso, pz0 = cz + uz*d*verso;
+      for(let q=0;q<n;q++){
+        const o = (q - (n-1)/2) * (s.w/(n+0.4));           // di traverso, con le ruote fra l'una e l'altra
+        const px = px0 - uz*o, pz = pz0 + ux*o;
+        const lungo = Math.abs(ux) > Math.abs(uz);
+        block(px, -s.hh, pz, lungo ? 0.25 : 0.1375, s.hh, lungo ? 0.1375 : 0.25, PAL.stone);
+      }
     }
-  }
-  if(i % 2 === 0){                       // fontana pubblica all'angolo
-    const fx = cx + 3.4, fz = cz + 3.4;
-    block(fx, 0, fz, 2.0, 0.62, 1.5, PAL.stone);
-    block(fx, 0.62, fz, 1.5, 0.14, 1.05, 0x5d7278);
-    block(fx, 0, fz-0.9, 0.6, 1.5, 0.6, PAL.civic);
+  });
+  if(i % 2 === 0){
+    // fontana pubblica all'angolo: vasca 1,6 × 1,2 m alta 0,8, pilastro 1,4 m
+    // [ordine di grandezza, non rilevato]. Prima: 8 × 6 m e 2,5 m d'altezza.
+    const a0 = vie[0], b0 = vie[1];
+    const fx = cx + b0.w/2 + b0.mw*0.5 + 0.2, fz = cz + a0.w/2 + a0.mw*0.5 + 0.2;
+    block(fx, 0, fz, 0.4, 0.2, 0.3, PAL.stone);
+    block(fx, 0.2, fz, 0.34, 0.01, 0.24, 0x5d7278);
+    block(fx, 0, fz-0.18, 0.11, 0.35, 0.11, PAL.civic);
   }
 });
 
@@ -645,8 +771,9 @@ for(const [x,z,w,d,grand] of HOUSES){
   sides.forEach((sd,k) => { const dd = distToStreet(sd.p[0], sd.p[1]); if(dd < bd){ bd = dd; bi = k; } });
   if(bd < 6){
     const sd = sides[bi];
-    block(sd.p[0], 0, sd.p[1], sd.s[0]*1.35, 0.88, sd.s[1]*1.35, 0x3a342c);
-    block(sd.p[0], 0.88, sd.p[1], sd.s[0]*1.6, 0.16, sd.s[1]*1.6, PAL.stone);
+    // la porta: 2 m per 3, con l'architrave [ipotesi; erano 5,4 × 3,5 m]
+    block(sd.p[0], 0, sd.p[1], sd.s[0]*0.5, 0.75, sd.s[1]*1.35, 0x3a342c);
+    block(sd.p[0], 0.75, sd.p[1], sd.s[0]*0.62, 0.06, sd.s[1]*1.6, PAL.stone);
   }
   if(grand && rnd() > 0.45){             // cipresso nel peristilio
     const tx = cx + (rnd()-0.5)*1.6, tz = cz + (rnd()-0.5)*1.6;
@@ -659,7 +786,9 @@ for(const [x,z,w,d,grand] of HOUSES){
 // capitelli sui colonnati principali
 for(const b of [...buckets.values()]){
   if(b.geo !== CYL) continue;
-  const caps = b.list.map(c => [c[0], c[1] + c[4]/2 + 0.09, c[2], c[3]*1.55, 0.18, c[5]*1.55]);
+  // l'abaco cresce col diametro: fisso a 72 cm schiacciava le colonne in scala
+  const caps = b.list.map(c => { const hc = Math.min(0.18, c[3]*0.5);
+    return [c[0], c[1] + c[4]/2 + hc/2, c[2], c[3]*1.55, hc, c[5]*1.55]; });
   const key = PAL.stone + '|cap';
   if(!buckets.has(key)) buckets.set(key, { color:PAL.stone, geo:BOX, list:[] });
   buckets.get(key).list.push(...caps);
@@ -990,11 +1119,14 @@ function stepParticles(dt, t){
 
 /* ---------------------------------------------------- griglia di collisione */
 
-const GX0 = -215, GZ0 = -130, GW = 440, GD = 275;
+// Celle da 0,25 unità (1 m). Erano da 1 unità, 4 m: con le larghezze vere
+// delle vie (9 ottobre 2026) i vicoli di 3 m risultavano interamente pieni.
+const CELLA = 0.25;
+const GX0 = -215, GZ0 = -130, GW = 440/CELLA, GD = 275/CELLA;
 const solid = new Uint8Array(GW*GD);
 function markRect(x,z,w,d){
-  for(let i=Math.floor(x-GX0); i<Math.ceil(x-GX0+w); i++)
-    for(let j=Math.floor(z-GZ0); j<Math.ceil(z-GZ0+d); j++)
+  for(let i=Math.floor((x-GX0)/CELLA); i<Math.ceil((x-GX0+w)/CELLA); i++)
+    for(let j=Math.floor((z-GZ0)/CELLA); j<Math.ceil((z-GZ0+d)/CELLA); j++)
       if(i>=0 && i<GW && j>=0 && j<GD) solid[j*GW+i] = 1;
 }
 for(const [x,z,w,d] of HOUSES) markRect(x,z,w,d);
@@ -1013,7 +1145,7 @@ for(let i=0;i<WALLS.length;i++){
   }
 }
 function isSolid(x,z){
-  const i = Math.floor(x-GX0), j = Math.floor(z-GZ0);
+  const i = Math.floor((x-GX0)/CELLA), j = Math.floor((z-GZ0)/CELLA);
   if(i<0 || i>=GW || j<0 || j>=GD) return false;
   return solid[j*GW+i] === 1;
 }
@@ -1271,7 +1403,7 @@ let yawT = 1.57, pitchT = 0.0;       // valori bersaglio: lo sguardo li insegue
 let locked = false, flight = null;
 let flyMode = false;                 // false = camminata con collisioni
 const EYE = 0.45;                    // 1,8 m
-const RADIUS = 0.34;
+const RADIUS = 0.15;                  // 60 cm; sopra il piano vicino della camera (0,12)
 const vel = new Vector3();           // velocità con inerzia
 let bobPhase = 0, bobAmt = 0, footstepTimer = 0;
 const stick = { x:0, y:0 };          // levetta touch, in [-1,1]
@@ -1301,7 +1433,12 @@ const spawn = findSpawn(-64, 14);
 const player = new Vector3(spawn[0], 0, spawn[1]);
 camera.position.set(player.x, EYE, player.z);
 
-function groundY(){ return depositCurrent; }
+// la quota su cui si sta: il deposito, se c'è; altrimenti il basolato in
+// carreggiata o il piano dei marciapiedi
+function groundY(){
+  if(depositCurrent > 0.001) return depositCurrent;
+  return quotaCarreggiata(player.x, player.z) ?? 0;
+}
 
 function tryMove(dx, dz){
   const nx = player.x + dx;
@@ -2022,9 +2159,9 @@ function passo(){
     g.position.y = depositCurrent;
 
   stepParticles(dt, t);
-  // a piedi sul basolato prima del 79, sul deposito dopo: a scala vera chi
-  // lavora ai recuperi sparirebbe sotto la cenere
-  inhabitants.update(t, dt, Math.max(STRADA_H, depositCurrent));
+  // sui marciapiedi prima del 79, sul deposito dopo: a scala vera chi lavora
+  // ai recuperi sparirebbe sotto la cenere
+  inhabitants.update(t, dt, depositCurrent);
 
   // cenere
   if(ashGroup.visible){
@@ -2316,6 +2453,8 @@ if(new URLSearchParams(location.search).has('debug')){
     },
     fase(i){ applyEpoch(i); },
     scena: scene,
+    camera,
+    solido: (x, z) => isSolid(x, z),
     ercolano: ERCOLANO,
     // per il giro di verifica: ogni luogo, fase e vista senza ricaricare
     luoghi: () => Object.keys(byId),
