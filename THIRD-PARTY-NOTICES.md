@@ -35,7 +35,6 @@ distribuiti con licenza CC0 1.0. I crediti sono riportati per tracciabilità;
 la licenza non li richiede.
 
 - `Cobblestone Pavement` — https://polyhaven.com/a/cobblestone_pavement
-- `Plastered Wall 05` — https://polyhaven.com/a/plastered_wall_05
 - `Roof Tiles` — https://polyhaven.com/a/roof_tiles
 
 ## Figure umane — MakeHuman / MPFB

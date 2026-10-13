@@ -1,0 +1,18 @@
+{
+  "_come": "Ogni scatto: l'indirizzo da aprire (con ?debug) e la didascalia nelle sei lingue. Nella pagina: pompei.vetrina(w, h, didascalia). Formati: iPhone 6,9\" 1320×2868 (finestra 440×956), iPad 13\" 2064×2752 (finestra 1032×1376). Si rifanno identici quando il modello cambia.",
+  "formati": { "iphone": [1320, 2868, 440, 956], "ipad": [2064, 2752, 1032, 1376] },
+  "scatti": [
+    { "nome": "01-strada", "indirizzo": "?debug&fase=1&cam=-24,0.45,14.9,-40,0.38,14.6",
+      "didascalia": { "it": "Cammina per Pompei la vigilia dell'eruzione", "en": "Walk through Pompeii on the eve of the eruption", "fr": "Marchez dans Pompéi à la veille de l'éruption", "de": "Geh am Vorabend des Ausbruchs durch Pompeji", "es": "Camina por Pompeya la víspera de la erupción", "pt": "Caminhe por Pompeia na véspera da erupção" } },
+    { "nome": "02-citta", "indirizzo": "?debug&fase=1&cam=-30,12,62,-10,0,-10",
+      "didascalia": { "it": "Otto fasi, dal 79 d.C. a oggi", "en": "Eight phases, from AD 79 to today", "fr": "Huit phases, de 79 apr. J.-C. à aujourd'hui", "de": "Acht Phasen, vom Jahr 79 bis heute", "es": "Ocho fases, del año 79 a hoy", "pt": "Oito fases, do ano 79 a hoje" } },
+    { "nome": "03-deposito", "indirizzo": "?debug&fase=3&cam=-6,6,8,-28,1,-30",
+      "didascalia": { "it": "Il deposito sale, le case affiorano", "en": "The deposit rises, the houses emerge", "fr": "Le dépôt monte, les maisons affleurent", "de": "Die Ablagerung steigt, die Häuser tauchen auf", "es": "El depósito sube, las casas afloran", "pt": "O depósito sobe, as casas afloram" } },
+    { "nome": "04-ercolano", "indirizzo": "?debug&vista=ercolano&sotto&cam=33,22,10,0,-0.78",
+      "didascalia": { "it": "Ercolano: guarda sotto la città", "en": "Herculaneum: look under the town", "fr": "Herculanum : regardez sous la ville", "de": "Herculaneum: unter die Stadt schauen", "es": "Herculano: mira bajo la ciudad", "pt": "Herculano: veja por baixo da cidade" } },
+    { "nome": "05-misura", "indirizzo": "?debug&fase=1&cam=87.5,9,60,87.5,0,40",
+      "didascalia": { "it": "Realismo solo dove è documentato", "en": "Realism only where it is documented", "fr": "Le réalisme seulement là où il est documenté", "de": "Realismus nur, wo er belegt ist", "es": "Realismo solo donde está documentado", "pt": "Realismo só onde está documentado" } },
+    { "nome": "06-oggi", "indirizzo": "?debug&fase=8&cam=-54.5,0.5,14.3,-60,0.3,14.85",
+      "didascalia": { "it": "E oggi, il cantiere aperto", "en": "And today, the open excavation", "fr": "Et aujourd'hui, le chantier ouvert", "de": "Und heute, die offene Grabung", "es": "Y hoy, la excavación abierta", "pt": "E hoje, a escavação aberta" } }
+  ]
+}
