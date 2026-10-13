@@ -78,14 +78,13 @@ cercare.
 - **La domanda:** c'è una sezione pubblicata, per esempio
   dell'Herculaneum Conservation Project, con le quote?
 
-### A6. Ercolano: l'orientamento della griglia
+### A6. Ercolano: l'orientamento della griglia — *risolto in parte*
 
-- **Cosa disegna il modello:** la convenzione di sito (Decumano Massimo a
-  monte, mare a valle), non il nord vero.
-- **Il conflitto:** il Parco e Maiuri danno l'asse NO-SE, una pagina
-  universitaria britannica NE-SO.
-- **La domanda:** qual è l'azimut dei decumani? Esiste una pianta
-  georiferita?
+- **Ora:** dal 13 ottobre 2026 la scena è costruita sulla pianta di
+  OpenStreetMap, che dà cardini a 58° e decumani a 147° dal nord: decumani
+  da nord-ovest a sud-est, come dicono il Parco e Maiuri.
+- **La domanda:** il dato di OSM, tracciato dai contributori su ortofoto,
+  corrisponde alla pianta ufficiale? Esiste una pianta georiferita del Parco?
 
 ---
 
