@@ -28,9 +28,10 @@ Le pagine e le pubblicazioni del Parco sono la fonte principale. Le scrivo
 perché alcune parti di Ercolano poggiano ancora su fonti secondarie o in
 conflitto:
 
-1. **L'orientamento della griglia urbana.** Il modello usa la convenzione di
-   sito (Decumano Massimo a monte, mare a valle) perché le fonti danno l'asse
-   ora NO-SE ora NE-SO. Una pianta georiferita lo risolverebbe.
+1. **L'orientamento e la pianta.** Il modello è ora costruito sulla pianta di
+   OpenStreetMap, che dà i decumani a 147° e i cardini a 58° dal nord, in
+   accordo con la descrizione del Parco. È tracciata da volontari: una pianta
+   georiferita ufficiale permetterebbe di verificarla.
 2. **Lo spessore del deposito e la profondità del teatro.** Il modello
    disegna un fronte di 20 m e il teatro a circa 25 m dalla quota stradale; le
    fonti vanno da 16 a 30 m per il deposito, da 20 a 25 m per il teatro. Una

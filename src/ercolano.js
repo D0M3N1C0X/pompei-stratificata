@@ -1,4 +1,5 @@
 import { DEC_MAX, DEC_INF, C3, C4, C5, BEACH_Y, LUOGHI } from './data/ercolano-places.js';
+import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna } from './ercolano-pianta.js';
 import { PAL } from './scene/palette.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
@@ -111,82 +112,17 @@ export const ERCOLANO = (function(){
     return mesh;
   }
 
-  /* ---------------------------------------------- pianta: assi stradali */
-  const NB0 = -24, NB1 = -2;                 // banda nord (fra i due decumani)
-  const SB0 = 2,   SB1 = 24;                 // banda sud (verso il mare)
-  const TOWN_Y = 0;
-
-  // suolo dell'area scavata
-  flat(2, TOWN_Y, -2, 104, 60, M.terra);
-
-  // decumani
-  flat(2, TOWN_Y, DEC_MAX, 104, 3.2, M.strada);
-  flat(2, TOWN_Y, DEC_INF, 104, 2.2, M.strada);
-  // cardini
-  [C3, C4, C5].forEach(cx => flat(cx, TOWN_Y, -12, 1.8, 30, M.strada));
-  [C3, C4, C5].forEach(cx => flat(cx, TOWN_Y, 13, 1.8, 26, M.strada));
-
-  // marciapiedi lungo i decumani
-  [[DEC_MAX-2.0],[DEC_MAX+2.0],[DEC_INF-1.5],[DEC_INF+1.5]].forEach(r =>
-    flat(2, TOWN_Y + 0.10, r[0], 104, 0.9, M.marcia));
-
-  /* ------------------------------------------- corpi di fabbrica romani */
-  // Volumetrie schematiche: piano terra 4 m, piano superiore 3 m dove
-  // documentato. Non è un rilievo.
-  function casa(x, z, w, d, piani, material, tetto){
-    const h1 = m(4);
-    box(x, 0, z, w, h1, d, material || M.tufo);
-    if(piani > 1) box(x, h1, z, w*0.98, m(3), d*0.98, M.tufo2, false);
-    const top = piani > 1 ? h1 + m(3) : h1;
-    if(tetto !== false) box(x, top, z, w*1.05, m(0.8), d*1.05, M.tetto, false);
-    return top;
-  }
-  // cortile: quattro ali attorno a un vuoto
-  function atrio(x, z, w, d, material){
-    const t = Math.min(w, d) * 0.26;
-    box(x, 0, z - d/2 + t/2, w, m(4), t, material || M.tufo);
-    box(x, 0, z + d/2 - t/2, w, m(4), t, material || M.tufo);
-    box(x - w/2 + t/2, 0, z, t, m(4), d - 2*t, material || M.tufo);
-    box(x + w/2 - t/2, 0, z, t, m(4), d - 2*t, material || M.tufo);
-  }
-
-  // ---- INSULA VI (fra Cardo III e Cardo IV, banda nord)
-  // Terme Centrali VI.1 (ingresso su Cardo III), Sede degli Augustali VI.21
-  // all'incrocio Cardo III / Decumano Massimo, Casa dei Due Atri VI.29.
-  atrio(-14, -18, 9, 9, M.tufo);                 // Terme Centrali, corpo ovest
-  box(-14, 0, -12, 9, m(5.5), 3, M.mattone);     // sala absidata schematica
-  casa(-5.5, -18.5, 7, 8, 2);                    // Casa dei Due Atri VI.29
-  casa(-16, -23.5, 6, 3.5, 1, M.tufo);           // Sede degli Augustali VI.21
-  casa(-7, -23.5, 8, 3.5, 2);
-  atrio(-10, -6, 12, 6, M.tufo2);
-
-  // ---- INSULA V (fra Cardo IV e Cardo V, banda nord)
-  // Casa del Bicentenario V.15 sul lato sud del Decumano Massimo.
-  casa(6, -23, 8, 5, 2, M.tufo);                 // Casa del Bicentenario
-  casa(14, -23, 7, 5, 2, M.tufo2);
-  atrio(9, -15, 14, 9, M.tufo);
-  casa(15.5, -7, 6, 8, 2);
-  casa(4, -6.5, 6, 7, 1);
-
-  // ---- INSULA III (fra Cardo III e Cardo IV, banda sud)
-  // Casa a Graticcio III.14 e Casa del Tramezzo di Legno III.11, entrambe
-  // sul Cardo IV Inferiore. Il graticcio (opus craticium) è la ragione per
-  // cui questa insula è celebre: legno e canne, conservati dal carbonio.
-  casa(-4, 4.5, 7, 5, 2, M.legno);               // Casa a Graticcio III.14
-  casa(-4, 11, 7, 6, 2, M.tufo);                 // Casa del Tramezzo di Legno III.11
-  atrio(-13, 8, 10, 9, M.tufo2);
-  casa(-13, 18, 10, 7, 1);
-  casa(-4, 19, 7, 6, 2, M.tufo2);
-
-  // ---- INSULA IV (fra Cardo IV e Cardo V, banda sud)
-  // Casa dell'Atrio a Mosaico IV.2 all'estremità nord, Casa dei Cervi IV.21
-  // all'estremità sud, affacciata sulla terrazza verso il mare.
-  atrio(9, 4.5, 14, 6, M.tufo);                  // Casa dell'Atrio a Mosaico IV.2
-  casa(4.5, 12, 6, 8, 2);
-  casa(15, 12, 7, 8, 1, M.tufo2);
-  atrio(9, 21, 15, 7, M.tufo);                   // Casa dei Cervi IV.21
-  for(let i=-2;i<=2;i++)                          // portico verso il mare
-    box(9 + i*3, 0, 24.6, 0.5, m(3.6), 0.5, M.colonna);
+  /* ---------------------------------------------- la città scavata ----
+     Case, vie e perimetro vengono dalla pianta vera (ercolano-pianta.js,
+     dati OpenStreetMap): la scena disegnata a mano misurava 416 × 240 m
+     invece di circa 180 × 210, con i cardini a 80 m invece che a 47–49. */
+  const TOWN_Y = QUOTA.citta, TER_Y = QUOTA.terrazza;
+  // il piano antico, per fasce di quota; fuori dalla fossa lo copre il deposito
+  flat(-12, TOWN_Y, -5, 150, 50, M.terra);
+  flat(-12, TER_Y, 24.1, 150, 8.3, M.terra);
+  flat(-12, BEACH_Y, 32.2, 150, 8, M.sabbia);
+  vie({ basolato:M.strada, marciapiede:M.marcia, parent:eRoot });
+  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'rovina', parent:eRoot, solids });
 
   // ---- INSULA ORIENTALIS II — la Palestra
   // Campo di 77 × 47 m (Maiuri 1960, «l'area rettangolare della palestra»):
@@ -200,30 +136,32 @@ export const ERCOLANO = (function(){
   // prato con la vasca a cielo aperto, lunga la metà del vero: contraddiceva
   // la scheda. Ora il deposito copre il campo, e la vasca — da Blender, sulla
   // misura pubblicata dei bracci — si vede con «ciò che è sotto».
-  const PX = 33, PZ = -12;
-  const CAMPO_X0 = PX - 19.25/2, CAMPO_X1 = PX + 19.25/2, CAMPO_D = 11.75;
-  const PORTICO = 1.4;                                     // striscia scavata: disegno, non misura
-  box(PX - 10.0, 0, PZ, 1.4, m(4.5), 12.5, M.mattone);     // ala su Cardo V
+  // Il complesso, in OSM, misura 78 m lungo i decumani e 102 lungo i
+  // cardini: il campo di 77 × 47 m entra solo con il lato lungo sui cardini
+  // [dedotto], e il lato ovest lascia ~30 m alle sale su Cardo V, la parte
+  // scavata. La vasca, con il braccio lungo sul lato lungo, ruota con lui.
+  const PAL = ANCORE.palestra;
+  const CAMPO = { x1:PAL.x1 - 0.5, z0:(PAL.z0 + PAL.z1)/2 - 77/U/2, z1:(PAL.z0 + PAL.z1)/2 + 77/U/2 };
+  CAMPO.x0 = CAMPO.x1 - 47/U;
+  const PX = (CAMPO.x0 + CAMPO.x1)/2, PZ = (CAMPO.z0 + CAMPO.z1)/2;
   for(let i=-2;i<=2;i++)                                   // portico ovest, schematico
-    box(CAMPO_X0 + 0.7, 0, PZ + i*2.4, 0.45, m(3.4), 0.45, M.colonna);
-  flat(CAMPO_X0 + PORTICO/2, TOWN_Y, PZ, PORTICO, CAMPO_D, M.marcia);
-  // il campo sepolto: venti metri di deposito, come il fronte
-  // (la funzione scarpata è dichiarata più sotto, ma è hoisted)
+    box(PAL.x0 + 0.9, 0, PZ + i*2.4, m(0.6), m(4.2), m(0.6), M.colonna);
   // Materiali propri, gli stessi colori: con «Guarda sotto la città» le sei
   // facce sovrapposte delle bande, a 0,40 l'una, sommate erano opache e la
   // vasca non si vedeva. Questi si velano di più (VELATI, più sotto).
   const DEP_CAMPO = [mat(0x86806f, 'ash'), mat(0x6e695d, 'ash'), mat(0x504c44, 'ash')];
-  scarpata((CAMPO_X0 + PORTICO + CAMPO_X1)/2, PZ, CAMPO_X1 - CAMPO_X0 - PORTICO, CAMPO_D, DEP_CAMPO);
+  deposito({ materiali:[M.dep1, M.dep2, M.dep3], campo:CAMPO, materialiCampo:DEP_CAMPO, parent:eRoot, solids });
 
   const vasca = new Group();
   vasca.position.set(PX, TOWN_Y, PZ);
+  vasca.rotation.y = Math.PI/2;                            // il braccio lungo lungo i cardini
   eRoot.add(vasca);
   // La geometria è quella di Blender; la superficie no: la vasca è sepolta e
   // si mostra come il teatro, nel materiale di «ciò che è sotto» (più avanti
   // il gruppo passa dentro «sepolto»). Così non c'è un secondo linguaggio
   // per la stessa cosa.
   new GLTFLoader().load(vascaUrl, gltf => {
-    gltf.scene.traverse(o => { if(o.isMesh){ o.material = M_SEPOLTO; o.castShadow = o.receiveShadow = false; } });
+    gltf.scene.traverse(o => { if(o.isMesh){ o.material = M_SEPOLTO; o.castShadow = o.receiveShadow = false; o.renderOrder = 10; } });
     vasca.add(gltf.scene);
   }, undefined, e => console.warn('Vasca della Palestra di Ercolano non caricata:', e));
   {
@@ -235,70 +173,23 @@ export const ERCOLANO = (function(){
       new BufferGeometry().setFromPoints(croce.map(([x,z]) => new Vector3(x, y, z))),
       new LineBasicMaterial({ color:PAL.accent })));
   }
-  casa(24.5, -22, 4, 6, 2, M.mattone);                     // vestibolo Ins. Or. II.4
-
-  // ---- INSULA ORIENTALIS I — terrazze verso la spiaggia
-  // Casa del Rilievo di Telefo Ins. Or. I.2, su tre livelli, non tutti scavati.
-  box(30, -0.9, 10, 16, m(3.6), 8, M.tufo);
-  box(30, TOWN_Y - 0.9, 17, 16, m(3.0), 6, M.tufo2);
-  for(let i=-2;i<=2;i++) box(30 + i*3, TOWN_Y - 0.9 + m(3.0), 17, 0.5, m(3.2), 0.5, M.colonna);
-  box(41, -1.6, 13, 5, m(4.0), 14, M.dep2);                // parte non scavata
 
   /* ------------------------------------- terrazze, fornici, spiaggia */
-  // Le terrazze (Area Sacra e Terrazza di M. Nonio Balbo) stanno sopra i
-  // fornici; i fornici stanno al livello della spiaggia antica.
-  const TER_Z = 27, TER_Y = -1.1;
-  flat(6, TER_Y, TER_Z, 46, 6, M.marcia);
-  box(-8, TER_Y, TER_Z - 1.4, 7, m(4.2), 3, M.tufo);       // tempio, Area Sacra
-  for(let i=-2;i<=2;i++) box(-8 + i*1.5, TER_Y, TER_Z - 3.0, 0.5, m(3.6), 0.5, M.colonna);
-  box(14, TER_Y, TER_Z - 1.0, 4, m(1.2), 2.5, M.marcia);   // ara di Nonio Balbo
-
-  // scalinata dalla terrazza alla spiaggia
-  for(let i=0;i<8;i++)
-    box(4, TER_Y - i*0.175, TER_Z + 3.4 + i*0.5, 4, 0.18, 0.5, M.marcia, false);
-
-  // spiaggia antica
-  flat(6, BEACH_Y, 37, 76, 14, M.sabbia);
-  flat(6, BEACH_Y - 0.05, 45, 76, 8, M.acqua);
-
-  // I DODICI FORNICI — sei a ovest e sei a est della scalinata.
+  // L'area sacra e la Terrazza di M. Nonio Balbo (piante OSM, sopra) stanno
+  // sopra i fornici; i fornici al livello della spiaggia antica, a ~113 m
+  // dal Decumano Inferiore. Dodici vani [Pappalardo 1994], larghezza e passo
+  // schematici: 6 m l'uno, da x −18 a +52 m.
+  const FRONTE_F = 113/U;
+  box(4.5, BEACH_Y, FRONTE_F - 1, 19.5, TER_Y - BEACH_Y, 2, M.mattone);
   const forniciX = [];
-  for(let i=0;i<6;i++) forniciX.push(-14 + i*2.9);      // sei a ovest
-  for(let i=0;i<6;i++) forniciX.push(6.5 + i*2.9);      // sei a est
-  forniciX.forEach(fx => {
-    box(fx, BEACH_Y, 31.6, 2.5, m(5.2), 3.4, M.mattone);       // setto e volta
-    box(fx, BEACH_Y, 33.4, 1.7, m(3.4), 0.4, M.dep3, false);   // il vano, in ombra
-  });
-  box(6, BEACH_Y + m(5.2), 31.0, 44, m(2.0), 5, M.tufo);       // massa sopra i fornici
-
-  /* ------------------------------------------- il fronte di scavo -----
-     Non un muro solo: corre lungo il Decumano Massimo e gira a nord-ovest
-     sopra la Basilica Noniana. Sopra: corso Resina e la città moderna. */
-  const SCARP_H = 5.0;                 // 20 m, valore modale delle fonti
-  function scarpata(x, z, w, d, mat = [M.dep1, M.dep2, M.dep3]){
-    const bande = [1.1, 0.9, 1.2, 0.8, 1.0];
-    let y = 0;
-    bande.forEach((h,i) => {
-      box(x, y, z, w, h, d, i%2 ? mat[1] : mat[0]);
-      y += h;
-    });
-    box(x, y, z, w*1.02, 0.35, d*1.02, mat[2], false);
-    return y;
+  for(let i=0;i<12;i++){
+    const fx = -18/U + 0.75 + i*1.5;
+    forniciX.push(fx);
+    box(fx, BEACH_Y, FRONTE_F + 0.02, 0.8, m(3.4), 0.1, M.dep3, false);       // il vano, in ombra
   }
-  scarpata(2, DEC_MAX - 4.4, 104, 5);            // fronte lungo il Decumano Massimo
-  scarpata(-40, -6, 12, 46);                     // ritorno a ovest, sopra Insula VII e II
-  scarpata(48, 6, 12, 52);                       // ritorno a est
-  scarpata(6, 44, 88, 8);                        // limite verso il mare
-
-  // Basilica Noniana VII.16 — 29 × 16 m, scavata all'aperto solo in parte:
-  // il muro est fu portato alla luce nel 1960-62, il resto resta sotto.
-  box(-26, 0, -16, 7.25, m(5.0), 4, M.tufo);
-  box(-31, 0, -16, 3, m(6.5), 4, M.dep2);
-
-  // Insula II, parzialmente scavata: Casa di Aristide, d'Argo, del Genio
-  casa(-27, 8, 8, 7, 1, M.tufo2);
-  casa(-27, 18, 8, 6, 1, M.tufo);
-  box(-34, 0, 13, 5, m(6.0), 22, M.dep2);        // oltre: Cardo II, non scavato
+  box(9.5, TER_Y, 22.75, m(3), m(1.2), m(2), M.marcia);                         // ara di Nonio Balbo
+  for(let i=0;i<8;i++)                                                          // scalinata verso la spiaggia
+    box(-5, TER_Y - i*(TER_Y - BEACH_Y)/8, FRONTE_F - 1 + i*0.35, 2.5, 0.18, 0.35, M.marcia, false);
 
   /* ---------------------------------------------------- ciò che è sotto
 
@@ -317,10 +208,15 @@ export const ERCOLANO = (function(){
      posizione è dichiarata incerta nella sua stessa scheda, con le fonti
      ufficiali che la mettono una a nord e l'altra a ovest. Disegnare un
      volume dove non si sa che cosa ci sia sarebbe invenzione. */
-  const TEATRO_X = -14, TEATRO_Z = DEC_MAX - 6.5;
+  // sotto l'ingresso moderno (OSM, Corso Resina): la cavea poco più a sud-est
+  // [posizione approssimata: la pianta del teatro non è in OSM]
+  const TEATRO_X = ANCORE.teatro[0] + 3, TEATRO_Z = ANCORE.teatro[1] + 4;
   const sepolto = new Group(); eRoot.add(sepolto); sepolto.visible = false;
+  // Vista a raggi X: le cose sepolte si disegnano sopra tutto il resto
+  // (depthTest spento, renderOrder alto). Con il deposito a bande ovunque,
+  // altrimenti, si vedevano appena.
   const M_SEPOLTO = new MeshBasicMaterial({
-    color: 0x9fe6cb, transparent:true, opacity:0.62, depthWrite:false, side:DoubleSide
+    color: 0x9fe6cb, transparent:true, opacity:0.62, depthWrite:false, depthTest:false, side:DoubleSide
   });
   {
     // (TEATRO_X è dichiarato appena sopra il gruppo)
@@ -343,29 +239,11 @@ export const ERCOLANO = (function(){
     sepolto.add(cavea, scaena, orch, pozzo);
   }
   sepolto.add(vasca);                     // la vasca della Palestra, anch'essa sotto
+  sepolto.traverse(o => { o.renderOrder = 10; });
 
   /* ------------------------------------------ la città moderna, sopra */
   const modern = new Group(); eRoot.add(modern);
-  // corso Resina: l'antica Strada Regia delle Calabrie, sopra la città sepolta
-  box(2, SCARP_H, DEC_MAX - 4.4, 104, 0.12, 2.6, M.asfalto, false, modern);
-  const palazzi = [
-    [-34,-33,7,9],[-24,-34,8,8],[-13,-33,9,10],[-1,-34,8,8],
-    [10,-33,9,9],[22,-34,8,8],[33,-33,9,10],[43,-34,7,8]
-  ];
-  palazzi.forEach((p,i) => {
-    const h = m(9 + (i%3)*3.5);
-    box(p[0], SCARP_H, p[1], p[2], h, p[3], M.moderno, true, modern);
-    box(p[0], SCARP_H + h, p[1], p[2]*1.06, m(0.7), p[3]*1.06, M.tettoM, false, modern);
-  });
-  // qualche edificio anche sui ritorni laterali
-  [[-40,-16,7,8],[-40,4,7,9],[48,-14,7,8],[48,10,7,9],[48,26,7,8]].forEach((p,i) => {
-    const h = m(9 + (i%2)*3);
-    box(p[0], SCARP_H, p[1], p[2], h, p[3], M.moderno, true, modern);
-    box(p[0], SCARP_H + h, p[1], p[2]*1.06, m(0.7), p[3]*1.06, M.tettoM, false, modern);
-  });
-
-
-
+  cittaModerna({ muri:M.moderno, tetti:M.tettoM, asfalto:M.asfalto, parent:modern });
 
   /* ------------------------------------------------ marcatori e cartigli */
   const hotspots = [];
@@ -383,7 +261,7 @@ export const ERCOLANO = (function(){
   /* -------------------------------------------------- collisioni ------ */
   // Griglia booleana sul rettangolo dello scavo: più rapida di scorrere
   // tutte le scatole a ogni passo.
-  const GX0 = -52, GZ0 = -40, GW = 112, GD = 92, CELL = 0.5;
+  const GX0 = -90, GZ0 = -70, GW = 180, GD = 130, CELL = 0.5;
   const NX = Math.ceil(GW/CELL), NZ = Math.ceil(GD/CELL);
   const grid = new Uint8Array(NX*NZ);
   const EYE = 0.45, RAD = 0.32;         // 1,80 m di altezza occhio
@@ -401,11 +279,14 @@ export const ERCOLANO = (function(){
     return grid[j*NX+i] === 1;
   }
   // quota del terreno: città a 0, terrazza e spiaggia più in basso
+  // in metri dal Decumano Inferiore: città fino a 76 m, rampa, terrazza,
+  // rampa, spiaggia dopo 117 m (le rampe sono di disegno: il passaggio vero
+  // è la scalinata accanto ai fornici)
   function quota(x, z){
-    if(z > 33.5) return BEACH_Y;
-    if(z > 30.0) return BEACH_Y + (33.5 - z)/3.5 * (TER_Y - BEACH_Y);
-    if(z > 24.5) return TER_Y;
-    return TOWN_Y;
+    const zm = z*U;
+    const rampa = (a, b, ya, yb) => ya + (yb - ya) * Math.min(1, Math.max(0, (zm - a)/(b - a)));
+    if(zm < 84) return rampa(76, 84, TOWN_Y, TER_Y);
+    return rampa(109, 117, TER_Y, BEACH_Y);
   }
 
   /* ------------------------------------------------- comandi in prima persona */
@@ -585,7 +466,11 @@ export const ERCOLANO = (function(){
   // perché è ciò di cui la scena parla.
   const VELATI = [
     { m:[M.moderno, M.tettoM, M.asfalto],        a:0.16 },
-    { m:[M.dep1, M.dep2, M.dep3, M.terra],       a:0.40 },
+    // il deposito, dal 13 ottobre 2026, è fatto di bande impilate ovunque:
+    // sei facce a 0,40 sommate erano opache e il teatro spariva; a 0,12
+    // restano leggibili come massa e lasciano vedere sotto
+    { m:[M.dep1, M.dep2, M.dep3],                a:0.12 },
+    { m:[M.terra],                               a:0.40 },
     { m:DEP_CAMPO,                               a:0.10 }   // sopra la vasca della Palestra
   ];
   function mostraSepolto(on){
@@ -607,7 +492,7 @@ export const ERCOLANO = (function(){
   function guardaSotto(dove){
     volo = true; vx = vy = vz = 0;
     if(dove === 'vasca'){ pos.x = PX; pos.y = 16; pos.z = PZ + 15; yaw = 0; pitch = -0.72; }
-    else { pos.x = TEATRO_X + 2; pos.z = -6; pos.y = 15; yaw = 0; pitch = -0.58; }
+    else { pos.x = TEATRO_X + 2; pos.z = TEATRO_Z + 20; pos.y = 15; yaw = 0; pitch = -0.58; }
   }
   // solo per ?debug: un'inquadratura fissa, in volo, per le foto di verifica
   function inquadra(x, y, z, imbardata, beccheggio){

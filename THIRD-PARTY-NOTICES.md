@@ -59,3 +59,14 @@ NSF EIA-0196217.» L'uso è libero, anche in prodotti; i file grezzi non si
 ridistribuiscono, e qui non ci sono: c'è solo il risultato del trasferimento
 sullo scheletro di MakeHuman, fatto dal progetto Firenze 1216 dello stesso
 autore (conversione BVH di B. Hahne).
+
+## Pianta di Ercolano — OpenStreetMap
+
+Le piante delle case scavate, il tracciato delle vie antiche, la posizione
+della Palestra e dello scavo della Villa dei Papiri, gli edifici e le strade
+della città moderna nella scena di Ercolano vengono da OpenStreetMap.
+
+- Dati © OpenStreetMap contributors, https://www.openstreetmap.org/copyright
+- Licenza: Open Database License (ODbL) 1.0. Il file derivato
+  `src/data/ercolano-pianta.json` resta sotto ODbL; lo produce
+  `strumenti/osm/ercolano_osm.py`.
