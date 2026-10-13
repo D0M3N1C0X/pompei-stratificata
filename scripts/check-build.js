@@ -135,6 +135,18 @@ if(IT_JSON) for(const cod of LINGUE_PRONTE){
         'il service worker chiede alla rete per prime le lingue e il manifest');
 }
 
+// ── i testi per lo store stanno nei limiti di App Store Connect: un campo
+//    troppo lungo lo scopriremmo solo al caricamento
+if(existsSync(join(root, 'store/testi.json'))){
+  const LIMITI = { nome:30, sottotitolo:30, promo:170, parole_chiave:100, descrizione:4000, novita:4000 };
+  const testi = JSON.parse(read('store/testi.json'));
+  for(const cod of ['it', ...LINGUE_PRONTE]){
+    const t = testi[cod] || {};
+    const fuori = Object.entries(LIMITI).filter(([k, max]) => !t[k] || [...t[k]].length > max).map(([k]) => k);
+    esigi(!fuori.length, `testi per lo store in ${cod} presenti e nei limiti`, fuori.join(', '));
+  }
+}
+
 // ── il service worker deve conoscere le lingue, o offline si rompe lì
 for(const cod of LINGUE_PRONTE)
   esigi(read('sw.js').includes(`./i18n/${cod}.json`),

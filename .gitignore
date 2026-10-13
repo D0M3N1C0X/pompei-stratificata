@@ -2,3 +2,6 @@ node_modules/
 dist/
 .DS_Store
 app/www/
+
+# immagini per lo store: si rigenerano da store/scatti.json (vedi store/README.md)
+store/immagini/

@@ -10,9 +10,6 @@ import { PAL } from './palette.js';
 import cobbleColorUrl from '../assets/pbr/pompeii/cobblestone-diffuse.webp';
 import cobbleNormalUrl from '../assets/pbr/pompeii/cobblestone-normal.webp';
 import cobbleRoughUrl from '../assets/pbr/pompeii/cobblestone-roughness.webp';
-import plasterColorUrl from '../assets/pbr/pompeii/plaster-diffuse.webp';
-import plasterNormalUrl from '../assets/pbr/pompeii/plaster-normal.webp';
-import plasterRoughUrl from '../assets/pbr/pompeii/plaster-roughness.webp';
 import roofColorUrl from '../assets/pbr/pompeii/roof-diffuse.webp';
 import roofNormalUrl from '../assets/pbr/pompeii/roof-normal.webp';
 import roofRoughUrl from '../assets/pbr/pompeii/roof-roughness.webp';
@@ -53,7 +50,10 @@ function pbrSet(colorUrl, normalUrl, roughnessUrl, repeat){
 // procedurali qui sotto. Le JPEG sono incorporate nel bundle offline da Vite.
 export const PBR = {
   basalt: pbrSet(cobbleColorUrl, cobbleNormalUrl, cobbleRoughUrl, 6),
-  plaster: pbrSet(plasterColorUrl, plasterNormalUrl, plasterRoughUrl, 10),
+  // L'intonaco fotografico non c'è più (13 ottobre 2026): la sua mappa di
+  // colore era un grigio-blu scuro, media RGB 69/73/77, e moltiplicata per il
+  // beige delle pareti dava muri neri in ogni scena. Le pareti tornano
+  // all'intonaco procedurale, TEX.plaster qui sotto.
   tile: pbrSet(roofColorUrl, roofNormalUrl, roofRoughUrl, 5)
 };
 

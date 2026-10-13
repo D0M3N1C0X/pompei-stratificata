@@ -2461,6 +2461,35 @@ if(new URLSearchParams(location.search).has('debug')){
     camera,
     solido: (x, z) => isSolid(x, z),
     ercolano: ERCOLANO,
+    // un'immagine per lo store: la scena adattata a w × h (riempie e
+    // ritaglia), una fascia scura in alto e la didascalia in Spectral, il
+    // carattere dei titoli, già incluso nel file. Le inquadrature e i testi
+    // stanno in store/scatti.json.
+    async vetrina(w, h, titolo, marchio = 'DOPO IL 79', passi = 45){
+      const img = new Image();
+      await new Promise(ok => { img.onload = ok; img.src = this.foto(passi); });
+      await document.fonts.load(`600 ${Math.round(w*0.064)}px Spectral`);
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const g = c.getContext('2d');
+      const k = Math.max(w/img.width, h/img.height), dw = img.width*k, dh = img.height*k;
+      g.drawImage(img, (w-dw)/2, (h-dh)/2, dw, dh);
+      const fascia = h*0.30, sf = g.createLinearGradient(0, 0, 0, fascia);
+      sf.addColorStop(0, 'rgba(16,20,18,0.94)'); sf.addColorStop(0.62, 'rgba(16,20,18,0.78)'); sf.addColorStop(1, 'rgba(16,20,18,0)');
+      g.fillStyle = sf; g.fillRect(0, 0, w, fascia);
+      const m = w*0.075;
+      g.fillStyle = '#7fb8a3'; g.font = `500 ${Math.round(w*0.026)}px "IBM Plex Mono", monospace`;
+      g.fillText(marchio.split('').join(String.fromCharCode(8202)), m, m + w*0.02);
+      g.fillStyle = '#eef1ec'; const fs = Math.round(w*0.064);
+      g.font = `600 ${fs}px Spectral, Georgia, serif`;
+      const righe = []; let riga = '';
+      for(const p of titolo.split(' ')){
+        const prova = riga ? riga + ' ' + p : p;
+        if(g.measureText(prova).width > w - 2*m && riga){ righe.push(riga); riga = p; } else riga = prova;
+      }
+      if(riga) righe.push(riga);
+      righe.forEach((r, i) => g.fillText(r, m, m + w*0.05 + fs*1.15*(i+1)));
+      return c.toDataURL('image/png');
+    },
     // per il giro di verifica: ogni luogo, fase e vista senza ricaricare
     luoghi: () => Object.keys(byId),
     apri(id){ const d = byId[id].data; applyEpoch(TOUR_EPOCH[id] ?? d.from); openPanel(d); },
