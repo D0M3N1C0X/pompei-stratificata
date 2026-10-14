@@ -17,6 +17,7 @@ import {
   DoubleSide,
   DirectionalLight,
   Fog,
+  PointLight,
   Group,
   HemisphereLight,
   Mesh,
@@ -243,21 +244,108 @@ export const ERCOLANO = (function(){
     const ORCHESTRA_Y = -1.25;            // ~25 m sotto la strada moderna
     // cavea: mezzo cilindro, raggio ~27 m
     const cavea = new Mesh(
-      new CylinderGeometry(6.75, 4.2, 1.7, 28, 1, true, 0, Math.PI), M_SEPOLTO);
+      new CylinderGeometry(6.75, 1.75, 1.75, 28, 1, true, 0, Math.PI), M_SEPOLTO);
     cavea.position.set(TEATRO_X, ORCHESTRA_Y + 0.85, TEATRO_Z);
     cavea.rotation.y = Math.PI;           // aperto verso valle, come il pendio
     // scaena: il fondale, sul lato aperto
     const scaena = new Mesh(new BoxGeometry(1,1,1), M_SEPOLTO);
-    scaena.position.set(TEATRO_X, ORCHESTRA_Y + 1.1, TEATRO_Z + 6.2);
+    scaena.position.set(TEATRO_X, ORCHESTRA_Y + 1.1, TEATRO_Z + 1.2);
     scaena.scale.set(13.5, 2.2, 1.1);
     // il piano dell'orchestra
-    const orch = new Mesh(new CylinderGeometry(4.2, 4.2, 0.08, 28), M_SEPOLTO);
+    const orch = new Mesh(new CylinderGeometry(1.75, 1.75, 0.08, 28), M_SEPOLTO);
     orch.position.set(TEATRO_X, ORCHESTRA_Y, TEATRO_Z);
     // i pozzi borbonici: l'unico modo per arrivarci, allora e adesso
     const pozzo = new Mesh(new CylinderGeometry(0.22, 0.22, SCARP_H - ORCHESTRA_Y, 10), M_SEPOLTO);
     pozzo.position.set(TEATRO_X + 3.0, (SCARP_H + ORCHESTRA_Y)/2, TEATRO_Z + 1.4);
     sepolto.add(cavea, scaena, orch, pozzo);
   }
+  /* --------------------------------------------- le gallerie borboniche
+     Si scende dall'ingresso vero (OSM, Corso Resina) e si arriva in fondo al
+     pozzo, ~25 m sotto la strada [Parco]; una galleria porta alla cavità
+     del teatro, svuotato dai Borbone. Documentati: la profondità,
+     l'orchestra di marmo bianco, i due piloni settecenteschi di La Vega
+     nella scena, la capienza (~2.500 posti, cavea in tre ordini) [Parco].
+     NON documentati qui: le misure del teatro e il tracciato dei cunicoli,
+     che non sono georiferiti nelle fonti che ho. Proporzioni schematiche:
+     orchestra di 7 m di raggio, dieci file di gradini fino a 27 m. */
+  const gal = new Group(); gal.visible = false; eScene.add(gal);
+  const Y0 = -1.25, RO = 1.75, RC = 6.75, PASSO = 0.5, ALZ = 0.175, TOP = Y0 + 10*ALZ;
+  const M_ROCCIA = new MeshLambertMaterial({ color:0x3b3833, side:DoubleSide });
+  materiali.push({ mm:M_ROCCIA, tex:'ash' });
+  const T = new Vector3(TEATRO_X, 0, TEATRO_Z);
+  const dirE = new Vector3(ANCORE.teatro[0] - TEATRO_X, 0, ANCORE.teatro[1] - TEATRO_Z).normalize();
+  const P1 = T.clone().addScaledVector(dirE, RC + 0.35), S0 = T.clone().addScaledVector(dirE, RC + 2.8);
+  const pezzo = (geo, mat, x, y, z, ry = 0) => { const o = new Mesh(geo, mat); o.position.set(x, y, z); o.rotation.y = ry; o.receiveShadow = true; gal.add(o); return o; };
+  // orchestra e gradini: semicerchi a nord della scena (la cavea guarda a sud)
+  pezzo(new CylinderGeometry(RO, RO, 0.06, 32, 1, false, Math.PI/2, Math.PI), M.colonna, T.x, Y0 - 0.03, T.z);
+  for(let k = 1; k <= 10; k++){
+    const r = RO + k*PASSO;
+    pezzo(new CylinderGeometry(r, r, k*ALZ, 40, 1, false, Math.PI/2, Math.PI), k % 2 ? M.tufo : M.tufo2, T.x, Y0 + k*ALZ/2, T.z);
+  }
+  // la scena e i due piloni di La Vega
+  box(T.x, Y0, T.z + 1.2, 2*RC, 2.4, 0.4, M.tufo2, false, gal);
+  for(const sx of [-2.5, 2.5]) box(T.x + sx, Y0, T.z + 0.8, 1.1, 3.6, 1.1, M.mattone, false, gal);
+  // la cavità: parete curva, parete di fondo, volta
+  pezzo(new CylinderGeometry(RC + 0.35, RC + 0.35, 4.6, 40, 1, true, Math.PI/2, Math.PI), M_ROCCIA, T.x, Y0 + 2.3, T.z);
+  box(T.x, Y0, T.z + 1.6, 2*RC + 0.8, 4.6, 0.3, M_ROCCIA, false, gal);
+  pezzo(new CylinderGeometry(RC + 0.4, RC + 0.4, 0.2, 40, 1, false, Math.PI/2, Math.PI), M_ROCCIA, T.x, Y0 + 4.6, T.z);
+  box(T.x, Y0 + 4.5, T.z + 0.8, 2*RC + 0.8, 0.2, 1.6, M_ROCCIA, false, gal);
+  // la galleria dal pozzo alla cavità, e il pozzo
+  {
+    const L = S0.distanceTo(P1), mid = S0.clone().add(P1).multiplyScalar(0.5), ang = Math.atan2(dirE.x, dirE.z);
+    // un parallelepipedo senza le due teste: con le teste la galleria era
+    // chiusa e dal pozzo non si vedeva la cavità (facce 4 e 5, ±z)
+    const gt = new BoxGeometry(0.55, 0.62, L);
+    gt.setIndex(Array.from(gt.index.array).slice(0, 24)); gt.clearGroups(); gt.addGroup(0, 24, 0);
+    const tubo = new Mesh(gt, M_ROCCIA);
+    tubo.position.set(mid.x, TOP + 0.31, mid.z); tubo.rotation.y = ang; gal.add(tubo);
+    // il pozzo, aperto verso la galleria (altrimenti la sua parete la chiude)
+    const verso = Math.atan2(-dirE.x, -dirE.z);
+    pezzo(new CylinderGeometry(0.45, 0.45, SCARP_H - TOP, 20, 1, true, verso + 0.7, 2*Math.PI - 1.4), M_ROCCIA, S0.x, (SCARP_H + TOP)/2, S0.z);
+    pezzo(new CylinderGeometry(0.45, 0.45, 0.05, 16), M_ROCCIA, S0.x, TOP - 0.02, S0.z);
+  }
+  const torcia = new PointLight(0xffc48a, 0, 9, 1.4);
+  eScene.add(eCam); eCam.add(torcia);
+
+  function inGalleriaLibero(x, z){
+    const dx = x - T.x, dz = z - T.z, r = Math.hypot(dx, dz);
+    if(r <= RC + 0.15 && dz <= 1.0) return true;                              // la cavità
+    const ax = S0.x, az = S0.z, bx = P1.x, bz = P1.z, vx2 = bx - ax, vz2 = bz - az;
+    const t = Math.max(0, Math.min(1, ((x - ax)*vx2 + (z - az)*vz2) / (vx2*vx2 + vz2*vz2)));
+    return Math.hypot(x - ax - t*vx2, z - az - t*vz2) <= 0.22;                // la galleria
+  }
+  function quotaGalleria(x, z){
+    const dx = x - T.x, dz = z - T.z, r = Math.hypot(dx, dz);
+    if(r > RC || dz > 0) return r > RC ? TOP : Y0;
+    return r <= RO ? Y0 : Y0 + Math.min(10, Math.ceil((r - RO)/PASSO)) * ALZ;
+  }
+  let inGalleria = false;
+  const salvato = {};
+  function galleria(on){
+    on = !!on && (momento === '1738' || momento === 'oggi');
+    if(on === inGalleria) return inGalleria;
+    inGalleria = on;
+    eRoot.visible = !on; gal.visible = on;
+    if(on){
+      Object.assign(salvato, { bg:eScene.background, fog:eScene.fog, sole:eSun.intensity, rim:eRim.intensity });
+      eScene.background = new Color(0x050404); eScene.fog = new Fog(0x050404, 2, 16);
+      eSun.intensity = 0.05; eRim.intensity = 0;
+      eScene.children.filter(o => o.isHemisphereLight).forEach(h => { salvato.emi = h.intensity; h.intensity = 0.3; });
+      torcia.intensity = 1.5;
+      volo = false; vx = vy = vz = 0;
+      pos.x = S0.x - dirE.x*0.7; pos.z = S0.z - dirE.z*0.7; pos.y = TOP;   // un passo dentro la galleria
+      yaw = Math.atan2(dirE.x, dirE.z); pitch = -0.05;
+    } else {
+      eScene.background = salvato.bg; eScene.fog = salvato.fog;
+      eSun.intensity = salvato.sole; eRim.intensity = salvato.rim;
+      eScene.children.filter(o => o.isHemisphereLight).forEach(h => { h.intensity = salvato.emi; });
+      torcia.intensity = 0;
+      reset();
+    }
+    return inGalleria;
+  }
+  function galleriaAttiva(){ return inGalleria; }
+
   sepolto.add(vasca);                     // la vasca della Palestra, anch'essa sotto
   sepolto.traverse(o => { o.renderOrder = 10; });
 
@@ -409,11 +497,12 @@ export const ERCOLANO = (function(){
     vy = 0;
 
     // spostamento con scorrimento lungo i muri, un asse alla volta
+    const blocca = inGalleria ? (x, z) => !inGalleriaLibero(x, z) : bloccato;
     const nx = pos.x + vx * dt;
-    if(!bloccato(nx, pos.z)) pos.x = nx; else vx = 0;
+    if(!blocca(nx, pos.z)) pos.x = nx; else vx = 0;
     const nz = pos.z + vz * dt;
-    if(!bloccato(pos.x, nz)) pos.z = nz; else vz = 0;
-    pos.y = quota(pos.x, pos.z);
+    if(!blocca(pos.x, nz)) pos.z = nz; else vz = 0;
+    pos.y = inGalleria ? quotaGalleria(pos.x, pos.z) : quota(pos.x, pos.z);
   }
 
   /* ------------------------------------------------------------ ciclo */
@@ -463,6 +552,7 @@ export const ERCOLANO = (function(){
     reset();
   }
   function exit(){
+    if(inGalleria) galleria(false);
     active = false;
     keys.clear(); vx = vz = 0; touchGo = 0;
     if(document.pointerLockElement === host) document.exitPointerLock();
@@ -517,6 +607,7 @@ export const ERCOLANO = (function(){
   let momento = 'oggi';
   function setMomento(mo){
     if(!MOMENTI.includes(mo)) mo = 'oggi';
+    if(inGalleria && mo !== '1738' && mo !== 'oggi') galleria(false);
     momento = mo;
     G.rovine.visible = mo === 'oggi' || mo === '1958';
     G.intere.visible = mo === '79';
@@ -588,7 +679,7 @@ export const ERCOLANO = (function(){
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f),
+           usaFigure: f => abitanti.usaFigure(f), galleria, galleriaAttiva,
            momenti: MOMENTI, luoghi: LUOGHI,
            isActive: () => active };
 })();

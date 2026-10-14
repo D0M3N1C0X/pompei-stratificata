@@ -67,7 +67,10 @@
         "m1738": "<b>The Bourbon tunnels, from 1738.</b> Everything lies under 20 m of deposit; digging goes by shafts and tunnels, starting from the theatre. On the surface, veiled, <b>today's</b> town: I do not have the plan of eighteenth-century Resina.",
         "m1958": "<b>The end of Maiuri's campaign, 1958.</b> The insulae are uncovered. Terraces, Suburban Baths and beach will be dug from 1980, the Villa of the Papyri from 1996: they are still buried [delimited by zones, not building by building].",
         "moggi": "<b>Today.</b> Everything brought to light, with the modern town above the excavation face."
-      }
+      },
+      "scendi": "Go down to the theatre",
+      "risali": "Back to the surface",
+      "galleriaNota": "<b>The Bourbon tunnels.</b> You are at the bottom of the shaft of the Corso Resina entrance, about 25 m below the street; the tunnel leads to the theatre's cavity. Documented: the depth, the white marble orchestra, La Vega's two eighteenth-century piers in the stage, about 2,500 seats [Park]. I do not have the theatre's measurements or the tunnels' layout: the proportions are schematic."
     },
     "cmp": {
       "titolo": "Why Herculaneum is not Pompeii",

@@ -2000,7 +2000,7 @@ function setErc(v){
   }
   setErcAlto(false);
   aggiornaComandiErcolano();
-  if(ercOn) segnaMomento(ERCOLANO.momentoAttivo());
+  if(ercOn) segnaGalleria();
   if(!ercOn){
     document.getElementById('btnTop').classList.toggle('on', overview);
     document.getElementById('btnFly').classList.toggle('on', flyMode);
@@ -2034,12 +2034,31 @@ function segnaMomento(mo){
   document.querySelectorAll('#ercMomenti [data-momento]').forEach(b =>
     b.classList.toggle('on', b.dataset.momento === mo));
   document.getElementById('ercMomentoNota').innerHTML = t('ui.erc.momentoNota.m' + mo);
+  const b = document.getElementById('ercGalleria');
+  if(b) b.hidden = !(mo === '1738' || mo === 'oggi');
 }
 function setMomentoErc(mo){
   const v = ERCOLANO.setMomento(mo);
   segnaMomento(v);
+  segnaGalleria();
   scriviStato();
 }
+// Le gallerie borboniche: si scende nel 1738 e oggi, quando il teatro si
+// raggiunge solo da sotto. Il pulsante cambia nome e la riga dice che cosa è
+// documentato e che cosa no.
+function segnaGalleria(){
+  const sotto = ERCOLANO.galleriaAttiva(), mo = ERCOLANO.momentoAttivo();
+  const b = document.getElementById('ercGalleria');
+  b.hidden = !(mo === '1738' || mo === 'oggi');
+  b.textContent = t(sotto ? 'ui.erc.risali' : 'ui.erc.scendi');
+  b.classList.toggle('on', sotto);
+  if(sotto) document.getElementById('ercMomentoNota').innerHTML = t('ui.erc.galleriaNota');
+  else segnaMomento(mo);
+}
+document.getElementById('ercGalleria').addEventListener('click', () => {
+  ERCOLANO.galleria(!ERCOLANO.galleriaAttiva());
+  segnaGalleria();
+});
 document.querySelectorAll('#ercMomenti [data-momento]').forEach(b =>
   b.addEventListener('click', () => setMomentoErc(b.dataset.momento)));
 for(const dove of ['teatro', 'vasca'])

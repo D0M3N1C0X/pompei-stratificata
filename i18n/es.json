@@ -67,7 +67,10 @@
         "m1738": "<b>Las galerías borbónicas, desde 1738.</b> Todo está bajo 20 m de depósito; se excava por pozos y galerías, empezando por el teatro. En la superficie, velada, la ciudad de <b>hoy</b>: no tengo el plano de la Resina del siglo XVIII.",
         "m1958": "<b>El final de la campaña de Maiuri, 1958.</b> Las insulae están al descubierto. Terrazas, Termas Suburbanas y playa se excavarán desde 1980, la Villa de los Papiros desde 1996: siguen enterradas [delimitación por zonas, no edificio por edificio].",
         "moggi": "<b>Hoy.</b> Todo lo que se ha sacado a la luz, con la ciudad moderna sobre el frente de excavación."
-      }
+      },
+      "scendi": "Bajar al teatro",
+      "risali": "Volver a la superficie",
+      "galleriaNota": "<b>Las galerías borbónicas.</b> Estás al fondo del pozo de la entrada de Corso Resina, unos 25 m bajo la calle; la galería lleva a la cavidad del teatro. Documentados: la profundidad, la orquesta de mármol blanco, los dos pilares dieciochescos de La Vega en la escena, unas 2.500 plazas [Parque]. No tengo las medidas del teatro ni el trazado de las galerías: las proporciones son esquemáticas."
     },
     "cmp": {
       "titolo": "Por qué Herculano no es Pompeya",
