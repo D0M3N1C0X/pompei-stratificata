@@ -36,7 +36,7 @@ export const ERCOLANO = (function(){
   eScene.background = new Color(0xa8b7c2);
   eScene.fog = new Fog(0xa8b7c2, 90, 340);
 
-  const eCam = new PerspectiveCamera(64, 1, 0.1, 900);
+  const eCam = new PerspectiveCamera(64, 1, 0.05, 900);
 
   const eSun = new DirectionalLight(0xfff2df, 2.15);
   eSun.position.set(-70, 96, 60);
@@ -135,8 +135,8 @@ export const ERCOLANO = (function(){
     const g = new Group(); g.name = k; eRoot.add(g); return [k, g];
   }));
   const solidiDeposito = { oggi:[], '1958':[], '1738':[], '79':[] };
-  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'rovina', parent:G.rovine, solids });
-  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'intera', parent:G.intere, solids:[] });
+  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'rovina', parent:G.rovine, solids });
+  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'intera', parent:G.intere, solids:[] });
   // gli abitanti: le stesse figure di Pompei, sulle vie della pianta vera
   const abitanti = createInhabitants({ streets:percorsi(), populations:POPULATIONS_ERCOLANO, places:false });
   eRoot.add(abitanti.group);
@@ -369,20 +369,24 @@ export const ERCOLANO = (function(){
   /* -------------------------------------------------- collisioni ------ */
   // Griglia booleana sul rettangolo dello scavo: più rapida di scorrere
   // tutte le scatole a ogni passo.
-  const GX0 = -90, GZ0 = -70, GW = 180, GD = 130, CELL = 0.5;
+  // Celle di 25 cm e un ingombro di 32 cm: le stanze delle sei case con
+  // l'interno sono larghe 3-4 m e le porte poco più di un metro; con celle
+  // di 2 m e un raggio di 1,3 m ogni stanza risultava piena.
+  const GX0 = -90, GZ0 = -70, GW = 180, GD = 130, CELL = 0.0625;
   const NX = Math.ceil(GW/CELL), NZ = Math.ceil(GD/CELL);
   const grid = new Uint8Array(NX*NZ);
-  const EYE = 0.45, RAD = 0.32;         // 1,80 m di altezza occhio
+  const EYE = 0.45, RAD = 0.08;         // 1,80 m di altezza occhio
   // si ricostruisce a ogni cambio di momento: il deposito non è lo stesso
   function griglia(extra){
     grid.fill(0);
     for(const s of solids.concat(extra)){
       if(s.y1 < EYE * 0.9) continue;    // sotto il ginocchio: si scavalca
-      const i0 = Math.max(0, Math.floor((s.x0 - GX0 - RAD)/CELL));
-      const i1 = Math.min(NX-1, Math.ceil((s.x1 - GX0 + RAD)/CELL));
-      const j0 = Math.max(0, Math.floor((s.z0 - GZ0 - RAD)/CELL));
-      const j1 = Math.min(NZ-1, Math.ceil((s.z1 - GZ0 + RAD)/CELL));
-      for(let i=i0;i<=i1;i++) for(let j=j0;j<=j1;j++) grid[j*NX+i] = 1;
+      // le celle il cui centro cade nella scatola allargata dell'ingombro
+      const i0 = Math.max(0, Math.ceil((s.x0 - GX0 - RAD)/CELL - 0.5));
+      const i1 = Math.min(NX-1, Math.floor((s.x1 - GX0 + RAD)/CELL - 0.5));
+      const j0 = Math.max(0, Math.ceil((s.z0 - GZ0 - RAD)/CELL - 0.5));
+      const j1 = Math.min(NZ-1, Math.floor((s.z1 - GZ0 + RAD)/CELL - 0.5));
+      for(let j=j0;j<=j1;j++) grid.fill(1, j*NX + i0, j*NX + i1 + 1);
     }
   }
   function bloccato(x, z){
@@ -638,8 +642,10 @@ export const ERCOLANO = (function(){
     else { pos.x = TEATRO_X + 2; pos.z = TEATRO_Z + 20; pos.y = 15; yaw = 0; pitch = -0.58; }
   }
   // solo per ?debug: un'inquadratura fissa, in volo, per le foto di verifica
+  // (sotto 1,2 unità si sta a terra, ad altezza d'occhio: il volo terrebbe
+  // la camera ad almeno 4,8 m, sopra i tetti)
   function inquadra(x, y, z, imbardata, beccheggio){
-    volo = true; vx = vy = vz = 0;
+    volo = y >= 1.2; vx = vy = vz = 0;
     pos.x = x; pos.y = y; pos.z = z; yaw = imbardata; pitch = beccheggio;
   }
   function reset(){
@@ -679,7 +685,7 @@ export const ERCOLANO = (function(){
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f), galleria, galleriaAttiva,
+           usaFigure: f => abitanti.usaFigure(f), galleria, galleriaAttiva, bloccato,
            momenti: MOMENTI, luoghi: LUOGHI,
            isActive: () => active };
 })();

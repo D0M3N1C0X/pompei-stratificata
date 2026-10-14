@@ -5,3 +5,6 @@ app/www/
 
 # immagini per lo store: si rigenerano da store/scatti.json (vedi store/README.md)
 store/immagini/
+
+# le piante di Commons: le scarica strumenti/piante/case_ercolano.py
+strumenti/piante/fonti/

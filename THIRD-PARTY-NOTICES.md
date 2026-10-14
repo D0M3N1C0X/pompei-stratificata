@@ -70,3 +70,22 @@ della città moderna nella scena di Ercolano vengono da OpenStreetMap.
 - Licenza: Open Database License (ODbL) 1.0. Il file derivato
   `src/data/ercolano-pianta.json` resta sotto ODbL; lo produce
   `strumenti/osm/ercolano_osm.py`.
+
+## Interni di sei case di Ercolano — piante di Wikimedia Commons
+
+La disposizione delle stanze, dell'impluvio e del giardino di sei case
+(Bicentenario, Atrio a Mosaico, Sannitica, Atrio Corinzio, Due Atri, Erma di
+Bronzo) è ricavata dagli schemi disegnati da «V. D.» e caricati su Wikimedia
+Commons dall'utente Ursus (2009). I disegni non sono inclusi nel repository:
+`strumenti/piante/case_ercolano.py` li scarica in `strumenti/piante/fonti/`.
+
+- `File:Herculanum_Casa_Bicentenario.jpg`, `File:Herculanum_Casa_Atrio_a_Mosaico.jpg`,
+  `File:Herculanum_Casa_del_atrio_corinzio.jpg`, `File:Herculanum_Casa_dei_due_atrii.jpg`,
+  `File:Herculanum_Casa_erma_di_bronzo.jpg`: pubblico dominio.
+- `File:Herculanum_Casa_Sannitica.png`: Creative Commons Attribution-ShareAlike
+  4.0 (https://creativecommons.org/licenses/by-sa/4.0/). I dati ricavati da
+  questo disegno, la voce «Casa Sannitica» di `src/data/ercolano-interni.json`,
+  restano sotto CC BY-SA 4.0.
+- Le misure vengono dal contorno di OpenStreetMap (ODbL, sopra): il disegno si
+  riscala sul riquadro della casa. Disposizione dagli schemi, dimensioni
+  approssimate: non è un rilievo.

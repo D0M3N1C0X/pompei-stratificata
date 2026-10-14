@@ -7,10 +7,16 @@ import {
   Matrix4,
   Mesh,
   Object3D,
+  Path,
   Shape
 } from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import PIANTA from './data/ercolano-pianta.json';
+import INTERNI from './data/ercolano-interni.json';
+
+// Sei case hanno gli interni, ricavati dalle piante libere di Commons
+// (strumenti/piante/case_ercolano.py): si legano alla pianta OSM per id.
+const INTERNI_PER_ID = Object.fromEntries(Object.values(INTERNI.case).map(c => [c.osm, c]));
 
 /* =====================================================================
    ERCOLANO DALLA PIANTA VERA
@@ -176,7 +182,7 @@ function muro(a, b, spessore, h, y0){
 function casuale(seme){ let s = seme >>> 0; return () => (s = (s*1664525 + 1013904223) >>> 0) / 4294967296; }
 
 export function caseAntiche({ materiali, modo = 'rovina', parent, solids }){
-  const pareti = [[], [], []], tetti = [];
+  const pareti = [[], [], []], tetti = [], acque = [], erbe = [];
   for(const e of PIANTA.edifici){
     const r = casuale(e.id);
     const p = e.punti.map(q => [m(q[0]), m(q[1])]);
@@ -184,7 +190,19 @@ export function caseAntiche({ materiali, modo = 'rovina', parent, solids }){
     const y0 = quotaDi(cz);
     const h = modo === 'rovina' ? m(2.5 + r()*2.5) : m(4 + (e.area > 400 ? 3 : 0));
     const k = Math.floor(r()*3);
-    for(let i = 0; i < p.length - 1; i++){
+    const int = INTERNI_PER_ID[e.id];
+    if(int){
+      // i muri del disegno: stanze, porte, colonne dei portici
+      for(const [x0, z0, x1, z1] of int.muri){
+        const g = BOX.clone();
+        T.position.set(m((x0+x1)/2), y0 + h/2, m((z0+z1)/2)); T.rotation.set(0, 0, 0);
+        T.scale.set(m(x1-x0), h, m(z1-z0)); T.updateMatrix(); g.applyMatrix4(T.matrix);
+        pareti[k].push(g);
+        solids.push({ x0:m(x0), x1:m(x1), z0:m(z0), z1:m(z1), y1:y0 + h });
+      }
+      for(const [x0, z0, x1, z1] of int.impluvi) acque.push([m(x0), m(z0), m(x1), m(z1), y0]);
+      for(const [x0, z0, x1, z1] of int.giardini) erbe.push([m(x0), m(z0), m(x1), m(z1), y0]);
+    } else for(let i = 0; i < p.length - 1; i++){
       const g = muro(p[i], p[i+1], m(0.45), h, y0);
       if(!g) continue;
       pareti[k].push(g);
@@ -193,9 +211,17 @@ export function caseAntiche({ materiali, modo = 'rovina', parent, solids }){
       solids.push({ x0, x1, z0, z1, y1:y0 + h });
     }
     if(modo === 'intera'){
-      // il tetto: la pianta estrusa e ristretta verso il centro, una falda
-      // larga ~4 m sul perimetro, il cortile aperto [schematico]
+      // il tetto: la pianta estrusa; dove c'è un interno, il compluvio
+      // sopra l'impluvio (largo il doppio) e il giardino restano aperti
       const s = new Shape(p.map(([x, z]) => ({ x, y:z })));
+      if(int){
+        const buco = (x0, z0, x1, z1) => new Path([{ x:m(x0), y:m(z0) }, { x:m(x0), y:m(z1) }, { x:m(x1), y:m(z1) }, { x:m(x1), y:m(z0) }]);
+        for(const [x0, z0, x1, z1] of int.impluvi){
+          const cx = (x0+x1)/2, cz = (z0+z1)/2, hw = (x1-x0), hd = (z1-z0);
+          s.holes.push(buco(cx - hw, cz - hd, cx + hw, cz + hd));
+        }
+        for(const [x0, z0, x1, z1] of int.giardini) s.holes.push(buco(x0, z0, x1, z1));
+      }
       const g = new ExtrudeGeometry(s, { depth:m(0.6), bevelEnabled:false });
       g.rotateX(Math.PI/2); g.translate(0, y0 + h + m(0.6), 0);
       tetti.push(g);
@@ -207,6 +233,24 @@ export function caseAntiche({ materiali, modo = 'rovina', parent, solids }){
     const mesh = new Mesh(mergeGeometries(lista, false), materiali[k]);
     mesh.castShadow = mesh.receiveShadow = true; parent.add(mesh); meshes.push(mesh);
   });
+  // impluvi e giardini delle case con l'interno
+  const lastre = (lista, mat, dy, spess) => {
+    if(!lista.length || !mat) return;
+    const gs = lista.map(([x0, z0, x1, z1, y0]) => {
+      const g = BOX.clone(); T.position.set((x0+x1)/2, y0 + dy, (z0+z1)/2); T.rotation.set(0, 0, 0);
+      T.scale.set(x1-x0, spess, z1-z0); T.updateMatrix(); g.applyMatrix4(T.matrix); return g;
+    });
+    const mesh = new Mesh(mergeGeometries(gs, false), mat); mesh.receiveShadow = true; parent.add(mesh); meshes.push(mesh);
+  };
+  // l'impluvio: un bordo di 25 cm alto 20, l'acqua 5 cm sotto il bordo
+  // [schematico: le piante danno il riquadro, non la sezione]
+  const bordi = acque.flatMap(([x0, z0, x1, z1, y0]) => {
+    const b = m(0.25);
+    return [[x0-b, z0-b, x1+b, z0, y0], [x0-b, z1, x1+b, z1+b, y0], [x0-b, z0, x0, z1, y0], [x1, z0, x1+b, z1, y0]];
+  });
+  lastre(bordi, materiali[1], m(0.1), m(0.2));
+  lastre(acque, materiali[4], m(0.075), m(0.15));
+  lastre(erbe, materiali[5], 0.006, 0.012);
   if(tetti.length && materiali[3]){
     const mesh = new Mesh(mergeGeometries(tetti, false), materiali[3]);
     mesh.castShadow = mesh.receiveShadow = true; parent.add(mesh); meshes.push(mesh);
