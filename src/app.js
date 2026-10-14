@@ -2257,7 +2257,9 @@ function passo(){
     const target = new Vector3(
       right.x*ix + fwd.x*iz, 0, right.z*ix + fwd.z*iz
     );
-    const maxSpeed = flyMode ? (sprint ? 52 : 17) : (sprint ? 4.8 : 1.9);
+    // a piedi il passo vero: 1,4 m/s, di corsa 4 m/s (unità da 4 m). Fino al
+    // 15 ottobre 2026 erano 7,6 e 19 m/s: una corsa e uno scatto da centometrista
+    const maxSpeed = flyMode ? (sprint ? 52 : 17) : (sprint ? 1.0 : 0.35);
     target.multiplyScalar(maxSpeed);
 
     if(flyMode){
@@ -2282,13 +2284,14 @@ function passo(){
       const speed = Math.hypot(vel.x, vel.z);
       bobAmt += (Math.min(speed/maxSpeed, 1) - bobAmt) * Math.min(1, dt*6);
       bobPhase += dt * (6.5 + speed*0.9);
-      const bob = Math.sin(bobPhase) * 0.022 * bobAmt;
+      const bob = Math.sin(bobPhase) * 0.01 * bobAmt;     // 4 cm: la testa di chi cammina
       camera.position.set(player.x, groundY() + EYE + bob, player.z);
-      if(speed > 0.12){
+      if(speed > 0.08){
         footstepTimer -= dt;
         if(footstepTimer <= 0){
-          AUDIO.playFootstep(Math.min(1, speed/2.4));
-          footstepTimer = 0.50 / Math.max(0.65, speed);
+          AUDIO.playFootstep(Math.min(1, speed/1.0));
+          // un passo ogni 0,55 s camminando, più fitto correndo
+          footstepTimer = 0.55 * Math.sqrt(0.35 / Math.max(0.35, speed));
         }
       } else footstepTimer = 0;
     }

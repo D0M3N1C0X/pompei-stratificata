@@ -43,3 +43,12 @@ jobs:
 
       - name: Ricontrolla dopo la ricostruzione
         run: npm run check
+
+      # Il 14 ottobre 2026 un errore d'avvio è passato tutti i controlli sui
+      # file: questa prova apre davvero il simulatore in Chrome e fa il giro
+      # di verifica (scripts/prova-avvio.mjs, scripts/giro.js).
+      - name: Prova d'avvio in Chrome
+        run: |
+          python3 -m http.server 8000 >/dev/null 2>&1 &
+          sleep 2
+          node scripts/prova-avvio.mjs http://localhost:8000/

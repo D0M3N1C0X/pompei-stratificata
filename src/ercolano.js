@@ -489,7 +489,7 @@ export const ERCOLANO = (function(){
       return;
     }
 
-    const speed = sprint ? 4.6 : 1.9;
+    const speed = sprint ? 1.0 : 0.35;     // 4 e 1,4 m/s: il passo vero (erano 18 e 7,6)
     const tx = (-sy * f + cy * r) * speed;
     const tz = (-cy * f - sy * r) * speed;
     vx += (tx - vx) * k;
