@@ -74,6 +74,7 @@ export const ANCORE = (() => {
     palestra: { x0:m(Math.min(...pxs)), x1:m(Math.max(...pxs)), z0:m(Math.min(...pzs)), z1:m(Math.max(...pzs)) },
     teatro,
     cervi: edificio('Casa dei Cervi'),
+    terme: edificio('Terme Suburbane'),
     graticcio: edificio('Casa a Graticcio'),
     papiri: PIANTA.villa_papiri ? centro(PIANTA.villa_papiri.punti).map(m) : null,
     azimut: { cardini:PIANTA.azimut_cardini, decumani:PIANTA.azimut_decumani }

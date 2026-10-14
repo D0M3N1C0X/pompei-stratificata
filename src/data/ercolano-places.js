@@ -23,6 +23,9 @@ export const LUOGHI = [
     { id:'fronte', x:C4, z:DEC_MAX-3, y:2.6 },
     { id:'fornici', x:2.5, z:29.6, y:BEACH_Y+2.6 },
     { id:'cervi', x:ANCORE.cervi[0], z:ANCORE.cervi[1], y:2.4 },
+    { id:'terme', x:ANCORE.terme[0], z:ANCORE.terme[1], y:QUOTA.terrazza + 2.4 },
+    // sul Cardo III, davanti al muro est della Basilica (vedi ercolano.js)
+    { id:'basilica', x:-49/4, z:-71.5/4, y:2.4 },
     { id:'palestra', x:ANCORE.palestra.x0 + 0.6, z:-10, y:2.6 },
     { id:'graticcio', x:ANCORE.graticcio[0], z:ANCORE.graticcio[1], y:2.4 },
     { id:'teatro', x:ANCORE.teatro[0], z:ANCORE.teatro[1], y:SCARP_H + 1.2 },
