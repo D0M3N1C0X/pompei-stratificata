@@ -223,6 +223,25 @@ const LARGHEZZE = {
   'Cardo III Superiore':4.6, 'Cardo III Inferiore':6.3, 'Cardo IV Superiore':4.7, 'Cardo IV Inferiore':5.7,
   'Cardo V Superiore':6.4, 'Cardo V Inferiore':4.1, 'Decumano Inferiore':4.2, 'Decumano Massimo':16.9
 };
+// I percorsi degli abitanti: i tratti delle vie, in unità, con carreggiata
+// e marciapiede; si fermano a 78 m dal Decumano Inferiore, prima del salto
+// verso la terrazza.
+export function percorsi(){
+  const out = [];
+  for(const v of PIANTA.vie){
+    const tot = LARGHEZZE[v.nome] || 5, mm = v.nome === 'Decumano Massimo' ? 3 : 1;
+    const carr = Math.max(1.6, tot - 2*mm);
+    for(let i = 0; i < v.punti.length - 1; i++){
+      let a = v.punti[i], b = v.punti[i+1];
+      if(a[1] > 78 && b[1] > 78) continue;
+      if(b[1] > 78){ const t = (78 - a[1]) / (b[1] - a[1]); b = [a[0] + (b[0]-a[0])*t, 78]; }
+      if(a[1] > 78){ const t = (78 - b[1]) / (a[1] - b[1]); a = [b[0] + (a[0]-b[0])*t, 78]; }
+      out.push({ a:a.map(m), b:b.map(m), w:m(carr), mw:m(mm), hh:m(0.3), n:v.nome });
+    }
+  }
+  return out;
+}
+
 export function vie({ basolato, marciapiede, parent }){
   const strade = [], marc = [];
   for(const v of PIANTA.vie){

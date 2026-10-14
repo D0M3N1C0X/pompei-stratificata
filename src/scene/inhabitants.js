@@ -339,7 +339,7 @@ function updateMesh(mesh, agents, count, delta, flow, suolo=0){
   if(walkBlendDirty) walkBlends.needsUpdate=true;
 }
 
-export function createInhabitants({ streets=[] }={}){
+export function createInhabitants({ streets=[], populations=POPULATIONS, places=true }={}){
   const group = new Group();
   group.name='popolazioni-per-epoca';
   const routes=routeTable(streets), entries=[];
@@ -347,9 +347,9 @@ export function createInhabitants({ streets=[] }={}){
   const sharedDog=dogGeometry(), sharedBird=pigeonGeometry();
   const populationGroups=[];
 
-  for(const profile of POPULATIONS){
+  for(const profile of populations){
     const random=seeded(0x51f15e + profile.epoch*997);
-    const sites=activitySites(profile.epoch,routes);
+    const sites=places ? activitySites(profile.epoch,routes) : [];
     const people=makeAgents(profile.people,'people',routes,random,profile.flow,sites);
     const dogs=makeAgents(profile.dogs,'dogs',routes,random,profile.flow,sites);
     const birds=makeAgents(profile.pigeons,'birds',routes,random,profile.flow,sites);
@@ -382,24 +382,14 @@ export function createInhabitants({ streets=[] }={}){
         }
       });
     },
-    // Le figure di Blender prendono il posto dei manichini nelle fasi in cui
-    // l'abito è documentato: il 79, l'eruzione e i recuperi del I–III secolo,
-    // che vestono allo stesso modo, lo scavo borbonico (Fabris 1776) e oggi. Ai recuperi lavorano uomini: niente donne
-    // né cittadini col pallio [scelta di regia]. Le altre fasi tengono i
-    // manichini finché le loro vesti non hanno una fonte, e la differenza si
-    // vede: è la regola del progetto, realismo solo dove è documentato.
+    // Le figure di Blender prendono il posto dei manichini nelle popolazioni
+    // che dichiarano una «serie» (vedi data/populations.js): solo dove l'abito
+    // è documentato. Le altre tengono i manichini, e la differenza si vede:
+    // è la regola del progetto, realismo solo dove è documentato.
     usaFigure(fig){
-      // fase → serie di figure, e se serve quali ruoli. La fase 8 è oggi:
-      // turisti, archeologi e operai (strumenti/blender/figure_oggi.py)
-      const FASI = {
-        0:{ serie:'romane' }, 1:{ serie:'romane' },
-        2:{ serie:'romane', ruoli:['popolano','servo','ragazzo'] },
-        6:{ serie:'borbonici' },
-        7:{ serie:'oggi' }
-      };
       for(const item of populationGroups){
-        if(!(item.profile.epoch in FASI)) continue;
-        const { serie, ruoli } = FASI[item.profile.epoch];
+        const { serie, ruoli } = item.profile;
+        if(!serie || !item.people.length) continue;
         const varianti = fig.varianti.filter(v => v.serie === serie && (!ruoli || ruoli.includes(v.ruolo)));
         if(!varianti.length) continue;
         const random = seeded(0xf16 + item.profile.epoch*31);
