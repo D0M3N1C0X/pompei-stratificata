@@ -77,7 +77,10 @@ export default {
         "m1738": "<b>I cunicoli borbonici, dal 1738.</b> Tutto è sotto 20 m di deposito; si scava per pozzi e gallerie, a partire dal teatro. In superficie, velata, la città di <b>oggi</b>: la pianta di Resina nel Settecento non la ho.",
         "m1958": "<b>La fine della campagna di Maiuri, 1958.</b> Le insulae sono scoperte. Terrazze, Terme Suburbane e spiaggia si scaveranno dal 1980, la Villa dei Papiri dal 1996: sono ancora sepolte [delimitazione per zone, non edificio per edificio].",
         "moggi": "<b>Oggi.</b> Tutto ciò che è stato portato alla luce, con la città moderna sopra il fronte di scavo."
-      }
+      },
+      "scendi": "Scendi al teatro",
+      "risali": "Torna in superficie",
+      "galleriaNota": "<b>Le gallerie borboniche.</b> Sei in fondo al pozzo dell'ingresso di Corso Resina, circa 25 m sotto la strada; la galleria porta alla cavità del teatro. Documentati: la profondità, l'orchestra di marmo bianco, i due piloni settecenteschi di La Vega nella scena, circa 2.500 posti [Parco]. Le misure del teatro e il tracciato dei cunicoli non li ho: le proporzioni sono schematiche."
     },
     "cmp": {
       "titoli": "<div class=\"cmpT\"><b>POMPEI</b><span>circa 5 m di deposito, di cui 3,1–3,3 m di lapilli pomicei</span><em>il piano superiore resta fuori</em></div>\n<div class=\"cmpT\"><b>ERCOLANO</b><span>circa 20 m di correnti piroclastiche: la casa sparisce tutta</span><em>sopra, la città moderna — Resina fino al 1969</em></div>",

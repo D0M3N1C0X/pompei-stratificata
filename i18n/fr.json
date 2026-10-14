@@ -67,7 +67,10 @@
         "m1738": "<b>Les galeries bourboniennes, à partir de 1738.</b> Tout est sous 20 m de dépôt ; on fouille par puits et galeries, en partant du théâtre. En surface, voilée, la ville d'<b>aujourd'hui</b> : je n'ai pas le plan de la Resina du XVIIIe siècle.",
         "m1958": "<b>La fin de la campagne de Maiuri, 1958.</b> Les insulae sont dégagées. Terrasses, Thermes suburbains et plage seront fouillés à partir de 1980, la Villa des Papyrus à partir de 1996 : ils sont encore ensevelis [délimitation par zones, pas bâtiment par bâtiment].",
         "moggi": "<b>Aujourd'hui.</b> Tout ce qui a été mis au jour, avec la ville moderne au-dessus du front de fouille."
-      }
+      },
+      "scendi": "Descendre au théâtre",
+      "risali": "Remonter",
+      "galleriaNota": "<b>Les galeries bourboniennes.</b> Vous êtes au fond du puits de l'entrée de Corso Resina, à environ 25 m sous la rue ; la galerie mène à la cavité du théâtre. Documentés : la profondeur, l'orchestre de marbre blanc, les deux piliers du XVIIIe siècle de La Vega dans la scène, environ 2 500 places [Parc]. Je n'ai ni les mesures du théâtre ni le tracé des galeries : les proportions sont schématiques."
     },
     "cmp": {
       "titolo": "Pourquoi Herculanum n'est pas Pompéi",
