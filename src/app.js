@@ -2000,6 +2000,7 @@ function setErc(v){
   }
   setErcAlto(false);
   aggiornaComandiErcolano();
+  if(ercOn) segnaMomento(ERCOLANO.momentoAttivo());
   if(!ercOn){
     document.getElementById('btnTop').classList.toggle('on', overview);
     document.getElementById('btnFly').classList.toggle('on', flyMode);
@@ -2027,6 +2028,20 @@ document.getElementById('ercBuried').addEventListener('click', () => {
   segnaSotto(v, 'teatro');
   if(v && !ERCOLANO.inVolo()) setErcAlto(true);   // da terra non si vedrebbe
 });
+// I quattro momenti di Ercolano (14 ottobre 2026): ognuno cambia deposito,
+// case e superficie, e ha una riga che dice che cosa si sta guardando.
+function segnaMomento(mo){
+  document.querySelectorAll('#ercMomenti [data-momento]').forEach(b =>
+    b.classList.toggle('on', b.dataset.momento === mo));
+  document.getElementById('ercMomentoNota').innerHTML = t('ui.erc.momentoNota.m' + mo);
+}
+function setMomentoErc(mo){
+  const v = ERCOLANO.setMomento(mo);
+  segnaMomento(v);
+  scriviStato();
+}
+document.querySelectorAll('#ercMomenti [data-momento]').forEach(b =>
+  b.addEventListener('click', () => setMomentoErc(b.dataset.momento)));
 for(const dove of ['teatro', 'vasca'])
   document.getElementById(dove === 'teatro' ? 'ercSottoTeatro' : 'ercSottoVasca')
     .addEventListener('click', () => { ERCOLANO.guardaSotto(dove); segnaSotto(true, dove); });
@@ -2393,8 +2408,9 @@ function scriviStato(){
   if(!statoPronto || presenting) return;
   const u = new URL(location.href);
   const q = u.searchParams;
-  ['fase','luogo','vista'].forEach(k => q.delete(k));
+  ['fase','luogo','vista','momento'].forEach(k => q.delete(k));
   if(ercOn) q.set('vista', 'ercolano');
+  if(ercOn && ERCOLANO.momentoAttivo() !== 'oggi') q.set('momento', ERCOLANO.momentoAttivo());
   else if(compareOn) q.set('vista', 'confronto');
   if(!ercOn && !compareOn && (epoch !== 0 || luogoAperto)) q.set('fase', String(epoch + 1));
   if(luogoAperto && !compareOn) q.set('luogo', luogoAperto);
@@ -2414,6 +2430,7 @@ function applicaCollegamento(){
   if(vista === 'confronto'){ setCompare(true); usato = true; }
   else if(vista === 'ercolano'){
     setErc(true); usato = true;
+    if(q.get('momento')) setMomentoErc(q.get('momento'));
     if(luogo && ERCOLANO.luoghi.some(p => p.id === luogo)) ERCOLANO.apri(luogo);
   } else {
     const h = luogo ? byId[luogo] : null;

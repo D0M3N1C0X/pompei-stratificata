@@ -55,7 +55,19 @@
       "indietro": "▼ atrás",
       "nota": "Caminas <b>solo por donde se ha excavado de verdad</b>: cuatro insulae\nenteras más las dos Orientalis. Todo lo demás es depósito, y está dibujado como\ndepósito — con la ciudad moderna encima. <span class=\"ercWarn\">La escena está\nconstruida según la convención del yacimiento (Decumanus Maximus hacia el monte,\nmar hacia abajo): la orientación real no está verificada.</span>",
       "comandi": "<span><kbd>W A S D</kbd> caminar</span><span><kbd>ratón</kbd> mirar</span>\n<span><kbd>clic</kbd> abrir la ficha</span><span><kbd>Esc</kbd> soltar</span>",
-      "vicino": "▸ {nome} — haz clic"
+      "vicino": "▸ {nome} — haz clic",
+      "momenti": {
+        "m79": "79",
+        "m1738": "1738",
+        "m1958": "1958",
+        "oggi": "Hoy"
+      },
+      "momentoNota": {
+        "m79": "<b>La víspera, año 79.</b> Las insulae excavadas enteras, con sus tejados. Más allá de la línea verde la ciudad seguía, pero su plano es desconocido: allí el terreno queda vacío.",
+        "m1738": "<b>Las galerías borbónicas, desde 1738.</b> Todo está bajo 20 m de depósito; se excava por pozos y galerías, empezando por el teatro. En la superficie, velada, la ciudad de <b>hoy</b>: no tengo el plano de la Resina del siglo XVIII.",
+        "m1958": "<b>El final de la campaña de Maiuri, 1958.</b> Las insulae están al descubierto. Terrazas, Termas Suburbanas y playa se excavarán desde 1980, la Villa de los Papiros desde 1996: siguen enterradas [delimitación por zonas, no edificio por edificio].",
+        "moggi": "<b>Hoy.</b> Todo lo que se ha sacado a la luz, con la ciudad moderna sobre el frente de excavación."
+      }
     },
     "cmp": {
       "titolo": "Por qué Herculano no es Pompeya",

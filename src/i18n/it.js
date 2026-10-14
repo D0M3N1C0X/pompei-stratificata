@@ -65,7 +65,19 @@ export default {
       "comandi": "<span><kbd>W A S D</kbd> cammina</span><span><kbd>mouse</kbd> guarda</span>\n<span><kbd>clic</kbd> apri la scheda</span><span><kbd>Esc</kbd> sblocca</span>",
       "avanti": "▲ avanti",
       "indietro": "▼ indietro",
-      "vicino": "▸ {nome} — clicca"
+      "vicino": "▸ {nome} — clicca",
+      "momenti": {
+        "m79": "79",
+        "m1738": "1738",
+        "m1958": "1958",
+        "oggi": "Oggi"
+      },
+      "momentoNota": {
+        "m79": "<b>La vigilia, 79 d.C.</b> Le insulae scavate intere, con i tetti. Oltre la linea verde la città continuava, ma la sua pianta è ignota: lì il terreno resta vuoto.",
+        "m1738": "<b>I cunicoli borbonici, dal 1738.</b> Tutto è sotto 20 m di deposito; si scava per pozzi e gallerie, a partire dal teatro. In superficie, velata, la città di <b>oggi</b>: la pianta di Resina nel Settecento non la ho.",
+        "m1958": "<b>La fine della campagna di Maiuri, 1958.</b> Le insulae sono scoperte. Terrazze, Terme Suburbane e spiaggia si scaveranno dal 1980, la Villa dei Papiri dal 1996: sono ancora sepolte [delimitazione per zone, non edificio per edificio].",
+        "moggi": "<b>Oggi.</b> Tutto ciò che è stato portato alla luce, con la città moderna sopra il fronte di scavo."
+      }
     },
     "cmp": {
       "titoli": "<div class=\"cmpT\"><b>POMPEI</b><span>circa 5 m di deposito, di cui 3,1–3,3 m di lapilli pomicei</span><em>il piano superiore resta fuori</em></div>\n<div class=\"cmpT\"><b>ERCOLANO</b><span>circa 20 m di correnti piroclastiche: la casa sparisce tutta</span><em>sopra, la città moderna — Resina fino al 1969</em></div>",
