@@ -1,5 +1,7 @@
 import { DEC_MAX, DEC_INF, C3, C4, C5, BEACH_Y, LUOGHI } from './data/ercolano-places.js';
-import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79 } from './ercolano-pianta.js';
+import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79, percorsi } from './ercolano-pianta.js';
+import { createInhabitants } from './scene/inhabitants.js';
+import { POPULATIONS_ERCOLANO } from './data/populations.js';
 import { PAL } from './scene/palette.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
@@ -134,6 +136,9 @@ export const ERCOLANO = (function(){
   const solidiDeposito = { oggi:[], '1958':[], '1738':[], '79':[] };
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'rovina', parent:G.rovine, solids });
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'intera', parent:G.intere, solids:[] });
+  // gli abitanti: le stesse figure di Pompei, sulle vie della pianta vera
+  const abitanti = createInhabitants({ streets:percorsi(), populations:POPULATIONS_ERCOLANO, places:false });
+  eRoot.add(abitanti.group);
   const M_LINEA = new LineBasicMaterial({ color:PAL.accent });
   terreno79({ terra:M.terra, sabbia:M.sabbia, acqua:M.acqua, linea:M_LINEA, parent:G.terra79, LineLoop, BufferGeometry, Vector3 });
 
@@ -416,6 +421,7 @@ export const ERCOLANO = (function(){
 
   function update(dt, elapsed){
     muovi(dt);
+    abitanti.update(elapsed, dt, 0);
     eCam.position.set(pos.x, volo ? pos.y : pos.y + EYE, pos.z);
     eCam.rotation.set(0,0,0);
     eCam.rotateY(yaw);
@@ -526,6 +532,7 @@ export const ERCOLANO = (function(){
       mt.depthWrite = mo !== '1738'; mt.needsUpdate = true;
     }
     griglia(solidiDeposito[mo]);
+    abitanti.setEpoch(MOMENTI.indexOf(mo));
     // nel 1738 a terra non si sta: tutto è sotto 20 m di deposito
     if(mo === '1738' && !volo){ volo = true; pos.y = SCARP_H + 6; pitch = -0.4; }
     return momento;
@@ -581,6 +588,7 @@ export const ERCOLANO = (function(){
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
+           usaFigure: f => abitanti.usaFigure(f),
            momenti: MOMENTI, luoghi: LUOGHI,
            isActive: () => active };
 })();

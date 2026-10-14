@@ -852,7 +852,7 @@ const inhabitants = createInhabitants({ streets:STREETS });
 scene.add(inhabitants.group);
 // le figure di Blender arrivano dopo il primo disegno: fino ad allora, e se
 // qualcosa va storto, restano i manichini
-caricaFigure().then(f => { inhabitants.usaFigure(f); if(window.pompei) window.pompei.figure = f; })
+caricaFigure().then(f => { inhabitants.usaFigure(f); ERCOLANO.usaFigure(f); if(window.pompei) window.pompei.figure = f; })
   .catch(e => console.warn('Figure del 79 non caricate:', e));
 
 const dummy = new Object3D();
