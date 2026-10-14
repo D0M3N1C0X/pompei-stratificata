@@ -246,6 +246,10 @@ della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
   le vesti di operai e visitatori dello scavo borbonico.
 - OpenStreetMap contributors — pianta dello scavo di Ercolano e della città
   moderna (ODbL), via `strumenti/osm/ercolano_osm.py`.
+- «V. D.» (Wikimedia Commons, utente Ursus, 2009) — schemi delle piante di sei
+  case di Ercolano: pubblico dominio, Casa Sannitica CC BY-SA 4.0. Gli interni
+  della scena ne riprendono la disposizione, riscalata sul contorno OSM, via
+  `strumenti/piante/case_ercolano.py`.
 - Mau, A. (1899). *Pompeii, its Life and Art*, trad. F. W. Kelsey, cap. XXXI
   (Project Gutenberg 42715) — larghezze delle vie, marciapiedi rialzati, pietre
   di passaggio.
