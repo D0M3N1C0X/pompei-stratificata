@@ -55,7 +55,19 @@
       "indietro": "▼ zurück",
       "nota": "Sie gehen <b>nur dort, wo wirklich gegraben wurde</b>: vier vollständige\nInsulae und die beiden Orientalis. Alles andere ist Ablagerung und ist auch als\nAblagerung gezeichnet — mit der modernen Stadt darüber. <span class=\"ercWarn\">Die\nSzene folgt der Ortskonvention (Decumanus Maximus hangaufwärts, Meer hangabwärts):\ndie tatsächliche Ausrichtung ist nicht überprüft.</span>",
       "comandi": "<span><kbd>W A S D</kbd> gehen</span><span><kbd>Maus</kbd> umsehen</span>\n<span><kbd>Klick</kbd> Karte öffnen</span><span><kbd>Esc</kbd> freigeben</span>",
-      "vicino": "▸ {nome} — klicken"
+      "vicino": "▸ {nome} — klicken",
+      "momenti": {
+        "m79": "79",
+        "m1738": "1738",
+        "m1958": "1958",
+        "oggi": "Heute"
+      },
+      "momentoNota": {
+        "m79": "<b>Der Vorabend, 79 n. Chr.</b> Die ausgegrabenen Insulae vollständig, mit Dächern. Jenseits der grünen Linie ging die Stadt weiter, aber ihr Plan ist unbekannt: dort bleibt der Boden leer.",
+        "m1738": "<b>Die bourbonischen Stollen, ab 1738.</b> Alles liegt unter 20 m Ablagerung; gegraben wird durch Schächte und Stollen, ausgehend vom Theater. An der Oberfläche, verschleiert, die Stadt von <b>heute</b>: Den Plan von Resina im 18. Jahrhundert habe ich nicht.",
+        "m1958": "<b>Das Ende von Maiuris Kampagne, 1958.</b> Die Insulae sind freigelegt. Terrassen, Vorstadtthermen und Strand werden ab 1980 ausgegraben, die Villa dei Papiri ab 1996: sie sind noch verschüttet [nach Zonen abgegrenzt, nicht Gebäude für Gebäude].",
+        "moggi": "<b>Heute.</b> Alles, was ans Licht gebracht wurde, mit der modernen Stadt über der Grabungskante."
+      }
     },
     "cmp": {
       "titolo": "Warum Herculaneum nicht Pompeji ist",

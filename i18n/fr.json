@@ -55,7 +55,19 @@
       "indietro": "▼ arrière",
       "nota": "Vous ne marchez <b>que là où l'on a réellement fouillé</b> : quatre insulae\nentières plus les deux Orientalis. Tout le reste est du dépôt, et il est dessiné\ncomme du dépôt — avec la ville moderne au-dessus. <span class=\"ercWarn\">La scène\nest construite selon la convention du site (Decumanus Maximus en amont, mer en\naval) : l'orientation réelle n'est pas vérifiée.</span>",
       "comandi": "<span><kbd>Z Q S D</kbd> marcher</span><span><kbd>souris</kbd> regarder</span>\n<span><kbd>clic</kbd> ouvrir la fiche</span><span><kbd>Échap</kbd> libérer</span>",
-      "vicino": "▸ {nome} — cliquez"
+      "vicino": "▸ {nome} — cliquez",
+      "momenti": {
+        "m79": "79",
+        "m1738": "1738",
+        "m1958": "1958",
+        "oggi": "Aujourd'hui"
+      },
+      "momentoNota": {
+        "m79": "<b>La veille, 79 apr. J.-C.</b> Les insulae fouillées entières, avec leurs toits. Au-delà de la ligne verte la ville continuait, mais son plan est inconnu : le terrain y reste vide.",
+        "m1738": "<b>Les galeries bourboniennes, à partir de 1738.</b> Tout est sous 20 m de dépôt ; on fouille par puits et galeries, en partant du théâtre. En surface, voilée, la ville d'<b>aujourd'hui</b> : je n'ai pas le plan de la Resina du XVIIIe siècle.",
+        "m1958": "<b>La fin de la campagne de Maiuri, 1958.</b> Les insulae sont dégagées. Terrasses, Thermes suburbains et plage seront fouillés à partir de 1980, la Villa des Papyrus à partir de 1996 : ils sont encore ensevelis [délimitation par zones, pas bâtiment par bâtiment].",
+        "moggi": "<b>Aujourd'hui.</b> Tout ce qui a été mis au jour, avec la ville moderne au-dessus du front de fouille."
+      }
     },
     "cmp": {
       "titolo": "Pourquoi Herculanum n'est pas Pompéi",

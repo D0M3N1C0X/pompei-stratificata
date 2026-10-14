@@ -55,7 +55,19 @@
       "indietro": "▼ back",
       "nota": "You can walk <b>only where the site has actually been dug</b>: four\ncomplete insulae plus the two Orientalis. Everything else is deposit, and is\ndrawn as deposit — with the modern town on top. <span class=\"ercWarn\">The scene\nis built to the site convention (Decumanus Maximus uphill, sea downhill): the\ntrue orientation is unverified.</span>",
       "comandi": "<span><kbd>W A S D</kbd> walk</span><span><kbd>mouse</kbd> look</span>\n<span><kbd>click</kbd> open the card</span><span><kbd>Esc</kbd> release</span>",
-      "vicino": "▸ {nome} — click"
+      "vicino": "▸ {nome} — click",
+      "momenti": {
+        "m79": "79",
+        "m1738": "1738",
+        "m1958": "1958",
+        "oggi": "Today"
+      },
+      "momentoNota": {
+        "m79": "<b>The eve, AD 79.</b> The excavated insulae whole, with their roofs. Beyond the green line the town went on, but its plan is unknown: the ground there stays empty.",
+        "m1738": "<b>The Bourbon tunnels, from 1738.</b> Everything lies under 20 m of deposit; digging goes by shafts and tunnels, starting from the theatre. On the surface, veiled, <b>today's</b> town: I do not have the plan of eighteenth-century Resina.",
+        "m1958": "<b>The end of Maiuri's campaign, 1958.</b> The insulae are uncovered. Terraces, Suburban Baths and beach will be dug from 1980, the Villa of the Papyri from 1996: they are still buried [delimited by zones, not building by building].",
+        "moggi": "<b>Today.</b> Everything brought to light, with the modern town above the excavation face."
+      }
     },
     "cmp": {
       "titolo": "Why Herculaneum is not Pompeii",

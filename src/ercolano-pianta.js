@@ -83,12 +83,38 @@ const T = new Object3D();
    cinquecento strisce sarebbero cinquecento oggetti. «campo» è un
    rettangolo (in unità) che usa materiali propri: sopra la vasca della
    Palestra il deposito deve velarsi di più (vedi VELATI in ercolano.js). */
-export function deposito({ materiali, campo, materialiCampo, parent, solids }){
+// Le righe di deposito secondo il momento:
+//   oggi  la maschera così com'è
+//   1958  in più il settore meridionale (terrazze, terme, spiaggia: scavati
+//         dal 1980, Maggi) e la Villa dei Papiri (1996–2008) [delimitazione
+//         per zone, non edificio per edificio]
+//   1738  tutto sepolto
+function righe(momento){
+  const M = PIANTA.maschera;
+  return M.deposito.map((dep, j) => {
+    if(momento === '1738') return [[0, M.nx]];
+    if(momento !== '1958') return dep;
+    const zm = M.z0 + (j + 0.5) * M.cella;
+    if(zm > 80) return [[0, M.nx]];
+    const iVilla = Math.floor((-100 - M.x0) / M.cella);        // la Villa sta oltre x −100 m
+    const out = dep.map(r => r.slice());
+    out.push([0, iVilla]);
+    out.sort((a, b) => a[0] - b[0]);
+    const unite = [];
+    for(const r of out){
+      const u = unite[unite.length - 1];
+      if(u && r[0] <= u[1]) u[1] = Math.max(u[1], r[1]); else unite.push(r);
+    }
+    return unite;
+  });
+}
+
+export function deposito({ materiali, campo, materialiCampo, parent, solids, momento = 'oggi' }){
   const M = PIANTA.maschera, C = m(M.cella), X0 = m(M.x0), Z0 = m(M.z0);
   const bande = [1.1, 0.9, 1.2, 0.8, 1.0];             // in unità, somma 5 = 20 m
   const base = QUOTA.spiaggia;
   const pezzi = { fuori:[], campo:[] };
-  M.deposito.forEach((corse, j) => {
+  righe(momento).forEach((corse, j) => {
     const z = Z0 + (j + 0.5) * C;
     for(const [i0, i1] of corse){
       let a = X0 + i0*C, b = X0 + i1*C;
@@ -257,6 +283,44 @@ export function cittaModerna({ muri, tetti, asfalto, parent }){
   if(coperture.length){ const s = new Mesh(mergeGeometries(coperture, false), tetti); s.receiveShadow = true; parent.add(s); out.push(s); }
   if(strade.length){ const s = new Mesh(mergeGeometries(strade, false), asfalto); s.receiveShadow = true; parent.add(s); out.push(s); }
   return out;
+}
+
+/* ----------------------------------------------------------------- il 79
+   Senza deposito: il terreno antico alle sue tre quote, il mare oltre la
+   spiaggia [linea di costa: ipotesi, ~140 m dal Decumano Inferiore], e una
+   linea color accento attorno a ciò che è scavato. Oltre la linea la città
+   continuava, ma la sua pianta è ignota: lì il terreno resta vuoto. */
+function inviluppo(punti){
+  const p = punti.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const cr = (o, a, b) => (a[0]-o[0])*(b[1]-o[1]) - (a[1]-o[1])*(b[0]-o[0]);
+  const giu = [], su = [];
+  for(const q of p){ while(giu.length >= 2 && cr(giu[giu.length-2], giu[giu.length-1], q) <= 0) giu.pop(); giu.push(q); }
+  for(const q of p.reverse()){ while(su.length >= 2 && cr(su[su.length-2], su[su.length-1], q) <= 0) su.pop(); su.push(q); }
+  return giu.slice(0, -1).concat(su.slice(0, -1));
+}
+export function terreno79({ terra, sabbia, acqua, linea, parent, LineLoop, BufferGeometry, Vector3 }){
+  const lastra = (x0, x1, z0, z1, y, mat) => {
+    const g = new Mesh(BOX, mat);
+    g.position.set((x0+x1)/2, y - 0.06, (z0+z1)/2); g.scale.set(x1-x0, 0.12, z1-z0);
+    g.receiveShadow = true; parent.add(g);
+  };
+  lastra(-85, 85, -70, m(Z_TERRAZZA), QUOTA.citta, terra);
+  lastra(-85, 85, m(Z_TERRAZZA), m(Z_SPIAGGIA), QUOTA.terrazza, terra);
+  lastra(-85, 85, m(Z_SPIAGGIA), m(140), QUOTA.spiaggia, sabbia);
+  lastra(-85, 85, m(140), 80, QUOTA.spiaggia - 0.05, acqua);
+  // i salti fra le quote: senza, fra una lastra e l'altra restava il cielo
+  const salto = (z, y0, y1) => {
+    const g = new Mesh(BOX, terra);
+    g.position.set(0, (y0 + y1)/2, z); g.scale.set(170, y1 - y0, 0.3);
+    g.receiveShadow = g.castShadow = true; parent.add(g);
+  };
+  salto(m(Z_TERRAZZA), QUOTA.terrazza - 0.12, QUOTA.citta);
+  salto(m(Z_SPIAGGIA), QUOTA.spiaggia - 0.12, QUOTA.terrazza);
+  const tutti = PIANTA.edifici.flatMap(e => e.punti).concat(PIANTA.palestra ? PIANTA.palestra.punti : []);
+  const h = inviluppo(tutti).map(([x, z]) => new Vector3(m(x), 0.08, m(z)));
+  const l = new LineLoop(new BufferGeometry().setFromPoints(h), linea);
+  parent.add(l);
+  return l;
 }
 
 export { PIANTA, centro };

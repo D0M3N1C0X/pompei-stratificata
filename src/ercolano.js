@@ -1,5 +1,5 @@
 import { DEC_MAX, DEC_INF, C3, C4, C5, BEACH_Y, LUOGHI } from './data/ercolano-places.js';
-import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna } from './ercolano-pianta.js';
+import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79 } from './ercolano-pianta.js';
 import { PAL } from './scene/palette.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
@@ -122,7 +122,20 @@ export const ERCOLANO = (function(){
   flat(-12, TER_Y, 24.1, 150, 8.3, M.terra);
   flat(-12, BEACH_Y, 32.2, 150, 8, M.sabbia);
   vie({ basolato:M.strada, marciapiede:M.marcia, parent:eRoot });
-  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'rovina', parent:eRoot, solids });
+
+  /* ---------------------------------------------------- i quattro momenti
+     79: la città intera, senza deposito · 1738: tutto sepolto, i cunicoli ·
+     1958: la fine della campagna di Maiuri · oggi: lo scavo com'è.
+     Ogni momento accende i suoi gruppi e ricostruisce le collisioni. */
+  const MOMENTI = ['79', '1738', '1958', 'oggi'];
+  const G = Object.fromEntries(['rovine', 'intere', 'dep_oggi', 'dep_1958', 'dep_1738', 'terra79'].map(k => {
+    const g = new Group(); g.name = k; eRoot.add(g); return [k, g];
+  }));
+  const solidiDeposito = { oggi:[], '1958':[], '1738':[], '79':[] };
+  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'rovina', parent:G.rovine, solids });
+  caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto], modo:'intera', parent:G.intere, solids:[] });
+  const M_LINEA = new LineBasicMaterial({ color:PAL.accent });
+  terreno79({ terra:M.terra, sabbia:M.sabbia, acqua:M.acqua, linea:M_LINEA, parent:G.terra79, LineLoop, BufferGeometry, Vector3 });
 
   // ---- INSULA ORIENTALIS II — la Palestra
   // Campo di 77 × 47 m (Maiuri 1960, «l'area rettangolare della palestra»):
@@ -140,17 +153,19 @@ export const ERCOLANO = (function(){
   // cardini: il campo di 77 × 47 m entra solo con il lato lungo sui cardini
   // [dedotto], e il lato ovest lascia ~30 m alle sale su Cardo V, la parte
   // scavata. La vasca, con il braccio lungo sul lato lungo, ruota con lui.
-  const PAL = ANCORE.palestra;
-  const CAMPO = { x1:PAL.x1 - 0.5, z0:(PAL.z0 + PAL.z1)/2 - 77/U/2, z1:(PAL.z0 + PAL.z1)/2 + 77/U/2 };
+  const PALESTRA = ANCORE.palestra;
+  const CAMPO = { x1:PALESTRA.x1 - 0.5, z0:(PALESTRA.z0 + PALESTRA.z1)/2 - 77/U/2, z1:(PALESTRA.z0 + PALESTRA.z1)/2 + 77/U/2 };
   CAMPO.x0 = CAMPO.x1 - 47/U;
   const PX = (CAMPO.x0 + CAMPO.x1)/2, PZ = (CAMPO.z0 + CAMPO.z1)/2;
   for(let i=-2;i<=2;i++)                                   // portico ovest, schematico
-    box(PAL.x0 + 0.9, 0, PZ + i*2.4, m(0.6), m(4.2), m(0.6), M.colonna);
+    box(PALESTRA.x0 + 0.9, 0, PZ + i*2.4, m(0.6), m(4.2), m(0.6), M.colonna);
   // Materiali propri, gli stessi colori: con «Guarda sotto la città» le sei
   // facce sovrapposte delle bande, a 0,40 l'una, sommate erano opache e la
   // vasca non si vedeva. Questi si velano di più (VELATI, più sotto).
   const DEP_CAMPO = [mat(0x86806f, 'ash'), mat(0x6e695d, 'ash'), mat(0x504c44, 'ash')];
-  deposito({ materiali:[M.dep1, M.dep2, M.dep3], campo:CAMPO, materialiCampo:DEP_CAMPO, parent:eRoot, solids });
+  for(const mo of ['oggi', '1958', '1738'])
+    deposito({ materiali:[M.dep1, M.dep2, M.dep3], campo:CAMPO, materialiCampo:DEP_CAMPO,
+               parent:G['dep_' + mo], solids:solidiDeposito[mo], momento:mo });
 
   const vasca = new Group();
   vasca.position.set(PX, TOWN_Y, PZ);
@@ -265,14 +280,18 @@ export const ERCOLANO = (function(){
   const NX = Math.ceil(GW/CELL), NZ = Math.ceil(GD/CELL);
   const grid = new Uint8Array(NX*NZ);
   const EYE = 0.45, RAD = 0.32;         // 1,80 m di altezza occhio
-  solids.forEach(s => {
-    if(s.y1 < EYE * 0.9) return;        // sotto il ginocchio: si scavalca
-    const i0 = Math.max(0, Math.floor((s.x0 - GX0 - RAD)/CELL));
-    const i1 = Math.min(NX-1, Math.ceil((s.x1 - GX0 + RAD)/CELL));
-    const j0 = Math.max(0, Math.floor((s.z0 - GZ0 - RAD)/CELL));
-    const j1 = Math.min(NZ-1, Math.ceil((s.z1 - GZ0 + RAD)/CELL));
-    for(let i=i0;i<=i1;i++) for(let j=j0;j<=j1;j++) grid[j*NX+i] = 1;
-  });
+  // si ricostruisce a ogni cambio di momento: il deposito non è lo stesso
+  function griglia(extra){
+    grid.fill(0);
+    for(const s of solids.concat(extra)){
+      if(s.y1 < EYE * 0.9) continue;    // sotto il ginocchio: si scavalca
+      const i0 = Math.max(0, Math.floor((s.x0 - GX0 - RAD)/CELL));
+      const i1 = Math.min(NX-1, Math.ceil((s.x1 - GX0 + RAD)/CELL));
+      const j0 = Math.max(0, Math.floor((s.z0 - GZ0 - RAD)/CELL));
+      const j1 = Math.min(NZ-1, Math.ceil((s.z1 - GZ0 + RAD)/CELL));
+      for(let i=i0;i<=i1;i++) for(let j=j0;j<=j1;j++) grid[j*NX+i] = 1;
+    }
+  }
   function bloccato(x, z){
     const i = Math.floor((x - GX0)/CELL), j = Math.floor((z - GZ0)/CELL);
     if(i < 0 || j < 0 || i >= NX || j >= NZ) return true;
@@ -483,9 +502,35 @@ export const ERCOLANO = (function(){
       m.depthWrite = !sepoltoOn;
       m.needsUpdate = true;
     }
+    // spegnendo la vista «sotto» nel 1738 la città di oggi torna velata
+    if(!sepoltoOn && momento === '1738') setMomento('1738');
     return sepoltoOn;
   }
   function sepoltoAttivo(){ return sepoltoOn; }
+
+  let momento = 'oggi';
+  function setMomento(mo){
+    if(!MOMENTI.includes(mo)) mo = 'oggi';
+    momento = mo;
+    G.rovine.visible = mo === 'oggi' || mo === '1958';
+    G.intere.visible = mo === '79';
+    G.terra79.visible = mo === '79';
+    G.dep_oggi.visible = mo === 'oggi';
+    G.dep_1958.visible = mo === '1958';
+    G.dep_1738.visible = mo === '1738';
+    modern.visible = mo !== '79';
+    // nel 1738 la città di oggi resta come segnaposto velato: la pianta di
+    // Resina nel Settecento non l'ho (scelta di Domenico, 14 ottobre 2026)
+    if(!sepoltoOn) for(const mt of [M.moderno, M.tettoM, M.asfalto]){
+      mt.transparent = mo === '1738'; mt.opacity = mo === '1738' ? 0.28 : 1;
+      mt.depthWrite = mo !== '1738'; mt.needsUpdate = true;
+    }
+    griglia(solidiDeposito[mo]);
+    // nel 1738 a terra non si sta: tutto è sotto 20 m di deposito
+    if(mo === '1738' && !volo){ volo = true; pos.y = SCARP_H + 6; pitch = -0.4; }
+    return momento;
+  }
+  function momentoAttivo(){ return momento; }
   // Due cose sepolte, due inquadrature. Da qualunque altro punto restano
   // dietro il deposito: il teatro si vede da oltre il fronte, guardando a
   // monte e in basso; la vasca dall'alto, dal lato del mare.
@@ -531,8 +576,11 @@ export const ERCOLANO = (function(){
     cbs.openPanel && cbs.openPanel(h.data);
   }
 
+  setMomento('oggi');
+
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, apri, textures, dallAlto, inVolo,
-           mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, luoghi: LUOGHI,
+           mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
+           momenti: MOMENTI, luoghi: LUOGHI,
            isActive: () => active };
 })();

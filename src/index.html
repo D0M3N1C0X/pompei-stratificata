@@ -579,6 +579,8 @@
     .ercBar{gap:6px;padding:7px 9px}
   }
   .ercSotto{display:inline-flex;gap:6px}
+  .ercMomenti{display:inline-flex;gap:4px}
+  .ercMomentoNota:empty{display:none}
   .ercSotto[hidden]{display:none}
   #touchHint{transition:opacity .6s;opacity:1}
   #touchHint.faded{opacity:0}
@@ -687,6 +689,12 @@ body.erc-on #crosshair{ display:block !important; }
 <div id="ercHud" hidden>
   <div class="ercBar">
     <span class="ercName" data-i18n="ui.erc.nome">Ercolano — lo scavo</span>
+    <span class="ercMomenti" id="ercMomenti" role="group">
+      <button class="tourBtn" data-momento="79" data-i18n="ui.erc.momenti.m79">79</button>
+      <button class="tourBtn" data-momento="1738" data-i18n="ui.erc.momenti.m1738">1738</button>
+      <button class="tourBtn" data-momento="1958" data-i18n="ui.erc.momenti.m1958">1958</button>
+      <button class="tourBtn on" data-momento="oggi" data-i18n="ui.erc.momenti.oggi">Oggi</button>
+    </span>
     <span class="ercNear" id="ercNear"></span>
     <button class="tourBtn" id="ercBuried" data-i18n="ui.erc.sepolto">Guarda sotto la città</button>
     <span class="ercSotto" id="ercSotto" hidden>
@@ -696,6 +704,7 @@ body.erc-on #crosshair{ display:block !important; }
     <button class="tourBtn" id="ercReset" data-i18n="ui.erc.incrocio">Torna all'incrocio</button>
     <button class="tourBtn" id="ercExit" data-i18n="ui.erc.esci">Torna a Pompei</button>
   </div>
+  <div class="ercNote ercMomentoNota" id="ercMomentoNota"></div>
   <div class="ercNote" data-i18n-html="ui.erc.nota">
     Cammini <b>solo dove si è scavato davvero</b>: quattro insulae intere più le due
     Orientalis. Tutto il resto è deposito, ed è disegnato come deposito — con la città
