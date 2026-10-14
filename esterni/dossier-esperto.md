@@ -1,7 +1,7 @@
 # Domande aperte per un esperto
 
 *«Dopo il 79 — Pompei ed Ercolano», simulatore 3D documentario di Domenico
-Perroni · stato al 13 ottobre 2026 ·
+Perroni · stato al 14 ottobre 2026 ·
 https://d0m3n1c0x.github.io/pompei-stratificata/*
 
 ## Perché questo documento
@@ -64,15 +64,23 @@ cercare.
 ### A4. Ercolano: la Basilica Noniana
 
 - **Cosa so:** 29 × 16 m, da una fonte terziaria. La voce di Maiuri
-  (Enciclopedia dell'Arte Antica, 1960) non dà misure.
-- **La domanda:** le misure sono confermate? Quanto è scavato a cielo aperto?
+  (Enciclopedia dell'Arte Antica, 1960) non dà misure. A cielo aperto c'è
+  solo il muro est sul Cardo III, scavato nel 1960–62 (Guidobaldi 2009,
+  p. 116). Il modello la disegna sepolta, 16 m sul Decumano Massimo e 29 m
+  sul Cardo III: l'orientamento è dedotto dalla coordinata di Commons, che
+  cade a meno di 4 m dal centro di quel rettangolo.
+- **La domanda:** le misure sono confermate? Quale lato corre sul Decumano?
+  Esiste una pianta pubblicata, anche quella settecentesca di Bardet e
+  Bellicard, con una scala?
 
 ### A5. Ercolano: altezza del fronte di scavo e profondità del teatro
 
 - **Cosa disegna il modello:** fronte di 20 m, valore modale; il teatro
   circa 25 m sotto la quota stradale moderna.
 - **Il conflitto:** lo spessore del deposito va da «16 e più metri» (Maiuri
-  1960) a «circa 20 m» (Parco) a «fino a 30 m» (D'Andrea et al. 2019); il
+  1960) a «circa 20 m» (sito del Parco) a «fino a 30 m» (D'Andrea et al.
+  2019); la guida del Parco del 2024 dice «un'altezza media di circa 16
+  metri», quindi il Parco stesso dà due cifre; il
   teatro sta a 25 m sulla pagina del Parco e a 20 m in una presentazione del
   direttore Sirano rilanciata nel 2020.
 - **La domanda:** c'è una sezione pubblicata, per esempio

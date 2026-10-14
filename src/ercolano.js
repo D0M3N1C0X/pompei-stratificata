@@ -259,6 +259,36 @@ export const ERCOLANO = (function(){
     pozzo.position.set(TEATRO_X + 3.0, (SCARP_H + ORCHESTRA_Y)/2, TEATRO_Z + 1.4);
     sepolto.add(cavea, scaena, orch, pozzo);
   }
+  /* ------------------------------------------------- la Basilica Noniana
+     Sepolta nell'insula VII, all'angolo del Decumano Massimo col Cardo III,
+     di fronte al Collegio degli Augustali; indagata dai Borbone per cunicoli,
+     non visitabile [Commons, categoria «Basilica Noniana (Herculaneum)»; Pleiades].
+     Misure: 29 × 16 m, da una sola fonte terziaria. La coordinata di Commons
+     (40°48'24.84" N, 14°20'51.72" E), proiettata come la pianta OSM, cade a
+     x −59,5, z −75 m: dentro un rettangolo di 16 m sul Decumano e 29 m sul
+     Cardo, appoggiato al filo ovest del Cardo III (x −50,15) e al filo nord
+     del Collegio (z −86), a 3,8 m dal centro. L'orientamento è DEDOTTO così,
+     non documentato; l'altezza (8 m) è di disegno.
+     Oggi se ne vede soltanto il muro est sul Cardo III, scavato nei primi
+     anni Sessanta [pompeiiinpictures, Ins. VII]: si disegna solo nel momento
+     «oggi»; le due porte laterali non sono disegnate, non ne ho la posizione. */
+  const BAS = { x0:m(-66.15), x1:m(-50.15), z0:m(-86), z1:m(-57) };
+  {
+    const h = m(8), t = m(0.6), cx = (BAS.x0 + BAS.x1)/2, cz = (BAS.z0 + BAS.z1)/2;
+    const W = BAS.x1 - BAS.x0, D = BAS.z1 - BAS.z0;
+    const muri = [[cx, BAS.z0 + t/2, W, t], [cx, BAS.z1 - t/2, W, t], [BAS.x0 + t/2, cz, t, D], [BAS.x1 - t/2, cz, t, D]];
+    for(const [x, z, w, d] of muri){
+      const mu = new Mesh(BOXG, M_SEPOLTO); mu.position.set(x, TOWN_Y + h/2, z); mu.scale.set(w, h, d);
+      mu.renderOrder = 10; sepolto.add(mu);
+    }
+    const bordo = [[BAS.x0, BAS.z0], [BAS.x1, BAS.z0], [BAS.x1, BAS.z1], [BAS.x0, BAS.z1]];
+    sepolto.add(new LineLoop(new BufferGeometry().setFromPoints(bordo.map(([x, z]) => new Vector3(x, TOWN_Y + 0.05, z))),
+      new LineBasicMaterial({ color:PAL.accent, depthTest:false })));
+    // il muro est, l'unico a cielo aperto oggi [altezza di disegno]
+    box(BAS.x1 - t/2, TOWN_Y, cz, t, m(4), D, M.tufo2, false, G.dep_oggi);
+    solidiDeposito.oggi.push({ x0:BAS.x1 - t, x1:BAS.x1, z0:BAS.z0, z1:BAS.z1, y1:TOWN_Y + m(4) });
+  }
+
   /* --------------------------------------------- le gallerie borboniche
      Si scende dall'ingresso vero (OSM, Corso Resina) e si arriva in fondo al
      pozzo, ~25 m sotto la strada [Parco]; una galleria porta alla cavità
