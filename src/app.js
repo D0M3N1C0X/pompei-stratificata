@@ -43,7 +43,7 @@ import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
 import { POST } from './post.js';
 import { PAL } from './scene/palette.js';
-import { DOT, PBR, TEX, TEXMAP, px } from './scene/textures.js';
+import { DOT, PBR, TEX, TEXMAP, SCALA_MONDO, mappaMondo, px } from './scene/textures.js';
 import { createInhabitants } from './scene/inhabitants.js';
 import { caricaFigure } from './scene/figure.js';
 import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
@@ -83,6 +83,9 @@ renderer.outputColorSpace = SRGBColorSpace;
 renderer.toneMapping = NeutralToneMapping;
 renderer.toneMappingExposure = 1.20;
 renderer.shadowMap.enabled = true;
+// PCFSoft: provato il 22/10/2026 il PCF con raggio, a Ercolano (texel di
+// 23 cm) faceva scalini a rombo su muri e acqua. La morbidezza delle ombre
+// viene invece dalla luce del cielo più forte (applyLight).
 renderer.shadowMap.type = PCFSoftShadowMap;
 renderer.localClippingEnabled = true;
 app.appendChild(renderer.domElement);
@@ -94,7 +97,7 @@ for(const tx of Object.values(TEX)){ tx.anisotropy = MAXANISO; tx.needsUpdate = 
 DOT.anisotropy = MAXANISO;
 
 POST.init(renderer);
-ERCOLANO.textures(TEX);
+ERCOLANO.textures(TEX, { SCALA_MONDO, mappaMondo });
 
 const scene = new Scene();
 scene.fog = new Fog(PAL.fog, 240, 860);
@@ -863,16 +866,20 @@ const tintColor = new Color();
 function bake(list, color, geo, parent, shadows, vary){
   const texName = TEXMAP.get(color);
   const pbr = PBR[texName];
+  // le texture che portano già il loro colore (tufo, basoli, opus incertum)
+  // non si moltiplicano per il colore della tavolozza
+  const proprio = texName === 'tuff' || texName === 'basoli' || texName === 'incertum';
   const mat = new MeshStandardMaterial({
-    color:texName === 'tuff' ? 0xffffff : color,
+    color:proprio ? 0xffffff : color,
     map:pbr ? pbr.color : (texName ? TEX[texName] : null),
-    normalMap:pbr ? pbr.normal : null,
+    normalMap:pbr ? pbr.normal : (texName === 'basoli' ? TEX.basoliN : null),
     normalScale:new Vector2(0.55,0.55),
     roughnessMap:pbr ? pbr.roughness : null,
     roughness:pbr ? 1 : 0.92,
     metalness:0,
     clippingPlanes:[clipPlane], clipShadows:true
   });
+  if(SCALA_MONDO[texName]) mappaMondo(mat, SCALA_MONDO[texName]);
   allMaterials.push(mat);
   const mesh = new InstancedMesh(geo, mat, list.length);
   list.forEach((b,i) => {
@@ -1288,14 +1295,20 @@ function applyLight(){
   const deg = sunEl * 180/Math.PI;
   const day = Math.max(0, Math.min(1, (deg + 4) / 22));   // 0 di notte, 1 in pieno giorno
   const k = sectionOn ? 1 : e.sun;
-  sun.intensity = 1.95 * k * day;
-  const warmth = Math.max(0, 1 - Math.max(0, deg) / 20);
-  const w = Math.max(warmth, (!sectionOn && e.warm > .5) ? 1 : 0);
-  sun.color.setRGB(1, 0.94 - w*0.20, 0.85 - w*0.42);
+  // Più calda e più morbida (22/10/2026): il sole un poco meno forte, il
+  // cielo un poco di più, così le ombre non sono buchi neri; il colore
+  // scalda già sotto i 30° di altezza, non solo all'alba. La posizione del
+  // sole resta quella calcolata (NOAA).
+  sun.intensity = 1.75 * k * day;
+  const warmth = Math.max(0, 1 - Math.max(0, deg) / 30);
+  const w = Math.max(warmth * warmth, (!sectionOn && e.warm > .5) ? 1 : 0);
+  sun.color.setRGB(1, 0.95 - w*0.22, 0.88 - w*0.45);
   const night = 1 - day;
-  hemi.intensity = (0.34 + 0.70*day) * (sectionOn ? 1 : (0.55 + k*0.45));
-  hemi.color.setRGB(0.86 - night*0.30, 0.88 - night*0.24, 0.85 - night*0.05);
-  hemi.groundColor.setRGB(0.38 - night*0.20, 0.35 - night*0.18, 0.29 - night*0.14);
+  hemi.intensity = (0.40 + 0.86*day) * (sectionOn ? 1 : (0.55 + k*0.45));
+  // il cielo tinge le ombre d'azzurro; il suolo di tufo e intonaco rimanda
+  // una luce calda dal basso
+  hemi.color.setRGB(0.84 - night*0.30, 0.90 - night*0.24, 0.98 - night*0.10);
+  hemi.groundColor.setRGB(0.52 - night*0.28, 0.44 - night*0.24, 0.33 - night*0.18);
   rim.intensity = 0.20 + night*0.34;
   rim.color.setRGB(0.55 + night*0.05, 0.66 + night*0.06, 0.78);
 }

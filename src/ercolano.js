@@ -70,10 +70,15 @@ export const ERCOLANO = (function(){
     materiali.push({ mm, tex });
     return mm;
   }
-  function textures(TEX){
+  function textures(TEX, scale){
     if(!TEX) return;
     materiali.forEach(o => {
-      if(o.tex && TEX[o.tex]){ o.mm.map = TEX[o.tex]; o.mm.needsUpdate = true; }
+      if(!o.tex || !TEX[o.tex]) return;
+      o.mm.map = TEX[o.tex];
+      // a misura vera, come a Pompei (scene/textures.js, mappaMondo)
+      if(scale && scale.SCALA_MONDO[o.tex]) scale.mappaMondo(o.mm, scale.SCALA_MONDO[o.tex]);
+      if(o.tex === 'basoli') o.mm.color.set(0xffffff);
+      o.mm.needsUpdate = true;
     });
   }
   const M = {
@@ -82,7 +87,7 @@ export const ERCOLANO = (function(){
     mattone: mat(0x93705a, 'rubble'),    // opus latericium
     legno:   mat(0x7a5a3e),              // i legni carbonizzati di Ercolano
     tetto:   mat(0x9a5a3c, 'tile'),
-    strada:  mat(0x60625f, 'basalt'),
+    strada:  mat(0x60625f, 'basoli'),
     marcia:  mat(0x9b947f, 'stone'),     // marciapiedi
     colonna: mat(0xdfd8c8, 'marble'),
     terra:   mat(0x63594a, 'tuff'),
