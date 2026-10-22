@@ -40,9 +40,10 @@ export default {
       "sonoroAcceso": "Sonoro acceso",
       "confronto": "Confronto",
       "ercolano": "Ercolano",
-      "tour": "Tour",
+      "tour": "Visita",
       "presenta": "Presenta",
-      "comandi": "Comandi"
+      "comandi": "Comandi",
+      "altro": "Altro"
     },
     "presenta": {
       "esci": "Esci dalla presentazione"
@@ -116,11 +117,12 @@ export default {
       "suolo": "suolo dopo il 79 · spessore non documentato, disegnato sottile apposta"
     },
     "tour": {
-      "etichetta": "Tour",
+      "etichetta": "Visita guidata",
       "indietro": "Indietro",
       "avanti": "Avanti",
       "chiudi": "Chiudi",
-      "posizione": "{i} / {n}"
+      "posizione": "Tappa {i} di {n}",
+      "fine": "Fine"
     },
     "panel": {
       "fonte": "Fonte",
@@ -181,6 +183,9 @@ export default {
     "lingua": {
       "etichetta": "Lingua",
       "aria": "Scegli la lingua"
+    },
+    "altro": {
+      "titolo": "Altri strumenti"
     }
   },
   "epoche": [

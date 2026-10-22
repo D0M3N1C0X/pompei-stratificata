@@ -30,9 +30,10 @@
       "sonoroAcceso": "Son activé",
       "confronto": "Comparer",
       "ercolano": "Herculanum",
-      "tour": "Parcours",
+      "tour": "Visite",
       "presenta": "Présenter",
-      "comandi": "Commandes"
+      "comandi": "Commandes",
+      "altro": "Plus"
     },
     "presenta": {
       "esci": "Quitter la présentation"
@@ -106,11 +107,12 @@
       "suolo": "sol après 79 · épaisseur non documentée, dessinée mince exprès"
     },
     "tour": {
-      "etichetta": "Parcours",
+      "etichetta": "Visite guidée",
       "indietro": "Précédent",
       "avanti": "Suivant",
       "chiudi": "Fermer",
-      "posizione": "{i} / {n}"
+      "posizione": "Étape {i} sur {n}",
+      "fine": "Terminer"
     },
     "panel": {
       "fonte": "Source",
@@ -164,6 +166,9 @@
       },
       "guida": "Mode d'emploi",
       "breve": "Modèle schématique : là où manque une mesure publiée, nous le disons, lieu par lieu."
+    },
+    "altro": {
+      "titolo": "Autres outils"
     }
   },
   "scena": {

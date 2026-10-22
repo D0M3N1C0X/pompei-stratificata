@@ -30,9 +30,10 @@
       "sonoroAcceso": "Som ligado",
       "confronto": "Comparar",
       "ercolano": "Herculano",
-      "tour": "Percurso",
+      "tour": "Visita",
       "presenta": "Apresentar",
-      "comandi": "Comandos"
+      "comandi": "Comandos",
+      "altro": "Mais"
     },
     "presenta": {
       "esci": "Sair da apresentação"
@@ -106,11 +107,12 @@
       "suolo": "solo depois de 79 · espessura não documentada, desenhada fina de propósito"
     },
     "tour": {
-      "etichetta": "Percurso",
+      "etichetta": "Visita guiada",
       "indietro": "Anterior",
       "avanti": "Seguinte",
       "chiudi": "Fechar",
-      "posizione": "{i} / {n}"
+      "posizione": "Paragem {i} de {n}",
+      "fine": "Terminar"
     },
     "panel": {
       "fonte": "Fonte",
@@ -164,6 +166,9 @@
       },
       "guida": "Como se usa",
       "breve": "Modelo esquemático: onde falta uma medida publicada, dizemo-lo, lugar a lugar."
+    },
+    "altro": {
+      "titolo": "Mais ferramentas"
     }
   },
   "scena": {

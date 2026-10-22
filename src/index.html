@@ -84,8 +84,8 @@
 <style>
   :root{
     --ink:#E7EBE6;
-    --ink-soft:#A3AFA8;
-    --ink-faint:#78847D;
+    --ink-soft:#B9C4BD;
+    --ink-faint:#95A29A;
     --glass:rgba(16,20,18,.88);
     --glass-2:rgba(19,24,22,.985);
     --line:rgba(231,235,230,.14);
@@ -128,15 +128,17 @@
   #brand{pointer-events:auto;display:flex;flex-direction:column;gap:.18rem}
   #brand h1{margin:0;font-size:.98rem;font-weight:600;letter-spacing:.01em}
   #brand .note{
-    font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.82rem;letter-spacing:.13em;text-transform:uppercase;
     color:var(--ink-soft);text-shadow:0 1px 4px rgba(8,11,10,.9);
   }
-  #tools{pointer-events:auto;display:flex;gap:.34rem;flex-wrap:wrap;justify-content:flex-end;max-width:40rem}
+  #tools{pointer-events:auto;display:flex;gap:.4rem;flex-wrap:nowrap;justify-content:flex-end}
+  /* Pulsanti in parole normali, non in maiuscoletto: si leggono prima
+     e si toccano meglio (22/10/2026, «facile per tutti»). */
   .tool{
-    font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;
-    padding:.4rem .62rem;border:1px solid var(--line);border-radius:2px;
-    background:var(--glass);color:var(--ink-soft);white-space:nowrap;
-    transition:border-color .15s,color .15s;
+    font-family:var(--sans);font-size:.98rem;font-weight:500;letter-spacing:0;
+    padding:.5rem .85rem;min-height:2.6rem;border:1px solid var(--line);border-radius:10px;
+    background:var(--glass);color:var(--ink);white-space:nowrap;
+    transition:border-color .15s,color .15s,background .15s;
   }
   .tool:hover{border-color:var(--accent-dim);color:var(--ink)}
   .tool.on{border-color:var(--accent);color:var(--accent)}
@@ -152,6 +154,18 @@
     background-size:4px 4px,4px 4px;background-repeat:no-repeat;
   }
   select.tool option{background:#151a17;color:var(--ink);font-family:var(--sans)}
+  #btnAltro[aria-expanded="true"]{border-color:var(--accent);color:var(--accent)}
+  #altro{
+    position:fixed;top:3.9rem;right:1rem;z-index:36;width:min(25rem,calc(100vw - 2rem));
+    background:var(--glass-2);border:1px solid var(--line);border-radius:18px;
+    padding:1rem;box-shadow:0 18px 50px rgba(0,0,0,.45);
+    max-height:calc(100dvh - 5rem);overflow-y:auto;
+  }
+  #altro[hidden]{display:none}
+  #altro h2{margin:0 0 .7rem;font-size:1rem;font-weight:600;color:var(--ink-soft)}
+  #altroGriglia{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+  #altroGriglia .tool{width:100%;text-align:left;min-height:3rem;white-space:normal}
+  #altroGriglia .tool[disabled]{display:none}
 
   /* -------------------------------------------------------- rail luoghi */
   #rail{
@@ -164,19 +178,19 @@
   body.rail-open #rail{transform:none}
   #railHead{padding:0 .9rem .55rem;display:flex;flex-direction:column;gap:.5rem}
   #railHead h2{
-    margin:0;font-family:var(--mono);font-size:.6rem;font-weight:600;
+    margin:0;font-family:var(--mono);font-size:.82rem;font-weight:600;
     letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
   }
   #search{
     width:100%;background:rgba(231,235,230,.06);border:1px solid var(--line);
     border-radius:2px;padding:.42rem .55rem;color:var(--ink);
-    font-family:var(--sans);font-size:.8rem;
+    font-family:var(--sans);font-size:.92rem;
   }
   #search::placeholder{color:var(--ink-faint)}
   #places{list-style:none;margin:0;padding:0 .5rem 1rem;overflow-y:auto;flex:1;
     display:flex;flex-direction:column;gap:.1rem}
   #places .empty{
-    padding:.6rem .55rem;font-family:var(--mono);font-size:.66rem;color:var(--ink-faint);
+    padding:.6rem .55rem;font-family:var(--mono);font-size:.86rem;color:var(--ink-faint);
   }
   .place{
     width:100%;text-align:left;padding:.5rem .55rem;border-radius:3px;
@@ -185,8 +199,8 @@
   .place:hover{background:rgba(127,184,163,.09);border-left-color:var(--accent)}
   .place.off{opacity:.42}
   .place.off .pl-sub::after{content:var(--fuori-fase," · fuori fase");color:var(--flag)}
-  .pl-label{font-size:.8rem;font-weight:500;line-height:1.25}
-  .pl-sub{font-family:var(--mono);font-size:.58rem;color:var(--ink-faint);letter-spacing:.05em}
+  .pl-label{font-size:.92rem;font-weight:500;line-height:1.25}
+  .pl-sub{font-family:var(--mono);font-size:.82rem;color:var(--ink-faint);letter-spacing:.05em}
 
   /* ------------------------------------------------------ fascia epoche */
   #bottom{
@@ -197,17 +211,20 @@
     transition:padding-left .28s cubic-bezier(.4,0,.2,1);
   }
   body.rail-open #bottom{padding-left:17.9rem}
+  /* con la scheda aperta la fascia in basso si stringe a sinistra della
+     scheda: prima la barra della visita ci finiva sotto */
+  @media (min-width:52.01rem){ body.panel-open #bottom{padding-right:calc(min(25rem,92vw) + .9rem)} }
   @media (max-width:52rem){ body.rail-open #bottom{padding-left:.9rem} }
   #epochWrap{pointer-events:auto;max-width:70rem;margin:0 auto;width:100%;
     display:flex;flex-direction:column;gap:.7rem}
   #caption{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.9rem;align-items:baseline}
   #epMeta{display:flex;flex-direction:column;gap:.1rem;min-width:7.5rem}
-  #epTag{font-family:var(--mono);font-size:.63rem;letter-spacing:.13em;color:var(--accent)}
+  #epTag{font-family:var(--mono);font-size:.85rem;letter-spacing:.13em;color:var(--accent)}
   #epName{font-size:1.02rem;font-weight:600;letter-spacing:-.012em;line-height:1.15}
-  #epText{font-family:var(--serif);font-size:.92rem;line-height:1.55;color:var(--ink-soft);margin:0;max-width:62ch}
+  #epText{font-family:var(--serif);font-size:1.02rem;line-height:1.55;color:var(--ink-soft);margin:0;max-width:62ch}
   #epText b{color:var(--ink);font-weight:500}
   #epText .cite{
-    display:block;margin-top:.3rem;font-family:var(--mono);font-size:.6rem;
+    display:block;margin-top:.3rem;font-family:var(--mono);font-size:.82rem;
     letter-spacing:.03em;color:var(--ink-faint);
   }
   #epochs{display:flex;gap:.28rem;overflow-x:auto;padding-bottom:.2rem;scrollbar-width:thin}
@@ -218,9 +235,9 @@
   }
   .ep:hover{border-top-color:var(--accent-dim);color:var(--ink-soft)}
   .ep.on{border-top-color:var(--accent);color:var(--ink)}
-  .ep-tag{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em}
+  .ep-tag{font-family:var(--mono);font-size:.82rem;letter-spacing:.1em}
   .ep.on .ep-tag{color:var(--accent)}
-  .ep-name{font-size:.73rem;font-weight:500;line-height:1.2}
+  .ep-name{font-size:.88rem;font-weight:500;line-height:1.2;overflow-wrap:break-word;hyphens:auto}
 
   /* ------------------------------------------------------------ pannello */
   #panel{
@@ -235,41 +252,41 @@
     display:flex;justify-content:space-between;align-items:flex-start;gap:.8rem;
   }
   #pTitle{margin:0;font-size:1.06rem;font-weight:600;letter-spacing:-.015em;line-height:1.2}
-  #pSub{display:block;margin-top:.2rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.09em;color:var(--ink-faint)}
-  #pClose{font-family:var(--mono);font-size:.85rem;color:var(--ink-faint);padding:.1rem .3rem;flex:0 0 auto;line-height:1}
+  #pSub{display:block;margin-top:.2rem;font-family:var(--mono);font-size:.82rem;letter-spacing:.09em;color:var(--ink-faint)}
+  #pClose{font-family:var(--mono);font-size:.95rem;color:var(--ink-faint);padding:.1rem .3rem;flex:0 0 auto;line-height:1}
   #pClose:hover{color:var(--accent)}
   .pLink{
-    font-family:var(--mono);font-size:.56rem;letter-spacing:.11em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.8rem;letter-spacing:.11em;text-transform:uppercase;
     color:var(--ink-faint);border:1px solid var(--line);border-radius:2px;
     padding:.3rem .45rem;flex:0 0 auto;white-space:nowrap;
   }
   .pLink:hover{color:var(--accent);border-color:var(--accent-dim)}
   #pBody{
     padding:1rem 1.2rem;overflow-y:auto;flex:1;
-    font-family:var(--serif);font-size:.93rem;line-height:1.62;color:var(--ink-soft);
+    font-family:var(--serif);font-size:1.02rem;line-height:1.62;color:var(--ink-soft);
     display:flex;flex-direction:column;gap:.8rem;
   }
   #pBody p{margin:0}
   #pBody b{color:var(--ink);font-weight:500}
   #pBody .lat{font-style:italic;color:var(--ink)}
-  #pBody p.lat{font-style:italic;color:var(--ink);border-left:1px solid var(--accent-dim);padding-left:.8rem;font-size:.9rem}
+  #pBody p.lat{font-style:italic;color:var(--ink);border-left:1px solid var(--accent-dim);padding-left:.8rem;font-size:1rem}
   #pBody p.key{
     border-left:2px solid var(--accent);padding:.55rem .8rem;background:rgba(127,184,163,.07);
-    font-family:var(--sans);font-size:.86rem;line-height:1.5;color:var(--ink);
+    font-family:var(--sans);font-size:.95rem;line-height:1.5;color:var(--ink);
   }
   #pBody p.warn{
     border-left:2px solid var(--flag);padding:.55rem .8rem;background:rgba(210,149,76,.08);
-    font-family:var(--sans);font-size:.82rem;line-height:1.5;color:var(--ink-soft);
+    font-family:var(--sans);font-size:.92rem;line-height:1.5;color:var(--ink-soft);
   }
   #pBody p.hint{
-    font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--accent);
+    font-family:var(--mono);font-size:.88rem;letter-spacing:.04em;color:var(--accent);
   }
   #pSrcWrap{padding:.7rem 1.2rem 1rem;border-top:1px solid var(--line)}
   #pSrcWrap .lbl{
-    font-family:var(--mono);font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;
     color:var(--ink-faint);display:block;margin-bottom:.25rem;
   }
-  #pSrc{font-family:var(--mono);font-size:.66rem;line-height:1.5;color:var(--accent)}
+  #pSrc{font-family:var(--mono);font-size:.86rem;line-height:1.5;color:var(--accent)}
 
   /* -------------------------------------------------------- HUD sezione */
   #sectionHud{
@@ -282,23 +299,23 @@
   }
   #sectionHud.on{display:flex}
   #secRow{display:flex;align-items:center;gap:.6rem;justify-content:space-between}
-  #secRow .lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
-  #secZ{font-family:var(--mono);font-size:.86rem;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+  #secRow .lbl{font-family:var(--mono);font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+  #secZ{font-family:var(--mono);font-size:.95rem;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
   .secBtn{
     border:1px solid var(--line);border-radius:2px;width:1.9rem;height:1.65rem;
-    font-family:var(--mono);font-size:.9rem;line-height:1;color:var(--ink-soft);
+    font-family:var(--mono);font-size:1rem;line-height:1;color:var(--ink-soft);
   }
   .secBtn:hover{border-color:var(--accent);color:var(--accent)}
   #secLegend{display:flex;flex-direction:column;gap:.18rem}
-  #secLegend div{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.58rem;color:var(--ink-soft);letter-spacing:.04em}
+  #secLegend div{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.82rem;color:var(--ink-soft);letter-spacing:.04em}
   #secLegend i{width:14px;height:9px;flex:0 0 auto;border-radius:1px}
-  #secSuolo{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.58rem;color:var(--ink-soft);letter-spacing:.04em}
+  #secSuolo{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.82rem;color:var(--ink-soft);letter-spacing:.04em}
   #secSuolo[hidden]{display:none}
   #secSuolo i{width:14px;height:9px;flex:0 0 auto;border-radius:1px;
     background:repeating-linear-gradient(135deg,rgba(124,106,82,.75) 0 2px,rgba(236,226,206,.9) 2px 4px)}
-  #secHint{font-family:var(--mono);font-size:.56rem;color:var(--ink-faint);letter-spacing:.06em}
+  #secHint{font-family:var(--mono);font-size:.8rem;color:var(--ink-faint);letter-spacing:.06em}
   #secEmpty{
-    font-family:var(--mono);font-size:.58rem;letter-spacing:.05em;color:var(--flag);
+    font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;color:var(--flag);
     border-left:2px solid var(--flag);padding-left:.5rem;
   }
   #secEmpty[hidden]{display:none}
@@ -306,16 +323,20 @@
   /* ------------------------------------------------------------ tour bar */
   #tourBar{
     align-self:center;z-index:25;
-    background:var(--glass-2);border:1px solid var(--accent-dim);border-radius:3px;
-    padding:.5rem .6rem;display:none;align-items:center;gap:.7rem;
+    background:var(--glass-2);border:1px solid var(--accent-dim);border-radius:16px;
+    padding:.55rem .65rem;display:none;align-items:center;gap:.7rem;
   }
   body.touring #tourBar{display:flex}
   body.touring.section-on #tourBar{display:none}
-  #tourBar .lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
-  #tourPos{font-family:var(--mono);font-size:.72rem;color:var(--ink);font-variant-numeric:tabular-nums;min-width:3.2rem;text-align:center}
+  #tourBar .lbl{font-size:.95rem;font-weight:600;color:var(--accent)}
+  #tourPos{font-size:1rem;color:var(--ink);font-variant-numeric:tabular-nums;min-width:6.5rem;text-align:center}
+  /* la visita: «Avanti» è il gesto principale, grande e pieno */
+  #tourBar #tourNext{background:var(--accent);border-color:var(--accent);color:#0E1512;font-weight:600;min-width:7rem}
+  #tourBar #tourNext:hover{background:#96CCB7;color:#0E1512}
+  #tourBar #tourPrev{min-width:6rem}
   .tourBtn{
-    border:1px solid var(--line);border-radius:2px;padding:.3rem .6rem;
-    font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+    border:1px solid var(--line);border-radius:10px;padding:.5rem .85rem;min-height:2.6rem;
+    font-family:var(--sans);font-size:.98rem;font-weight:500;color:var(--ink);
   }
   .tourBtn:hover:not([disabled]){border-color:var(--accent);color:var(--accent)}
   .tourBtn.on{border-color:var(--accent);color:var(--accent)}
@@ -334,7 +355,7 @@
     font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1;
   }
   #clockNow{
-    font-family:var(--mono);font-size:.56rem;letter-spacing:.11em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.8rem;letter-spacing:.11em;text-transform:uppercase;
     border:1px solid var(--line);border-radius:2px;padding:.24rem .45rem;color:var(--ink-soft);
   }
   #clockNow:hover{border-color:var(--accent);color:var(--accent)}
@@ -351,8 +372,8 @@
     width:15px;height:15px;border-radius:50%;background:var(--accent);
     border:2px solid #101412;cursor:pointer;
   }
-  #clockNote{font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;color:var(--ink-soft)}
-  #clockSrc{font-family:var(--mono);font-size:.5rem;letter-spacing:.04em;color:var(--ink-faint);line-height:1.4}
+  #clockNote{font-family:var(--mono);font-size:.8rem;letter-spacing:.06em;color:var(--ink-soft)}
+  #clockSrc{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--ink-faint);line-height:1.4}
 
   /* ------------------------------------------------- bussola e scala */
   #compass{
@@ -360,7 +381,7 @@
     display:flex;flex-direction:column;align-items:flex-end;gap:.45rem;
   }
   #compass svg{display:block;transition:transform .08s linear}
-  #compassNote{font-family:var(--mono);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+  #compassNote{font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
 
   /* -------------------------------------------------- comandi touch */
   #touch{
@@ -387,13 +408,13 @@
   #btnRun{
     position:absolute;right:1.4rem;bottom:12.5rem;width:4.4rem;height:4.4rem;border-radius:50%;
     background:rgba(16,20,18,.5);border:1px solid var(--line);pointer-events:auto;
-    font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
     color:var(--ink-soft);touch-action:none;
   }
   #btnRun.on{border-color:var(--accent);color:var(--accent);background:rgba(127,184,163,.14)}
   #touchHint{
     position:absolute;left:50%;transform:translateX(-50%);bottom:9.2rem;
-    font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;color:var(--ink-faint);
+    font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;color:var(--ink-faint);
     background:rgba(12,16,14,.55);padding:.2rem .5rem;border-radius:2px;
   }
 
@@ -408,7 +429,7 @@
   #nearHint{
     position:fixed;left:50%;top:calc(50% + 22px);transform:translateX(-50%);
     z-index:15;pointer-events:none;opacity:0;transition:opacity .2s;
-    font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.85rem;letter-spacing:.11em;text-transform:uppercase;
     color:var(--accent);background:rgba(12,16,14,.7);padding:.25rem .55rem;border-radius:2px;white-space:nowrap;
   }
   #nearHint.on{opacity:1}
@@ -423,7 +444,7 @@
   body.presenting #bottom{padding-bottom:2.2rem}
   #presentExit{
     position:fixed;top:1rem;right:1.1rem;z-index:26;display:none;
-    font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.85rem;letter-spacing:.11em;text-transform:uppercase;
     color:var(--ink-soft);background:var(--glass);border:1px solid var(--line);
     padding:.4rem .7rem;border-radius:2px;
   }
@@ -440,14 +461,14 @@
     max-width:34rem;width:100%;background:var(--glass-2);border:1px solid var(--line);border-radius:22px;
     padding:1.7rem 1.5rem 1.3rem;display:flex;flex-direction:column;gap:1rem;
   }
-  #introCard .eyebrow{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  #introCard .eyebrow{font-family:var(--mono);font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
   #introCard h2{margin:0;font-size:1.55rem;font-weight:600;letter-spacing:-.026em;line-height:1.1}
-  #introCard p{margin:0;font-family:var(--serif);font-size:.94rem;line-height:1.6;color:var(--ink-soft)}
+  #introCard p{margin:0;font-family:var(--serif);font-size:1.04rem;line-height:1.6;color:var(--ink-soft)}
   .keys{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.5rem .9rem;
     padding:.8rem 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
   }
-  .keys div{display:flex;gap:.45rem;align-items:baseline;font-size:.76rem;color:var(--ink-soft)}
+  .keys div{display:flex;gap:.45rem;align-items:baseline;font-size:.9rem;color:var(--ink-soft)}
   /* Su uno schermo tattile la legenda WASD/Esc/1-8 non serve a niente e
      allunga di uno schermo la strada per entrare. La scelta la fa il CSS,
      così è giusta già al primo fotogramma. */
@@ -457,11 +478,11 @@
     .keys[data-quando="tatto"]{display:grid}
   }
   kbd{
-    font-family:var(--mono);font-size:.62rem;padding:.12rem .34rem;border:1px solid var(--line);
+    font-family:var(--mono);font-size:.85rem;padding:.12rem .34rem;border:1px solid var(--line);
     border-radius:2px;color:var(--ink);background:rgba(231,235,230,.05);white-space:nowrap;
   }
   .disclaimer{
-    font-size:.78rem;line-height:1.5;color:var(--ink-faint);
+    font-size:.9rem;line-height:1.5;color:var(--ink-faint);
     border-left:2px solid var(--flag);padding-left:.75rem;font-family:var(--sans);
   }
   /* La porta d'ingresso: tre scelte grandi, come una schermata di iPhone.
@@ -483,7 +504,7 @@
   }
   .sTesto{display:flex;flex-direction:column;gap:.2rem}
   .sTesto b{font-family:var(--sans);font-size:1.08rem;font-weight:600;letter-spacing:-.01em}
-  .sTesto span{font-family:var(--sans);font-size:.88rem;line-height:1.4;color:var(--ink-soft)}
+  .sTesto span{font-family:var(--sans);font-size:.98rem;line-height:1.4;color:var(--ink-soft)}
   .sTesto [data-quando="tatto"]{display:none}
   @media (pointer: coarse){
     .sTesto [data-quando="tastiera"]{display:none}
@@ -491,11 +512,11 @@
   }
   #introAltro{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;align-items:center}
   #introAltro button,#introAltro a{
-    font-family:var(--sans);font-size:.92rem;color:var(--accent);text-decoration:none;
+    font-family:var(--sans);font-size:1.02rem;color:var(--accent);text-decoration:none;
     padding:.5rem 0;min-height:2.75rem;display:inline-flex;align-items:center;
   }
   #introAltro button:hover,#introAltro a:hover{text-decoration:underline}
-  #introCard .introBreve{font-family:var(--sans);font-size:.82rem;color:var(--ink-faint)}
+  #introCard .introBreve{font-family:var(--sans);font-size:.92rem;color:var(--ink-faint)}
   #introGuida{display:flex;flex-direction:column;gap:.9rem;border-top:1px solid var(--line-soft);padding-top:.9rem}
   #introGuida[hidden]{display:none}
 
@@ -505,7 +526,7 @@
   }
   #loading.gone{opacity:0;pointer-events:none}
   #loading > span{
-    font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
+    font-family:var(--mono);font-size:.86rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
   }
   /* Se il modello non parte, il velo non deve restare lì per sempre: diventa
      una pagina che spiega e offre una via d'uscita. */
@@ -517,14 +538,14 @@
     margin:0 0 .8rem;font-size:1.15rem;font-weight:600;letter-spacing:-.015em;color:var(--ink);
   }
   #guasto p{
-    margin:0 0 .9rem;font-family:var(--serif);font-size:.95rem;line-height:1.6;color:var(--ink-soft);
+    margin:0 0 .9rem;font-family:var(--serif);font-size:1.04rem;line-height:1.6;color:var(--ink-soft);
   }
   #guasto a{
-    font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;
+    font-family:var(--mono);font-size:.86rem;letter-spacing:.11em;text-transform:uppercase;
     color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-dim);padding-bottom:.15rem;
   }
   #guastoDett{
-    margin-top:1.2rem;font-family:var(--mono);font-size:.6rem;line-height:1.5;
+    margin-top:1.2rem;font-family:var(--mono);font-size:.82rem;line-height:1.5;
     color:var(--ink-faint);white-space:pre-wrap;word-break:break-word;
     max-height:7rem;overflow:auto;
   }
@@ -533,7 +554,7 @@
     background:#101412;padding:2rem;
   }
   #senzaScript p{
-    max-width:30rem;font-family:var(--serif);font-size:.95rem;line-height:1.6;color:var(--ink-soft);
+    max-width:30rem;font-family:var(--serif);font-size:1.04rem;line-height:1.6;color:var(--ink-soft);
   }
 
   /* -------------------------------------------------------- telefono */
@@ -545,29 +566,45 @@
       scrollbar-width:none;-ms-overflow-style:none;
     }
     #tools::-webkit-scrollbar{display:none}
-    #brand{flex:0 0 auto;max-width:8.5rem}
-    #brand h1{font-size:.72rem;line-height:1.2}
-    #brand .note{font-size:.48rem;line-height:1.3}
+    /* sul telefono il titolo lo dice già la porta d'ingresso: lo spazio
+       va ai cinque comandi, che così stanno tutti in vista */
+    #brand{display:none}
+    .tool{font-size:.88rem;padding:.45rem .48rem}
+    #tools{gap:.25rem}
+    #top{padding:.5rem .4rem}
+    select.tool{padding-right:1.25rem;background-position:calc(100% - 10px) calc(50% + 1px),calc(100% - 6px) calc(50% + 1px)}
+    #altro{top:3.5rem;right:.7rem;left:.7rem;width:auto}
     #compass{display:none}
   }
   @media (max-width:44rem){
     #epMeta{min-width:0;flex-direction:row;gap:.5rem;align-items:baseline}
     #caption{grid-template-columns:minmax(0,1fr);gap:.2rem}
-    #epName{font-size:.9rem}
+    #epName{font-size:1rem}
     #epText{
-      font-size:.8rem;line-height:1.45;
+      font-size:.92rem;line-height:1.45;
       display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
     }
     #epText .cite{display:none}
     #bottom{padding:1rem .7rem .5rem}
-    .ep{min-width:5.4rem;padding:.38rem .45rem}
-    .ep-name{font-size:.66rem}
+    .ep{min-width:7.4rem;padding:.38rem .45rem}
+    .ep-name{font-size:.86rem}
     #stick{left:.9rem;bottom:12.5rem;width:6.6rem;height:6.6rem}
     #stickKnob{width:2.7rem;height:2.7rem}
     #btnRun{right:.9rem;bottom:13.5rem;width:3.8rem;height:3.8rem}
-    #touchHint{bottom:19.6rem;font-size:.5rem}
+    #touchHint{bottom:19.6rem;font-size:.78rem}
     #sectionHud,#tourBar{min-width:0;width:100%}
     #tourBar{justify-content:space-between}
+    #tourBar .lbl{display:none}
+    #tourBar{gap:.4rem;padding:.45rem}
+    #tourBar .tourBtn,#tourBar #tourNext,#tourBar #tourPrev{min-width:0;padding:.5rem .7rem}
+    #tourBar #tourNext{flex:1}
+    #tourPos{min-width:0;font-size:.95rem}
+    /* sul telefono la scheda copre lo schermo: durante la visita la barra
+       resta sopra la scheda, in fondo, così «Avanti» è sempre a portata */
+    body.touring.panel-open #bottom{z-index:32;background:none}
+    body.touring.panel-open #caption,body.touring.panel-open #epochs{visibility:hidden}
+    body.touring.panel-open #tourBar{position:fixed;left:.6rem;right:.6rem;bottom:.6rem;width:auto}
+    body.touring.panel-open #panel{padding-bottom:4.6rem}
     #clock{right:.7rem;bottom:auto;top:4.2rem;width:11.5rem}
     #rail{width:min(17rem,86vw)}
     #panel{width:min(22rem,94vw)}
@@ -595,7 +632,7 @@
      (431 px su 812): la nota resta, ma in due righe, e un tocco la apre. */
   @media (max-width:44rem){
     .ercNote{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-      overflow:hidden;cursor:pointer;font-size:11.5px}
+      overflow:hidden;cursor:pointer;font-size:13.5px}
     .ercNote.aperta{display:block}
     .ercBar{gap:6px;padding:7px 9px}
     /* Su un telefono il riquadro occupava ancora metà dello schermo: una
@@ -623,13 +660,13 @@
 #cmpHud{ position:fixed; left:16px; bottom:16px; z-index:40; max-width:min(440px,calc(100vw - 32px)); }
 #cmpHud[hidden]{ display:none; }
 .cmpBox{ background:rgba(20,20,18,.90); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.12);
-  border-radius:14px; padding:16px 18px; color:#eae6dc; font-size:13px; line-height:1.5;
+  border-radius:14px; padding:16px 18px; color:#eae6dc; font-size:15px; line-height:1.5;
   max-height:calc(100vh - 140px); overflow:auto; }
 .cmpBox h3{ margin:0 0 8px; font-size:15px; letter-spacing:.01em; }
 .cmpBox p{ margin:0 0 8px; }
 .cmpKey{ border-left:3px solid #7fb8a3; padding-left:10px; color:#fff; }
-.cmpWarn{ border-left:3px solid #c8a25c; padding-left:10px; color:#e6dcc6; font-size:12px; }
-.cmpSrc{ font-size:11px; color:#a49d8e; }
+.cmpWarn{ border-left:3px solid #c8a25c; padding-left:10px; color:#e6dcc6; font-size:14px; }
+.cmpSrc{ font-size:13px; color:#a49d8e; }
 .cmpBtns{ display:flex; gap:8px; margin-top:10px; }
 body.cmp-on #rail, body.cmp-on #panel, body.cmp-on #bottom, body.cmp-on #clock,
 body.cmp-on #compass, body.cmp-on #touch, body.cmp-on #sectionHud, body.cmp-on #tourBar,
@@ -641,13 +678,13 @@ body.cmp-on #crosshair, body.cmp-on #nearHint{ display:none !important; }
 .ercBar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap;
   background:rgba(20,20,18,.90); backdrop-filter:blur(10px);
   border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:9px 12px; }
-.ercName{ font-size:13px; font-weight:600; color:#eae6dc; letter-spacing:.01em; }
-.ercNear{ font-size:12px; color:#7fb8a3; min-width:0; }
+.ercName{ font-size:15px; font-weight:600; color:#eae6dc; letter-spacing:.01em; }
+.ercNear{ font-size:14px; color:#7fb8a3; min-width:0; }
 .ercNote{ max-width:min(560px,calc(100vw - 32px)); background:rgba(20,20,18,.86);
   backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.10); border-radius:12px;
-  padding:10px 13px; color:#d8d3c6; font-size:12px; line-height:1.5; }
+  padding:10px 13px; color:#d8d3c6; font-size:14px; line-height:1.5; }
 .ercWarn{ color:#e0c68d; }
-.ercKeys{ display:flex; gap:14px; flex-wrap:wrap; font-size:11px; color:#a49d8e; padding-left:4px; }
+.ercKeys{ display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:#a49d8e; padding-left:4px; }
 .ercKeys kbd{ background:rgba(255,255,255,.10); border-radius:4px; padding:1px 5px;
   font-family:ui-monospace,monospace; color:#e6e1d4; }
 .ercGo{ display:none; gap:8px; }
@@ -655,10 +692,10 @@ body.cmp-on #crosshair, body.cmp-on #nearHint{ display:none !important; }
    nelle gallerie, dove il tocco non porta (22/10/2026). */
 body.touch.erc-galleria #ercHud .ercGo{ display:flex; }
 body.touch #ercHud .ercKeys{ display:none; }
-.ercTatto{ display:none; font-size:11px; color:#a49d8e; padding-left:4px; }
+.ercTatto{ display:none; font-size:13px; color:#a49d8e; padding-left:4px; }
 body.touch:not(.erc-galleria) #ercHud .ercTatto{ display:block; }
 .ercGoBtn{ background:rgba(20,20,18,.90); border:1px solid rgba(255,255,255,.16);
-  color:#eae6dc; border-radius:12px; padding:14px 22px; font-size:14px; }
+  color:#eae6dc; border-radius:12px; padding:14px 22px; font-size:15.5px; }
 body.erc-on #rail, body.erc-on #bottom, body.erc-on #clock, body.erc-on #compass,
 body.erc-on #touch, body.erc-on #sectionHud, body.erc-on #tourBar,
 body.erc-on #cmpHud, body.erc-on #cmpTitles{ display:none !important; }
@@ -668,9 +705,9 @@ body.erc-on #crosshair{ display:block !important; }
 #cmpTitles[hidden]{ display:none; }
 .cmpT{ text-align:center; color:#f4f1e8; text-shadow:0 2px 14px rgba(0,0,0,.75); }
 .cmpT b{ display:block; font-size:clamp(20px,2.4vw,32px); letter-spacing:.10em; font-weight:600; }
-.cmpT span{ display:block; font-size:12px; color:#e2dccd; margin-top:4px; max-width:230px; }
-.cmpT em{ display:block; font-size:11.5px; color:#efe9da; font-style:normal; margin-top:4px; opacity:.92; }
-.plSep{ margin:14px 0 6px; padding:0 4px 12px; font-size:11px; letter-spacing:.10em;
+.cmpT span{ display:block; font-size:14px; color:#e2dccd; margin-top:4px; max-width:230px; }
+.cmpT em{ display:block; font-size:13.5px; color:#efe9da; font-style:normal; margin-top:4px; opacity:.92; }
+.plSep{ margin:14px 0 6px; padding:0 4px 12px; font-size:13px; letter-spacing:.10em;
   text-transform:uppercase; color:#8d8779; border-top:1px solid rgba(255,255,255,.10); padding-top:12px; }
 </style>
 
@@ -692,21 +729,30 @@ body.erc-on #crosshair{ display:block !important; }
   </div>
   <div id="tools">
     <button class="tool" id="btnRail" data-i18n="ui.tool.luoghi">Luoghi</button>
-    <button class="tool primary" id="btnFly" data-i18n="ui.tool.cammina">Cammina</button>
-    <button class="tool" id="btnSection" data-i18n="ui.tool.sezione">Sezione</button>
-    <button class="tool" id="btnTop" data-i18n="ui.tool.dallAlto">Dall'alto</button>
-    <button class="tool" id="btnLabels" data-i18n="ui.tool.etichette">Etichette</button>
-    <button class="tool" id="btnQuality" data-i18n="ui.tool.qualita">Qualità</button>
-    <button class="tool" id="btnPad" data-i18n="ui.tool.controller">Controller</button>
-    <button class="tool" id="btnClock" data-i18n="ui.tool.ora">Ora</button>
-    <button class="tool" id="btnAudio" data-i18n="ui.tool.sonoro" aria-pressed="false">Sonoro</button>
-    <button class="tool primary" id="btnCompare" data-i18n="ui.tool.confronto">Confronto</button>
+    <button class="tool" id="btnTour" data-i18n="ui.tool.tour">Visita</button>
     <button class="tool" id="btnErc" data-i18n="ui.tool.ercolano">Ercolano</button>
-    <button class="tool" id="btnTour" data-i18n="ui.tool.tour">Tour</button>
-    <button class="tool" id="btnPresent" data-i18n="ui.tool.presenta">Presenta</button>
-    <button class="tool" id="btnHelp" data-i18n="ui.tool.comandi">Comandi</button>
+    <button class="tool" id="btnAltro" aria-expanded="false" aria-controls="altro" data-i18n="ui.tool.altro">Altro</button>
     <select class="tool" id="lang" aria-label="Scegli la lingua"
             data-i18n-attr="aria-label: ui.lingua.aria"></select>
+  </div>
+</div>
+
+<!-- «Altro»: gli strumenti che servono a chi esplora a fondo. In cima
+     restano solo le quattro cose che servono a tutti (22/10/2026). -->
+<div id="altro" hidden role="dialog" aria-labelledby="altroTitolo">
+  <h2 id="altroTitolo" data-i18n="ui.altro.titolo">Altri strumenti</h2>
+  <div id="altroGriglia">
+    <button class="tool primary" id="btnFly" data-i18n="ui.tool.cammina">Cammina</button>
+    <button class="tool" id="btnTop" data-i18n="ui.tool.dallAlto">Dall'alto</button>
+    <button class="tool" id="btnSection" data-i18n="ui.tool.sezione">Sezione</button>
+    <button class="tool primary" id="btnCompare" data-i18n="ui.tool.confronto">Confronto</button>
+    <button class="tool" id="btnClock" data-i18n="ui.tool.ora">Ora</button>
+    <button class="tool" id="btnAudio" data-i18n="ui.tool.sonoro" aria-pressed="false">Sonoro</button>
+    <button class="tool" id="btnLabels" data-i18n="ui.tool.etichette">Etichette</button>
+    <button class="tool" id="btnPresent" data-i18n="ui.tool.presenta">Presenta</button>
+    <button class="tool" id="btnQuality" data-i18n="ui.tool.qualita">Qualità</button>
+    <button class="tool" id="btnPad" data-i18n="ui.tool.controller">Controller</button>
+    <button class="tool" id="btnHelp" data-i18n="ui.tool.comandi">Comandi</button>
   </div>
 </div>
 

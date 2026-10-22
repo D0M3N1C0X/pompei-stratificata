@@ -32,7 +32,8 @@
       "ercolano": "Herculaneum",
       "tour": "Tour",
       "presenta": "Present",
-      "comandi": "Controls"
+      "comandi": "Controls",
+      "altro": "More"
     },
     "presenta": {
       "esci": "Leave presentation"
@@ -106,11 +107,12 @@
       "suolo": "soil after AD 79 · thickness not documented, drawn thin on purpose"
     },
     "tour": {
-      "etichetta": "Tour",
+      "etichetta": "Guided tour",
       "indietro": "Back",
       "avanti": "Next",
       "chiudi": "Close",
-      "posizione": "{i} / {n}"
+      "posizione": "Stop {i} of {n}",
+      "fine": "Finish"
     },
     "panel": {
       "fonte": "Source",
@@ -164,6 +166,9 @@
       },
       "guida": "How it works",
       "breve": "A schematic model: wherever a published measurement is missing, we say so, place by place."
+    },
+    "altro": {
+      "titolo": "More tools"
     }
   },
   "scena": {

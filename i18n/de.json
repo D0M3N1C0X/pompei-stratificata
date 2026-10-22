@@ -30,9 +30,10 @@
       "sonoroAcceso": "Ton an",
       "confronto": "Vergleich",
       "ercolano": "Herculaneum",
-      "tour": "Rundgang",
+      "tour": "Führung",
       "presenta": "Vorführen",
-      "comandi": "Steuerung"
+      "comandi": "Steuerung",
+      "altro": "Mehr"
     },
     "presenta": {
       "esci": "Vorführung beenden"
@@ -106,11 +107,12 @@
       "suolo": "Boden nach 79 · Mächtigkeit nicht belegt, absichtlich dünn gezeichnet"
     },
     "tour": {
-      "etichetta": "Rundgang",
+      "etichetta": "Führung",
       "indietro": "Zurück",
       "avanti": "Weiter",
       "chiudi": "Schließen",
-      "posizione": "{i} / {n}"
+      "posizione": "Station {i} von {n}",
+      "fine": "Fertig"
     },
     "panel": {
       "fonte": "Quelle",
@@ -164,6 +166,9 @@
       },
       "guida": "So funktioniert es",
       "breve": "Ein schematisches Modell: Wo ein veröffentlichtes Maß fehlt, sagen wir es, Ort für Ort."
+    },
+    "altro": {
+      "titolo": "Weitere Werkzeuge"
     }
   },
   "scena": {

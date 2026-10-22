@@ -1815,7 +1815,10 @@ function tourGo(step){
   document.getElementById('tourPos').textContent =
     t('ui.tour.posizione', { i: tourIdx+1, n: TOUR.length });
   document.getElementById('tourPrev').disabled = tourIdx === 0;
-  document.getElementById('tourNext').disabled = tourIdx === TOUR.length-1;
+  // all'ultima tappa «Avanti» diventa «Fine»: chiude la visita invece di
+  // restare spento senza dire perché
+  const ultima = tourIdx === TOUR.length-1;
+  document.getElementById('tourNext').textContent = t(ultima ? 'ui.tour.fine' : 'ui.tour.avanti');
 }
 function startTour(){
   document.body.classList.add('touring');
@@ -1830,7 +1833,8 @@ function stopTour(){
 document.getElementById('btnTour').addEventListener('click', () =>
   document.body.classList.contains('touring') ? stopTour() : startTour());
 document.getElementById('tourPrev').addEventListener('click', () => tourGo(-1));
-document.getElementById('tourNext').addEventListener('click', () => tourGo(1));
+document.getElementById('tourNext').addEventListener('click', () =>
+  tourIdx === TOUR.length-1 ? stopTour() : tourGo(1));
 document.getElementById('tourClose').addEventListener('click', stopTour);
 
 /* ------------------------------------------------------------- toolbar */
@@ -1863,6 +1867,28 @@ function toggleLabels(){
 }
 document.getElementById('btnLabels').addEventListener('click', toggleLabels);
 document.getElementById('btnLabels').classList.add('on');
+
+/* ------------------------------------------------------------ «Altro» */
+// Il pannello degli strumenti meno usati. Si chiude toccando fuori, con Esc
+// o dopo aver scelto uno strumento.
+const altro = document.getElementById('altro'), btnAltro = document.getElementById('btnAltro');
+function apriAltro(on){
+  altro.hidden = !on;
+  btnAltro.setAttribute('aria-expanded', String(on));
+  // su schermo largo si apre sotto il suo pulsante, anche a scheda aperta
+  if(on && innerWidth > 832){
+    const r = btnAltro.getBoundingClientRect();
+    altro.style.top = (r.bottom + 8) + 'px';
+    altro.style.right = Math.max(16, innerWidth - r.right) + 'px';
+  } else { altro.style.top = ''; altro.style.right = ''; }
+  if(on) altro.querySelector('button:not([disabled])')?.focus({ preventScroll:true });
+}
+btnAltro.addEventListener('click', e => { e.stopPropagation(); apriAltro(altro.hidden); });
+altro.addEventListener('click', e => { if(e.target.closest('button')) setTimeout(() => apriAltro(false), 0); });
+addEventListener('pointerdown', e => {
+  if(!altro.hidden && !altro.contains(e.target) && e.target !== btnAltro) apriAltro(false);
+});
+addEventListener('keydown', e => { if(e.code === 'Escape' && !altro.hidden){ apriAltro(false); btnAltro.focus(); } });
 
 /* ------------------------------------------------------------ controller */
 let padOn = false;
