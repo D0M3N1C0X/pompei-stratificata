@@ -9,7 +9,7 @@
     },
     "touch": {
       "run": "Courir",
-      "hint": "faites glisser l'écran pour regarder autour de vous",
+      "hint": "touche la rue pour y aller · fais glisser pour regarder autour",
       "levettaAria": "Manette de déplacement"
     },
     "brand": {
@@ -136,7 +136,7 @@
       "aria": "Choisir la langue"
     },
     "intro": {
-      "occhiello": "Explorateur v8 · dossier Pompéi après 79",
+      "occhiello": "Pompéi et Herculanum · de 79 à aujourd'hui",
       "titolo": "Seize siècles, en huit étapes",
       "entra": "Entrer dans la ville",
       "confronto": "Voir la comparaison",
@@ -146,8 +146,24 @@
       "p2": "Les cônes verts marquent les points où le dossier possède une donnée : approchez-vous et cliquez. <b>Coupe</b> ouvre le terrain et vous laisse regarder la stratigraphie de l'intérieur.",
       "p3": "Vous arrivez <b>à neuf heures et demie</b>, le soleil bas : c'est l'heure où les ombres détachent les volumes et où la ville devient lisible. <b>Heure</b> ouvre l'horloge — choisissez l'aube, midi ou la nuit — et <b>Maintenant</b> bascule sur l'<b>heure réelle de Pompéi</b>, le soleil là où il serait au-dessus du site en ce moment, calculé pour la latitude 40,75° N avec les formules NOAA. <b>Manette</b> active les commandes à l'écran ; une manette Bluetooth est reconnue toute seule.",
       "tastiera": "<div><kbd>Z Q S D</kbd><span>marcher</span></div>\n<div><kbd>Maj</kbd><span>courir</span></div>\n<div><kbd>souris</kbd><span>regarder</span></div>\n<div><kbd>C</kbd><span>coupe</span></div>\n<div><kbd>F</kbd><span>vol libre</span></div>\n<div><kbd>L</kbd><span>étiquettes</span></div>\n<div><kbd>1 – 8</kbd><span>changer de phase</span></div>\n<div><kbd>Échap</kbd><span>libérer la souris</span></div>\n<div><kbd>manette</kbd><span>joysticks et gâchettes</span></div>",
-      "tatto": "<div><kbd>joystick</kbd><span>marcher</span></div>\n<div><kbd>glisser</kbd><span>regarder</span></div>\n<div><kbd>toucher le cône</kbd><span>ouvrir la fiche</span></div>\n<div><kbd>bandeau du bas</kbd><span>changer de phase</span></div>\n<div><kbd>Coupe</kbd><span>ouvrir le terrain</span></div>\n<div><kbd>manette</kbd><span>joysticks et gâchettes</span></div>",
-      "avvertenza": "Le plan suit le tracé urbain réel — neuf <em>regiones</em>, les axes de rues, sept portes, la position des monuments — mais les volumes sont schématiques et la trame a été redressée. Les seules proportions tirées de mesures publiées sont celles de la Grande Palestre. Les textures sont dessinées par le code, non relevées sur les matériaux réels. Le tracé du canal de Fontana est inventé : aucune source scientifique ne le documente. Ne vous en servez pas comme documentation archéologique : servez-vous-en pour rendre un raisonnement visible."
+      "tatto": "<div><kbd>touche la rue</kbd><span>vas-y à pied</span></div>\n<div><kbd>Courir</kbd><span>va plus vite</span></div>\n<div><kbd>glisse</kbd><span>regarde</span></div>\n<div><kbd>touche le cône</kbd><span>ouvre la fiche</span></div>\n<div><kbd>bande en bas</kbd><span>change de phase</span></div>\n<div><kbd>manette</kbd><span>sticks et gâchettes</span></div>",
+      "avvertenza": "Le plan suit le tracé urbain réel — neuf <em>regiones</em>, axes des rues, sept portes, position des monuments — mais les volumes sont schématiques et la grille est redressée. Seules quelques données viennent de mesures publiées, chacune avec sa source dans sa fiche : la largeur des rues et des trottoirs, la Grande Palestre. Les textures sont dessinées par le code, pas relevées sur les matériaux réels. Le tracé du canal de Fontana est inventé : aucune source scientifique ne le documente. Ne l'utilise pas comme documentation archéologique : utilise-le pour montrer un raisonnement.",
+      "lead": "Deux villes ensevelies par la même éruption, et ce qui s'est passé ensuite. Choisis comment entrer.",
+      "visita": {
+        "titolo": "Fais la visite guidée",
+        "testo": "Une étape à la fois, avec l'histoire de chaque lieu. Tu peux t'arrêter quand tu veux."
+      },
+      "cammina": {
+        "titolo": "Marche seul",
+        "tastiera": "Déplace-toi avec Z Q S D ou W A S D et regarde avec la souris. Les cônes verts racontent un lieu.",
+        "tatto": "Touche la rue et tu y vas à pied ; fais glisser pour regarder autour de toi."
+      },
+      "ercolano": {
+        "titolo": "Va à Herculanum",
+        "testo": "La ville que l'éruption a entièrement recouverte : on ne marche que là où l'on a fouillé."
+      },
+      "guida": "Mode d'emploi",
+      "breve": "Modèle schématique : là où manque une mesure publiée, nous le disons, lieu par lieu."
     }
   },
   "scena": {

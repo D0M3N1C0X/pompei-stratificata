@@ -19,7 +19,7 @@ export default {
   "ui": {
     "touch": {
       "run": "Corri",
-      "hint": "trascina lo schermo per guardarti intorno",
+      "hint": "tocca la strada per andarci · trascina per guardarti intorno",
       "levettaAria": "Levetta di movimento"
     },
     "brand": {
@@ -130,18 +130,34 @@ export default {
       "copiato": "Link copiato"
     },
     "intro": {
-      "occhiello": "Esploratore v8 · dossier Pompei dopo il 79",
+      "occhiello": "Pompei ed Ercolano · dal 79 a oggi",
       "titolo": "Sedici secoli, in otto passi",
       "p1": "Cammini per le strade di Pompei — i muri ti fermano — e scorri le fasi lungo la fascia in basso. A ogni passo cambia quello che vedi: <b>il deposito sale di cinque metri e i piani terra spariscono</b>, i tetti vengono spogliati, sui piani superiori emergenti compaiono le strutture del IV–V secolo, la collina si copre di coltivo, il canale di Fontana la taglia, si aprono i cumuli di scarico borbonici.",
       "p2": "I coni verdi sono i punti in cui il dossier ha un dato: avvicinati e clicca. Con <b>Sezione</b> tagli il terreno e guardi la stratigrafia dall'interno.",
       "p3": "Si entra <b>alle nove e mezza</b>, con il sole basso: è l'ora in cui le ombre staccano i volumi e la città si legge. Con <b>Ora</b> apri l'orologio, scegli l'alba, il mezzogiorno o la notte, e con <b>Adesso</b> passi all'<b>ora reale di Pompei</b> — il sole dove sarebbe in questo momento sopra il sito, per la latitudine 40,75° N con le formule NOAA. Con <b>Controller</b> accendi i comandi su schermo; se colleghi un joypad Bluetooth viene riconosciuto da solo.",
       "tastiera": "<div><kbd>W A S D</kbd><span>cammina</span></div>\n<div><kbd>Shift</kbd><span>corri</span></div>\n<div><kbd>mouse</kbd><span>guarda</span></div>\n<div><kbd>C</kbd><span>sezione</span></div>\n<div><kbd>F</kbd><span>volo libero</span></div>\n<div><kbd>L</kbd><span>etichette</span></div>\n<div><kbd>1 – 8</kbd><span>cambia fase</span></div>\n<div><kbd>Esc</kbd><span>sblocca il mouse</span></div>\n<div><kbd>joypad</kbd><span>levette e dorsali</span></div>",
-      "tatto": "<div><kbd>levetta</kbd><span>cammina</span></div>\n<div><kbd>trascina</kbd><span>guarda</span></div>\n<div><kbd>tocca il cono</kbd><span>apri la scheda</span></div>\n<div><kbd>fascia in basso</kbd><span>cambia fase</span></div>\n<div><kbd>Sezione</kbd><span>taglia il terreno</span></div>\n<div><kbd>joypad</kbd><span>levette e dorsali</span></div>",
-      "avvertenza": "La pianta segue l'impianto urbano reale — nove <em>regiones</em>, assi stradali, sette porte, posizione dei monumenti — ma le volumetrie sono schematiche e la griglia è raddrizzata. Le uniche proporzioni prese da misure pubblicate sono quelle della Palestra Grande. Le texture sono disegnate dal codice, non rilevate dai materiali reali. Il tracciato del canale di Fontana è inventato: nessuna fonte scientifica lo documenta. Non usarlo come documentazione archeologica: usalo per far vedere un ragionamento.",
+      "tatto": "<div><kbd>tocca la strada</kbd><span>vai lì a piedi</span></div>\n<div><kbd>Corri</kbd><span>vai più veloce</span></div>\n<div><kbd>trascina</kbd><span>guarda</span></div>\n<div><kbd>tocca il cono</kbd><span>apri la scheda</span></div>\n<div><kbd>fascia in basso</kbd><span>cambia fase</span></div>\n<div><kbd>joypad</kbd><span>levette e dorsali</span></div>",
+      "avvertenza": "La pianta segue l'impianto urbano reale — nove <em>regiones</em>, assi stradali, sette porte, posizione dei monumenti — ma le volumetrie sono schematiche e la griglia è raddrizzata. Sono prese da misure pubblicate solo alcune cose, ciascuna con la fonte nella sua scheda: le larghezze delle strade e dei marciapiedi, la Palestra Grande. Le texture sono disegnate dal codice, non rilevate dai materiali reali. Il tracciato del canale di Fontana è inventato: nessuna fonte scientifica lo documenta. Non usarlo come documentazione archeologica: usalo per far vedere un ragionamento.",
       "entra": "Entra in città",
       "confronto": "Vedi il confronto",
       "dossier": "Vai al dossier",
-      "dossierLink": "./dossier/"
+      "dossierLink": "./dossier/",
+      "lead": "Due città sepolte dalla stessa eruzione, e quello che è successo dopo. Scegli come entrare.",
+      "visita": {
+        "titolo": "Fai la visita guidata",
+        "testo": "Una tappa alla volta, con la storia di ogni luogo. Puoi fermarti quando vuoi."
+      },
+      "cammina": {
+        "titolo": "Cammina da solo",
+        "tastiera": "Muoviti con W A S D e guarda col mouse. I coni verdi raccontano un luogo.",
+        "tatto": "Tocca la strada e ci vai a piedi; trascina per guardarti intorno."
+      },
+      "ercolano": {
+        "titolo": "Vai a Ercolano",
+        "testo": "La città che l'eruzione ha coperto del tutto: si cammina solo dove si è scavato."
+      },
+      "guida": "Come si usa",
+      "breve": "Modello schematico: dove manca una misura pubblicata lo diciamo, luogo per luogo."
     },
     "caricamento": "Costruzione della città…",
     "guasto": {

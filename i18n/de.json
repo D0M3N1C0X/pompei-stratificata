@@ -9,7 +9,7 @@
     },
     "touch": {
       "run": "Laufen",
-      "hint": "über den Bildschirm ziehen, um sich umzusehen",
+      "hint": "Straße antippen, um hinzugehen · ziehen, um dich umzusehen",
       "levettaAria": "Steuerknüppel"
     },
     "brand": {
@@ -136,7 +136,7 @@
       "aria": "Sprache wählen"
     },
     "intro": {
-      "occhiello": "Explorer v8 · Dossier Pompeji nach 79",
+      "occhiello": "Pompeji und Herculaneum · von 79 bis heute",
       "titolo": "Sechzehn Jahrhunderte, in acht Schritten",
       "entra": "Die Stadt betreten",
       "confronto": "Den Vergleich ansehen",
@@ -146,8 +146,24 @@
       "p2": "Die grünen Kegel markieren die Punkte, an denen das Dossier einen Befund hat: hingehen und klicken. <b>Schnitt</b> öffnet den Boden und lässt Sie die Schichtung von innen sehen.",
       "p3": "Sie kommen <b>um halb zehn</b> an, bei tief stehender Sonne: das ist die Stunde, in der die Schatten die Baukörper trennen und die Stadt lesbar wird. <b>Uhrzeit</b> öffnet die Uhr — wählen Sie Morgengrauen, Mittag oder Nacht — und <b>Jetzt</b> schaltet auf die <b>tatsächliche Zeit in Pompeji</b> um, mit der Sonne dort, wo sie in diesem Augenblick über dem Gelände stünde, berechnet für 40,75° N mit den NOAA-Formeln. <b>Controller</b> schaltet die Bildschirmsteuerung ein; ein Bluetooth-Gamepad wird von selbst erkannt.",
       "tastiera": "<div><kbd>W A S D</kbd><span>gehen</span></div>\n<div><kbd>Umschalt</kbd><span>laufen</span></div>\n<div><kbd>Maus</kbd><span>umsehen</span></div>\n<div><kbd>C</kbd><span>Schnitt</span></div>\n<div><kbd>F</kbd><span>freier Flug</span></div>\n<div><kbd>L</kbd><span>Beschriftung</span></div>\n<div><kbd>1 – 8</kbd><span>Phase wechseln</span></div>\n<div><kbd>Esc</kbd><span>Maus freigeben</span></div>\n<div><kbd>Gamepad</kbd><span>Sticks und Schultertasten</span></div>",
-      "tatto": "<div><kbd>Stick</kbd><span>gehen</span></div>\n<div><kbd>ziehen</kbd><span>umsehen</span></div>\n<div><kbd>Kegel antippen</kbd><span>Karte öffnen</span></div>\n<div><kbd>Band unten</kbd><span>Phase wechseln</span></div>\n<div><kbd>Schnitt</kbd><span>Boden öffnen</span></div>\n<div><kbd>Gamepad</kbd><span>Sticks und Schultertasten</span></div>",
-      "avvertenza": "Der Plan folgt dem tatsächlichen Stadtgrundriss — neun <em>regiones</em>, die Straßenachsen, sieben Tore, die Lage der Monumente — aber die Baukörper sind schematisch und das Raster wurde begradigt. Die einzigen Proportionen aus veröffentlichten Maßen sind die der Großen Palästra. Die Texturen sind vom Code gezeichnet, nicht an den echten Materialien aufgenommen. Der Verlauf von Fontanas Kanal ist erfunden: keine wissenschaftliche Quelle belegt ihn. Verwenden Sie dies nicht als archäologische Dokumentation, sondern um eine Argumentation sichtbar zu machen."
+      "tatto": "<div><kbd>Straße antippen</kbd><span>hingehen</span></div>\n<div><kbd>Laufen</kbd><span>schneller gehen</span></div>\n<div><kbd>ziehen</kbd><span>schauen</span></div>\n<div><kbd>Kegel antippen</kbd><span>Karte öffnen</span></div>\n<div><kbd>Leiste unten</kbd><span>Phase wechseln</span></div>\n<div><kbd>Gamepad</kbd><span>Sticks und Schultertasten</span></div>",
+      "avvertenza": "Der Plan folgt dem realen Stadtgrundriss — neun <em>regiones</em>, Straßenachsen, sieben Tore, Lage der Monumente —, aber die Baukörper sind schematisch und das Raster ist begradigt. Nur wenige Dinge stammen aus veröffentlichten Maßen, jedes mit Quelle auf seiner Karte: die Breite der Straßen und Gehwege, die Große Palästra. Die Texturen sind vom Code gezeichnet, nicht an den echten Materialien aufgenommen. Der Verlauf von Fontanas Kanal ist erfunden: Keine wissenschaftliche Quelle belegt ihn. Nutze das Modell nicht als archäologische Dokumentation, sondern um einen Gedankengang zu zeigen.",
+      "lead": "Zwei Städte, verschüttet vom selben Ausbruch, und was danach geschah. Wähle, wie du hineingehst.",
+      "visita": {
+        "titolo": "Mach die Führung",
+        "testo": "Eine Station nach der anderen, mit der Geschichte jedes Ortes. Du kannst jederzeit aufhören."
+      },
+      "cammina": {
+        "titolo": "Geh allein",
+        "tastiera": "Bewege dich mit W A S D und schau mit der Maus. Die grünen Kegel erzählen von einem Ort.",
+        "tatto": "Tippe auf die Straße und du gehst hin; ziehe, um dich umzusehen."
+      },
+      "ercolano": {
+        "titolo": "Geh nach Herculaneum",
+        "testo": "Die Stadt, die der Ausbruch ganz bedeckt hat: Gehen kann man nur, wo ausgegraben wurde."
+      },
+      "guida": "So funktioniert es",
+      "breve": "Ein schematisches Modell: Wo ein veröffentlichtes Maß fehlt, sagen wir es, Ort für Ort."
     }
   },
   "scena": {

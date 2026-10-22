@@ -9,7 +9,7 @@
     },
     "touch": {
       "run": "Correr",
-      "hint": "arraste o ecrã para olhar em redor",
+      "hint": "toca na rua para lá ires · arrasta para olhar à volta",
       "levettaAria": "Manípulo de movimento"
     },
     "brand": {
@@ -136,7 +136,7 @@
       "aria": "Escolher o idioma"
     },
     "intro": {
-      "occhiello": "Explorador v8 · dossiê Pompeia depois de 79",
+      "occhiello": "Pompeia e Herculano · de 79 até hoje",
       "titolo": "Dezasseis séculos, em oito passos",
       "entra": "Entrar na cidade",
       "confronto": "Ver a comparação",
@@ -146,8 +146,24 @@
       "p2": "Os cones verdes marcam os pontos onde o dossiê tem um dado: aproxime-se e clique. <b>Corte</b> abre o terreno e deixa-o olhar a estratigrafia por dentro.",
       "p3": "Entra <b>às nove e meia</b>, com o sol baixo: é a hora em que as sombras destacam os volumes e a cidade se lê. <b>Hora</b> abre o relógio — escolha a madrugada, o meio-dia ou a noite — e <b>Agora</b> passa à <b>hora real de Pompeia</b>, com o sol onde estaria sobre o sítio neste momento, calculado para a latitude 40,75° N com as fórmulas da NOAA. <b>Comando</b> liga os controlos no ecrã; um comando Bluetooth é reconhecido sozinho.",
       "tastiera": "<div><kbd>W A S D</kbd><span>caminhar</span></div>\n<div><kbd>Shift</kbd><span>correr</span></div>\n<div><kbd>rato</kbd><span>olhar</span></div>\n<div><kbd>C</kbd><span>corte</span></div>\n<div><kbd>F</kbd><span>voo livre</span></div>\n<div><kbd>L</kbd><span>etiquetas</span></div>\n<div><kbd>1 – 8</kbd><span>mudar de fase</span></div>\n<div><kbd>Esc</kbd><span>libertar o rato</span></div>\n<div><kbd>comando</kbd><span>manípulos e gatilhos</span></div>",
-      "tatto": "<div><kbd>manípulo</kbd><span>caminhar</span></div>\n<div><kbd>arrastar</kbd><span>olhar</span></div>\n<div><kbd>tocar no cone</kbd><span>abrir a ficha</span></div>\n<div><kbd>faixa inferior</kbd><span>mudar de fase</span></div>\n<div><kbd>Corte</kbd><span>abrir o terreno</span></div>\n<div><kbd>comando</kbd><span>manípulos e gatilhos</span></div>",
-      "avvertenza": "A planta segue o traçado urbano real — nove <em>regiones</em>, os eixos viários, sete portas, a posição dos monumentos — mas os volumes são esquemáticos e a malha foi endireitada. As únicas proporções tiradas de medidas publicadas são as da Palestra Grande. As texturas são desenhadas pelo código, não levantadas dos materiais reais. O traçado do canal de Fontana é inventado: nenhuma fonte científica o documenta. Não o use como documentação arqueológica: use-o para tornar visível um raciocínio."
+      "tatto": "<div><kbd>toca na rua</kbd><span>vai lá a pé</span></div>\n<div><kbd>Correr</kbd><span>vai mais depressa</span></div>\n<div><kbd>arrasta</kbd><span>olha</span></div>\n<div><kbd>toca no cone</kbd><span>abre a ficha</span></div>\n<div><kbd>faixa em baixo</kbd><span>muda de fase</span></div>\n<div><kbd>comando</kbd><span>manípulos e gatilhos</span></div>",
+      "avvertenza": "A planta segue o traçado urbano real — nove <em>regiones</em>, eixos viários, sete portas, posição dos monumentos —, mas os volumes são esquemáticos e a grelha está endireitada. Só algumas coisas vêm de medidas publicadas, cada uma com a fonte na sua ficha: a largura das ruas e dos passeios, a Grande Palestra. As texturas são desenhadas pelo código, não levantadas dos materiais reais. O traçado do canal de Fontana é inventado: nenhuma fonte científica o documenta. Não o uses como documentação arqueológica: usa-o para mostrar um raciocínio.",
+      "lead": "Duas cidades soterradas pela mesma erupção, e o que aconteceu depois. Escolhe como entrar.",
+      "visita": {
+        "titolo": "Faz a visita guiada",
+        "testo": "Uma paragem de cada vez, com a história de cada lugar. Podes parar quando quiseres."
+      },
+      "cammina": {
+        "titolo": "Caminha sozinho",
+        "tastiera": "Move-te com W A S D e olha com o rato. Os cones verdes contam um lugar.",
+        "tatto": "Toca na rua e vais lá a pé; arrasta para olhar à volta."
+      },
+      "ercolano": {
+        "titolo": "Vai a Herculano",
+        "testo": "A cidade que a erupção cobriu por completo: só se caminha onde se escavou."
+      },
+      "guida": "Como se usa",
+      "breve": "Modelo esquemático: onde falta uma medida publicada, dizemo-lo, lugar a lugar."
     }
   },
   "scena": {

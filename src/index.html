@@ -369,6 +369,9 @@
   body.pad #touch{display:block}
   body.presenting #touch,
   body.section-on #touch{display:none}
+  /* sul tocco si cammina toccando la strada (scene/cammino.js): la levetta
+     resta solo per il joypad e per chi accende «Controller» col mouse */
+  body.touch #stick{display:none}
   #stick{
     position:absolute;left:1.4rem;bottom:11.5rem;width:7.5rem;height:7.5rem;border-radius:50%;
     background:rgba(16,20,18,.5);border:1px solid var(--line);pointer-events:auto;
@@ -434,8 +437,8 @@
   }
   #intro.gone{opacity:0;pointer-events:none}
   #introCard{
-    max-width:36rem;width:100%;background:var(--glass-2);border:1px solid var(--line);
-    padding:1.6rem 1.5rem 1.3rem;display:flex;flex-direction:column;gap:.9rem;
+    max-width:34rem;width:100%;background:var(--glass-2);border:1px solid var(--line);border-radius:22px;
+    padding:1.7rem 1.5rem 1.3rem;display:flex;flex-direction:column;gap:1rem;
   }
   #introCard .eyebrow{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
   #introCard h2{margin:0;font-size:1.55rem;font-weight:600;letter-spacing:-.026em;line-height:1.1}
@@ -461,22 +464,40 @@
     font-size:.78rem;line-height:1.5;color:var(--ink-faint);
     border-left:2px solid var(--flag);padding-left:.75rem;font-family:var(--sans);
   }
-  #introBtns{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
-  #btnStart{
-    background:var(--accent);color:#0E1512;font-family:var(--mono);font-size:.68rem;
-    font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:.6rem 1.1rem;border-radius:2px;
+  /* La porta d'ingresso: tre scelte grandi, come una schermata di iPhone.
+     Le istruzioni lunghe restano, ma dietro «Come si usa». */
+  #introCard .introLead{font-family:var(--sans);font-size:1.02rem;line-height:1.5;color:var(--ink)}
+  #scelte{display:flex;flex-direction:column;gap:.7rem}
+  .scelta{
+    display:flex;align-items:center;gap:1rem;text-align:left;width:100%;
+    padding:1rem 1.1rem;min-height:4.6rem;border-radius:14px;
+    background:rgba(231,235,230,.06);border:1px solid var(--line);color:var(--ink);
+    transition:background .15s,border-color .15s,transform .1s;
   }
-  #btnStart:hover{background:#96CCB7}
-  #btnStartCompare{
-    font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.12em;
-    text-transform:uppercase;padding:.6rem 1.1rem;border-radius:2px;
-    border:1px solid var(--accent-dim);color:var(--ink);
+  .scelta:hover{background:rgba(127,184,163,.12);border-color:var(--accent-dim)}
+  .scelta:active{transform:scale(.985)}
+  .scelta:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .sIco{
+    flex:none;width:2.6rem;height:2.6rem;border-radius:50%;display:grid;place-items:center;
+    background:var(--accent);color:#0E1512;font-size:1.05rem;font-weight:700;
   }
-  #btnStartCompare:hover{border-color:var(--accent);color:var(--accent)}
-  #introBtns a{
-    font-family:var(--mono);font-size:.63rem;letter-spacing:.11em;text-transform:uppercase;
-    color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--accent-dim);padding-bottom:.15rem;
+  .sTesto{display:flex;flex-direction:column;gap:.2rem}
+  .sTesto b{font-family:var(--sans);font-size:1.08rem;font-weight:600;letter-spacing:-.01em}
+  .sTesto span{font-family:var(--sans);font-size:.88rem;line-height:1.4;color:var(--ink-soft)}
+  .sTesto [data-quando="tatto"]{display:none}
+  @media (pointer: coarse){
+    .sTesto [data-quando="tastiera"]{display:none}
+    .sTesto [data-quando="tatto"]{display:inline}
   }
+  #introAltro{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;align-items:center}
+  #introAltro button,#introAltro a{
+    font-family:var(--sans);font-size:.92rem;color:var(--accent);text-decoration:none;
+    padding:.5rem 0;min-height:2.75rem;display:inline-flex;align-items:center;
+  }
+  #introAltro button:hover,#introAltro a:hover{text-decoration:underline}
+  #introCard .introBreve{font-family:var(--sans);font-size:.82rem;color:var(--ink-faint)}
+  #introGuida{display:flex;flex-direction:column;gap:.9rem;border-top:1px solid var(--line-soft);padding-top:.9rem}
+  #introGuida[hidden]{display:none}
 
   #loading{
     position:fixed;inset:0;z-index:50;display:grid;place-items:center;
@@ -577,6 +598,17 @@
       overflow:hidden;cursor:pointer;font-size:11.5px}
     .ercNote.aperta{display:block}
     .ercBar{gap:6px;padding:7px 9px}
+    /* Su un telefono il riquadro occupava ancora metà dello schermo: una
+       riga sola che scorre di lato, il nome lo dice già la testata, e
+       resta solo la nota del momento; quella generale è nelle schede
+       «Quanto è scavato» e «Cardini e decumani». */
+    #ercHud .ercBar{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none;
+      -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent);
+              mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent)}
+    #ercHud .ercBar::-webkit-scrollbar{display:none}
+    #ercHud .ercBar > *{flex:none}
+    .ercName{display:none}
+    .ercNote:not(.ercMomentoNota){display:none}
   }
   .ercSotto{display:inline-flex;gap:6px}
   .ercMomenti{display:inline-flex;gap:4px}
@@ -619,8 +651,12 @@ body.cmp-on #crosshair, body.cmp-on #nearHint{ display:none !important; }
 .ercKeys kbd{ background:rgba(255,255,255,.10); border-radius:4px; padding:1px 5px;
   font-family:ui-monospace,monospace; color:#e6e1d4; }
 .ercGo{ display:none; gap:8px; }
-body.touch #ercHud .ercGo{ display:flex; }
+/* Sul tocco si cammina toccando la strada: avanti/indietro servono solo
+   nelle gallerie, dove il tocco non porta (22/10/2026). */
+body.touch.erc-galleria #ercHud .ercGo{ display:flex; }
 body.touch #ercHud .ercKeys{ display:none; }
+.ercTatto{ display:none; font-size:11px; color:#a49d8e; padding-left:4px; }
+body.touch:not(.erc-galleria) #ercHud .ercTatto{ display:block; }
 .ercGoBtn{ background:rgba(20,20,18,.90); border:1px solid rgba(255,255,255,.16);
   color:#eae6dc; border-radius:12px; padding:14px 22px; font-size:14px; }
 body.erc-on #rail, body.erc-on #bottom, body.erc-on #clock, body.erc-on #compass,
@@ -716,6 +752,7 @@ body.erc-on #crosshair{ display:block !important; }
     <span><kbd>W A S D</kbd> cammina</span><span><kbd>mouse</kbd> guarda</span>
     <span><kbd>clic</kbd> apri la scheda</span><span><kbd>Esc</kbd> sblocca</span>
   </div>
+  <div class="ercTatto" data-i18n="ui.touch.hint">tocca la strada per andarci · trascina per guardarti intorno</div>
   <div class="ercGo">
     <button class="ercGoBtn" id="ercFwd" data-i18n="ui.erc.avanti">▲ avanti</button>
     <button class="ercGoBtn" id="ercBack" data-i18n="ui.erc.indietro">▼ indietro</button>
@@ -835,36 +872,58 @@ body.erc-on #crosshair{ display:block !important; }
 </aside>
 
 <div id="intro">
-  <div id="introCard">
-    <span class="eyebrow" data-i18n="ui.intro.occhiello">Esploratore v8 · dossier Pompei dopo il 79</span>
-    <h2 data-i18n="ui.intro.titolo">Sedici secoli, in otto passi</h2>
-    <p data-i18n-html="ui.intro.p1">Cammini per le strade di Pompei — i muri ti fermano — e scorri le fasi lungo la fascia in basso. A ogni passo cambia quello che vedi: <b>il deposito sale di cinque metri e i piani terra spariscono</b>, i tetti vengono spogliati, sui piani superiori emergenti compaiono le strutture del IV–V secolo, la collina si copre di coltivo, il canale di Fontana la taglia, si aprono i cumuli di scarico borbonici.</p>
-    <p data-i18n-html="ui.intro.p2">I coni verdi sono i punti in cui il dossier ha un dato: avvicinati e clicca. Con <b>Sezione</b> tagli il terreno e guardi la stratigrafia dall'interno.</p>
-    <p data-i18n-html="ui.intro.p3">Si entra <b>alle nove e mezza</b>, con il sole basso: è l'ora in cui le ombre staccano i volumi e la città si legge. Con <b>Ora</b> apri l'orologio, scegli l'alba, il mezzogiorno o la notte, e con <b>Adesso</b> passi all'<b>ora reale di Pompei</b> — il sole dove sarebbe in questo momento sopra il sito, per la latitudine 40,75° N con le formule NOAA. Con <b>Controller</b> accendi i comandi su schermo; se colleghi un joypad Bluetooth viene riconosciuto da solo.</p>
-    <div class="keys" data-quando="tastiera" data-i18n-html="ui.intro.tastiera">
-      <div><kbd>W A S D</kbd><span>cammina</span></div>
-      <div><kbd>Shift</kbd><span>corri</span></div>
-      <div><kbd>mouse</kbd><span>guarda</span></div>
-      <div><kbd>C</kbd><span>sezione</span></div>
-      <div><kbd>F</kbd><span>volo libero</span></div>
-      <div><kbd>L</kbd><span>etichette</span></div>
-      <div><kbd>1 – 8</kbd><span>cambia fase</span></div>
-      <div><kbd>Esc</kbd><span>sblocca il mouse</span></div>
-      <div><kbd>joypad</kbd><span>levette e dorsali</span></div>
+  <div id="introCard" role="dialog" aria-labelledby="introTitolo">
+    <span class="eyebrow" data-i18n="ui.intro.occhiello">Pompei ed Ercolano · dal 79 a oggi</span>
+    <h2 id="introTitolo" data-i18n="ui.intro.titolo">Sedici secoli, in otto passi</h2>
+    <p class="introLead" data-i18n="ui.intro.lead">Due città sepolte dalla stessa eruzione, e quello che è successo dopo. Scegli come entrare.</p>
+    <div id="scelte">
+      <button class="scelta" id="sceltaVisita">
+        <span class="sIco" aria-hidden="true">▶</span>
+        <span class="sTesto"><b data-i18n="ui.intro.visita.titolo">Fai la visita guidata</b>
+        <span data-i18n="ui.intro.visita.testo">Una tappa alla volta, con la storia di ogni luogo. Puoi fermarti quando vuoi.</span></span>
+      </button>
+      <button class="scelta" id="btnStart">
+        <span class="sIco" aria-hidden="true">↗</span>
+        <span class="sTesto"><b data-i18n="ui.intro.cammina.titolo">Cammina da solo</b>
+        <span data-quando="tastiera" data-i18n="ui.intro.cammina.tastiera">Muoviti con W A S D e guarda col mouse. I coni verdi raccontano un luogo.</span>
+        <span data-quando="tatto" data-i18n="ui.intro.cammina.tatto">Tocca la strada e ci vai a piedi; trascina per guardarti intorno.</span></span>
+      </button>
+      <button class="scelta" id="sceltaErcolano">
+        <span class="sIco" aria-hidden="true">↓</span>
+        <span class="sTesto"><b data-i18n="ui.intro.ercolano.titolo">Vai a Ercolano</b>
+        <span data-i18n="ui.intro.ercolano.testo">La città che l'eruzione ha coperto del tutto: si cammina solo dove si è scavato.</span></span>
+      </button>
     </div>
-    <div class="keys" data-quando="tatto" data-i18n-html="ui.intro.tatto">
-      <div><kbd>levetta</kbd><span>cammina</span></div>
-      <div><kbd>trascina</kbd><span>guarda</span></div>
-      <div><kbd>tocca il cono</kbd><span>apri la scheda</span></div>
-      <div><kbd>fascia in basso</kbd><span>cambia fase</span></div>
-      <div><kbd>Sezione</kbd><span>taglia il terreno</span></div>
-      <div><kbd>joypad</kbd><span>levette e dorsali</span></div>
-    </div>
-    <p class="disclaimer" data-i18n-html="ui.intro.avvertenza">La pianta segue l'impianto urbano reale — nove <em>regiones</em>, assi stradali, sette porte, posizione dei monumenti — ma le volumetrie sono schematiche e la griglia è raddrizzata. Le uniche proporzioni prese da misure pubblicate sono quelle della Palestra Grande. Le texture sono disegnate dal codice, non rilevate dai materiali reali. Il tracciato del canale di Fontana è inventato: nessuna fonte scientifica lo documenta. Non usarlo come documentazione archeologica: usalo per far vedere un ragionamento.</p>
-    <div id="introBtns">
-      <button id="btnStart" data-i18n="ui.intro.entra">Entra in città</button>
+    <div id="introAltro">
       <button id="btnStartCompare" data-i18n="ui.intro.confronto">Vedi il confronto</button>
       <a href="./dossier/" data-i18n="ui.intro.dossier" data-i18n-attr="href:ui.intro.dossierLink">Vai al dossier</a>
+      <button id="introGuidaBtn" aria-expanded="false" aria-controls="introGuida" data-i18n="ui.intro.guida">Come si usa</button>
+    </div>
+    <p class="introBreve" data-i18n="ui.intro.breve">Modello schematico: dove manca una misura pubblicata lo diciamo, luogo per luogo.</p>
+    <div id="introGuida" hidden>
+      <p data-i18n-html="ui.intro.p1">Cammini per le strade di Pompei — i muri ti fermano — e scorri le fasi lungo la fascia in basso. A ogni passo cambia quello che vedi: <b>il deposito sale di cinque metri e i piani terra spariscono</b>, i tetti vengono spogliati, sui piani superiori emergenti compaiono le strutture del IV–V secolo, la collina si copre di coltivo, il canale di Fontana la taglia, si aprono i cumuli di scarico borbonici.</p>
+      <p data-i18n-html="ui.intro.p2">I coni verdi sono i punti in cui il dossier ha un dato: avvicinati e clicca. Con <b>Sezione</b> tagli il terreno e guardi la stratigrafia dall'interno.</p>
+      <p data-i18n-html="ui.intro.p3">Si entra <b>alle nove e mezza</b>, con il sole basso: è l'ora in cui le ombre staccano i volumi e la città si legge. Con <b>Ora</b> apri l'orologio, scegli l'alba, il mezzogiorno o la notte, e con <b>Adesso</b> passi all'<b>ora reale di Pompei</b> — il sole dove sarebbe in questo momento sopra il sito, per la latitudine 40,75° N con le formule NOAA. Con <b>Controller</b> accendi i comandi su schermo; se colleghi un joypad Bluetooth viene riconosciuto da solo.</p>
+      <div class="keys" data-quando="tastiera" data-i18n-html="ui.intro.tastiera">
+        <div><kbd>W A S D</kbd><span>cammina</span></div>
+        <div><kbd>Shift</kbd><span>corri</span></div>
+        <div><kbd>mouse</kbd><span>guarda</span></div>
+        <div><kbd>C</kbd><span>sezione</span></div>
+        <div><kbd>F</kbd><span>volo libero</span></div>
+        <div><kbd>L</kbd><span>etichette</span></div>
+        <div><kbd>1 – 8</kbd><span>cambia fase</span></div>
+        <div><kbd>Esc</kbd><span>sblocca il mouse</span></div>
+        <div><kbd>joypad</kbd><span>levette e dorsali</span></div>
+      </div>
+      <div class="keys" data-quando="tatto" data-i18n-html="ui.intro.tatto">
+        <div><kbd>levetta</kbd><span>cammina</span></div>
+        <div><kbd>trascina</kbd><span>guarda</span></div>
+        <div><kbd>tocca il cono</kbd><span>apri la scheda</span></div>
+        <div><kbd>fascia in basso</kbd><span>cambia fase</span></div>
+        <div><kbd>Sezione</kbd><span>taglia il terreno</span></div>
+        <div><kbd>joypad</kbd><span>levette e dorsali</span></div>
+      </div>
+      <p class="disclaimer" data-i18n-html="ui.intro.avvertenza">La pianta segue l'impianto urbano reale — nove <em>regiones</em>, assi stradali, sette porte, posizione dei monumenti — ma le volumetrie sono schematiche e la griglia è raddrizzata. Le uniche proporzioni prese da misure pubblicate sono quelle della Palestra Grande. Le texture sono disegnate dal codice, non rilevate dai materiali reali. Il tracciato del canale di Fontana è inventato: nessuna fonte scientifica lo documenta. Non usarlo come documentazione archeologica: usalo per far vedere un ragionamento.</p>
     </div>
   </div>
 </div>

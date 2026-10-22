@@ -58,7 +58,8 @@ esigi(!/claude\.ai\/code\/artifact/.test(index),
 // ── versione dichiarata negli stessi termini ovunque
 const major = JSON.parse(read('package.json')).version.split('.')[0];
 esigi(index.includes(`v${major} · due città`), `la testata dichiara v${major}`);
-esigi(index.includes(`Esploratore v${major}`), `la scheda d'ingresso dichiara v${major}`);
+// la scheda d'ingresso non dichiara più la versione (22/10/2026): è una porta
+// con tre scelte, non un frontespizio; la versione resta nella testata
 esigi(read('sw.js').includes(`dopo79-v${major}`), `la cache del service worker dichiara v${major}`);
 
 // ── senza il collegamento al manifest l'applicazione non si installa, e il

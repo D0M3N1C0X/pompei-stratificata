@@ -3,6 +3,7 @@ import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terre
 import { createInhabitants } from './scene/inhabitants.js';
 import { POPULATIONS_ERCOLANO } from './data/populations.js';
 import { PAL } from './scene/palette.js';
+import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
 import {
@@ -24,7 +25,11 @@ import {
   MeshBasicMaterial,
   MeshLambertMaterial,
   PerspectiveCamera,
-  Scene
+  Plane,
+  Raycaster,
+  RingGeometry,
+  Scene,
+  Vector2
 } from 'three';
 
 export const ERCOLANO = (function(){
@@ -466,7 +471,7 @@ export const ERCOLANO = (function(){
   }
   function onPointerDown(e){
     if(!active) return;
-    if(e.pointerType === 'touch'){ touchLook = { id:e.pointerId, x:e.clientX, y:e.clientY }; return; }
+    if(e.pointerType === 'touch'){ touchLook = { id:e.pointerId, x:e.clientX, y:e.clientY, x0:e.clientX, y0:e.clientY, mosso:false }; return; }
     // clic su un marcatore vicino: apre la scheda
     const near = vicino();
     if(near){ cbs.openPanel && cbs.openPanel(near.data); return; }
@@ -474,12 +479,51 @@ export const ERCOLANO = (function(){
   }
   function onPointerMove(e){
     if(!active || !touchLook || e.pointerId !== touchLook.id) return;
+    if(Math.hypot(e.clientX - touchLook.x0, e.clientY - touchLook.y0) > 10) touchLook.mosso = true;
     yaw   -= (e.clientX - touchLook.x) * 0.006;
     pitch -= (e.clientY - touchLook.y) * 0.005;
     pitch = Math.max(-1.25, Math.min(1.15, pitch));
     touchLook.x = e.clientX; touchLook.y = e.clientY;
   }
-  function onPointerUp(e){ if(touchLook && e.pointerId === touchLook.id) touchLook = null; }
+  function onPointerUp(e){
+    if(!touchLook || e.pointerId !== touchLook.id) return;
+    const tocco = !touchLook.mosso;
+    touchLook = null;
+    if(tocco && active) tocca(e);
+  }
+
+  /* «Tocca dove vuoi andare», come a Pompei (scene/cammino.js): un cono
+     toccato apre la scheda, la strada toccata è la meta. Il percorso si
+     cerca a celle di 50 cm sulla griglia delle collisioni. Non in volo e
+     non nelle gallerie, dove si va avanti e indietro con i bottoni. */
+  const raggio = new Raycaster(), ndc = new Vector2();
+  const piano = new Plane(new Vector3(0, 1, 0), 0), punto = new Vector3();
+  let percorso = null;
+  const segno = creaSegno({ RingGeometry, MeshBasicMaterial, Mesh, colore:PAL.accent });
+  eScene.add(segno);
+  function fermaPercorso(){ percorso = null; segno.visible = false; }
+  function tocca(e){
+    const r = host.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left)/r.width)*2 - 1, -((e.clientY - r.top)/r.height)*2 + 1);
+    raggio.setFromCamera(ndc, eCam);
+    const coni = hotspots.filter(h => h.group.visible).map(h => h.cone);
+    const hit = raggio.intersectObjects(coni, false)[0];
+    if(hit){
+      const h = hotspots.find(x => x.cone === hit.object);
+      if(h && cbs.openPanel){ cbs.openPanel(h.data); return; }
+    }
+    if(volo || inGalleria) return;
+    piano.constant = -quota(pos.x, pos.z);
+    if(!raggio.ray.intersectPlane(piano, punto)) return;
+    if(punto.distanceTo(eCam.position) > 120) return;
+    const punti = trovaPercorso({ libero:(x, z) => !bloccato(x, z), da:[pos.x, pos.z],
+                                  a:[punto.x, punto.z], passo:0.125, margine:8 });
+    if(!punti){ fermaPercorso(); return; }
+    const [fx, fz] = punti[punti.length - 1];
+    percorso = { punti, fermo:0, x:pos.x, z:pos.z };
+    segno.position.set(fx, quota(fx, fz) + 0.02, fz);
+    segno.visible = true;
+  }
   function onLockChange(){ locked = (document.pointerLockElement === host); }
 
   function vicino(){
@@ -523,9 +567,27 @@ export const ERCOLANO = (function(){
       return;
     }
 
-    const speed = sprint ? 1.0 : 0.35;     // 4 e 1,4 m/s: il passo vero (erano 18 e 7,6)
-    const tx = (-sy * f + cy * r) * speed;
-    const tz = (-cy * f - sy * r) * speed;
+    const speed = sprint || corsa ? 1.0 : 0.35;     // 4 e 1,4 m/s: il passo vero (erano 18 e 7,6)
+    let tx = (-sy * f + cy * r) * speed;
+    let tz = (-cy * f - sy * r) * speed;
+    // il percorso toccato, finché non si usano tasti o bottoni
+    if(percorso && (f || r || inGalleria)) fermaPercorso();
+    if(percorso){
+      const v = seguiPercorso(percorso, pos.x, pos.z, speed);
+      if(!v) fermaPercorso();
+      else {
+        [tx, tz] = v;
+        if(!touchLook && Math.hypot(v[0], v[1]) > 0.1){
+          let d = Math.atan2(-v[0], -v[1]) - yaw;
+          d = Math.atan2(Math.sin(d), Math.cos(d));
+          yaw += d * Math.min(1, dt * 2.2);
+        }
+        // fermo contro qualcosa: meno di 20 cm in un secondo e mezzo, si rinuncia
+        // (lo spostamento di un solo fotogramma, al passo, è sempre minuscolo)
+        if(Math.hypot(pos.x - percorso.x, pos.z - percorso.z) > 0.05){ percorso.x = pos.x; percorso.z = pos.z; percorso.fermo = 0; }
+        else if((percorso.fermo += dt) > 1.5) fermaPercorso();
+      }
+    }
     vx += (tx - vx) * k;
     vz += (tz - vz) * k;
     vy = 0;
@@ -560,6 +622,7 @@ export const ERCOLANO = (function(){
       h.cone.rotation.y = elapsed * 0.7;
     });
 
+    if(segno.visible){ const k = 1 + Math.sin(elapsed * 4) * 0.12; segno.scale.set(k, k, k); }
     const near = vicino();
     if(cbs.onNear) cbs.onNear(near ? near.data.label : null);
   }
@@ -588,7 +651,7 @@ export const ERCOLANO = (function(){
   function exit(){
     if(inGalleria) galleria(false);
     active = false;
-    keys.clear(); vx = vz = 0; touchGo = 0;
+    keys.clear(); vx = vz = 0; touchGo = 0; fermaPercorso();
     if(document.pointerLockElement === host) document.exitPointerLock();
   }
   /* La posizione d'apertura del volo è composta, non calcolata: da qui
@@ -598,6 +661,7 @@ export const ERCOLANO = (function(){
      quanto è piccola la parte scavata rispetto a quello che le sta sopra. */
   function dallAlto(on){
     volo = !!on;
+    fermaPercorso();
     vx = vy = vz = 0;
     if(volo){
       pos.x = C4; pos.z = 62; pos.y = 48;
@@ -695,6 +759,9 @@ export const ERCOLANO = (function(){
     yaw = 0; pitch = 0.11; vx = vz = 0;
   }
   function setGo(v){ touchGo = v; }
+  // «Corri» sul tocco: vale per il percorso toccato
+  let corsa = false;
+  function setCorsa(v){ corsa = !!v; }
   function apri(id){
     const h = hotspots.find(x => x.data.id === id);
     if(!h) return;
@@ -713,7 +780,7 @@ export const ERCOLANO = (function(){
   setMomento('oggi');
 
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
-           setGo, apri, textures, dallAlto, inVolo,
+           setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
            usaFigure: f => abitanti.usaFigure(f), galleria, galleriaAttiva, bloccato,
            momenti: MOMENTI, luoghi: LUOGHI,

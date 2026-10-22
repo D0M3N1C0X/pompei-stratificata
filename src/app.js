@@ -24,6 +24,7 @@ import {
   Points,
   PointsMaterial,
   Raycaster,
+  RingGeometry,
   SRGBColorSpace,
   Scene,
   Sprite,
@@ -45,6 +46,7 @@ import { PAL } from './scene/palette.js';
 import { DOT, PBR, TEX, TEXMAP, px } from './scene/textures.js';
 import { createInhabitants } from './scene/inhabitants.js';
 import { caricaFigure } from './scene/figure.js';
+import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
@@ -1475,7 +1477,9 @@ addEventListener('blur', () => keys.clear());
 const cv = renderer.domElement;
 cv.addEventListener('click', ev => {
   if(!locked && !isTouch && !sectionOn){ cv.requestPointerLock(); return; }
-  pickHotspot(ev);
+  if(pickHotspot(ev)) return;
+  // sul tocco: un colpo secco sulla strada è «vai lì»; trascinare è guardare
+  if(isTouch && !trascinato) camminaVerso(ev);
 });
 document.addEventListener('pointerlockchange', () => {
   locked = document.pointerLockElement === cv;
@@ -1488,14 +1492,15 @@ addEventListener('mousemove', e => {
   pitchT = Math.max(-1.35, Math.min(1.15, pitchT));
 });
 
-let dragging = false, lastX = 0, lastY = 0;
+let dragging = false, lastX = 0, lastY = 0, downX = 0, downY = 0, trascinato = false;
 cv.addEventListener('pointerdown', e => {
   if(locked) return;
-  dragging = true; lastX = e.clientX; lastY = e.clientY;
+  dragging = true; lastX = downX = e.clientX; lastY = downY = e.clientY; trascinato = false;
 });
 addEventListener('pointerup', () => dragging = false);
 addEventListener('pointermove', e => {
   if(!dragging || locked) return;
+  if(Math.hypot(e.clientX - downX, e.clientY - downY) > 10) trascinato = true;
   yawT   -= (e.clientX - lastX) * 0.004;
   pitchT -= (e.clientY - lastY) * 0.004;
   pitchT = Math.max(-1.35, Math.min(1.15, pitchT));
@@ -1541,6 +1546,7 @@ const runBtn = document.getElementById('btnRun');
 runBtn.addEventListener('click', () => {
   touchRun = !touchRun;
   runBtn.classList.toggle('on', touchRun);
+  ERCOLANO.setCorsa(touchRun);
 });
 
 const raycaster = new Raycaster();
@@ -1556,8 +1562,40 @@ function pickHotspot(ev){
   const hit = raycaster.intersectObjects(targets, false)[0];
   if(hit){
     const h = hotspots.find(x => x.cone === hit.object);
-    if(h) openPanel(h.data);
+    if(h){ openPanel(h.data); return true; }
   }
+  return false;
+}
+
+/* ---- «tocca dove vuoi andare» (iPhone, iPad) ----------------------------
+   Il punto toccato si cerca sul piano del suolo su cui si sta; il percorso
+   lo trova scene/cammino.js sulla stessa griglia delle collisioni, quindi
+   gira attorno alle case invece di fermarsi contro il primo muro. Si va al
+   passo vero (1,4 m/s); con «Corri» a 4 m/s. Tastiera e levetta lo annullano. */
+let percorso = null;
+const segno = creaSegno({ RingGeometry, MeshBasicMaterial, Mesh, colore:PAL.accent });
+scene.add(segno);
+const pianoSuolo = new Plane(new Vector3(0, 1, 0), 0), puntoSuolo = new Vector3();
+function quotaIn(x, z){
+  return depositCurrent > 0.001 ? depositCurrent : (quotaCarreggiata(x, z) ?? 0);
+}
+function fermaPercorso(){ percorso = null; segno.visible = false; }
+function camminaVerso(ev){
+  if(flyMode || sectionOn || flight || presenting) return false;
+  const r = cv.getBoundingClientRect();
+  ndc.set(((ev.clientX-r.left)/r.width)*2-1, -((ev.clientY-r.top)/r.height)*2+1);
+  raycaster.setFromCamera(ndc, camera);
+  pianoSuolo.constant = -groundY();
+  if(!raycaster.ray.intersectPlane(pianoSuolo, puntoSuolo)) return false;
+  if(puntoSuolo.distanceTo(camera.position) > 160) return false;
+  const punti = trovaPercorso({ libero:(x, z) => !blocked(x, z), da:[player.x, player.z],
+                                a:[puntoSuolo.x, puntoSuolo.z], passo:CELLA, margine:10 });
+  if(!punti){ fermaPercorso(); return false; }
+  const [fx, fz] = punti[punti.length - 1];
+  percorso = { punti, fermo:0, x:player.x, z:player.z };
+  segno.position.set(fx, quotaIn(fx, fz) + 0.02, fz);
+  segno.visible = true;
+  return true;
 }
 
 function flyTo(p){
@@ -1566,6 +1604,7 @@ function flyTo(p){
              target: new Vector3(p.x, p.y + 2, p.z), t:0 };
   player.set(p.x + 16, 0, p.z + 20);
   if(locked) document.exitPointerLock();
+  fermaPercorso();
 }
 
 function setFly(on){
@@ -1593,6 +1632,7 @@ function aggiornaSezioneVuota(){
 
 function setSection(on){
   sectionOn = on;
+  fermaPercorso();
   document.getElementById('btnSection').classList.toggle('on', on);
   sectionHud.classList.toggle('on', on);
   document.body.classList.toggle('section-on', on);
@@ -1976,6 +2016,7 @@ function aggiornaComandiErcolano(){
 function setErc(v){
   ercOn = !!v;
   document.body.classList.toggle('erc-on', ercOn);
+  if(!ercOn) document.body.classList.remove('erc-galleria');
   document.getElementById('ercHud').hidden = !ercOn;
   document.getElementById('btnErc').classList.toggle('on', ercOn);
   if(ercOn){
@@ -2052,6 +2093,7 @@ function segnaGalleria(){
   b.hidden = !(mo === '1738' || mo === 'oggi');
   b.textContent = t(sotto ? 'ui.erc.risali' : 'ui.erc.scendi');
   b.classList.toggle('on', sotto);
+  document.body.classList.toggle('erc-galleria', sotto);
   if(sotto) document.getElementById('ercMomentoNota').innerHTML = t('ui.erc.galleriaNota');
   else segnaMomento(mo);
 }
@@ -2087,18 +2129,39 @@ document.querySelector('#ercHud .ercNote')
 document.getElementById('cmpClose').addEventListener('click', () => setCompare(false));
 document.getElementById('cmpReset').addEventListener('click', () => CONFRONTO.reset());
 
-document.getElementById('btnHelp').addEventListener('click', () =>
-  document.getElementById('intro').classList.remove('gone'));
-document.getElementById('btnStart').addEventListener('click', () => {
+/* La porta d'ingresso: tre scelte (visita, cammina, Ercolano) e, sotto
+   «Come si usa», le istruzioni complete. «Comandi» la riapre già aperta
+   sulle istruzioni: chi la chiede vuole quelle. */
+const introGuida = document.getElementById('introGuida');
+const introGuidaBtn = document.getElementById('introGuidaBtn');
+function mostraGuida(on){
+  introGuida.hidden = !on;
+  introGuidaBtn.setAttribute('aria-expanded', String(on));
+}
+introGuidaBtn.addEventListener('click', () => mostraGuida(introGuida.hidden));
+function chiudiIntro(){
   document.getElementById('intro').classList.add('gone');
   AUDIO.init();
+}
+document.getElementById('btnHelp').addEventListener('click', () => {
+  mostraGuida(true);
+  document.getElementById('intro').classList.remove('gone');
+});
+document.getElementById('btnStart').addEventListener('click', chiudiIntro);
+document.getElementById('sceltaVisita').addEventListener('click', () => {
+  chiudiIntro();
+  if(ercOn) setErc(false);
+  if(!document.body.classList.contains('touring')) startTour();
+});
+document.getElementById('sceltaErcolano').addEventListener('click', () => {
+  chiudiIntro();
+  if(!ercOn) setErc(true);
 });
 // Il confronto è la tesi del progetto in una schermata: cinque metri contro
 // venti, stessa scala. Nascosto dietro il quinto bottone della seconda fila
 // non lo trovava nessuno, quindi si può prendere direttamente dalla porta.
 document.getElementById('btnStartCompare').addEventListener('click', () => {
-  document.getElementById('intro').classList.add('gone');
-  AUDIO.init();
+  chiudiIntro();
   setCompare(true);
 });
 /* ------------------------------------------------------------ lingua */
@@ -2262,6 +2325,26 @@ function passo(){
     const maxSpeed = flyMode ? (sprint ? 52 : 17) : (sprint ? 1.0 : 0.35);
     target.multiplyScalar(maxSpeed);
 
+    // il percorso toccato: vale finché non si usano tastiera o levetta
+    if(percorso && (mag > 0.05 || flyMode)) fermaPercorso();
+    if(percorso){
+      const v = seguiPercorso(percorso, player.x, player.z, maxSpeed);
+      if(!v) fermaPercorso();
+      else {
+        target.set(v[0], 0, v[1]);
+        // lo sguardo gira piano verso dove si va, se non lo si sta trascinando
+        if(!dragging && Math.hypot(v[0], v[1]) > 0.1){
+          let d = Math.atan2(-v[0], -v[1]) - yawT;
+          d = Math.atan2(Math.sin(d), Math.cos(d));
+          yawT += d * Math.min(1, dt * 2.2);
+        }
+        // fermo contro qualcosa: meno di 20 cm in un secondo e mezzo, si rinuncia
+        // (lo spostamento di un solo fotogramma, al passo, è sempre minuscolo)
+        if(Math.hypot(player.x - percorso.x, player.z - percorso.z) > 0.05){ percorso.x = player.x; percorso.z = player.z; percorso.fermo = 0; }
+        else if((percorso.fermo += dt) > 1.5) fermaPercorso();
+      }
+    }
+
     if(flyMode){
       let vy = 0;
       if(keys.has('Space'))       vy += maxSpeed;
@@ -2296,6 +2379,8 @@ function passo(){
       } else footstepTimer = 0;
     }
   }
+
+  if(segno.visible){ const k = 1 + Math.sin(t * 4) * 0.12; segno.scale.set(k, k, k); }
 
   // lo sguardo insegue il bersaglio: niente scatti sul mouse
   const lookK = Math.min(1, dt * 26);
