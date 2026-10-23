@@ -45,7 +45,8 @@ def scarica():
 
 def main():
     if len(sys.argv) > 1:                            # un file già scaricato, per lavorare offline
-        dati, server = json.load(open(sys.argv[1])), sys.argv[1]
+        # il percorso locale non finisce nei dati pubblicati: si scrive da dove vengono, non dove stavano
+        dati, server = json.load(open(sys.argv[1])), "Estratto OpenStreetMap (Overpass API) letto da un file locale"
     else:
         dati, server = scarica()
     E = [e for e in dati['elements'] if e['type'] == 'way' and e.get('geometry')]

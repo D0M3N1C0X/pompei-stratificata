@@ -58,7 +58,7 @@ diversi di sparire, dalla stessa eruzione.
 |---|---|
 | **Otto fasi** | 79 d.C. (vigilia e seppellimento) · I–III sec. · IV–V sec. · XV–XVI sec. · 1592–1600 · 1748–1763 · oggi |
 | **Popolazioni** | persone, cani e piccioni animati per fase, con soste individuali e fuga durante l’eruzione; densità sceniche, non censimenti |
-| **Quindici luoghi** | ciascuno con la scheda dei dati e la fonte in fondo al pannello |
+| **Venti luoghi** | ciascuno con la scheda dei dati e la fonte in fondo al pannello |
 | **Modalità sezione** | taglia il terreno e mostra la stratigrafia dall'interno, con le quote sulla faccia del taglio |
 | **Sole reale** | posizione solare calcolata per Pompei (40,75° N) sull'ora di Europe/Rome |
 | **Sonoro** | ambiente sonoro diverso per ogni fase, e il timbro degli strumenti attestati come reperto nell'area vesuviana — tibiae, cornua, cymbala. Tutto sintetizzato dal codice: nessun file audio |
@@ -163,8 +163,8 @@ Il portoghese è scritto in variante europea ma è etichettato `pt`, che per la
 formattazione dei numeri segue la convenzione brasiliana (`12.000`): la prosa è
 stata scritta coerente con quella, non con lo spazio di `pt-PT`.
 
-I dati non contengono testo. In `src/data/` restano coordinate, spessori e quali
-gruppi accendere; tutta la prosa sta in `src/i18n/it.js` e in `i18n/*.json`, con
+I dati non contengono prosa dell'interfaccia. In `src/data/` restano coordinate, spessori e quali
+gruppi accendere (con, in `ercolano-pianta.json`, i nomi degli edifici e la nota sulla fonte OSM); tutta la prosa sta in `src/i18n/it.js` e in `i18n/*.json`, con
 la stessa forma. Aggiungere una lingua significa copiare `i18n/en.json`,
 tradurlo e aggiungere una riga a `LINGUE` in `src/i18n/index.js`. Le chiavi che
 mancano ricadono sull'italiano, così una traduzione incompleta resta leggibile
