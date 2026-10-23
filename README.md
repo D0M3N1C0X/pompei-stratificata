@@ -1,328 +1,98 @@
-# Dopo il 79 — Pompei ed Ercolano
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="site-assets/cover-dark.png">
+  <img alt="Pompeii never vanished: it became unreadable. Eight phases from AD 79 to today, five metres of deposit against twenty at Herculaneum, six languages." src="site-assets/cover-light.png">
+</picture>
 
-Due città sepolte dalla stessa notte, in un modello che si percorre a piedi.
+<p align="center">
+  <a href="https://d0m3n1c0x.github.io/pompei-stratificata/?lang=en"><b>Open the model</b></a> ·
+  <a href="https://d0m3n1c0x.github.io/pompei-stratificata/dossier/en/">Read the dossier</a> ·
+  <a href="README.it.md">Italiano</a>
+</p>
 
-**Pompei** attraverso otto fasi cronologiche, dalla vigilia dell'eruzione del 79 d.C.
-al cantiere di scavo di oggi. **Ercolano** limitata alla parte effettivamente
-scavata, con il fronte di scavo e corso Resina sopra il resto. E una **sezione che
-mette le due colonne stratigrafiche a confronto nella stessa scala**: cinque metri
-contro venti.
+# After AD 79: Pompeii and Herculaneum
 
-I dati di un dossier documentario sono ancorati ai luoghi in cui sono stati raccolti.
+Two cities buried by the same night, in a model you walk through. **Pompeii** across eight phases, from the eve of
+the eruption of AD 79 to today's excavation; **Herculaneum** limited to what has actually been excavated, with the
+excavation front and the modern city above the rest; and a **section that sets the two stratigraphic columns side by
+side at the same scale**: five metres against twenty. The data of a documentary dossier are anchored to the places
+where they were collected.
 
-> L'indirizzo del repository resta `pompei-stratificata`: rinominarlo avrebbe rotto
-> l'indirizzo di GitHub Pages, che non viene reindirizzato dopo un cambio di nome.
+> The repository keeps the address `pompei-stratificata`: renaming it would break the GitHub Pages address, which is
+> not redirected after a rename.
 
-**[▶ Apri il simulatore](https://d0m3n1c0x.github.io/pompei-stratificata/)** ·
-**[Leggi il dossier](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/)** ·
-**[Read the dossier in English](https://d0m3n1c0x.github.io/pompei-stratificata/dossier/en/)**
+## The question
 
-[English](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=en) ·
-[Français](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=fr) ·
-[Deutsch](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=de) ·
-[Español](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=es) ·
-[Português](https://d0m3n1c0x.github.io/pompei-stratificata/?lang=pt)
+"Why was Pompeii not excavated before the sixteenth century?" is the wrong question, and the project starts from
+refusing to answer it as asked. People dug, and how: in the days after the eruption and for centuries, owners
+recovering what they could, systematic stripping of materials, looting. What did not exist was **digging to know**.
+Nor was the site forgotten: what was lost was the link between the place, still called *Civita*, and the name,
+recovered only in 1763 with the inscription *rei publicae Pompeianorum*, 1,684 years after the eruption and fifteen
+years into the Bourbon excavations.
 
----
+The model makes visible an argument that stays abstract in words: under about five metres of deposit, a four-metre
+ground floor disappears and the upper floor does not. **Pompeii was never invisible: it became unreadable**, which is
+why it stayed within reach of salvagers, looters and, four centuries later, of the people who came back to live there.
+Herculaneum shows that the conclusion depends on the deposit, not on people: the same night, fifteen kilometres away,
+no Plinian fallout and about twenty metres of pyroclastic currents. Nobody came back, and a new town was built on top
+without knowing what lay beneath. **Pompeii became unreadable, Herculaneum unreachable.**
 
-## La domanda
-
-«Perché a Pompei non si scavò prima del XVI secolo?» è una domanda posta male, e
-il progetto nasce dal rifiuto di rispondere così com'è.
-
-Si scavò, eccome: dai giorni successivi all'eruzione e per secoli — recuperi dei
-proprietari, spoglio sistematico dei materiali, saccheggi. Quello che non esisteva
-non era lo scavo, era lo **scavo per conoscere**. E il sito non fu dimenticato: si
-perse la corrispondenza tra il luogo, che continuò a chiamarsi *Civita*, e il nome,
-recuperato solo nel 1763 con il ritrovamento dell'iscrizione
-*rei publicae Pompeianorum* — 1684 anni dopo l'eruzione, e 15 anni dopo l'inizio
-degli scavi borbonici.
-
-Il modello serve a rendere visibile un ragionamento che a parole resta astratto:
-con circa cinque metri di deposito, un piano terra alto quattro metri sparisce e
-il piano superiore no. **Pompei non è mai stata invisibile: è diventata
-illeggibile.** È la ragione fisica per cui la città è rimasta raggiungibile dai
-recuperanti, dai saccheggiatori e, quattro secoli dopo, da chi ci è tornato ad
-abitare.
-
-Ercolano serve a mostrare che quella conclusione dipende dal deposito e non dagli
-uomini. Stessa notte, quindici chilometri di distanza, nessuna fase di ricaduta
-pliniana e circa venti metri di correnti piroclastiche: lì non torna ad abitare
-nessuno, e sopra le rovine si costruisce una città nuova senza sapere che cosa ci
-sia sotto. **Pompei è diventata illeggibile, Ercolano irraggiungibile.** Due modi
-diversi di sparire, dalla stessa eruzione.
-
-## Che cosa contiene
+## What is inside
 
 | | |
 |---|---|
-| **Otto fasi** | 79 d.C. (vigilia e seppellimento) · I–III sec. · IV–V sec. · XV–XVI sec. · 1592–1600 · 1748–1763 · oggi |
-| **Popolazioni** | persone, cani e piccioni animati per fase, con soste individuali e fuga durante l’eruzione; densità sceniche, non censimenti |
-| **Venti luoghi** | ciascuno con la scheda dei dati e la fonte in fondo al pannello |
-| **Modalità sezione** | taglia il terreno e mostra la stratigrafia dall'interno, con le quote sulla faccia del taglio |
-| **Sole reale** | posizione solare calcolata per Pompei (40,75° N) sull'ora di Europe/Rome |
-| **Sonoro** | ambiente sonoro diverso per ogni fase, e il timbro degli strumenti attestati come reperto nell'area vesuviana — tibiae, cornua, cymbala. Tutto sintetizzato dal codice: nessun file audio |
-| **Confronto** | la sezione stratigrafica di Pompei e quella di Ercolano affiancate, nella stessa scala, con la città moderna sopra Ercolano |
-| **Ercolano** | lo scavo percorribile a piedi: due decumani, tre cardini, quattro insulae intere più le due Orientalis, le terrazze, i dodici fornici sulla spiaggia antica, e il fronte di scavo con corso Resina sopra |
-| **Tour guidato** | quattordici tappe in ordine narrativo, con cambio di fase automatico |
-| **Modalità presentazione** | scorre le otto fasi da sola, con didascalie ingrandite |
+| **Eight phases** | AD 79 (the eve and the burial) · 1st–3rd c. · 4th–5th c. · 15th–16th c. · 1592–1600 · 1748–1763 · today |
+| **Populations** | people, dogs and pigeons animated by phase, fleeing during the eruption; scenic densities, not censuses |
+| **Twenty places** | each with its data card and the source at the bottom of the panel |
+| **Section mode** | cuts the ground and shows the stratigraphy from inside, with heights on the cut face |
+| **Real sun** | the sun's position computed for Pompeii (40.75° N) on Europe/Rome time |
+| **Sound** | a soundscape for each phase and the timbre of instruments found as finds around Vesuvius (tibiae, cornua, cymbala), all synthesised in code |
+| **Comparison** | the Pompeii and Herculaneum sections side by side at the same scale, with the modern city above Herculaneum |
+| **Herculaneum** | the excavation on foot: two decumani, three cardines, the insulae, the terraces, the twelve boat sheds on the ancient beach |
+| **Guided tour** | fourteen stops in narrative order, changing phase on its own |
 
-## Resa
+It runs on a computer, on a phone (on-screen controller) and with a Bluetooth gamepad, in six languages (Italian,
+English, French, German, Spanish, Portuguese), and installs as an app that **works offline** after the first visit.
 
-Il motore disegna la scena fuori schermo e la ripassa con un solo passaggio scritto
-a mano — antialiasing, un'occlusione di contatto letta dalla profondità, una
-maschera di nitidezza, vignettatura — senza usare addon, così il file resta
-autosufficiente. Il riquadro dell'ombra segue lo sguardo e si stringe a circa
-120 m di lato quando cammini: con una mappa da 4096 fa un texel ogni pochi
-centimetri, contro i 74 cm della versione precedente, ed è la ragione per cui le
-ombre si leggono. La risoluzione interna sale sopra quella dello schermo quando la
-macchina regge e scende da sola quando non regge, invece di scattare fra livelli
-fissi.
+## What it is not
 
-Funziona su computer (tastiera e mouse), su telefono (controller su schermo) e con
-un joypad Bluetooth. Installabile come applicazione: dopo la prima apertura
-funziona **senza rete**.
+The project only stands if it is honest about its limits; the full list is in [README.it.md](README.it.md#che-cosa-non-è).
 
-## Che cosa NON è
+- **Not an archaeological survey.** The plan follows the real urban layout (nine *regiones*, streets, seven gates,
+  the monuments' positions), but volumes are schematic and the grid is straightened.
+- **Measured proportions only where published**: the Great Palaestra at Pompeii; the Palaestra, the Basilica Noniana
+  and the House of the Stags at Herculaneum. Everything else is deduced from plans.
+- **Declared inventions are labelled as such**, like the course of the Conte di Sarno canal, for which no scientific
+  source was found.
+- **The sound is not a reconstruction**: it plays the timbre of instruments that survive, never an ancient melody.
+- **Where sources disagree, the model says so**: the depth of Herculaneum's deposit (16 to 25 m in the sources, drawn
+  at 20 m), the true orientation of its grid.
 
-Va detto in chiaro, perché il progetto sta in piedi solo se è onesto sui propri
-limiti.
+## Method
 
-- **Non è un rilievo archeologico.** La pianta segue l'impianto urbano reale —
-  nove *regiones*, assi stradali, sette porte, posizione dei monumenti — ma le
-  volumetrie sono schematiche e la griglia è raddrizzata rispetto all'originale.
-- **Le uniche proporzioni prese da misure pubblicate** sono quelle della Palestra
-  Grande (circa 140 × 140 m, piscina 23 × 35 m), dalla guida ufficiale del Parco
-  Archeologico di Pompei.
-- **Il tracciato del canale del Conte di Sarno è inventato.** Cercando una fonte
-  scientifica sul percorso esatto sotto la città non ne ho trovate: l'unica
-  trattazione estesa è autopubblicata e legata a una tesi di ridatazione di Pompei,
-  quindi inutilizzabile. Nel modello è dichiarato tale nella scheda del luogo.
-- **Le texture non sono scansioni archeologiche.** Basalto, intonaco e tegole
-  usano mappe PBR CC0 locali; il colore del tufo usa una texture generata con AI,
-  documentata in `src/assets/pbr/pompeii/ATTRIBUTIONS.md`; le altre superfici
-  restano procedurali.
-- **Gli abitanti animati sono ancora modelli procedurali provvisori.** Le
-  densità per epoca sono scelte sceniche, non stime demografiche; non sono ancora
-  integrati modelli umani e animali fotorealistici con provenienza e attribuzione.
-- **Il profilo del Vesuvio è schematico e fuori scala.**
-- **Il sonoro non è una ricostruzione.** Riproduce il *timbro* di strumenti che
-  esistono come reperto — circa settanta rinvenimenti riferibili a tibiae da Pompei,
-  cinque cornua, sei coppie di cymbala — ma **non esegue nessuna melodia antica**, e
-  l'ambiente (folla, lapilli, vento, picconi) è un'evocazione dichiarata: nessuna
-  fonte descrive il paesaggio sonoro di Pompei. La cetra suona ed è marcata come
-  **sola iconografia**: da Pompei e da Ercolano non sopravvive nessuno strumento a
-  corda. Arpa e liuto restano fuori perché non attestati.
-- **La melodia dell'epitaffio di Sicilo non è inclusa.** È l'unica composizione
-  greco-antica completa superstite e sarebbe l'aggancio giusto, ma la sequenza dei
-  segni e le durate non sono state verificate sull'edizione critica (Pöhlmann &
-  West 2001, nr. 23, pp. 88–91). Il posto c'è ed è vuoto finché quel volume non
-  viene aperto. La scheda del luogo spiega esattamente questo.
-- **Il modello di Ercolano nel confronto è una colonna stratigrafica schematica**,
-  non la topografia del sito. Sullo spessore del deposito le fonti divergono fra
-  16 e 25 m: è disegnato 20 m, il valore modale nelle fonti peer-reviewed e nel
-  sito del Parco, e il conflitto è dichiarato nel pannello.
-- **Nella scena di Ercolano si cammina solo dove si è scavato davvero.** Il resto
-  della città antica non è ricostruito: è disegnato come deposito, con la città
-  moderna sopra. Ricostruire ciò che non è scavato sarebbe invenzione.
-- **L'orientamento di Ercolano non è verificato.** La scena è costruita nella
-  *convenzione di sito* — Decumano Massimo a monte, mare a valle — perché è così
-  che ogni pianta e ogni fonte lo descrivono. L'azimut vero della griglia non l'ho
-  trovato pubblicato: le fonti divergono fra NO–SE e NE–SO. La bussola, in quella
-  scena, dice «lato mare», non «nord».
-- **Le uniche misure pubblicate usate a Ercolano** sono la Palestra (77 × 47 m,
-  Maiuri 1960), la Basilica Noniana (29 × 16 m) e la superficie della Casa dei
-  Cervi (circa 1.190 m²). Tutto il resto della sagoma è dedotto dalle piante.
-- **La posizione del sole usa i parametri orbitali odierni**, non quelli del 79 d.C.
+Every statement in the dossier carries its source beside it, and where a source was not checked, it says so. A
+**Gaps** section lists what was not verified, and a **verification log** records two corrections made after checking
+the sources: the graffito in the House of N. Popidius Priscus was in Greek (*domus pertusa* is Fiorelli's Latin
+rendering), and the idea that later eruptions added deposit over Pompeii was withdrawn, because no scientific source
+documents it for the city. That second check revealed a gap the project declares as open research: **no
+geoarchaeological study of the stratigraphic column above the AD 79 level inside Pompeii's walls appears to be
+published.**
 
-## Collegamenti diretti
+## Run it
 
-L'indirizzo dice dove sei, e si può passare a qualcuno:
-
-| | |
-|---|---|
-| `?fase=5` | apre la quinta fase (gli stessi numeri dei tasti 1–8) |
-| `?luogo=basilica` | apre la scheda del luogo, nella fase in cui esiste |
-| `?vista=confronto` | apre il confronto stratigrafico |
-| `?vista=ercolano&luogo=teatro` | entra a Ercolano e apre la scheda del teatro |
-
-Si combinano con `?lang=`. L'indirizzo si aggiorna da solo mentre navighi, e
-nella scheda di ogni luogo c'è «Copia il link». Chi arriva da un collegamento
-diretto salta la scheda d'ingresso; un valore sbagliato viene ignorato e il
-modello parte dall'inizio.
-
-## Lingue
-
-Sei: italiano, inglese, francese, tedesco, spagnolo e portoghese. Il simulatore
-sceglie da solo — parametro `?lang=`, poi la scelta salvata, poi la lingua del
-browser — e il selettore in barra la cambia. Il codice finisce nell'indirizzo,
-quindi un link a una lingua si può passare a qualcuno:
-`…/pompei-stratificata/?lang=de`.
-
-Il portoghese è scritto in variante europea ma è etichettato `pt`, che per la
-formattazione dei numeri segue la convenzione brasiliana (`12.000`): la prosa è
-stata scritta coerente con quella, non con lo spazio di `pt-PT`.
-
-I dati non contengono prosa dell'interfaccia. In `src/data/` restano coordinate, spessori e quali
-gruppi accendere (con, in `ercolano-pianta.json`, i nomi degli edifici e la nota sulla fonte OSM); tutta la prosa sta in `src/i18n/it.js` e in `i18n/*.json`, con
-la stessa forma. Aggiungere una lingua significa copiare `i18n/en.json`,
-tradurlo e aggiungere una riga a `LINGUE` in `src/i18n/index.js`. Le chiavi che
-mancano ricadono sull'italiano, così una traduzione incompleta resta leggibile
-e il buco si vede; `npm run check` fallisce se una lingua dichiarata pronta non
-ha tutte le chiavi.
-
-Il **dossier** esiste in italiano e in inglese (`dossier/en/`). Chi usa il
-simulatore in una lingua diversa dall'italiano viene mandato alla versione
-inglese: circa seimila parole di apparato critico non sono state tradotte in altre
-quattro lingue, e l'inglese è quella che un lettore francese, tedesco, spagnolo
-o portoghese ha più probabilità di leggere. Il testo di riferimento resta
-l'italiano.
-
-Tre cose che **non** si traducono, ed è voluto:
-
-- **I toponimi disegnati nella scena.** Via dell'Abbondanza, Porta Marina,
-  REGIO IX restano tali: è così che li chiama anche la letteratura in inglese.
-- **Le fonti.** Titoli di opere, nomi di riviste, «E-Journal degli Scavi di
-  Pompei»: sono riferimenti bibliografici, non testo.
-- **I numeri.** «3,1–3,3 m» e «12.000» non vengono riscritti a mano: passano da
-  `Intl.NumberFormat`, che in inglese dà «3.1–3.3 m» e «12,000».
-
-Le formule di cautela — «dichiarata, non risolta», «[da verificare]», «le fonti
-divergono» — sono portanti e vanno mantenute in ogni lingua. Il lessico tecnico
-inglese è quello dei lavori già citati: *pyroclastic density currents*, *Plinian
-fallout*, *pumice lapilli*, *African Red Slip ware*, e *insula*, *regio*,
-*cardo*, *decumanus* invariati.
-
-## Metodo
-
-Ogni affermazione nel dossier porta la fonte a fianco. Dove una fonte non è stata
-verificata, c'è scritto. Il documento ha una sezione **Lacune** che elenca ciò che
-non è stato controllato, e un **Registro delle verifiche** che documenta due
-correzioni fatte al testo dopo aver verificato le fonti:
-
-1. Il graffito della Casa di N. Popidius Priscus (VII.2.20) **era in greco**:
-   *domus pertusa* è la resa latina che ne diede Fiorelli, non il testo
-   dell'iscrizione. Nessun numero *CIL* individuato.
-2. L'ipotesi che le eruzioni successive (Pollena 472, Vesuvio 1631) avessero
-   aggiunto deposito su Pompei **è stata ritirata**: nessuna fonte scientifica la
-   documenta per il sito urbano.
-
-Da quella seconda verifica è emersa una lacuna nella letteratura che il progetto
-dichiara come spazio di ricerca: **non risulta pubblicato uno studio geoarcheologico
-della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
-
-## Fonti principali
-
-- Sparice, D., Amoretti, V., Galadini, F., Di Vito, M. A., Terracciano, A.,
-  Scarpati, G., & Zuchtriegel, G. (2024). A novel view of the destruction of
-  Pompeii during the 79 CE eruption of Vesuvius (Italy). *Frontiers in Earth
-  Science*, 12. https://doi.org/10.3389/feart.2024.1386960
-- Zuchtriegel, G., Borsa, L., Onesti, A., Salvatori, L., & Scarpati, G. (2025).
-  La rioccupazione nell'Insula meridionalis di Pompei dopo il 79 d.C. Riflessioni
-  a margine dell'«inconscio archeologico». *E-Journal degli Scavi di Pompei*.
-- Amato, V., Covolan, M., Dessales, H., & Santoriello, A. (2022). Seismic
-  Microzonation of the Pompeii Archaeological Park. *Geosciences*, 12(7), 275.
-  https://doi.org/10.3390/geosciences12070275
-- Pensa, A., Capra, L., Giordano, G., & Corrado, S. (2023). A new hazard scenario
-  at Vesuvius: Deadly thermal impact of detached ash cloud surges in 79CE at
-  Herculaneum. *Scientific Reports*, 13, 5622. https://doi.org/10.1038/s41598-023-32623-3
-- Camardo, D. (2007). Archaeology and conservation at Herculaneum: From the Maiuri
-  campaign to the Herculaneum Conservation Project. *Conservation and Management of
-  Archaeological Sites*, 8(4), 205–214.
-- Petrone, P. (2019). The Herculaneum victims of the 79 AD Vesuvius eruption: A
-  review. *Journal of Anthropological Sciences*, 97, 1–22. https://doi.org/10.4436/jass.97008
-- Mungari, M., & Wysłucha, K. (2021). Material music in ritual soundscapes of
-  Pompeii. *Open Arts Journal*, 10, 89–108. https://doi.org/10.5456/issn.2050-3679/2021s05
-- Hagel, S. (2008). Re-evaluating the Pompeii auloi. *The Journal of Hellenic
-  Studies*, 128, 52–71.
-- Pelosi, C., Agresti, G., Holmes, P., Ervas, A., De Angeli, S., & Santamaria, U.
-  (2016). An X-ray fluorescence investigation of ancient Roman musical instruments
-  and replica production under the aegis of the European Music Archaeological
-  Project. *International Journal of Conservation Science*, 7(SI2), 847–856.
-- Rohland, R. A. (2022). *Carpe diem: The poetics of presence in Greek and Latin
-  literature*. Cambridge University Press.
-- Fabris, P. (1776). *The discovery of the temple of Isis at Pompeii*, per
-  W. Hamilton, *Campi Phlegraei*. Wellcome Collection 43680i, pubblico dominio —
-  le vesti di operai e visitatori dello scavo borbonico.
-- OpenStreetMap contributors — pianta dello scavo di Ercolano e della città
-  moderna (ODbL), via `strumenti/osm/ercolano_osm.py`.
-- «V. D.» (Wikimedia Commons, utente Ursus, 2009) — schemi delle piante di sei
-  case di Ercolano: pubblico dominio, Casa Sannitica CC BY-SA 4.0. Gli interni
-  della scena ne riprendono la disposizione, riscalata sul contorno OSM, via
-  `strumenti/piante/case_ercolano.py`.
-- Mau, A. (1899). *Pompeii, its Life and Art*, trad. F. W. Kelsey, cap. XXXI
-  (Project Gutenberg 42715) — larghezze delle vie, marciapiedi rialzati, pietre
-  di passaggio.
-- Poehler, E. E. (2017). *The Traffic Systems of Pompeii*. Oxford University
-  Press — altezza dei cordoli (quasi tutti fra 15 e 39 cm).
-- Brown, S. *Clothing in Roman Art*. Archaeological Institute of America,
-  Roman Clothing Project (J. Paul Getty Museum) — le vesti degli abitanti del 79.
-- Pilli, E., et al. (2024). Ancient DNA challenges prevailing interpretations of
-  the Pompeii plaster casts. *Current Biology*, 34, 5307–5318.
-  https://doi.org/10.1016/j.cub.2024.10.007 — carnagioni e capelli degli abitanti,
-  come approssimazione.
-- Parco Archeologico di Pompei, *Guida agli scavi di Pompei* e schede del sito
-  ufficiale · Parco Archeologico di Ercolano, *Area archeologica* · UNESCO World
-  Heritage Centre, lista 829.
-- Svetonio, *Divus Titus* 8.4 · Cassio Dione, *Storia romana* 66.21–24.
-- NOAA Global Monitoring Laboratory, *Solar Calculation Details* — equazioni per
-  la posizione solare.
-
-L'apparato completo, con i dati bibliografici verificati e le lacune dichiarate,
-è nel dossier.
-
-## Struttura
-
-```
-index.html              il simulatore (autosufficiente: motore 3D, città, dati)
-manifest.webmanifest    metadati per l'installazione come applicazione
-sw.js                   service worker: mette tutto in cache, poi funziona offline
-icon-*.png              icone dell'applicazione
-dossier/index.html      il dossier documentario (scritto a mano, niente build)
-dossier/en/index.html   lo stesso dossier in inglese
-i18n/*.json             i testi delle altre cinque lingue, a richiesta
-scripts/                pubblicazione del prodotto e controlli
-ricerca/piste.md        quaderno delle ricerche aperte: piste, non fonti
-app/                    l'applicazione per iPhone, iPad e Mac (Capacitor) — vedi app/README.md
-capacitor.config.json   configurazione dell'applicazione
-```
-
-Nessuna dipendenza da installare, nessun passaggio di compilazione. Il motore 3D
-(three.js) è incluso nel file. Per provare in locale:
+No dependencies and no build step; three.js is included in the file.
 
 ```bash
-python3 -m http.server 8000
+python3 -m http.server 8000      # then open http://localhost:8000
+npm run check                    # the project's own checks
 ```
 
-e apri `http://localhost:8000`. Il service worker richiede `https` o `localhost`:
-da `file://` l'app funziona, ma non si installa.
+## Licence
 
-## Licenza
+Code under MIT ([LICENSE](LICENSE)); texts, dossier and documentary content under CC BY 4.0
+([LICENSE-CONTENUTI.md](LICENSE-CONTENUTI.md)); three.js, MakeHuman figures and CMU motion capture under their own
+terms ([THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)). To cite: [CITATION.cff](CITATION.cff).
 
-- **Codice**: MIT — vedi [LICENSE](LICENSE)
-- **Testi, dossier e contenuti documentari**: CC BY 4.0 — vedi
-  [LICENSE-CONTENUTI.md](LICENSE-CONTENUTI.md)
-- **three.js**, incluso in `index.html`: MIT, dei suoi autori — vedi
-  [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
-- **Figure** (MakeHuman, CC0) e **movimenti** (CMU Motion Capture Database):
-  vedi [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
+## About
 
-## Citare
-
-Vedi [CITATION.cff](CITATION.cff). Se il repository è archiviato su Zenodo,
-usa il DOI della versione che hai consultato.
-
-## Autore
-
-Domenico Perroni — HR, people analytics e media education, a Cracovia.
-[Profilo GitHub](https://github.com/D0M3N1C0X) · [LinkedIn](https://www.linkedin.com/in/domenico-perroni)
-
-Altri progetti dello stesso portfolio (in inglese):
-
-- [pay-transparency-readiness-kit](https://github.com/D0M3N1C0X/pay-transparency-readiness-kit) — la direttiva UE sulla trasparenza retributiva applicata a un datore di lavoro in quattro paesi: modello Excel, presentazione per il consiglio di amministrazione, checklist di conformità; [report online](https://d0m3n1c0x.github.io/pay-transparency-readiness-kit/)
-- [where-pay-transparency-bites](https://github.com/D0M3N1C0X/where-pay-transparency-bites) — dati Eurostat per i 27 paesi UE, analizzati in R: il divario retributivo pubblicato sottostima quello dentro i settori; [articolo](https://d0m3n1c0x.github.io/where-pay-transparency-bites/), [dashboard](https://d0m3n1c0x.github.io/where-pay-transparency-bites/dashboard/) e [working paper](https://d0m3n1c0x.github.io/where-pay-transparency-bites/paper.pdf)
-- [workforce-cost-model](https://github.com/D0M3N1C0X/workforce-cost-model) — il costo del personale in Italia e Polonia: contributi a carico del datore, scostamento dal budget e scenari per l'anno successivo in un modello Excel con formule vive; [memo online](https://d0m3n1c0x.github.io/workforce-cost-model/)
-- [equal-value-pay-ranges](https://github.com/D0M3N1C0X/equal-value-pay-ranges) — dalle fasce retributive per famiglia a una fascia per grado e paese, di pari valore: prezzi di mercato Eurostat per quattro paesi, modello Excel con formule vive e un [cercatore di fasce](https://d0m3n1c0x.github.io/equal-value-pay-ranges/ads.html) per gli annunci
-- [hr-people-analytics](https://github.com/D0M3N1C0X/hr-people-analytics) — perché le persone se ne vanno, quanto è difendibile la retribuzione secondo la direttiva UE sulla trasparenza retributiva, come funziona il servizio HR; [report online](https://d0m3n1c0x.github.io/hr-people-analytics/)
-- [engagement-survey-analytics](https://github.com/D0M3N1C0X/engagement-survey-analytics) — un'indagine di clima analizzata dall'inizio alla fine, con una [dashboard interattiva](https://d0m3n1c0x.github.io/engagement-survey-analytics/)
-- [job-search-agent](https://github.com/D0M3N1C0X/job-search-agent) — la ricerca di lavoro trattata come una pipeline di dati
+Built by **Domenico Perroni**: HR advisory and people analytics, with a master's in media education, based in Kraków.
+[GitHub](https://github.com/D0M3N1C0X) · [LinkedIn](https://www.linkedin.com/in/domenico-perroni) · [Portfolio](https://d0m3n1c0x.github.io/)
