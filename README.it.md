@@ -246,6 +246,22 @@ della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
 - Fabris, P. (1776). *The discovery of the temple of Isis at Pompeii*, per
   W. Hamilton, *Campi Phlegraei*. Wellcome Collection 43680i, pubblico dominio —
   le vesti di operai e visitatori dello scavo borbonico.
+- Villa Romana del Casale, Piazza Armerina, mosaico del trasporto degli animali
+  (inizio IV sec.), Wikimedia Commons, pubblico dominio — le tuniche della
+  rioccupazione (IV–V sec.).
+- Catacombe di San Gennaro, Napoli, arcosolio di Teotecno, Ilaritas e Nonnosa
+  (V sec.), foto di AlMare su Wikimedia Commons, CC BY-SA 2.5 — il manto delle
+  donne della rioccupazione. Solo letta, non ridistribuita.
+- Tavola Strozzi, Napoli, c. 1472, Wikimedia Commons, pubblico dominio — le
+  vesti dei contadini della Civita (XV–XVI sec.).
+- Fontana, D. (1590). *Della trasportatione dell'obelisco vaticano*, Roma,
+  esemplare Internet Archive su Wikimedia Commons, pubblico dominio — gli
+  scavatori del canale (1592–1600).
+- Parco Archeologico di Ercolano, fotografie storiche georeferenziate (open
+  data, licenza «Beni Culturali Standard»), C2510 e C2537, 1931 — gli operai di
+  Maiuri nel 1958. Solo lette, non ridistribuite.
+  Tutte le figure: `strumenti/blender/figure_fasi.py`, con FONTE, LETTURA e
+  IPOTESI dichiarate per ogni capo.
 - OpenStreetMap contributors — pianta dello scavo di Ercolano e della città
   moderna (ODbL), via `strumenti/osm/ercolano_osm.py`.
 - «V. D.» (Wikimedia Commons, utente Ursus, 2009) — schemi delle piante di sei

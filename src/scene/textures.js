@@ -251,6 +251,32 @@ function vano(n){
   return c;
 }
 
+/* L'opus latericium di Ercolano: file di mattoni sottili con giunti di
+   malta, sfalsati di fila in fila. Spessore della fila (mattone e giunto)
+   circa 6,4 cm, lunghezza dei mattoni variabile: di disegno. A misura vera
+   la vecchia texture a pietre sembrava una pelle maculata (28/10/2026).
+   Mattoni di 35–55 cm per circa 4 cm, giunti di 2–2,5 cm: di disegno. */
+function laterizio(n, seed){
+  const c = px(n), g = c.getContext('2d'), r = seeded(seed);
+  g.fillStyle = 'rgb(160,150,132)'; g.fillRect(0, 0, n, n);      // malta
+  // mattoni lunghi e sottili, di un rosso spento e consumato, malta spessa
+  const fila = 32, giunto = 12;
+  for(let y = 0; y < n; y += fila){
+    let x = -Math.floor(r()*200);
+    while(x < n){
+      const l = 170 + Math.floor(r()*110), v = 0.78 + r()*0.32;
+      g.fillStyle = `rgb(${138*v|0},${94*v|0},${74*v|0})`;
+      g.fillRect(x + 2, y + 2, l - giunto, fila - giunto);
+      if(x + l > n) g.fillRect(x + 2 - n, y + 2, l - giunto, fila - giunto);   // ripetibile
+      x += l;
+    }
+  }
+  const d = g.getImageData(0, 0, n, n);
+  for(let i = 0; i < d.data.length; i += 4){ const q = 0.9 + r()*0.16; d.data[i] *= q; d.data[i+1] *= q; d.data[i+2] *= q; }
+  g.putImageData(d, 0, 0);
+  return c;
+}
+
 /* Le texture a misura vera. Gli edifici sono scatole scalate: con le
    coordinate della scatola la stessa texture si stendeva una volta su ogni
    faccia, e su una strada lunga 400 m un basolato di lastre da mezzo metro
@@ -286,7 +312,7 @@ export function mappaMondo(m, scala){
   m.customProgramCacheKey = () => 'mondo';
 }
 // ripetizioni per unità di ogni texture (il motivo misura 4/scala metri)
-export const SCALA_MONDO = { battuto:1, plaster:0.8, rubble:2, incertum:1.7, tile:1.3, basalt:1, basoli:1,
+export const SCALA_MONDO = { laterizio:3.9, battuto:1, plaster:0.8, rubble:2, incertum:1.7, tile:1.3, basalt:1, basoli:1,
   stone:2, marble:2, tuffNoise:1, pumiceW:1, pumiceG:1, ash:1, veg:1 };
 
 export const TEX = {};
@@ -317,6 +343,7 @@ TEX.veg     = toTex(grain(256, 0.74, 1.0, 109, 12, 0.10), 2);
 }
 TEX.incertum = toTex(incertum(512, 149), 1);
 TEX.battuto = toTex(battuto(512, 157), 1);
+TEX.laterizio = toTex(laterizio(512, 163), 1);
 TEX.vano = toTex(vano(128), 1);
 TEX.vano.wrapS = TEX.vano.wrapT = ClampToEdgeWrapping;
 

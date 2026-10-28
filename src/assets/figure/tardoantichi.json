@@ -1,0 +1,78 @@
+[
+ {
+  "n": 0,
+  "ruolo": "lavoratore",
+  "sesso": "m",
+  "eta": 0.448,
+  "seme": 395,
+  "peso": 4.0,
+  "capelli": "short02",
+  "capo": null,
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.603,
+  "anche": 0.8454,
+  "file": "tard-00.glb",
+  "vertici": 4382
+ },
+ {
+  "n": 1,
+  "ruolo": "lavoratore",
+  "sesso": "m",
+  "eta": 0.383,
+  "seme": 438,
+  "peso": 4.0,
+  "capelli": "short02",
+  "capo": null,
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.446,
+  "anche": 0.7458,
+  "file": "tard-01.glb",
+  "vertici": 4382
+ },
+ {
+  "n": 2,
+  "ruolo": "lavoratore",
+  "sesso": "m",
+  "eta": 0.571,
+  "seme": 481,
+  "peso": 4.0,
+  "capelli": "short02",
+  "capo": null,
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "altezza": 1.657,
+  "anche": 0.8752,
+  "file": "tard-02.glb",
+  "vertici": 4382
+ },
+ {
+  "n": 3,
+  "ruolo": "donna",
+  "sesso": "f",
+  "eta": 0.429,
+  "seme": 524,
+  "peso": 1.5,
+  "capelli": null,
+  "capo": "velo",
+  "pelle": [
+   0.9,
+   0.76,
+   0.66
+  ],
+  "altezza": 1.508,
+  "anche": 0.7864,
+  "file": "tard-03.glb",
+  "vertici": 2802
+ }
+]

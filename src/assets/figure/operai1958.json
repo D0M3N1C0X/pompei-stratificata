@@ -1,0 +1,78 @@
+[
+ {
+  "n": 0,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.596,
+  "seme": 1958,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "coppola",
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "altezza": 1.688,
+  "anche": 0.9045,
+  "file": "mai-00.glb",
+  "vertici": 1936
+ },
+ {
+  "n": 1,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.564,
+  "seme": 2001,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "coppola",
+  "pelle": [
+   0.9,
+   0.76,
+   0.66
+  ],
+  "altezza": 1.714,
+  "anche": 0.9135,
+  "file": "mai-01.glb",
+  "vertici": 1936
+ },
+ {
+  "n": 2,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.717,
+  "seme": 2044,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "coppola",
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "altezza": 1.577,
+  "anche": 0.8338,
+  "file": "mai-02.glb",
+  "vertici": 1936
+ },
+ {
+  "n": 3,
+  "ruolo": "operaio",
+  "sesso": "m",
+  "eta": 0.358,
+  "seme": 2087,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "coppola",
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "altezza": 1.397,
+  "anche": 0.7188,
+  "file": "mai-03.glb",
+  "vertici": 1936
+ }
+]

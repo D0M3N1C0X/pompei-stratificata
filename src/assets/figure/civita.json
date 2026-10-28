@@ -1,0 +1,78 @@
+[
+ {
+  "n": 0,
+  "ruolo": "contadino",
+  "sesso": "m",
+  "eta": 0.372,
+  "seme": 1472,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.9,
+   0.76,
+   0.66
+  ],
+  "altezza": 1.553,
+  "anche": 0.8196,
+  "file": "civ-00.glb",
+  "vertici": 2728
+ },
+ {
+  "n": 1,
+  "ruolo": "contadino",
+  "sesso": "m",
+  "eta": 0.694,
+  "seme": 1515,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.71,
+  "anche": 0.9174,
+  "file": "civ-01.glb",
+  "vertici": 2728
+ },
+ {
+  "n": 2,
+  "ruolo": "contadino",
+  "sesso": "m",
+  "eta": 0.734,
+  "seme": 1558,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.555,
+  "anche": 0.8203,
+  "file": "civ-02.glb",
+  "vertici": 2728
+ },
+ {
+  "n": 3,
+  "ruolo": "contadino",
+  "sesso": "m",
+  "eta": 0.466,
+  "seme": 1601,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.637,
+  "anche": 0.8656,
+  "file": "civ-03.glb",
+  "vertici": 2728
+ }
+]

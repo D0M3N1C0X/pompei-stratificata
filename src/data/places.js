@@ -26,5 +26,7 @@ export const PLACES = [
   { id:"sicilo", x:-150, z:52, y:6, from:0, to:7 },
   { id:"strumenti", x:-96, z:44, y:6, from:0, to:7 },
   // accanto al punto d'ingresso: di che cosa sono fatti strada e muri
-  { id:"materiali", x:-74, z:14.6, y:2.4, from:0, to:7 }
+  { id:"materiali", x:-74, z:14.6, y:2.4, from:0, to:7 },
+  // accanto: chi sono le persone che si vedono, fase per fase, e da dove vengono
+  { id:"persone", x:-80, z:13.6, y:2.4, from:0, to:7 }
 ];

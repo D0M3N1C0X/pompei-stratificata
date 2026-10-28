@@ -1,0 +1,78 @@
+[
+ {
+  "n": 0,
+  "ruolo": "scavatore",
+  "sesso": "m",
+  "eta": 0.417,
+  "seme": 1592,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.546,
+  "anche": 0.8086,
+  "file": "can-00.glb",
+  "vertici": 1912
+ },
+ {
+  "n": 1,
+  "ruolo": "scavatore",
+  "sesso": "m",
+  "eta": 0.612,
+  "seme": 1635,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.78,
+   0.6,
+   0.46
+  ],
+  "altezza": 1.605,
+  "anche": 0.8439,
+  "file": "can-01.glb",
+  "vertici": 1912
+ },
+ {
+  "n": 2,
+  "ruolo": "scavatore",
+  "sesso": "m",
+  "eta": 0.368,
+  "seme": 1678,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.506,
+  "anche": 0.7867,
+  "file": "can-02.glb",
+  "vertici": 1912
+ },
+ {
+  "n": 3,
+  "ruolo": "scavatore",
+  "sesso": "m",
+  "eta": 0.617,
+  "seme": 1721,
+  "peso": 1.0,
+  "capelli": null,
+  "capo": "berretto",
+  "pelle": [
+   0.86,
+   0.68,
+   0.54
+  ],
+  "altezza": 1.681,
+  "anche": 0.8967,
+  "file": "can-03.glb",
+  "vertici": 1912
+ }
+]

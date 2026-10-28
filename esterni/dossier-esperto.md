@@ -119,19 +119,20 @@ Da 1 a 2,6 m secondo una guida, al massimo circa 2 m secondo un'altra.
 
 ---
 
-## C. Vesti per le fasi ancora senza figure realistiche
+## C. Vesti delle fasi dopo il 79 — *figure fatte il 28 ottobre 2026*
 
-Le figure sono vestite secondo le fonti per il 79 (S. Brown, *Clothing in
-Roman Art*, AIA/Getty), per lo scavo borbonico (P. Fabris, *Campi Phlegraei*,
-1776) e per oggi. Per tre fasi non ho ancora fonti, e lì restano dei
-manichini:
+Ogni fase ha ora figure vestite secondo un'immagine dell'epoca, ma le fonti
+sono deboli in modi diversi, e su ciascuna una correzione mi servirebbe:
 
-- **IV–V secolo**, la rioccupazione: come vestivano gli abitanti della
-  Campania tardoantica?
-- **XV–XVI secolo**, la Civita: contadini e pastori della piana del Sarno.
-- **1592–1600**, il canale di Fontana: gli scavatori del canale.
-
-Bastano indicazioni iconografiche: affreschi, rilievi, stampe, disegni.
+- **IV–V secolo**, la rioccupazione: uso il mosaico della Villa del Casale
+  (Sicilia) e l'affresco di Teotecno a Napoli, una famiglia agiata. Esistono
+  immagini di poveri della Campania tardoantica?
+- **XV–XVI secolo**, la Civita: uso i facchini della Tavola Strozzi (Napoli,
+  1472). Come vestivano contadini e pastori della piana del Sarno, e le donne?
+- **1592–1600**, il canale: uso gli operai del libro di Fontana del 1590, in
+  bianco e nero. Ci sono fonti a colori o descrizioni scritte?
+- **1958**, gli operai di Maiuri a Ercolano: uso foto del 1931. Esistono foto
+  degli anni Cinquanta con le maestranze?
 
 ---
 

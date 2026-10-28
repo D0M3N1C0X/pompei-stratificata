@@ -17,6 +17,10 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import ROMANE from '../assets/figure/romane.json';
 import OGGI from '../assets/figure/oggi.json';
 import BORBONICI from '../assets/figure/borbonici.json';
+import TARDOANTICHI from '../assets/figure/tardoantichi.json';
+import CIVITA from '../assets/figure/civita.json';
+import CANALE from '../assets/figure/canale.json';
+import OPERAI1958 from '../assets/figure/operai1958.json';
 import movimentiUrl from '../assets/figure/movimenti.glb?url';
 
 /* =====================================================================
@@ -37,12 +41,18 @@ import movimentiUrl from '../assets/figure/movimenti.glb?url';
    nel browser.
    ===================================================================== */
 
-const FILE = import.meta.glob(['../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb', '../assets/figure/borb-*.glb'], { eager:true, query:'?url', import:'default' });
+const FILE = import.meta.glob(['../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb', '../assets/figure/borb-*.glb',
+  '../assets/figure/tard-*.glb', '../assets/figure/civ-*.glb', '../assets/figure/can-*.glb', '../assets/figure/mai-*.glb'], { eager:true, query:'?url', import:'default' });
 // le serie: chi veste come, e da quale script di Blender viene
 const SERIE = [
   { nome:'romane', elenco:ROMANE },   // strumenti/blender/figure_romane.py — il 79
   { nome:'oggi',   elenco:OGGI },     // strumenti/blender/figure_oggi.py — il cantiere aperto
-  { nome:'borbonici', elenco:BORBONICI } // strumenti/blender/figure_borbonici.py — lo scavo 1748–1763
+  { nome:'borbonici', elenco:BORBONICI }, // strumenti/blender/figure_borbonici.py — lo scavo 1748–1763
+  // strumenti/blender/figure_fasi.py (28/10/2026): le fasi che avevano i manichini
+  { nome:'tardoantichi', elenco:TARDOANTICHI },  // la rioccupazione, IV–V secolo
+  { nome:'civita', elenco:CIVITA },              // la collina coltivata, XV–XVI secolo
+  { nome:'canale', elenco:CANALE },              // gli scavatori di Fontana, 1592–1600
+  { nome:'operai1958', elenco:OPERAI1958 }       // gli operai di Maiuri a Ercolano
 ];
 
 const PASSO_F = 20;      // fotogrammi del passo (clip di circa 1 s)

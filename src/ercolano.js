@@ -77,14 +77,14 @@ export const ERCOLANO = (function(){
       o.mm.map = TEX[o.tex];
       // a misura vera, come a Pompei (scene/textures.js, mappaMondo)
       if(scale && scale.SCALA_MONDO[o.tex]) scale.mappaMondo(o.mm, scale.SCALA_MONDO[o.tex]);
-      if(o.tex === 'basoli') o.mm.color.set(0xffffff);
+      if(o.tex === 'basoli' || o.tex === 'laterizio') o.mm.color.set(0xffffff);
       o.mm.needsUpdate = true;
     });
   }
   const M = {
     tufo:    mat(0xc6b89c, 'plaster'),   // opus reticulatum e intonaci
     tufo2:   mat(0x9e9078, 'plaster'),
-    mattone: mat(0x93705a, 'rubble'),    // opus latericium
+    mattone: mat(0x93705a, 'laterizio'), // opus latericium
     legno:   mat(0x7a5a3e),              // i legni carbonizzati di Ercolano
     tetto:   mat(0x9a5a3c, 'tile'),
     strada:  mat(0x60625f, 'basoli'),
