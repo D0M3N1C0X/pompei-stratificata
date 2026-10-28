@@ -112,7 +112,9 @@
       "avanti": "Next",
       "chiudi": "Close",
       "posizione": "Stop {i} of {n}",
-      "fine": "Finish"
+      "fine": "Finish",
+      "voce": "Read aloud",
+      "voceSpegni": "Stop reading"
     },
     "panel": {
       "fonte": "Source",

@@ -334,6 +334,9 @@
   #tourBar #tourNext{background:var(--accent);border-color:var(--accent);color:#0E1512;font-weight:600;min-width:7rem}
   #tourBar #tourNext:hover{background:#96CCB7;color:#0E1512}
   #tourBar #tourPrev{min-width:6rem}
+  #tourVoce{display:inline-flex;align-items:center;gap:.4rem}
+  #tourVoce[hidden]{display:none}
+  #tourVoce[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
   .tourBtn{
     border:1px solid var(--line);border-radius:10px;padding:.5rem .85rem;min-height:2.6rem;
     font-family:var(--sans);font-size:.98rem;font-weight:500;color:var(--ink);
@@ -599,6 +602,8 @@
     #tourBar .tourBtn,#tourBar #tourNext,#tourBar #tourPrev{min-width:0;padding:.5rem .7rem}
     #tourBar #tourNext{flex:1}
     #tourPos{min-width:0;font-size:.95rem}
+    /* sul telefono la voce è solo l'icona; il nome resta per chi usa VoiceOver */
+    #tourVoce .voceTesto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
     /* sul telefono la scheda copre lo schermo: durante la visita la barra
        resta sopra la scheda, in fondo, così «Avanti» è sempre a portata */
     body.touring.panel-open #bottom{z-index:32;background:none}
@@ -886,6 +891,10 @@ body.erc-on #crosshair{ display:block !important; }
       <button class="tourBtn" id="tourPrev" data-i18n="ui.tour.indietro">Indietro</button>
       <span id="tourPos">1 / 14</span>
       <button class="tourBtn" id="tourNext" data-i18n="ui.tour.avanti">Avanti</button>
+      <button class="tourBtn" id="tourVoce" aria-pressed="false" hidden>
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        <span class="voceTesto" data-i18n="ui.tour.voce">Leggi ad alta voce</span>
+      </button>
       <button class="tourBtn" id="tourClose" data-i18n="ui.tour.chiudi">Chiudi</button>
     </div>
     <div id="caption">

@@ -112,7 +112,9 @@
       "avanti": "Seguinte",
       "chiudi": "Fechar",
       "posizione": "Paragem {i} de {n}",
-      "fine": "Terminar"
+      "fine": "Terminar",
+      "voce": "Ler em voz alta",
+      "voceSpegni": "Desligar a voz"
     },
     "panel": {
       "fonte": "Fonte",

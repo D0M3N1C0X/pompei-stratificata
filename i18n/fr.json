@@ -112,7 +112,9 @@
       "avanti": "Suivant",
       "chiudi": "Fermer",
       "posizione": "Étape {i} sur {n}",
-      "fine": "Terminer"
+      "fine": "Terminer",
+      "voce": "Lire à voix haute",
+      "voceSpegni": "Couper la voix"
     },
     "panel": {
       "fonte": "Source",

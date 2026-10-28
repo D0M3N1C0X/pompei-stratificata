@@ -112,7 +112,9 @@
       "avanti": "Weiter",
       "chiudi": "Schließen",
       "posizione": "Station {i} von {n}",
-      "fine": "Fertig"
+      "fine": "Fertig",
+      "voce": "Vorlesen",
+      "voceSpegni": "Vorlesen beenden"
     },
     "panel": {
       "fonte": "Quelle",

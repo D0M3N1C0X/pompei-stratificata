@@ -122,7 +122,9 @@ export default {
       "avanti": "Avanti",
       "chiudi": "Chiudi",
       "posizione": "Tappa {i} di {n}",
-      "fine": "Fine"
+      "fine": "Fine",
+      "voce": "Leggi ad alta voce",
+      "voceSpegni": "Spegni la voce"
     },
     "panel": {
       "fonte": "Fonte",

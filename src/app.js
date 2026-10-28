@@ -688,19 +688,48 @@ for(let i=0;i<9;i++){
   block(-124-t*22, 0, -60-t*14, 2.2, 1.4+((i*3)%3)*0.4, 2.2, PAL.stone);
 }
 
-{
-  const VX = -66, VZ = -252, R = 128, H = 104, STEP = 8;
-  for(let x=-R; x<=R; x+=STEP){
-    for(let z=-R; z<=R; z+=STEP){
-      const dr = Math.hypot(x,z);
-      if(dr > R) continue;
-      let h = H * Math.pow(1 - dr/R, 1.35);
-      if(dr < 20) h -= (20-dr)*1.1;
-      h = Math.max(1.5, h);
-      const shade = dr > R*0.8 ? 0x6d6a64 : (dr > R*0.42 ? PAL.mountain : 0x555350);
-      block(VX+x, -3, VZ+z, STEP+0.6, h+3, STEP+0.6, shade);
+// (una funzione chiamata più avanti: qui cityGroup e allMaterials non
+// esistono ancora, e usarli darebbe l'errore d'avvio del 14 ottobre)
+function costruisciVesuvio(){
+  // Il Vesuvio: lo stesso profilo di prima (schematico e fuori scala, come
+  // dice la sua scheda), ma come superficie continua invece che a gradini
+  // di blocchi da 32 m (28/10/2026). Anelli concentrici, un poco irregolari.
+  const VX = -66, VZ = -252, R = 128, H = 104, NR = 48, NS = 96;
+  const quota = (dr, a) => {
+    let h = H * Math.pow(1 - dr/R, 1.35);
+    if(dr < 20) h -= (20-dr)*1.1;
+    h = Math.max(1.5, h) * (1 + 0.035*Math.sin(a*5 + dr*0.05) + 0.02*Math.sin(a*11 - dr*0.09));
+    return dr >= R ? -0.5 : h;
+  };
+  const pos = [], col = [], idx = [];
+  const c1 = new Color(0x6d6a64), c2 = new Color(PAL.mountain), c3 = new Color(0x555350), cc = new Color();
+  for(let i = 0; i <= NR; i++){
+    const dr = R * i / NR;
+    const t = dr / R;
+    // dal cratere scuro alle falde più chiare, come i tre toni dei blocchi
+    if(t < 0.42) cc.copy(c3).lerp(c2, t / 0.42); else cc.copy(c2).lerp(c1, Math.min(1, (t - 0.42) / 0.38));
+    for(let j = 0; j < NS; j++){
+      const a = j / NS * Math.PI * 2;
+      pos.push(VX + Math.cos(a)*dr, quota(dr, a), VZ + Math.sin(a)*dr);
+      col.push(cc.r, cc.g, cc.b);
     }
   }
+  for(let i = 0; i < NR; i++) for(let j = 0; j < NS; j++){
+    const a = i*NS + j, b = i*NS + (j+1) % NS, c = (i+1)*NS + j, d = (i+1)*NS + (j+1) % NS;
+    idx.push(a, c, b, b, c, d);
+  }
+  const geo = new BufferGeometry();
+  geo.setAttribute('position', new BufferAttribute(new Float32Array(pos), 3));
+  geo.setAttribute('color', new BufferAttribute(new Float32Array(col), 3));
+  geo.setIndex(idx);
+  geo.computeVertexNormals();
+  const mm = new MeshStandardMaterial({ vertexColors:true, map:TEX.ash, roughness:0.95, metalness:0,
+    clippingPlanes:[clipPlane], clipShadows:true });
+  mappaMondo(mm, 0.5);
+  allMaterials.push(mm);
+  const monte = new Mesh(geo, mm);
+  monte.receiveShadow = true;
+  cityGroup.add(monte);
 }
 
 /* ------------------------------------------------------ dettagli urbani */
@@ -868,7 +897,7 @@ function bake(list, color, geo, parent, shadows, vary){
   const pbr = PBR[texName];
   // le texture che portano già il loro colore (tufo, basoli, opus incertum)
   // non si moltiplicano per il colore della tavolozza
-  const proprio = texName === 'tuff' || texName === 'basoli' || texName === 'incertum';
+  const proprio = texName === 'tuff' || texName === 'basoli' || texName === 'incertum' || texName === 'battuto' || texName === 'vano';
   const mat = new MeshStandardMaterial({
     color:proprio ? 0xffffff : color,
     map:pbr ? pbr.color : (texName ? TEX[texName] : null),
@@ -880,6 +909,12 @@ function bake(list, color, geo, parent, shadows, vary){
     clippingPlanes:[clipPlane], clipShadows:true
   });
   if(SCALA_MONDO[texName]) mappaMondo(mat, SCALA_MONDO[texName]);
+  // il vano della porta: la penombra della stanza non dipende dal sole sulla
+  // facciata (in ombra tornava nera); la si disegna come luce propria
+  if(texName === 'vano'){
+    mat.color.set(0x000000); mat.emissive.set(0xffffff);
+    mat.emissiveMap = TEX.vano; mat.emissiveIntensity = 0.85;
+  }
   allMaterials.push(mat);
   const mesh = new InstancedMesh(geo, mat, list.length);
   list.forEach((b,i) => {
@@ -909,6 +944,7 @@ function bakeTracked(list, color, geo, parent, shadows){
 }
 
 for(const b of buckets.values()) bakeTracked(b.list, b.color, b.geo, cityGroup);
+costruisciVesuvio();
 
 const roofsA = new Group(), roofsB = new Group();
 scene.add(roofsA, roofsB);
@@ -1832,13 +1868,55 @@ function tourGo(step){
   // restare spento senza dire perché
   const ultima = tourIdx === TOUR.length-1;
   document.getElementById('tourNext').textContent = t(ultima ? 'ui.tour.fine' : 'ui.tour.avanti');
+  leggiScheda();
 }
+/* La voce nella visita: la sintesi vocale del dispositivo legge titolo e
+   testo della scheda di ogni tappa, nella lingua scelta. Spenta all'inizio
+   (una visita che parla da sola sorprende, in classe); la scelta si
+   ricorda su questo dispositivo. Le fonti non si leggono: restano scritte. */
+const VOCE_LINGUA = { it:'it-IT', en:'en-GB', fr:'fr-FR', de:'de-DE', es:'es-ES', pt:'pt-PT' };
+const voceBtn = document.getElementById('tourVoce');
+const sintesi = 'speechSynthesis' in window ? window.speechSynthesis : null;
+let voceOn = false;
+try { voceOn = localStorage.getItem('dopo79-voce') === '1'; } catch(e){}
+function voceScelta(){
+  const tag = VOCE_LINGUA[linguaAttiva()] || 'it-IT', voci = sintesi.getVoices();
+  return voci.find(v => v.lang === tag && v.localService) || voci.find(v => v.lang === tag)
+      || voci.find(v => v.lang.slice(0, 2) === tag.slice(0, 2)) || null;
+}
+function leggiScheda(){
+  if(!sintesi) return;
+  sintesi.cancel();
+  if(!voceOn) return;
+  const testo = document.getElementById('pTitle').textContent + '. ' + document.getElementById('pBody').innerText;
+  const u = new SpeechSynthesisUtterance(testo.replace(/\s+/g, ' ').trim());
+  u.lang = VOCE_LINGUA[linguaAttiva()] || 'it-IT';
+  const v = voceScelta(); if(v) u.voice = v;
+  u.rate = 0.95;
+  sintesi.speak(u);
+}
+function segnaVoce(){
+  voceBtn.setAttribute('aria-pressed', String(voceOn));
+  voceBtn.querySelector('.voceTesto').textContent = t(voceOn ? 'ui.tour.voceSpegni' : 'ui.tour.voce');
+}
+if(sintesi){
+  voceBtn.hidden = false;
+  segnaVoce();
+  voceBtn.addEventListener('click', () => {
+    voceOn = !voceOn;
+    try { localStorage.setItem('dopo79-voce', voceOn ? '1' : '0'); } catch(e){}
+    segnaVoce();
+    leggiScheda();
+  });
+}
+
 function startTour(){
   document.body.classList.add('touring');
   document.getElementById('btnTour').classList.add('on');
   tourIdx = -1; tourGo(1);
 }
 function stopTour(){
+  if(sintesi) sintesi.cancel();
   document.body.classList.remove('touring');
   document.getElementById('btnTour').classList.remove('on');
   closePanel();

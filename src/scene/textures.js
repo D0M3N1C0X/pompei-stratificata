@@ -211,6 +211,46 @@ function incertum(n, seed){
   return c;
 }
 
+/* Il suolo e i marciapiedi: un battuto di terra e calce con frammenti di
+   cocciopesto e di calcare. Mau (cap. XXXI): il fondo del marciapiede lo
+   sceglieva il proprietario della casa; questo è uno dei fondi possibili,
+   scelto per tutti — di disegno, ripetibile, a misura vera (prima era una
+   foto di tufo stesa su ogni cella di 16 m, e nei ritagli si stirava). */
+function battuto(n, seed){
+  const c = px(n), g = c.getContext('2d'), r = seeded(seed);
+  g.drawImage(grain(n, 0.84, 1.0, seed, 10, 0.05), 0, 0);
+  const d = g.getImageData(0, 0, n, n);
+  for(let i = 0; i < n*n; i++){                // terra battuta beige
+    d.data[i*4] = d.data[i*4] * 0.66; d.data[i*4+1] = d.data[i*4+1] * 0.60; d.data[i*4+2] = d.data[i*4+2] * 0.50;
+  }
+  g.putImageData(d, 0, 0);
+  const COLORI = ['rgba(150,82,58,', 'rgba(170,98,70,', 'rgba(214,206,190,', 'rgba(110,104,96,'];
+  for(let k = 0; k < 2600; k++){
+    const x = r()*n, y = r()*n, rad = 0.6 + r()*1.8, col = COLORI[Math.floor(r()*COLORI.length)];
+    g.fillStyle = col + (0.45 + r()*0.4) + ')';
+    for(const ox of [-n, 0, n]) for(const oy of [-n, 0, n]){ g.beginPath(); g.arc(x + ox, y + oy, rad, 0, 7); g.fill(); }
+  }
+  return c;
+}
+
+/* Il vano della porta visto dalla strada al sole: non un nero pieno ma una
+   stanza in penombra, più scura in alto e ai lati, con il pavimento appena
+   rischiarato dalla luce che entra. Di disegno: non rappresenta una stanza
+   vera, solo che dietro la porta c'è uno spazio. */
+function vano(n){
+  const c = px(n), g = c.getContext('2d');
+  const v = g.createLinearGradient(0, 0, 0, n);
+  v.addColorStop(0.00, 'rgb(18,15,13)');
+  v.addColorStop(0.62, 'rgb(40,34,29)');
+  v.addColorStop(0.70, 'rgb(62,53,43)');      // dove il pavimento comincia
+  v.addColorStop(1.00, 'rgb(92,79,63)');
+  g.fillStyle = v; g.fillRect(0, 0, n, n);
+  const h = g.createLinearGradient(0, 0, n, 0);
+  h.addColorStop(0, 'rgba(0,0,0,0.45)'); h.addColorStop(0.5, 'rgba(0,0,0,0)'); h.addColorStop(1, 'rgba(0,0,0,0.45)');
+  g.fillStyle = h; g.fillRect(0, 0, n, n);
+  return c;
+}
+
 /* Le texture a misura vera. Gli edifici sono scatole scalate: con le
    coordinate della scatola la stessa texture si stendeva una volta su ogni
    faccia, e su una strada lunga 400 m un basolato di lastre da mezzo metro
@@ -246,7 +286,7 @@ export function mappaMondo(m, scala){
   m.customProgramCacheKey = () => 'mondo';
 }
 // ripetizioni per unità di ogni texture (il motivo misura 4/scala metri)
-export const SCALA_MONDO = { plaster:0.8, rubble:2, incertum:1.7, tile:1.3, basalt:1, basoli:1,
+export const SCALA_MONDO = { battuto:1, plaster:0.8, rubble:2, incertum:1.7, tile:1.3, basalt:1, basoli:1,
   stone:2, marble:2, tuffNoise:1, pumiceW:1, pumiceG:1, ash:1, veg:1 };
 
 export const TEX = {};
@@ -276,16 +316,19 @@ TEX.veg     = toTex(grain(256, 0.74, 1.0, 109, 12, 0.10), 2);
   TEX.basoliN.wrapS = TEX.basoliN.wrapT = RepeatWrapping; TEX.basoliN.anisotropy = 4;
 }
 TEX.incertum = toTex(incertum(512, 149), 1);
+TEX.battuto = toTex(battuto(512, 157), 1);
+TEX.vano = toTex(vano(128), 1);
+TEX.vano.wrapS = TEX.vano.wrapT = ClampToEdgeWrapping;
 
 export const TEXMAP = new Map([
   [PAL.wall1,'plaster'],[PAL.wall2,'plaster'],[PAL.wall3,'incertum'],
   [PAL.roof,'tile'],[PAL.roof2,'tile'],
   [PAL.street,'basoli'],[PAL.kerb,'stone'],
   [PAL.stone,'stone'],[PAL.column,'marble'],[PAL.civic,'stone'],
-  [PAL.terrace,'tuff'],[0x8f8776,'tuff'],[0x847c6b,'tuff'],
+  [PAL.terrace,'battuto'],[0x8f8776,'battuto'],[0x847c6b,'battuto'],
   [PAL.depWhite,'pumiceW'],[PAL.depGrey,'pumiceG'],[PAL.depSurge,'ash'],
   [0x4c4639,'ash'],[PAL.mountain,'ash'],[0x6d6a64,'ash'],[0x555350,'ash'],
   [PAL.veg,'veg'],[PAL.crude,'plaster'],[PAL.spoil,'tuff'],
-  [0x3a342c,'plaster'],[0x5a4a37,'tuffNoise'],[0x54633f,'veg'],[0x5f6e48,'veg'],
+  [0x3a342c,'vano'],[0x5a4a37,'tuffNoise'],[0x54633f,'veg'],[0x5f6e48,'veg'],
   [0x8f8674,'tuff'],[0x5d7278,'stone'],[0x6d8286,'stone']
 ]);
