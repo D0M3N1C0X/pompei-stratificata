@@ -10,7 +10,7 @@ store/testi.json     nome, sottotitolo, testo promozionale, descrizione,
                      Apple verificati da npm run check)
 store/scatti.json    le sei inquadrature e le didascalie degli screenshot
 store/immagini/      (generata, non versionata) 72 JPEG: 6 scatti × 6 lingue
-                     × 2 formati
+                     × 2 formati, da scripts/scatti-store.mjs
 ../privacy.html      l'informativa, pubblicata con il sito
 ```
 
@@ -64,26 +64,41 @@ che porta a 9+. La decisione spetta a te.
 
 Sei scene del modello con una didascalia, in due formati: iPhone 6,9"
 (1320 × 2868) e iPad 13" (2064 × 2752). Apple ridimensiona da sola per gli
-schermi più piccoli. Sono una **prima bozza**: vanno rifatti dopo il lavoro su
-Ercolano, sulla luce e sui materiali, ed è un'operazione ripetibile.
+schermi più piccoli. Rifatte il 29 ottobre 2026, con l'interfaccia, la luce,
+i materiali e le figure di adesso:
 
-Per rifarli:
+| Scena | Cosa mostra |
+|---|---|
+| 01-strada | una strada il pomeriggio prima dell'eruzione, all'altezza degli occhi |
+| 02-persone | la folla verso l'anfiteatro, vestita come nelle fonti |
+| 03-citta | la città sotto il Vesuvio, dall'alto |
+| 04-deposito | i tetti che affiorano dal deposito |
+| 05-ercolano | il fronte di scavo, con la città moderna sopra |
+| 06-oggi | il cantiere aperto di oggi |
+
+Per rifarle, con il Mac acceso e Chrome installato:
+
+```bash
+npm run build
+```
 
 ```bash
 python3 -m http.server 8780
 ```
 
 ```bash
-node scripts/ricevi-foto.mjs store/immagini
+node scripts/scatti-store.mjs
 ```
 
-Poi si apre `http://localhost:8780/?debug` con una finestra di **660 × 1434**
-per iPhone o **1032 × 1376** per iPad (con densità 2 il canvas esce
-esattamente nel formato giusto). Si porta l'ora a mezzogiorno e si chiama
-`pompei.vetrina(w, h, didascalia)` per ogni scena di `scatti.json`: la
-funzione fotografa la scena, la adatta al formato e scrive la didascalia.
-I PNG che arrivano si convertono in JPEG di qualità 90 (`sips -s format jpeg`),
-così 72 immagini scendono da 292 a 44 MB.
+Lo script apre il simulatore in un Chrome senza finestra, una scena alla
+volta, e scrive in `store/immagini` 72 JPEG: 6 scene × 6 lingue × 2 formati,
+in circa sette minuti. Di ogni scena fa una sola foto e ci scrive sopra le sei
+didascalie, quindi tutte le lingue mostrano lo stesso istante. Per rifarne una
+sola: `node scripts/scatti-store.mjs http://localhost:8780/ 02-persone`.
+
+Nelle foto non ci sono i coni verdi dei luoghi né le etichette: in
+un'immagine ferma sembrerebbero difetti. Le inquadrature, l'ora del giorno e
+le didascalie stanno in `scatti.json`.
 
 ## Il Mac
 

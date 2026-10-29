@@ -788,6 +788,6 @@ export const ERCOLANO = (function(){
            setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
            usaFigure: f => abitanti.usaFigure(f), galleria, galleriaAttiva, bloccato,
-           momenti: MOMENTI, luoghi: LUOGHI,
+           momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots,
            isActive: () => active };
 })();
