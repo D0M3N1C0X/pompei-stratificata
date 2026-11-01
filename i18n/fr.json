@@ -196,7 +196,11 @@
         "studio": "étude scientifique",
         "terziaria": "synthèse, à vérifier",
         "disegno": "choix du modèle"
-      }
+      },
+      "aErcolano": "Aller à Herculanum à cette heure",
+      "aPompei": "Retour à Pompéi à cette heure",
+      "quotaPompei": "dépôt ici : environ {m} m",
+      "quotaErcolano": "dépôt au-dessus de la plage antique : environ {m} m"
     }
   },
   "scena": {

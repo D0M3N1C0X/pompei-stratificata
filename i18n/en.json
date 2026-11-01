@@ -196,7 +196,11 @@
         "studio": "scientific study",
         "terziaria": "summary, to be checked",
         "disegno": "model choice"
-      }
+      },
+      "aErcolano": "Go to Herculaneum at this hour",
+      "aPompei": "Back to Pompeii at this hour",
+      "quotaPompei": "deposit here: about {m} m",
+      "quotaErcolano": "deposit above the ancient beach: about {m} m"
     }
   },
   "scena": {

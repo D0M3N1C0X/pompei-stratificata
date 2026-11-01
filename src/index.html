@@ -333,6 +333,11 @@
   .eruGrande:hover{background:#96CCB7}
   .eruSotto{font-size:.95rem;color:var(--ink-soft)}
   body.eru-on #caption{display:none}
+  /* a Ercolano, durante l'eruzione, resta solo la barra del tempo */
+  body.erc-on.eru-on #bottom{display:flex!important}
+  body.erc-on.eru-on #ercHud{display:none!important}
+  body.erc-on #epochs,body.erc-on #eruApri{display:none!important}
+  #eruCitta{border-color:var(--accent-dim)}
   body.eru-on #clock,body.eru-on #btnClock{display:none!important}
   .eruPiega{position:absolute;top:.25rem;height:1rem;width:0;border-left:2px dashed var(--ink-faint)}
   #eruBar{
@@ -344,6 +349,7 @@
   #eruPlay:hover{background:#96CCB7;color:#0E1512}
   #eruOra{display:flex;flex-direction:column;line-height:1.1;margin-right:auto;min-width:9rem}
   #eruGiorno{font-family:var(--mono);font-size:.85rem;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}
+  #eruQuota{font-size:.92rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
   #eruOrario{font-size:1.45rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
   #eruLinea{position:relative;padding-top:1.5rem}
   #eruRange{width:100%;accent-color:var(--accent);height:2rem;margin:0}
@@ -967,9 +973,10 @@ body.erc-on #crosshair{ display:block !important; }
         <button id="eruPlay" class="tourBtn" aria-pressed="false">
           <span data-i18n="ui.eru.avvia">Avvia</span>
         </button>
-        <div id="eruOra" aria-live="polite"><span id="eruGiorno"></span><span id="eruOrario"></span></div>
+        <div id="eruOra" aria-live="polite"><span id="eruGiorno"></span><span id="eruOrario"></span><span id="eruQuota"></span></div>
         <button id="eruPrev" class="tourBtn" data-i18n="ui.eru.prima">Evento prima</button>
         <button id="eruNext" class="tourBtn" data-i18n="ui.eru.dopo">Evento dopo</button>
+        <button id="eruCitta" class="tourBtn">Vai a Ercolano a quest'ora</button>
         <button id="eruChiudi" class="tourBtn" data-i18n="ui.eru.chiudi">Chiudi</button>
       </div>
       <div id="eruLinea">

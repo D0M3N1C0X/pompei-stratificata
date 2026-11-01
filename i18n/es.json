@@ -196,7 +196,11 @@
         "studio": "estudio científico",
         "terziaria": "síntesis, por verificar",
         "disegno": "decisión del modelo"
-      }
+      },
+      "aErcolano": "Ir a Herculano a esta hora",
+      "aPompei": "Volver a Pompeya a esta hora",
+      "quotaPompei": "depósito aquí: unos {m} m",
+      "quotaErcolano": "depósito sobre la playa antigua: unos {m} m"
     }
   },
   "scena": {

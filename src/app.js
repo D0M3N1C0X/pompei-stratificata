@@ -1538,7 +1538,18 @@ function vaiEruzione(ore){
   eruEl('eruRange').value = String(Math.round(posOra(eru.ore) * 1000));
   eruEl('eruRange').setAttribute('aria-valuetext', o.giorno + ', ' + o.ora);
   mostraEvento(eventoAttivo(eru.ore));
+  // quanto deposito c'è, qui e adesso: il numero che cambia sotto gli occhi
+  if(ercOn){
+    const mE = ERCOLANO.eruzione(eru.ore) || 0;
+    eruEl('eruQuota').textContent = t('ui.eru.quotaErcolano', { m: fmt().n(Math.round(mE)) });
+  } else {
+    const mP = Math.round(depositCurrent * 4 * 10) / 10;
+    eruEl('eruQuota').textContent = t('ui.eru.quotaPompei', { m: fmt().n(mP) });
+  }
   scriviStato();
+}
+function segnaCittaEruzione(){
+  eruEl('eruCitta').textContent = t(ercOn ? 'ui.eru.aPompei' : 'ui.eru.aErcolano');
 }
 function suonaEruzione(on){
   eru.play = on && eru.ore < DURATA;
@@ -1554,11 +1565,13 @@ function apriEruzione(ore){
   document.body.classList.add('eru-on');
   eruEl('eruBar').hidden = false;
   costruisciSegni();
+  segnaCittaEruzione();
   vaiEruzione(ore ?? 0);
   suonaEruzione(ore === undefined);
   aggiornaPortaEruzione();
 }
 function chiudiEruzione(silenzioso){
+  if(ercOn) ERCOLANO.eruzione(null);
   eru.on = false; eru.play = false; eru.luce = 1;
   document.body.classList.remove('eru-on');
   eruEl('eruBar').hidden = true;
@@ -1586,6 +1599,7 @@ eruEl('eruPlay').addEventListener('click', () => {
   suonaEruzione(!eru.play);
 });
 eruEl('eruChiudi').addEventListener('click', () => chiudiEruzione());
+eruEl('eruCitta').addEventListener('click', () => setErc(!ercOn));
 eruEl('eruRange').addEventListener('input', e => { suonaEruzione(false); vaiEruzione(oraPos(Number(e.target.value) / 1000)); });
 eruEl('eruPrev').addEventListener('click', () => {
   suonaEruzione(false);
@@ -2348,7 +2362,6 @@ function aggiornaComandiErcolano(){
 }
 
 function setErc(v){
-  if(v && eru.on) chiudiEruzione(true);
   ercOn = !!v;
   document.body.classList.toggle('erc-on', ercOn);
   if(!ercOn) document.body.classList.remove('erc-galleria');
@@ -2371,10 +2384,13 @@ function setErc(v){
       }
     });
   } else {
+    ERCOLANO.eruzione(null);
     ERCOLANO.exit();
     closePanel();
   }
   setErcAlto(false);
+  // l'eruzione continua nell'altra città, alla stessa ora
+  if(eru.on){ vaiEruzione(eru.ore); segnaCittaEruzione(); }
   aggiornaComandiErcolano();
   if(ercOn) segnaGalleria();
   if(!ercOn){
@@ -2861,7 +2877,7 @@ function scriviStato(){
   else if(compareOn) q.set('vista', 'confronto');
   if(!ercOn && !compareOn && (epoch !== 0 || luogoAperto)) q.set('fase', String(epoch + 1));
   if(luogoAperto && !compareOn) q.set('luogo', luogoAperto);
-  if(eru.on && !ercOn && !compareOn) q.set('eruzione', String(Math.round(eru.ore * 10) / 10));
+  if(eru.on && !compareOn) q.set('eruzione', String(Math.round(eru.ore * 10) / 10));
   const nuovo = u.pathname + (q.toString() ? '?' + q.toString() : '') + u.hash;
   if(nuovo !== location.pathname + location.search + location.hash)
     history.replaceState(null, '', nuovo);
@@ -2877,8 +2893,10 @@ function applicaCollegamento(){
 
   if(vista === 'confronto'){ setCompare(true); usato = true; }
   else if(vista === 'ercolano'){
+    const oreE = parseFloat(q.get('eruzione'));
+    if(Number.isFinite(oreE)) apriEruzione(Math.max(0, Math.min(DURATA, oreE)));
     setErc(true); usato = true;
-    if(q.get('momento')) setMomentoErc(q.get('momento'));
+    if(q.get('momento') && !eru.on) setMomentoErc(q.get('momento'));
     if(luogo && ERCOLANO.luoghi.some(p => p.id === luogo)) ERCOLANO.apri(luogo);
   } else {
     const h = luogo ? byId[luogo] : null;

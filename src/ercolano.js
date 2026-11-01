@@ -3,6 +3,7 @@ import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terre
 import { createInhabitants } from './scene/inhabitants.js';
 import { POPULATIONS_ERCOLANO } from './data/populations.js';
 import { PAL } from './scene/palette.js';
+import { statoEruzione } from './data/eruzione.js';
 import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
@@ -29,6 +30,7 @@ import {
   Raycaster,
   RingGeometry,
   Scene,
+  SphereGeometry,
   Vector2
 } from 'three';
 
@@ -53,7 +55,8 @@ export const ERCOLANO = (function(){
   eSun.shadow.bias = -0.0004;
   eSun.shadow.normalBias = 0.03;
   eScene.add(eSun, eSun.target);
-  eScene.add(new HemisphereLight(0xe9f1f6, 0x635a4b, 1.28));
+  const eHemi = new HemisphereLight(0xe9f1f6, 0x635a4b, 1.28);
+  eScene.add(eHemi);
   const eRim = new DirectionalLight(0x9ec3da, 0.34);
   eRim.position.set(60, 26, -50);
   eScene.add(eRim);
@@ -784,10 +787,109 @@ export const ERCOLANO = (function(){
 
   setMomento('oggi');
 
+
+  /* ------------------------------------------- l'eruzione ora per ora
+     Lo stesso orologio di Pompei (src/data/eruzione.js). Si sta sulla
+     spiaggia antica, davanti ai fornici, rivolti al Vesuvio. Qui la pomice
+     quasi non cade (Ercolano era sopravvento); dalla notte le correnti
+     riempiono la spiaggia e poi la città, fino ai 20 m del deposito.
+     Documentato: la sopravvento, la notte come fascia, ~500 °C, ~300
+     vittime nei fornici. DI DISEGNO: l'ora dei singoli impulsi e quanto
+     deposito lascia ciascuno; il Vesuvio, che in questa scena non c'era,
+     è un cono schematico nella direzione vera (75,7° dal nord, cioè 17,3°
+     a destra dell'asse dei cardini) ma a 2 km invece di 6,8. */
+  const IMPULSI = [11.8, 13.4, 17.0, 19.2];          // [disegno] dentro le fasce
+  const RIEMPI  = [0.36, 0.55, 0.82, 1.0];            // quota raggiunta dopo ognuno
+  const crescitaErc = ore => {
+    let f = 0;
+    IMPULSI.forEach((t0, i) => {
+      const prima = i ? RIEMPI[i-1] : 0;
+      if(ore >= t0) f = prima + (RIEMPI[i] - prima) * Math.min(1, (ore - t0) / 0.5);
+    });
+    return f;
+  };
+  const DIR_V = new Vector3(Math.sin(17.3 * Math.PI/180), 0, -Math.cos(17.3 * Math.PI/180));
+  const monteE = new Group(); monteE.visible = false; eScene.add(monteE);
+  const M_MONTE = new MeshLambertMaterial({ color:0x5d5a54, fog:false });
+  const M_COL_E = new MeshLambertMaterial({ color:0xe6e1d6, emissive:0x2a2621, transparent:true, opacity:0.95, fog:false });
+  const colE = new Group();
+  {
+    const cono = new Mesh(new ConeGeometry(190, 95, 48, 1, true), M_MONTE);
+    cono.position.y = 95/2 - 2;
+    const tronco = new Mesh(new CylinderGeometry(0.16, 0.07, 1, 28, 1, true), M_COL_E);
+    tronco.position.y = 0.4; tronco.scale.set(1, 0.8, 1);
+    const chioma = new Mesh(new SphereGeometry(0.5, 32, 16), M_COL_E);
+    chioma.position.y = 0.86; chioma.scale.set(1.25, 0.32, 1.25);
+    const sbuffo = new Mesh(new SphereGeometry(0.5, 24, 12), M_COL_E);
+    sbuffo.position.set(0.32, 0.8, 0.2); sbuffo.scale.set(0.7, 0.24, 0.6);
+    colE.add(tronco, chioma, sbuffo); colE.position.y = 90;
+    monteE.add(cono, colE);
+    monteE.position.copy(DIR_V).multiplyScalar(520);
+  }
+  const ERU_CHIARO = new Color(0x8f8a7e), ERU_SCURO = new Color(0x15130f), ERU_CORR = new Color(0x5d574d);
+  const eruCielo = new Color();
+  let eruOre = null, eruSalvato = null;
+  function eruzione(ore){
+    if(ore === null || ore === undefined){
+      if(eruOre === null) return;
+      eruOre = null;
+      G.dep_1738.scale.y = 1; G.dep_1738.position.y = 0;
+      monteE.visible = false;
+      eScene.background = eruSalvato.bg; eScene.fog = eruSalvato.fog;
+      eSun.intensity = eruSalvato.sole; eRim.intensity = eruSalvato.rim; eHemi.intensity = eruSalvato.emi;
+      setMomento(eruSalvato.momento);
+      reset();
+      return;
+    }
+    if(eruOre === null){
+      if(inGalleria) galleria(false);
+      if(sepoltoOn) mostraSepolto(false);
+      eruSalvato = { momento, bg:eScene.background, fog:eScene.fog, sole:eSun.intensity, rim:eRim.intensity, emi:eHemi.intensity };
+      eScene.fog = new Fog(0xa8b7c2, 90, 340);
+      setMomento('79');
+      // sulla spiaggia antica, una decina di metri davanti ai fornici,
+      // rivolti al Vesuvio e un poco in su per vedere la colonna
+      inquadra(4.5, 0.5, 31, -Math.atan2(DIR_V.x, -DIR_V.z), 0.16);
+      monteE.visible = true;
+    }
+    eruOre = ore;
+    const st = statoEruzione(ore);
+    // il deposito: cresce dalla spiaggia antica (−10 m) fino a 20 m
+    const f = crescitaErc(ore), base = QUOTA.spiaggia;
+    G.dep_1738.visible = f > 0.002;
+    G.dep_1738.scale.y = Math.max(0.002, f);
+    G.dep_1738.position.y = base * (1 - G.dep_1738.scale.y);
+    const cima = base + (SCARP_H - base) * f;
+    // chi guarda resta sopra il deposito: la spiaggia sparisce sotto i piedi
+    if(cima > quota(pos.x, pos.z) - 0.2){ volo = true; vx = vy = vz = 0; pos.y = Math.max(pos.y, cima + 1.3); }
+    // le persone in città fino al primo impulso; poi nessuna [disegno]
+    abitanti.setEpoch(ore < IMPULSI[0] ? MOMENTI.indexOf('79') : MOMENTI.indexOf('1738'));
+    // la colonna: la stessa crescita di Pompei
+    const cresce = Math.min(1, ore / 2), alta = ore < 9 ? 0.72 : 0.72 + 0.28 * Math.min(1, (ore - 9) / 2);
+    const cala = ore < 18 ? 1 : Math.max(0, 1 - (ore - 18) / 5), k = cresce * alta * cala;
+    colE.visible = k > 0.02; colE.scale.set(150 * k, 105 * k, 150 * k);
+    const grigia = ore >= 9 ? Math.min(1, (ore - 9) / 2) : 0;
+    M_COL_E.color.setRGB(0.90 - grigia*0.36, 0.88 - grigia*0.36, 0.84 - grigia*0.36).multiplyScalar(1.15 - st.buio*0.35);
+    M_COL_E.opacity = 0.95 * Math.min(1, cala * 1.4);
+    // il buio e la corrente che arriva: la nebbia si chiude a ogni impulso
+    const corr = Math.max(0, ...IMPULSI.map(t0 => 1 - Math.abs(ore - t0 - 0.15) / 0.3));
+    eruCielo.copy(ERU_CHIARO).lerp(ERU_SCURO, st.buio).lerp(ERU_CORR, corr);
+    eScene.background = eruCielo;
+    eScene.fog.color.copy(eruCielo);
+    eScene.fog.near = 2 + 60 * (1 - st.buio) * (1 - corr);
+    eScene.fog.far = Math.max(10, 340 * (1 - 0.7 * st.buio) * (1 - 0.95 * corr));
+    const luce = 1 - st.buio * 0.92;
+    eSun.intensity = eruSalvato.sole * luce;
+    eRim.intensity = eruSalvato.rim * luce;
+    eHemi.intensity = eruSalvato.emi * (0.3 + 0.7 * luce);
+    return (cima - base) * U;                         // metri sopra la spiaggia antica
+  }
+  const eruzioneAttiva = () => eruOre !== null;
+
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f), galleria, galleriaAttiva, bloccato,
+           usaFigure: f => abitanti.usaFigure(f), galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
            momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots,
            isActive: () => active };
 })();

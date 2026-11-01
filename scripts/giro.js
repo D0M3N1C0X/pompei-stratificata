@@ -32,6 +32,13 @@
       if(!document.getElementById('eruTitolo').textContent.trim()) guai.push('eruzione ' + b.dataset.id + ': titolo vuoto');
       fatti.eruzione++;
     }
+    // la stessa ora a Ercolano, e ritorno
+    document.getElementById('eruCitta').click();
+    if(!document.body.classList.contains('erc-on')) guai.push('eruzione: non va a Ercolano');
+    controlla('eruzione a Ercolano');
+    if(!/\d/.test(document.getElementById('eruQuota').textContent)) guai.push('eruzione: quota di Ercolano assente');
+    document.getElementById('eruCitta').click();
+    if(document.body.classList.contains('erc-on')) guai.push('eruzione: non torna a Pompei');
     document.getElementById('eruChiudi').click();
     if(document.body.classList.contains('eru-on')) guai.push('eruzione: non si chiude');
   } catch(e){ guai.push('eruzione: ' + e.message); }

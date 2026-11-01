@@ -196,7 +196,11 @@
         "studio": "wissenschaftliche Studie",
         "terziaria": "Zusammenfassung, zu prüfen",
         "disegno": "Entscheidung des Modells"
-      }
+      },
+      "aErcolano": "Zu dieser Stunde nach Herculaneum",
+      "aPompei": "Zu dieser Stunde zurück nach Pompeji",
+      "quotaPompei": "Ablagerung hier: etwa {m} m",
+      "quotaErcolano": "Ablagerung über dem antiken Strand: etwa {m} m"
     }
   },
   "scena": {

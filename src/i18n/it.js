@@ -213,7 +213,11 @@ export default {
         "studio": "studio scientifico",
         "terziaria": "sintesi, da verificare",
         "disegno": "scelta del modello"
-      }
+      },
+      "aErcolano": "Vai a Ercolano a quest'ora",
+      "aPompei": "Torna a Pompei a quest'ora",
+      "quotaPompei": "deposito qui: circa {m} m",
+      "quotaErcolano": "deposito sopra la spiaggia antica: circa {m} m"
     }
   },
   "epoche": [
