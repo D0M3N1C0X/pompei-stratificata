@@ -87,7 +87,7 @@ try {
   // 2. il giro di verifica
   const giro = await valuta(`(async () => (0, eval)(await (await fetch('scripts/giro.js')).text()))()`, true);
   if(!giro || !giro.fatti) throw new Error('il giro non ha restituito un esito');
-  console.log(`✓ giro: ${giro.fatti.fasi} fasi, ${giro.fatti.eruzione} eventi dell'eruzione, ${giro.fatti.luoghi} luoghi di Pompei, ${giro.fatti.erc} di Ercolano`);
+  console.log(`✓ giro: ${giro.fatti.fasi} fasi, ${giro.fatti.eruzione} eventi dell'eruzione, ${giro.fatti.classe} tappe in classe, ${giro.fatti.luoghi} luoghi di Pompei, ${giro.fatti.erc} di Ercolano`);
   for(const g of giro.guai) console.error('✗ ' + g);
 
   // 3. eccezioni non gestite durante tutto questo

@@ -384,6 +384,68 @@
     #eruCorpo{font-size:1rem}
   }
 
+  /* ------------------------------------------------------------ in classe
+     «Lavagna»: tutto più grande, per il fondo dell'aula; «Studente»: le
+     stesse tappe, senza risposte. Il pannello sta in alto a sinistra, sotto
+     il titolo: la barra dell'eruzione occupa il basso, la scheda la destra. */
+  html.lavagna{font-size:125%}
+  #introClasse{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:.2rem 0 .4rem}
+  .icLbl{font-size:.92rem;font-weight:650;color:var(--accent);margin-right:.2rem}
+  .icBtn{border:1px solid var(--accent-dim);border-radius:10px;padding:.55rem .9rem;min-height:2.75rem;
+    font-family:var(--sans);font-size:.98rem;font-weight:550;color:var(--ink)}
+  .icBtn:hover{border-color:var(--accent);color:var(--accent)}
+  #classeBox{position:fixed;left:.9rem;top:4.6rem;z-index:30;width:min(26rem,calc(100vw - 1.8rem));
+    max-height:calc(100vh - 6rem);overflow:auto;
+    background:var(--glass-2);border:1px solid var(--accent-dim);border-radius:16px;
+    padding:.8rem .9rem;display:flex;flex-direction:column;gap:.6rem}
+  #classeBox[hidden]{display:none}
+  /* in modalità classe le tappe sostituiscono la fascia delle fasi; su
+     schermo largo il pannello è una colonna a sinistra e la barra
+     dell'eruzione le sta accanto, invece di passarle sotto */
+  body.classe-on #epochs{display:none}
+  @media (min-width:52.01rem){
+    body.classe-on #classeBox{width:min(22rem,38vw);max-height:calc(100vh - 5.5rem)}
+    body.classe-on #bottom{padding-left:calc(min(22rem,38vw) + 1.8rem)}
+    body.classe-on.rail-open #bottom{padding-left:calc(min(22rem,38vw) + 1.8rem)}
+  }
+  #clTesta{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+  #clTitolo{margin:0;font-size:1rem;font-weight:650;color:var(--accent)}
+  #clPercorsi{display:flex;gap:.3rem}
+  #clPercorsi .tourBtn{min-height:2.3rem;padding:.3rem .65rem;font-size:.9rem}
+  #clTappa{display:flex;flex-direction:column;gap:.1rem}
+  #clPos{font-family:var(--mono);font-size:.82rem;letter-spacing:.06em;color:var(--ink-soft)}
+  #clNome{font-size:1.1rem;font-weight:650}
+  #clDomande{display:flex;flex-direction:column;gap:.7rem}
+  .clDom{border-left:3px solid var(--accent);padding-left:.7rem;display:flex;flex-direction:column;gap:.35rem}
+  .clQ{margin:0;font-family:var(--serif);font-size:1.08rem;line-height:1.5;color:var(--ink)}
+  .clR{margin:0;font-family:var(--serif);font-size:1rem;line-height:1.5;color:var(--ink-soft)}
+  .clR[hidden]{display:none}
+  .clF{font-family:var(--mono);font-size:.8rem;color:var(--ink-faint)}
+  .clMostra{align-self:flex-start;border:1px solid var(--line);border-radius:8px;padding:.3rem .65rem;min-height:2.3rem;
+    font-size:.9rem;color:var(--ink)}
+  .clMostra:hover{border-color:var(--accent);color:var(--accent)}
+  .clScrivi{font-size:.9rem;color:var(--ink-faint);font-style:italic}
+  #clNav{display:flex;gap:.4rem;flex-wrap:wrap}
+  #clNext{background:var(--accent);border-color:var(--accent);color:#0E1512;font-weight:650;min-width:6.5rem}
+  #clNext:hover{background:#96CCB7;color:#0E1512}
+  #clStrumenti{display:flex;gap:.3rem 1rem;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:.5rem}
+  .clLink{font-size:.88rem;color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;padding:.3rem 0;min-height:2.2rem}
+  .clLink:hover{color:var(--accent)}
+  body.classe-studente #clNascondi,body.classe-studente #clCondividi{display:none}
+  body.classe-lavagna #clRiprendi{display:none}
+  /* l'interfaccia nascosta: resta la scena, e un tasto per riaverla */
+  body.ui-nascosta #top,body.ui-nascosta #bottom,body.ui-nascosta #panel,body.ui-nascosta #classeBox,
+  body.ui-nascosta #rail,body.ui-nascosta #ercHud,body.ui-nascosta #clock,body.ui-nascosta #compass,
+  body.ui-nascosta #touch{display:none!important}
+  #mostraUI{position:fixed;right:1rem;bottom:1rem;z-index:60;background:var(--glass-2);border:1px solid var(--line);
+    border-radius:10px;padding:.5rem .8rem;color:var(--ink-soft);font-size:.9rem;opacity:.55}
+  #mostraUI:hover{opacity:1}
+  #mostraUI[hidden]{display:none}
+  @media (max-width:52rem){
+    #classeBox{top:auto;bottom:.6rem;left:.6rem;right:.6rem;width:auto;max-height:45vh}
+    body.classe-on #bottom{padding-bottom:calc(45vh + 1rem)}
+  }
+
   /* ------------------------------------------------------------ tour bar */
   #tourBar{
     align-self:center;z-index:25;
@@ -822,10 +884,36 @@ body.erc-on #crosshair{ display:block !important; }
     <button class="tool" id="btnQuality" data-i18n="ui.tool.qualita">Qualità</button>
     <button class="tool" id="btnPad" data-i18n="ui.tool.controller">Controller</button>
     <button class="tool" id="btnHelp" data-i18n="ui.tool.comandi">Comandi</button>
+    <button class="tool" id="btnLavagna" data-i18n="ui.classe.lavagna">Lavagna</button>
+    <button class="tool" id="btnStudente" data-i18n="ui.classe.studenteBreve">Studente</button>
   </div>
 </div>
 
 <button id="presentExit" onclick="document.dispatchEvent(new KeyboardEvent('keydown',{code:'Escape'}))" data-i18n="ui.presenta.esci">Esci dalla presentazione</button>
+
+<section id="classeBox" hidden aria-labelledby="clTitolo">
+  <div id="clTesta">
+    <h2 id="clTitolo"></h2>
+    <div id="clPercorsi" role="group">
+      <button class="tourBtn" data-percorso="breve" data-i18n="ui.classe.breve">20 minuti</button>
+      <button class="tourBtn" data-percorso="completo" data-i18n="ui.classe.completo">50 minuti</button>
+    </div>
+  </div>
+  <div id="clTappa"><span id="clPos"></span><b id="clNome"></b></div>
+  <div id="clDomande"></div>
+  <div id="clNav">
+    <button class="tourBtn" id="clPrev" data-i18n="ui.classe.indietro">Indietro</button>
+    <button class="tourBtn" id="clNext" data-i18n="ui.classe.avanti">Avanti</button>
+    <button class="tourBtn" id="clRiprendi" data-i18n="ui.classe.riprendi">Riprendi la tappa</button>
+  </div>
+  <div id="clStrumenti">
+    <button class="clLink" id="clNascondi" data-i18n="ui.classe.nascondiUI">Nascondi l'interfaccia</button>
+    <button class="clLink" id="clScheda" data-i18n="ui.classe.scheda">Scheda da stampare</button>
+    <button class="clLink" id="clCondividi" data-i18n="ui.classe.link">Copia il link per gli studenti</button>
+    <button class="clLink" id="clEsci" data-i18n="ui.classe.esci">Esci dalla modalità classe</button>
+  </div>
+</section>
+<button id="mostraUI" hidden data-i18n="ui.classe.mostraUI">Mostra l'interfaccia</button>
 
 <aside id="rail">
   <div id="railHead">
@@ -1042,6 +1130,11 @@ body.erc-on #crosshair{ display:block !important; }
         <span class="sTesto"><b data-i18n="ui.intro.ercolano.titolo">Vai a Ercolano</b>
         <span data-i18n="ui.intro.ercolano.testo">La città che l'eruzione ha coperto del tutto: si cammina solo dove si è scavato.</span></span>
       </button>
+    </div>
+    <div id="introClasse">
+      <span class="icLbl" data-i18n="ui.classe.ingresso">In classe</span>
+      <button class="icBtn" id="sceltaLavagna" data-i18n="ui.classe.insegnante">Sono un insegnante · Lavagna</button>
+      <button class="icBtn" id="sceltaStudente" data-i18n="ui.classe.studente">Sono uno studente</button>
     </div>
     <div id="introAltro">
       <button id="btnStartCompare" data-i18n="ui.intro.confronto">Vedi il confronto</button>

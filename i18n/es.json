@@ -201,6 +201,40 @@
       "aPompei": "Volver a Pompeya a esta hora",
       "quotaPompei": "depósito aquí: unos {m} m",
       "quotaErcolano": "depósito sobre la playa antigua: unos {m} m"
+    },
+    "classe": {
+      "ingresso": "En clase",
+      "insegnante": "Soy docente · Pizarra",
+      "studente": "Soy estudiante",
+      "lavagna": "Pizarra",
+      "studenteBreve": "Estudiante",
+      "breve": "20 minutos",
+      "completo": "50 minutos",
+      "posizione": "Parada {i} de {n} · unos {m} minutos",
+      "indietro": "Atrás",
+      "avanti": "Siguiente",
+      "fine": "Fin",
+      "riprendi": "Volver a la parada",
+      "nascondiUI": "Ocultar la interfaz",
+      "mostraUI": "Mostrar la interfaz",
+      "scheda": "Ficha para imprimir",
+      "link": "Copiar el enlace para estudiantes",
+      "linkCopiato": "Enlace copiado",
+      "esci": "Salir del modo clase",
+      "eruzione": "La erupción",
+      "domande": "Para debatir",
+      "risposta": "Mostrar la respuesta",
+      "nascondiRisposta": "Ocultar la respuesta",
+      "scrivi": "Responde en la ficha.",
+      "minuti": "{m} minutos",
+      "schedaTitolo": "Después del 79 — ficha para la clase",
+      "schedaNome": "Nombre",
+      "schedaClasse": "Clase",
+      "schedaData": "Fecha",
+      "stampa": "Imprimir o guardar en PDF",
+      "schedaNota": "Las respuestas y las fuentes están en el simulador, modo Pizarra:",
+      "titolo_breve": "La erupción y el sepultamiento",
+      "titolo_completo": "Dieciséis siglos, de la erupción al nombre recuperado"
     }
   },
   "scena": {
@@ -538,6 +572,85 @@
       "titolo": "El tercer día",
       "testo": "Cuando vuelve la luz, el tercer día contando desde el último que había visto, el cuerpo de Plinio el Viejo aparece <b>intacto, sin heridas, vestido como estaba</b>.",
       "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
+    }
+  },
+  "classe": {
+    "domande": {
+      "nube": {
+        "q": "Plinio escribe a qué hora empieza la erupción, pero las fuentes no coinciden en el mes. ¿Por qué la hora es más segura que el mes?",
+        "r": "La hora séptima romana es la primera después del mediodía en cualquier estación, y la escribe un testigo. El mes, en cambio, se discute: los manuscritos de Plinio difieren, Dion Casio habla del final del verano y una inscripción a carboncillo hallada en 2018 reabrió el debate. El modelo no elige: declara la fecha discutida.",
+        "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4 · Cassio Dione 66.21 · scheda «Vesuvio»"
+      },
+      "crolli": {
+        "q": "La pómez no quema. ¿Por qué causó víctimas ya el primer día?",
+        "r": "Por su peso: se acumula sobre los tejados y los hunde. En la capa de lapilli de Pompeya hay <b>394 esqueletos</b>; el 90 % murió dentro de los edificios, probablemente por el hundimiento de tejados y forjados.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "s4": {
+        "q": "La corriente S4 dejó apenas 3 cm de depósito y, aun así, mató a la mayoría de las víctimas de Pompeya. ¿Cómo es posible?",
+        "r": "Cuenta la temperatura, no el espesor: entre <b>250 y 600 °C</b>, con un paso de 30–150 segundos. El umbral de supervivencia que indica el estudio es de 200 °C. En el depósito de la S4 hay <b>650 víctimas</b>, que durante mucho tiempo se creyeron asfixiadas por la ceniza.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "fasce": {
+        "q": "En la línea del tiempo algunos eventos son franjas de color, no puntos. ¿Qué nos dice el modelo?",
+        "r": "Que para esos eventos ninguna fuente leída da una hora precisa: las fuentes dicen «de noche» o «en las primeras horas del segundo día». En lugar de inventar un horario, el modelo dibuja la incertidumbre. Es la regla del proyecto: realismo solo donde está documentado.",
+        "fonte": "src/data/eruzione.js · il metodo del progetto"
+      },
+      "ercolano": {
+        "q": "Sobre Herculano casi no cayó pómez. ¿Por qué eso no salvó a sus habitantes?",
+        "r": "Herculano estaba a barlovento: la caída fue hacia el sureste, sobre Pompeya. Pero desde la noche las corrientes piroclásticas golpearon la ciudad a unos <b>500 °C</b>. En los arcos de la playa hay unas <b>300 víctimas</b>: muchos habían bajado al mar.",
+        "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Mastrolorenzo et al. 2010 · Parco Archeologico di Ercolano"
+      },
+      "cinqueMetri": {
+        "q": "En Pompeya el depósito tiene unos 5 m. ¿Qué queda fuera, y por qué importa para los siglos siguientes?",
+        "r": "Con cinco metros, una planta baja de cuatro desaparece; el piso superior, no. Por eso la ciudad sigue siendo accesible: para los recuperadores, los saqueadores y, cuatro siglos después, para quienes vuelven a vivir allí. La medida vale para el sector estudiado, no para toda la ciudad.",
+        "fonte": "Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12 · scheda «Insula dei Casti Amanti»"
+      },
+      "confronto": {
+        "q": "Pompeya unos 5 m, Herculano unos 20 m. ¿Qué cambia para quien quiera volver después?",
+        "r": "En Pompeya los pisos superiores quedan fuera: la ciudad se reencuentra, se despoja, se vuelve a habitar. En Herculano la casa desaparece entera bajo las corrientes y encima nace otra ciudad: se excava con túneles desde 1738, y a cielo abierto solo donde la ciudad moderna lo permite.",
+        "fonte": "scheda «Perché Ercolano non è Pompei» · Parco Archeologico di Ercolano"
+      },
+      "soccorsi": {
+        "q": "Tras la erupción, el emperador Tito envía ayuda. ¿Por qué nadie reconstruye Pompeya?",
+        "r": "La intervención se refiere a Campania como región: curadores sorteados entre antiguos cónsules, y los bienes de quienes murieron sin herederos entregados a las ciudades afectadas. Ninguna fuente antigua documenta un intento de reconstruir Pompeya: la ayuda va a los vivos, no a las ruinas.",
+        "fonte": "Svetonio, <em>Tit.</em> 8.4 · Cassio Dione 66.24"
+      },
+      "foro": {
+        "q": "En los siglos posteriores al 79, el Foro es de los primeros lugares desmontados. ¿Por qué precisamente él?",
+        "r": "Era la mayor superficie de mármol de la ciudad, y por tanto la más rentable de desmontar. Mármoles, bloques y plomo salen de termas, Foro, teatros y Anfiteatro: cuando nace la arqueología, el valor recuperable ya se ha ido hace tiempo.",
+        "fonte": "Parco Archeologico di Pompei, <em>Pompei dopo l’eruzione</em>"
+      },
+      "horrea": {
+        "q": "En un edificio sepultado en el 79 aparece una moneda del 161 d. C. ¿Qué nos dice?",
+        "r": "Que ochenta y dos años después de la erupción alguien frecuentaba aquel lugar y perdía monedas allí. La ciudad sepultada no era un desierto sellado: era un lugar frecuentado.",
+        "fonte": "Zuchtriegel, Borsa, Onesti, Salvatori, Scarpati 2025"
+      },
+      "mosaici": {
+        "q": "En el siglo V alguien construye un horno de pan dentro de una vieja cisterna. ¿Cómo vivían sus habitantes?",
+        "r": "Habitaban los pisos superiores que emergían del depósito y usaban los sepultados como bodegas: hornos, hogares, un molino de mano, cerámica de cocina. Es la reocupación de los siglos IV–V.",
+        "fonte": "Zuchtriegel et al. 2025 · <em>Pompei oltre il 79 d.C.</em>, E-Journal 2026.09"
+      },
+      "quadriportico": {
+        "q": "¿Por qué durante tanto tiempo las excavaciones borraron justamente las huellas de lo que vino después del 79?",
+        "r": "Porque cada campaña apuntaba al nivel del 79 y quitaba lo que había encima. Los autores hablan de un «inconsciente arqueológico»: la documentación que respondería a la pregunta la destruyó la disciplina que debía recogerla.",
+        "fonte": "Zuchtriegel et al. 2025, «inconscio archeologico»"
+      },
+      "canale": {
+        "q": "Entre 1594 y 1600 un canal atraviesa la colina y saca a la luz monedas y restos de edificios. ¿Por qué nadie entiende que está dentro de Pompeya?",
+        "r": "Nadie relaciona esos restos con la ciudad romana: el lugar no estaba olvidado, pero se había perdido la correspondencia entre el lugar y el nombre. Atención: en el modelo el trazado del canal es inventado, porque ninguna fuente científica lo documenta.",
+        "fonte": "Parco Archeologico di Pompei · <em>Manifatture in Campania</em>, Giunti 1983"
+      },
+      "nome": {
+        "q": "La excavación empieza en 1748, pero el sitio solo se identifica en 1763. ¿Cómo se sabe que es Pompeya?",
+        "r": "Por una inscripción que contiene la fórmula <em>rei publicae Pompeianorum</em>. Durante quince años se había excavado Pompeya sin saber que lo era: Alcubierre creía estar en Estabia.",
+        "fonte": "Britannica, <em>Pompeii — History of excavations</em> · Parslow 1995"
+      },
+      "lacuna": {
+        "q": "El modelo dice abiertamente lo que no sabe. ¿Por qué una reconstrucción debería mostrar sus lagunas?",
+        "r": "Porque si no, quien mira toma por un dato lo que es una hipótesis. Aquí, por ejemplo, no existe un estudio publicado de la columna de depósito sobre el nivel del 79 dentro de las murallas: el espesor procede de un solo sector publicado y se extiende al resto por necesidad de dibujo. Decirlo empuja a buscar, no a creer.",
+        "fonte": "scheda «La colonna che nessuno ha studiato» · registro delle verifiche"
+      }
     }
   }
 }

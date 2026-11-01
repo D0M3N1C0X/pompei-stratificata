@@ -201,6 +201,40 @@
       "aPompei": "Zu dieser Stunde zurück nach Pompeji",
       "quotaPompei": "Ablagerung hier: etwa {m} m",
       "quotaErcolano": "Ablagerung über dem antiken Strand: etwa {m} m"
+    },
+    "classe": {
+      "ingresso": "Im Unterricht",
+      "insegnante": "Ich unterrichte · Tafel",
+      "studente": "Ich bin Schüler/in",
+      "lavagna": "Tafel",
+      "studenteBreve": "Schüler/in",
+      "breve": "20 Minuten",
+      "completo": "50 Minuten",
+      "posizione": "Station {i} von {n} · etwa {m} Minuten",
+      "indietro": "Zurück",
+      "avanti": "Weiter",
+      "fine": "Ende",
+      "riprendi": "Zurück zur Station",
+      "nascondiUI": "Oberfläche ausblenden",
+      "mostraUI": "Oberfläche einblenden",
+      "scheda": "Arbeitsblatt zum Drucken",
+      "link": "Link für die Klasse kopieren",
+      "linkCopiato": "Link kopiert",
+      "esci": "Unterrichtsmodus verlassen",
+      "eruzione": "Der Ausbruch",
+      "domande": "Zum Besprechen",
+      "risposta": "Antwort zeigen",
+      "nascondiRisposta": "Antwort ausblenden",
+      "scrivi": "Antworte auf dem Arbeitsblatt.",
+      "minuti": "{m} Minuten",
+      "schedaTitolo": "Nach 79 — Arbeitsblatt für die Klasse",
+      "schedaNome": "Name",
+      "schedaClasse": "Klasse",
+      "schedaData": "Datum",
+      "stampa": "Drucken oder als PDF sichern",
+      "schedaNota": "Antworten und Quellen stehen im Simulator, Modus Tafel:",
+      "titolo_breve": "Der Ausbruch und die Verschüttung",
+      "titolo_completo": "Sechzehn Jahrhunderte, vom Ausbruch bis zum wiedergefundenen Namen"
     }
   },
   "scena": {
@@ -538,6 +572,85 @@
       "titolo": "Der dritte Tag",
       "testo": "Als das Licht zurückkehrt, am dritten Tag, gezählt von dem, den er zuletzt gesehen hatte, wird der Leichnam von Plinius dem Älteren gefunden, <b>unversehrt, ohne Wunden, gekleidet wie er war</b>.",
       "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
+    }
+  },
+  "classe": {
+    "domande": {
+      "nube": {
+        "q": "Plinius schreibt, um welche Stunde der Ausbruch beginnt, aber beim Monat sind sich die Quellen uneinig. Warum ist die Stunde sicherer als der Monat?",
+        "r": "Die siebte römische Stunde ist zu jeder Jahreszeit die erste nach Mittag, und ein Augenzeuge hat sie aufgeschrieben. Der Monat ist umstritten: Die Plinius-Handschriften weichen ab, Cassius Dio spricht vom Ende des Sommers, und eine 2018 gefundene Kohleinschrift hat die Debatte neu eröffnet. Das Modell entscheidet nicht: Es erklärt das Datum für umstritten.",
+        "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4 · Cassio Dione 66.21 · scheda «Vesuvio»"
+      },
+      "crolli": {
+        "q": "Bims brennt nicht. Warum gab es schon am ersten Tag Tote?",
+        "r": "Wegen des Gewichts: Er häuft sich auf den Dächern und durchbricht sie. In der Lapillischicht Pompejis liegen <b>394 Skelette</b>; 90 % starben in Gebäuden, wohl durch einstürzende Dächer und Decken.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "s4": {
+        "q": "Strom S4 hinterließ kaum 3 cm Ablagerung und tötete doch die meisten Opfer Pompejis. Wie ist das möglich?",
+        "r": "Es zählt die Temperatur, nicht die Mächtigkeit: zwischen <b>250 und 600 °C</b>, bei 30–150 Sekunden Durchzug. Die in der Studie genannte Überlebensschwelle liegt bei 200 °C. In der Ablagerung von S4 liegen <b>650 Opfer</b>, die man lange für in der Asche erstickt hielt.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "fasce": {
+        "q": "Auf der Zeitleiste sind manche Ereignisse farbige Bänder, keine Punkte. Was sagt uns das Modell damit?",
+        "r": "Dass für diese Ereignisse keine gelesene Quelle eine genaue Stunde nennt: Die Quellen sagen „in der Nacht“ oder „in den frühen Stunden des zweiten Tages“. Statt eine Uhrzeit zu erfinden, zeichnet das Modell die Unsicherheit. Das ist die Regel des Projekts: Realismus nur dort, wo er belegt ist.",
+        "fonte": "src/data/eruzione.js · il metodo del progetto"
+      },
+      "ercolano": {
+        "q": "Auf Herculaneum fiel fast kein Bims. Warum rettete das die Menschen nicht?",
+        "r": "Herculaneum lag im Wind: Der Fall ging nach Südosten, auf Pompeji. Doch ab der Nacht trafen pyroklastische Ströme die Stadt mit etwa <b>500 °C</b>. In den Bootshäusern am Strand liegen rund <b>300 Opfer</b>: Viele waren zum Meer hinuntergegangen.",
+        "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Mastrolorenzo et al. 2010 · Parco Archeologico di Ercolano"
+      },
+      "cinqueMetri": {
+        "q": "In Pompeji ist die Ablagerung etwa 5 m mächtig. Was ragt heraus, und warum ist das für die folgenden Jahrhunderte wichtig?",
+        "r": "Bei fünf Metern verschwindet ein vier Meter hohes Erdgeschoss, das Obergeschoss nicht. Deshalb bleibt die Stadt erreichbar: für Bergungstrupps, für Plünderer und vier Jahrhunderte später für die, die zurückkehren, um dort zu wohnen. Der Wert gilt für den untersuchten Bereich, nicht für die ganze Stadt.",
+        "fonte": "Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12 · scheda «Insula dei Casti Amanti»"
+      },
+      "confronto": {
+        "q": "Pompeji etwa 5 m, Herculaneum etwa 20 m. Was ändert das für alle, die später zurückkehren wollen?",
+        "r": "In Pompeji ragen die Obergeschosse heraus: Die Stadt wird wiedergefunden, geplündert, wieder bewohnt. In Herculaneum verschwindet das Haus ganz unter den Strömen, und darüber entsteht eine andere Stadt: Gegraben wird ab 1738 in Stollen, unter freiem Himmel nur dort, wo die moderne Stadt es erlaubt.",
+        "fonte": "scheda «Perché Ercolano non è Pompei» · Parco Archeologico di Ercolano"
+      },
+      "soccorsi": {
+        "q": "Nach dem Ausbruch schickt Kaiser Titus Hilfe. Warum baut niemand Pompeji wieder auf?",
+        "r": "Die Hilfe gilt Kampanien als Region: per Los aus ehemaligen Konsuln bestimmte Beauftragte, und das Vermögen der ohne Erben Gestorbenen geht an die betroffenen Städte. Keine antike Quelle belegt einen Versuch, Pompeji wieder aufzubauen: Die Hilfe geht an die Lebenden, nicht an die Ruinen.",
+        "fonte": "Svetonio, <em>Tit.</em> 8.4 · Cassio Dione 66.24"
+      },
+      "foro": {
+        "q": "In den Jahrhunderten nach 79 gehört das Forum zu den ersten Orten, die abgebaut werden. Warum gerade das Forum?",
+        "r": "Es war die größte Marmorfläche der Stadt und damit am lohnendsten abzubauen. Marmor, Blöcke und Blei verlassen die Thermen, das Forum, die Theater und das Amphitheater: Als die Archäologie entsteht, ist der verwertbare Wert längst fort.",
+        "fonte": "Parco Archeologico di Pompei, <em>Pompei dopo l’eruzione</em>"
+      },
+      "horrea": {
+        "q": "In einem 79 verschütteten Gebäude findet man eine Münze von 161 n. Chr. Was sagt sie uns?",
+        "r": "Dass zweiundachtzig Jahre nach dem Ausbruch jemand diesen Ort aufsuchte und dort Münzen verlor. Die verschüttete Stadt war keine versiegelte Wüste: Sie war ein besuchter Ort.",
+        "fonte": "Zuchtriegel, Borsa, Onesti, Salvatori, Scarpati 2025"
+      },
+      "mosaici": {
+        "q": "Im 5. Jahrhundert baut jemand einen Brotofen in eine alte Zisterne. Wie lebten die Menschen damals?",
+        "r": "Sie bewohnten die Obergeschosse, die aus der Ablagerung ragten, und nutzten die verschütteten als Keller: Öfen, Feuerstellen, eine Handmühle, Kochgeschirr. Das ist die Wiederbesiedlung des 4.–5. Jahrhunderts.",
+        "fonte": "Zuchtriegel et al. 2025 · <em>Pompei oltre il 79 d.C.</em>, E-Journal 2026.09"
+      },
+      "quadriportico": {
+        "q": "Warum haben Grabungen so lange gerade die Spuren der Zeit nach 79 beseitigt?",
+        "r": "Weil jede Kampagne auf das Niveau von 79 zielte und entfernte, was darüber lag. Die Autoren sprechen vom „archäologischen Unbewussten“: Die Belege, die die Frage beantworten würden, hat die Disziplin zerstört, die sie sammeln sollte.",
+        "fonte": "Zuchtriegel et al. 2025, «inconscio archeologico»"
+      },
+      "canale": {
+        "q": "Zwischen 1594 und 1600 durchschneidet ein Kanal den Hügel und bringt Münzen und Gebäudereste zutage. Warum merkt niemand, dass er in Pompeji ist?",
+        "r": "Niemand verbindet diese Reste mit der römischen Stadt: Der Ort war nicht vergessen, aber die Verbindung zwischen Ort und Namen war verloren. Achtung: Im Modell ist der Verlauf des Kanals erfunden, weil keine wissenschaftliche Quelle ihn belegt.",
+        "fonte": "Parco Archeologico di Pompei · <em>Manifatture in Campania</em>, Giunti 1983"
+      },
+      "nome": {
+        "q": "Die Grabung beginnt 1748, aber erst 1763 wird der Ort identifiziert. Woran erkennt man, dass es Pompeji ist?",
+        "r": "An einer Inschrift mit der Formel <em>rei publicae Pompeianorum</em>. Fünfzehn Jahre lang hatte man in Pompeji gegraben, ohne zu wissen, dass es Pompeji war: Alcubierre glaubte, in Stabiae zu sein.",
+        "fonte": "Britannica, <em>Pompeii — History of excavations</em> · Parslow 1995"
+      },
+      "lacuna": {
+        "q": "Das Modell sagt offen, was es nicht weiß. Warum sollte eine Rekonstruktion ihre Lücken zeigen?",
+        "r": "Weil man sonst eine Hypothese für eine Tatsache hält. Hier gibt es zum Beispiel keine veröffentlichte Studie der Ablagerungssäule über dem Niveau von 79 innerhalb der Mauern: Die Mächtigkeit stammt aus einem einzigen veröffentlichten Bereich und wird für die Zeichnung auf den Rest übertragen. Das zu sagen regt zum Suchen an, nicht zum Glauben.",
+        "fonte": "scheda «La colonna che nessuno ha studiato» · registro delle verifiche"
+      }
     }
   }
 }

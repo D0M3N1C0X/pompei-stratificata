@@ -53,6 +53,24 @@
     document.getElementById('ercSottoVasca').click(); controlla('erc vasca');
     document.getElementById('ercBuried').click();
   } catch(e){ guai.push('ercolano: ' + e.message); }
+  // in classe: tutte le tappe del percorso lungo, alla lavagna e da studente
+  fatti.classe = 0;
+  try {
+    P.vista('pompei');
+    for(const modo of ['btnLavagna', 'btnStudente']){
+      document.getElementById(modo).click();
+      document.querySelector('#clPercorsi [data-percorso="completo"]').click();
+      for(let i = 0; i < 30 && !document.getElementById('clNext').disabled; i++){
+        controlla('classe ' + document.getElementById('clPos').textContent);
+        if(!document.querySelector('.clQ')?.textContent.trim()) guai.push('classe: domanda vuota a ' + document.getElementById('clPos').textContent);
+        fatti.classe++;
+        document.getElementById('clNext').click();
+      }
+      controlla('classe ultima tappa'); fatti.classe++;
+    }
+    document.getElementById('clEsci').click();
+    if(document.body.classList.contains('classe-on')) guai.push('classe: non si esce');
+  } catch(e){ guai.push('classe: ' + e.message); }
   P.vista('pompei');
   return { lang: document.documentElement.lang, fatti, guai };
 })()

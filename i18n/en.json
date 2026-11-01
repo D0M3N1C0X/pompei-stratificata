@@ -201,6 +201,40 @@
       "aPompei": "Back to Pompeii at this hour",
       "quotaPompei": "deposit here: about {m} m",
       "quotaErcolano": "deposit above the ancient beach: about {m} m"
+    },
+    "classe": {
+      "ingresso": "In class",
+      "insegnante": "I'm a teacher · Whiteboard",
+      "studente": "I'm a student",
+      "lavagna": "Whiteboard",
+      "studenteBreve": "Student",
+      "breve": "20 minutes",
+      "completo": "50 minutes",
+      "posizione": "Stop {i} of {n} · about {m} minutes",
+      "indietro": "Back",
+      "avanti": "Next",
+      "fine": "End",
+      "riprendi": "Back to this stop",
+      "nascondiUI": "Hide the interface",
+      "mostraUI": "Show the interface",
+      "scheda": "Printable worksheet",
+      "link": "Copy the link for students",
+      "linkCopiato": "Link copied",
+      "esci": "Leave class mode",
+      "eruzione": "The eruption",
+      "domande": "To discuss",
+      "risposta": "Show the answer",
+      "nascondiRisposta": "Hide the answer",
+      "scrivi": "Answer on the worksheet.",
+      "minuti": "{m} minutes",
+      "schedaTitolo": "After AD 79 — class worksheet",
+      "schedaNome": "Name",
+      "schedaClasse": "Class",
+      "schedaData": "Date",
+      "stampa": "Print or save as PDF",
+      "schedaNota": "Answers and sources are in the simulator, Whiteboard mode:",
+      "titolo_breve": "The eruption and the burial",
+      "titolo_completo": "Sixteen centuries, from the eruption to the name found again"
     }
   },
   "scena": {
@@ -538,6 +572,85 @@
       "titolo": "The third day",
       "testo": "When daylight returns, on the third day counting from the last one he had seen, the body of Pliny the Elder is found <b>intact, unharmed, dressed as he had been</b>.",
       "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
+    }
+  },
+  "classe": {
+    "domande": {
+      "nube": {
+        "q": "Pliny writes what time the eruption begins, but the sources disagree about the month. Why is the hour more certain than the month?",
+        "r": "The Roman seventh hour is the first after midday in every season, and it is written by an eyewitness. The month is disputed: Pliny's manuscripts differ, Cassius Dio speaks of the end of summer, and a charcoal inscription found in 2018 reopened the debate. The model does not choose: it declares the date disputed.",
+        "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4 · Cassio Dione 66.21 · scheda «Vesuvio»"
+      },
+      "crolli": {
+        "q": "Pumice does not burn. Why did it kill people on the very first day?",
+        "r": "Through its weight: it piles up on roofs and breaks them. In Pompeii's lapilli layer there are <b>394 skeletons</b>; 90% died inside buildings, probably from collapsing roofs and floors.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "s4": {
+        "q": "Current S4 left barely 3 cm of deposit, yet it killed most of Pompeii's victims. How is that possible?",
+        "r": "Temperature matters, not thickness: between <b>250 and 600 °C</b>, passing in 30–150 seconds. The survival threshold cited in the study is 200 °C. The S4 deposit holds <b>650 victims</b>, long believed to have suffocated in the ash.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "fasce": {
+        "q": "On the timeline some events are coloured bands, not points. What is the model telling us?",
+        "r": "That for those events no source I read gives a precise hour: the sources say \"in the night\" or \"in the early hours of the second day\". Instead of inventing a time, the model draws the uncertainty. That is the project's rule: realism only where it is documented.",
+        "fonte": "src/data/eruzione.js · il metodo del progetto"
+      },
+      "ercolano": {
+        "q": "Almost no pumice fell on Herculaneum. Why did that not save its people?",
+        "r": "Herculaneum was upwind: the fall went south-east, onto Pompeii. But from the night on, pyroclastic currents struck the town at about <b>500 °C</b>. The boat sheds on the beach hold about <b>300 victims</b>: many had gone down to the sea.",
+        "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Mastrolorenzo et al. 2010 · Parco Archeologico di Ercolano"
+      },
+      "cinqueMetri": {
+        "q": "At Pompeii the deposit is about 5 m deep. What stays above it, and why does that matter for the centuries that follow?",
+        "r": "With five metres a ground floor four metres high disappears, the upper floor does not. That is why the town stays reachable: by salvagers, by looters and, four centuries later, by people who come back to live there. The figure applies to the sector studied, not to the whole town.",
+        "fonte": "Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12 · scheda «Insula dei Casti Amanti»"
+      },
+      "confronto": {
+        "q": "Pompeii about 5 m, Herculaneum about 20 m. What changes for anyone who wants to come back afterwards?",
+        "r": "At Pompeii the upper floors stay above ground: the town is found again, stripped, lived in again. At Herculaneum the house vanishes entirely under the currents and another town grows on top: digging goes by tunnels from 1738, and in the open only where the modern town allows.",
+        "fonte": "scheda «Perché Ercolano non è Pompei» · Parco Archeologico di Ercolano"
+      },
+      "soccorsi": {
+        "q": "After the eruption Emperor Titus sends aid. Why does nobody rebuild Pompeii?",
+        "r": "The intervention concerns Campania as a region: commissioners drawn by lot from former consuls, and the property of those who died without heirs given to the stricken towns. No ancient source records an attempt to rebuild Pompeii: the aid goes to the living, not to the ruins.",
+        "fonte": "Svetonio, <em>Tit.</em> 8.4 · Cassio Dione 66.24"
+      },
+      "foro": {
+        "q": "In the centuries after 79 the Forum is among the first places to be dismantled. Why that one?",
+        "r": "It was the largest marble surface in the town, so the most profitable to strip. Marble, blocks and lead leave the baths, the Forum, the theatres and the Amphitheatre: by the time archaeology is born, the salvageable value is long gone.",
+        "fonte": "Parco Archeologico di Pompei, <em>Pompei dopo l’eruzione</em>"
+      },
+      "horrea": {
+        "q": "In a building buried in 79 a coin of AD 161 is found. What does it tell us?",
+        "r": "That eighty-two years after the eruption someone was visiting that place and losing coins there. The buried town was not a sealed desert: it was a place people went to.",
+        "fonte": "Zuchtriegel, Borsa, Onesti, Salvatori, Scarpati 2025"
+      },
+      "mosaici": {
+        "q": "In the 5th century someone builds a bread oven inside an old cistern. How did people live then?",
+        "r": "They lived on the upper floors that emerged from the deposit and used the buried ones as cellars: ovens, hearths, a hand mill, cooking ware. This is the reoccupation of the 4th–5th centuries.",
+        "fonte": "Zuchtriegel et al. 2025 · <em>Pompei oltre il 79 d.C.</em>, E-Journal 2026.09"
+      },
+      "quadriportico": {
+        "q": "Why did excavations for so long remove precisely the traces of what came after 79?",
+        "r": "Because every campaign aimed at the level of 79 and removed what lay above it. The authors speak of an \"archaeological unconscious\": the evidence that would answer the question was destroyed by the discipline meant to collect it.",
+        "fonte": "Zuchtriegel et al. 2025, «inconscio archeologico»"
+      },
+      "canale": {
+        "q": "Between 1594 and 1600 a canal cuts through the hill and turns up coins and remains of buildings. Why does nobody realise they are inside Pompeii?",
+        "r": "Nobody links those remains to the Roman town: the place was not forgotten, but the link between the place and the name had been lost. Note: in the model the canal's route is invented, because no scientific source documents it.",
+        "fonte": "Parco Archeologico di Pompei · <em>Manifatture in Campania</em>, Giunti 1983"
+      },
+      "nome": {
+        "q": "Digging starts in 1748, but the site is identified only in 1763. How do they realise it is Pompeii?",
+        "r": "Through an inscription containing the formula <em>rei publicae Pompeianorum</em>. For fifteen years Pompeii had been dug without anyone knowing it was Pompeii: Alcubierre thought he was at Stabiae.",
+        "fonte": "Britannica, <em>Pompeii — History of excavations</em> · Parslow 1995"
+      },
+      "lacuna": {
+        "q": "The model says openly what it does not know. Why should a reconstruction show its gaps?",
+        "r": "Because otherwise viewers take a hypothesis for a fact. Here, for instance, there is no published study of the deposit column above the level of 79 inside the walls: the thickness comes from a single published sector and is extended to the rest for the sake of drawing. Saying so prompts people to search, not to believe.",
+        "fonte": "scheda «La colonna che nessuno ha studiato» · registro delle verifiche"
+      }
     }
   }
 }

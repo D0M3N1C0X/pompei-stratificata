@@ -41,6 +41,7 @@ import { AUDIO } from './audio.js';
 import { CONFRONTO } from './confronto.js';
 import { EPOCHS } from './data/epochs.js';
 import { EVENTI, DURATA, statoEruzione, puntoEvento } from './data/eruzione.js';
+import { PERCORSI, MODALITA } from './data/classe.js';
 import { PLACES } from './data/places.js';
 import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
@@ -141,6 +142,8 @@ let sunEl = 0.6, sunAz = Math.PI;
 // L'eruzione ora per ora (fase 2): dichiarata qui, prima del sole, perché
 // updateSun e applyLight la leggono fin dal primo fotogramma.
 const eru = { on:false, ore:0, play:false, luce:1, ultimo:null };
+// la modalità classe (null, 'lavagna', 'studente'): letta da scriviStato
+const cl = { modo:null, percorso:'breve', tappa:0 };
 
 function romeNow(){
   const f = new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Rome',
@@ -1612,6 +1615,158 @@ eruEl('eruNext').addEventListener('click', () => {
   vaiEruzione(dopo ? puntoEvento(dopo) : DURATA);
 });
 
+/* ------------------------------------------------------------ in classe
+   «Lavagna» per l'insegnante, «Studente» per chi ha l'iPad in mano: le
+   stesse tappe (src/data/classe.js), le domande con la risposta e la fonte
+   dietro un tasto solo nella prima. */
+const clEl = id => document.getElementById(id);
+const CHIAVE_CLASSE = 'dopo79.classe';
+function etichettaTappa(tp){
+  if(tp.tipo === 'luogo'){ const h = byId[tp.id]; return h ? h.data.label : tp.id; }
+  const ev = eventoAttivo(tp.ore);
+  return t('ui.classe.eruzione') + (tp.citta === 'ercolano' ? ' · ' + t('ui.eru.luoghi.ercolano') : '') +
+    ' — ' + t('eruzione.' + ev.id + '.titolo');
+}
+function vaiTappa(i){
+  const P = PERCORSI[cl.percorso];
+  cl.tappa = Math.max(0, Math.min(P.tappe.length - 1, i));
+  const tp = P.tappe[cl.tappa];
+  if(tp.tipo === 'eruzione'){
+    closePanel();
+    if(eru.on) vaiEruzione(tp.ore); else apriEruzione(tp.ore);
+    suonaEruzione(false);
+    if((tp.citta === 'ercolano') !== ercOn) setErc(tp.citta === 'ercolano');
+  } else {
+    if(eru.on) chiudiEruzione(true);
+    if(ercOn) setErc(false);
+    const h = byId[tp.id];
+    if(h){ applyEpoch(TOUR_EPOCH[tp.id] ?? h.data.from); flyTo(h.data); openPanel(h.data); }
+  }
+  disegnaClasse();
+  scriviStato();
+}
+function disegnaClasse(){
+  const P = PERCORSI[cl.percorso], tp = P.tappe[cl.tappa], lav = cl.modo === 'lavagna';
+  clEl('clTitolo').textContent = t(lav ? 'ui.classe.lavagna' : 'ui.classe.studenteBreve');
+  document.querySelectorAll('#clPercorsi button').forEach(b => b.classList.toggle('on', b.dataset.percorso === cl.percorso));
+  clEl('clPos').textContent = t('ui.classe.posizione', { i: fmt().n(cl.tappa + 1), n: fmt().n(P.tappe.length), m: fmt().n(tp.minuti) });
+  clEl('clNome').textContent = etichettaTappa(tp);
+  const box = clEl('clDomande'); box.innerHTML = '';
+  const titolo = document.createElement('span'); titolo.className = 'clPos'; titolo.textContent = t('ui.classe.domande');
+  for(const id of tp.domande){
+    const k = 'classe.domande.' + id;
+    const d = document.createElement('div'); d.className = 'clDom';
+    const q = document.createElement('p'); q.className = 'clQ'; q.innerHTML = t(k + '.q'); d.appendChild(q);
+    if(lav){
+      const r = document.createElement('p'); r.className = 'clR'; r.innerHTML = t(k + '.r'); r.hidden = true;
+      const f = document.createElement('span'); f.className = 'clF'; f.innerHTML = t(k + '.fonte'); f.hidden = true;
+      const b = document.createElement('button'); b.className = 'clMostra'; b.textContent = t('ui.classe.risposta');
+      b.setAttribute('aria-expanded', 'false');
+      b.addEventListener('click', () => {
+        const apri = r.hidden; r.hidden = f.hidden = !apri;
+        b.textContent = t(apri ? 'ui.classe.nascondiRisposta' : 'ui.classe.risposta');
+        b.setAttribute('aria-expanded', String(apri));
+      });
+      d.append(b, r, f);
+    } else {
+      const sc = document.createElement('span'); sc.className = 'clScrivi'; sc.textContent = t('ui.classe.scrivi'); d.appendChild(sc);
+    }
+    box.appendChild(d);
+  }
+  clEl('clPrev').disabled = cl.tappa === 0;
+  const ultima = cl.tappa === P.tappe.length - 1;
+  clEl('clNext').disabled = ultima;
+  clEl('clNext').textContent = t(ultima ? 'ui.classe.fine' : 'ui.classe.avanti');
+  document.getElementById('btnLavagna').classList.toggle('on', cl.modo === 'lavagna');
+  document.getElementById('btnStudente').classList.toggle('on', cl.modo === 'studente');
+}
+function impostaClasse(modo, tappa){
+  cl.modo = MODALITA.includes(modo) ? modo : null;
+  const on = !!cl.modo;
+  document.body.classList.toggle('classe-on', on);
+  document.body.classList.toggle('classe-lavagna', cl.modo === 'lavagna');
+  document.body.classList.toggle('classe-studente', cl.modo === 'studente');
+  document.documentElement.classList.toggle('lavagna', cl.modo === 'lavagna');
+  clEl('classeBox').hidden = !on;
+  if(!on) nascondiUI(false);
+  try { localStorage.setItem(CHIAVE_CLASSE, JSON.stringify(on ? { modo:cl.modo, percorso:cl.percorso } : {})); } catch(e){}
+  if(on){
+    if(document.body.classList.contains('touring')) stopTour();
+    vaiTappa(tappa ?? cl.tappa);
+  } else {
+    document.getElementById('btnLavagna').classList.remove('on');
+    document.getElementById('btnStudente').classList.remove('on');
+    scriviStato();
+  }
+}
+function nascondiUI(on){
+  document.body.classList.toggle('ui-nascosta', on);
+  clEl('mostraUI').hidden = !on;
+}
+// il nome del tag spezzato: check-build conta i <title> del file pubblicato
+const TAG_T = ['ti', 'tle'].join('');
+function schedaDaStampare(){
+  const P = PERCORSI[cl.percorso];
+  const esc = x => String(x);
+  const righe = P.tappe.map((tp, i) => {
+    const dom = tp.domande.map(id => `<div class="d"><p>${t('classe.domande.' + id + '.q')}</p><div class="r"></div><div class="r"></div><div class="r"></div></div>`).join('');
+    return `<section><h2>${fmt().n(i + 1)}. ${esc(etichettaTappa(tp))} <small>· ${t('ui.classe.minuti', { m: fmt().n(tp.minuti) })}</small></h2>${dom}</section>`;
+  }).join('');
+  const html = `<!doctype html><html lang="${linguaAttiva()}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<${TAG_T}>${t('ui.classe.schedaTitolo')}</${TAG_T}><style>
+body{font-family:Georgia,serif;color:#111;margin:2rem auto;max-width:44rem;padding:0 1rem;line-height:1.45}
+h1{font-family:system-ui,sans-serif;font-size:1.4rem;margin:0 0 .3rem}.sub{font-family:system-ui,sans-serif;color:#555;margin:0 0 1rem}
+.campi{display:flex;gap:1.5rem;font-family:system-ui,sans-serif;margin:0 0 1.5rem}.campi span{flex:1;border-bottom:1px solid #999;padding-bottom:.2rem}
+h2{font-family:system-ui,sans-serif;font-size:1.05rem;margin:1.4rem 0 .4rem}h2 small{font-weight:400;color:#666}
+.d p{margin:.3rem 0}.r{border-bottom:1px solid #bbb;height:1.9rem}section{break-inside:avoid}
+.nota{font-family:system-ui,sans-serif;font-size:.85rem;color:#555;margin-top:2rem}
+button{font:inherit;font-family:system-ui,sans-serif;padding:.6rem 1rem;border-radius:10px;border:1px solid #333;background:#fff;cursor:pointer}
+@media print{button{display:none}body{margin:0 auto}}
+</style></head><body>
+<button onclick="print()">${t('ui.classe.stampa')}</button>
+<h1>${t('ui.classe.schedaTitolo')}</h1><p class="sub">${t('ui.classe.titolo_' + cl.percorso)} · ${t('ui.classe.minuti', { m: fmt().n(P.minuti) })}</p>
+<div class="campi"><span>${t('ui.classe.schedaNome')}</span><span>${t('ui.classe.schedaClasse')}</span><span>${t('ui.classe.schedaData')}</span></div>
+${righe}
+<p class="nota">${t('ui.classe.schedaNota')} https://d0m3n1c0x.github.io/pompei-stratificata/</p>
+</body></html>`;
+  const url = URL.createObjectURL(new Blob([html], { type:'text/html' }));
+  const w = window.open(url, '_blank');
+  if(!w){ const a = document.createElement('a'); a.href = url; a.download = 'scheda-dopo-il-79.html'; a.click(); }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+async function copiaLinkStudenti(){
+  const u = new URL(location.href);
+  ['fase','luogo','vista','momento','eruzione','debug','cam'].forEach(k => u.searchParams.delete(k));
+  u.searchParams.set('classe', 'studente'); u.searchParams.set('percorso', cl.percorso);
+  u.searchParams.set('tappa', String(cl.tappa + 1)); u.searchParams.set('lang', linguaAttiva());
+  const testo = u.toString(), b = clEl('clCondividi');
+  try { await navigator.clipboard.writeText(testo); b.textContent = t('ui.classe.linkCopiato'); }
+  catch(e){ window.prompt(t('ui.classe.link'), testo); }
+  setTimeout(() => { b.textContent = t('ui.classe.link'); }, 2500);
+}
+clEl('sceltaLavagna').addEventListener('click', () => { chiudiIntro(); impostaClasse('lavagna', 0); });
+clEl('sceltaStudente').addEventListener('click', () => { chiudiIntro(); impostaClasse('studente', 0); });
+clEl('btnLavagna').addEventListener('click', () => impostaClasse(cl.modo === 'lavagna' ? null : 'lavagna'));
+clEl('btnStudente').addEventListener('click', () => impostaClasse(cl.modo === 'studente' ? null : 'studente'));
+clEl('clPrev').addEventListener('click', () => vaiTappa(cl.tappa - 1));
+clEl('clNext').addEventListener('click', () => vaiTappa(cl.tappa + 1));
+clEl('clRiprendi').addEventListener('click', () => vaiTappa(cl.tappa));
+clEl('clEsci').addEventListener('click', () => impostaClasse(null));
+clEl('clNascondi').addEventListener('click', () => nascondiUI(true));
+clEl('mostraUI').addEventListener('click', () => nascondiUI(false));
+clEl('clScheda').addEventListener('click', schedaDaStampare);
+clEl('clCondividi').addEventListener('click', copiaLinkStudenti);
+document.querySelectorAll('#clPercorsi button').forEach(b => b.addEventListener('click', () => {
+  cl.percorso = b.dataset.percorso;
+  try { localStorage.setItem(CHIAVE_CLASSE, JSON.stringify({ modo:cl.modo, percorso:cl.percorso })); } catch(e){}
+  vaiTappa(0);
+}));
+// H nasconde e rimostra l'interfaccia, solo alla lavagna (in un campo di testo no)
+addEventListener('keydown', e => {
+  if(e.code !== 'KeyH' || cl.modo !== 'lavagna' || /INPUT|TEXTAREA/.test(document.activeElement?.tagName || '')) return;
+  nascondiUI(!document.body.classList.contains('ui-nascosta'));
+});
+
 let filterText = '';
 function renderPlaceList(){
   const ul = document.getElementById('places');
@@ -2871,12 +3026,13 @@ function scriviStato(){
   if(!statoPronto || presenting) return;
   const u = new URL(location.href);
   const q = u.searchParams;
-  ['fase','luogo','vista','momento','eruzione'].forEach(k => q.delete(k));
+  ['fase','luogo','vista','momento','eruzione','classe','percorso','tappa'].forEach(k => q.delete(k));
   if(ercOn) q.set('vista', 'ercolano');
   if(ercOn && ERCOLANO.momentoAttivo() !== 'oggi') q.set('momento', ERCOLANO.momentoAttivo());
   else if(compareOn) q.set('vista', 'confronto');
   if(!ercOn && !compareOn && (epoch !== 0 || luogoAperto)) q.set('fase', String(epoch + 1));
   if(luogoAperto && !compareOn) q.set('luogo', luogoAperto);
+  if(cl.modo){ q.set('classe', cl.modo); q.set('percorso', cl.percorso); q.set('tappa', String(cl.tappa + 1)); }
   if(eru.on && !compareOn) q.set('eruzione', String(Math.round(eru.ore * 10) / 10));
   const nuovo = u.pathname + (q.toString() ? '?' + q.toString() : '') + u.hash;
   if(nuovo !== location.pathname + location.search + location.hash)
@@ -2915,6 +3071,18 @@ function applicaCollegamento(){
     }
     const oreEru = parseFloat(q.get('eruzione'));
     if(Number.isFinite(oreEru) && !h){ apriEruzione(Math.max(0, Math.min(DURATA, oreEru))); usato = true; }
+  }
+  // la classe: dall'indirizzo (il link per gli studenti) o dall'ultima scelta
+  let salvata = {};
+  try { salvata = JSON.parse(localStorage.getItem(CHIAVE_CLASSE) || '{}'); } catch(e){}
+  const modoClasse = q.get('classe') || (usato ? null : salvata.modo);
+  if(MODALITA.includes(modoClasse)){
+    const perc = q.get('percorso') || salvata.percorso;
+    if(PERCORSI[perc]) cl.percorso = perc;
+    const n = parseInt(q.get('tappa'), 10);
+    statoPronto = true;
+    impostaClasse(modoClasse, Number.isInteger(n) ? n - 1 : 0);
+    usato = true;
   }
   // Chi arriva da un collegamento diretto vuole atterrare lì, non leggere
   // la scheda d'ingresso: resta raggiungibile da «Comandi».

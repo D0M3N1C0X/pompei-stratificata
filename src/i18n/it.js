@@ -218,6 +218,40 @@ export default {
       "aPompei": "Torna a Pompei a quest'ora",
       "quotaPompei": "deposito qui: circa {m} m",
       "quotaErcolano": "deposito sopra la spiaggia antica: circa {m} m"
+    },
+    "classe": {
+      "ingresso": "In classe",
+      "insegnante": "Sono un insegnante · Lavagna",
+      "studente": "Sono uno studente",
+      "lavagna": "Lavagna",
+      "studenteBreve": "Studente",
+      "breve": "20 minuti",
+      "completo": "50 minuti",
+      "posizione": "Tappa {i} di {n} · circa {m} minuti",
+      "indietro": "Indietro",
+      "avanti": "Avanti",
+      "fine": "Fine",
+      "riprendi": "Riprendi la tappa",
+      "nascondiUI": "Nascondi l'interfaccia",
+      "mostraUI": "Mostra l'interfaccia",
+      "scheda": "Scheda da stampare",
+      "link": "Copia il link per gli studenti",
+      "linkCopiato": "Link copiato",
+      "esci": "Esci dalla modalità classe",
+      "eruzione": "L'eruzione",
+      "domande": "Da discutere",
+      "risposta": "Mostra la risposta",
+      "nascondiRisposta": "Nascondi la risposta",
+      "scrivi": "Rispondi sulla scheda.",
+      "minuti": "{m} minuti",
+      "schedaTitolo": "Dopo il 79 — scheda per la classe",
+      "schedaNome": "Nome",
+      "schedaClasse": "Classe",
+      "schedaData": "Data",
+      "stampa": "Stampa o salva in PDF",
+      "schedaNota": "Le risposte e le fonti sono nel simulatore, modalità Lavagna:",
+      "titolo_breve": "L'eruzione e il seppellimento",
+      "titolo_completo": "Sedici secoli, dall'eruzione al nome ritrovato"
     }
   },
   "epoche": [
@@ -555,6 +589,85 @@ export default {
       "titolo": "Il terzo giorno",
       "testo": "Quando torna la luce, il terzo giorno contando da quello che aveva visto per ultimo, il corpo di Plinio il Vecchio viene trovato <b>intatto, senza ferite, vestito com'era</b>.",
       "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
+    }
+  },
+  "classe": {
+    "domande": {
+      "nube": {
+        "q": "Plinio scrive a che ora comincia l'eruzione, ma sul mese le fonti non sono d'accordo. Perché l'ora è più sicura del mese?",
+        "r": "L'ora settima romana è la prima dopo mezzogiorno in ogni stagione, ed è scritta da un testimone. Il mese invece è controverso: i manoscritti di Plinio divergono, Cassio Dione parla della fine dell'estate e un'iscrizione a carboncino trovata nel 2018 ha riaperto il dibattito. Il modello non sceglie: dichiara la data controversa.",
+        "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4 · Cassio Dione 66.21 · scheda «Vesuvio»"
+      },
+      "crolli": {
+        "q": "Le pomici non bruciano. Perché fecero vittime già nel primo giorno?",
+        "r": "Per il peso: si accumulano sui tetti e li sfondano. Nello strato di lapilli di Pompei ci sono <b>394 scheletri</b>; il 90% morì dentro gli edifici, probabilmente per il crollo di tetti e solai.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "s4": {
+        "q": "La corrente S4 lasciò appena 3 cm di deposito, eppure uccise la maggior parte delle vittime di Pompei. Come è possibile?",
+        "r": "Conta la temperatura, non lo spessore: fra <b>250 e 600 °C</b>, con un passaggio di 30–150 secondi. La soglia di sopravvivenza indicata nello studio è 200 °C. Nel deposito della S4 ci sono <b>650 vittime</b>, a lungo credute soffocate dalla cenere.",
+        "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+      },
+      "fasce": {
+        "q": "Sulla linea del tempo alcuni eventi sono fasce colorate, non punti. Che cosa ci sta dicendo il modello?",
+        "r": "Che per quegli eventi nessuna fonte letta dà un'ora precisa: le fonti dicono «nella notte» o «nelle prime ore del secondo giorno». Invece di inventare un orario, il modello disegna l'incertezza. È la regola del progetto: realismo solo dove è documentato.",
+        "fonte": "src/data/eruzione.js · il metodo del progetto"
+      },
+      "ercolano": {
+        "q": "Su Ercolano non cadde quasi pomice. Perché questo non salvò gli abitanti?",
+        "r": "Ercolano era sopravvento: la caduta andò verso sud-est, su Pompei. Ma dalla notte le correnti piroclastiche investirono la città a circa <b>500 °C</b>. Nei fornici sulla spiaggia ci sono circa <b>300 vittime</b>: molti erano scesi al mare.",
+        "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Mastrolorenzo et al. 2010 · Parco Archeologico di Ercolano"
+      },
+      "cinqueMetri": {
+        "q": "A Pompei il deposito è di circa 5 m. Che cosa resta fuori, e perché conta per i secoli successivi?",
+        "r": "Con cinque metri un piano terra alto quattro sparisce, il piano superiore no. Per questo la città resta raggiungibile: dai recuperanti, dai saccheggiatori e, quattro secoli dopo, da chi ci torna ad abitare. La misura vale per il settore studiato, non per tutta la città.",
+        "fonte": "Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12 · scheda «Insula dei Casti Amanti»"
+      },
+      "confronto": {
+        "q": "Pompei circa 5 m, Ercolano circa 20 m. Che cosa cambia per chi, dopo, vuole tornare?",
+        "r": "A Pompei i piani superiori restano fuori: la città si ritrova, si spoglia, si riabita. A Ercolano la casa sparisce tutta sotto le correnti e sopra nasce un'altra città: si scava per cunicoli dal 1738, e a cielo aperto solo dove la città moderna lo permette.",
+        "fonte": "scheda «Perché Ercolano non è Pompei» · Parco Archeologico di Ercolano"
+      },
+      "soccorsi": {
+        "q": "Dopo l'eruzione l'imperatore Tito manda aiuti. Perché nessuno ricostruisce Pompei?",
+        "r": "L'intervento riguarda la Campania come regione: curatori estratti a sorte fra gli ex consoli, e i beni di chi era morto senza eredi dati alle città colpite. Nessuna fonte antica documenta un tentativo di ricostruire Pompei: l'aiuto va ai vivi, non alle rovine.",
+        "fonte": "Svetonio, <em>Tit.</em> 8.4 · Cassio Dione 66.24"
+      },
+      "foro": {
+        "q": "Nei secoli dopo il 79 il Foro è fra i primi luoghi a essere smontati. Perché proprio lui?",
+        "r": "Era la superficie di marmo più estesa della città, quindi la più redditizia da smontare. Marmi, blocchi e piombo escono da terme, Foro, teatri e Anfiteatro: quando nasce l'archeologia, il valore recuperabile è già uscito da un pezzo.",
+        "fonte": "Parco Archeologico di Pompei, <em>Pompei dopo l’eruzione</em>"
+      },
+      "horrea": {
+        "q": "In un edificio sepolto nel 79 si trova una moneta del 161 d.C. Che cosa ci dice?",
+        "r": "Che ottantadue anni dopo l'eruzione qualcuno frequentava quel luogo e ci perdeva monete. La città sepolta non era un deserto sigillato: era un luogo frequentato.",
+        "fonte": "Zuchtriegel, Borsa, Onesti, Salvatori, Scarpati 2025"
+      },
+      "mosaici": {
+        "q": "Nel V secolo qualcuno costruisce un forno da pane dentro una vecchia cisterna. Come vivevano gli abitanti di allora?",
+        "r": "Abitavano i piani superiori che emergevano dal deposito e usavano quelli sepolti come cantine: forni, focolari, una macina a mano, ceramica da fuoco. È la rioccupazione del IV–V secolo.",
+        "fonte": "Zuchtriegel et al. 2025 · <em>Pompei oltre il 79 d.C.</em>, E-Journal 2026.09"
+      },
+      "quadriportico": {
+        "q": "Perché per tanto tempo gli scavi hanno cancellato proprio le tracce del dopo 79?",
+        "r": "Perché ogni campagna puntava al livello del 79 e toglieva quello che c'era sopra. Gli autori parlano di «inconscio archeologico»: la documentazione che risponderebbe alla domanda l'ha distrutta la disciplina che doveva raccoglierla.",
+        "fonte": "Zuchtriegel et al. 2025, «inconscio archeologico»"
+      },
+      "canale": {
+        "q": "Fra il 1594 e il 1600 un canale attraversa la collina e restituisce monete e resti di edifici. Perché nessuno capisce di essere dentro Pompei?",
+        "r": "Nessuno collega quei resti alla città romana: il luogo non era dimenticato, ma si era persa la corrispondenza fra il luogo e il nome. Attenzione: nel modello il tracciato del canale è inventato, perché nessuna fonte scientifica lo documenta.",
+        "fonte": "Parco Archeologico di Pompei · <em>Manifatture in Campania</em>, Giunti 1983"
+      },
+      "nome": {
+        "q": "Lo scavo comincia nel 1748, ma il sito viene identificato solo nel 1763. Come si capisce che è Pompei?",
+        "r": "Con un'iscrizione che contiene la formula <em>rei publicae Pompeianorum</em>. Per quindici anni si era scavato Pompei senza sapere che fosse Pompei: Alcubierre credeva di essere a Stabia.",
+        "fonte": "Britannica, <em>Pompeii — History of excavations</em> · Parslow 1995"
+      },
+      "lacuna": {
+        "q": "Il modello dice apertamente che cosa non sa. Perché una ricostruzione dovrebbe mostrare le sue lacune?",
+        "r": "Perché altrimenti chi guarda prende per un dato quello che è un'ipotesi. Qui, per esempio, non risulta uno studio della colonna di deposito sopra il livello del 79 dentro le mura: lo spessore viene da un solo settore pubblicato ed è esteso al resto per necessità di disegno. Dirlo spinge a cercare, non a credere.",
+        "fonte": "scheda «La colonna che nessuno ha studiato» · registro delle verifiche"
+      }
     }
   }
 };
