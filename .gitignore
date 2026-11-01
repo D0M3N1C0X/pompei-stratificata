@@ -8,3 +8,6 @@ store/immagini/
 
 # le piante di Commons: le scarica strumenti/piante/case_ercolano.py
 strumenti/piante/fonti/
+
+# configurazione locale dell'anteprima
+.claude/

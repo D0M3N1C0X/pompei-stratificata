@@ -320,6 +320,64 @@
   }
   #secEmpty[hidden]{display:none}
 
+  /* ------------------------------------------- l'eruzione ora per ora
+     Pensata per la lavagna: caratteri grandi, un gesto principale
+     (Avvia/Pausa), gli eventi toccabili sulla linea del tempo. */
+  #eruApri{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+  #eruApri[hidden],#eruBar[hidden]{display:none}
+  .eruGrande{
+    display:inline-flex;align-items:center;gap:.55rem;min-height:3rem;padding:.6rem 1.15rem;
+    background:var(--accent);color:#0E1512;border-radius:12px;font-family:var(--sans);
+    font-size:1.08rem;font-weight:650;
+  }
+  .eruGrande:hover{background:#96CCB7}
+  .eruSotto{font-size:.95rem;color:var(--ink-soft)}
+  body.eru-on #caption{display:none}
+  body.eru-on #clock,body.eru-on #btnClock{display:none!important}
+  .eruPiega{position:absolute;top:.25rem;height:1rem;width:0;border-left:2px dashed var(--ink-faint)}
+  #eruBar{
+    background:var(--glass-2);border:1px solid var(--accent-dim);border-radius:16px;
+    padding:.75rem .9rem .85rem;display:flex;flex-direction:column;gap:.65rem;
+  }
+  #eruTop{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+  #eruPlay{background:var(--accent);border-color:var(--accent);color:#0E1512;font-weight:650;min-width:7rem;min-height:3rem;font-size:1.05rem}
+  #eruPlay:hover{background:#96CCB7;color:#0E1512}
+  #eruOra{display:flex;flex-direction:column;line-height:1.1;margin-right:auto;min-width:9rem}
+  #eruGiorno{font-family:var(--mono);font-size:.85rem;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}
+  #eruOrario{font-size:1.45rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+  #eruLinea{position:relative;padding-top:1.5rem}
+  #eruRange{width:100%;accent-color:var(--accent);height:2rem;margin:0}
+  #eruSegni{position:absolute;left:0;right:0;top:0;height:1.5rem}
+  .eruFascia{position:absolute;top:.62rem;height:.3rem;border-radius:3px;background:rgba(232,180,110,.35)}
+  .eruSegno{
+    position:absolute;top:.2rem;width:1.15rem;height:1.15rem;margin-left:-.575rem;border-radius:50%;
+    border:2px solid var(--ink-soft);background:var(--glass-2);padding:0;
+  }
+  .eruSegno::after{content:"";position:absolute;inset:-.5rem}   /* bersaglio da dito */
+  .eruSegno.c-primaria{border-color:#E9C46A}
+  .eruSegno.c-studio{border-color:var(--accent)}
+  .eruSegno.c-terziaria{border-color:#B9B4A8;border-style:dashed}
+  .eruSegno.c-disegno{border-color:#8D8A83;border-style:dotted}
+  .eruSegno.on{background:var(--ink);transform:scale(1.2)}
+  #eruTesto{display:flex;flex-direction:column;gap:.25rem;max-width:64ch}
+  #eruRiga{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;font-size:.92rem;color:var(--ink-soft)}
+  #eruLuogo{font-weight:650;color:var(--ink)}
+  .eruCert{font-family:var(--mono);font-size:.8rem;letter-spacing:.05em;padding:.12rem .45rem;border-radius:6px;border:1px solid var(--line)}
+  .eruCert.c-primaria{border-color:#E9C46A;color:#E9C46A}
+  .eruCert.c-studio{border-color:var(--accent);color:var(--accent)}
+  .eruCert.c-terziaria{border-style:dashed}
+  .eruCert.c-disegno{border-style:dotted}
+  #eruTitolo{margin:0;font-size:1.25rem;font-weight:650;letter-spacing:-.01em}
+  #eruCorpo{margin:0;font-family:var(--serif);font-size:1.08rem;line-height:1.55;color:var(--ink-soft)}
+  #eruCorpo b{color:var(--ink);font-weight:550}
+  #eruFonte{font-family:var(--mono);font-size:.82rem;color:var(--ink-faint)}
+  @media (max-width:52rem){
+    #eruTop{gap:.4rem}
+    #eruOra{order:-1;width:100%;flex-direction:row;gap:.6rem;align-items:baseline}
+    #eruPrev,#eruNext{flex:1}
+    #eruCorpo{font-size:1rem}
+  }
+
   /* ------------------------------------------------------------ tour bar */
   #tourBar{
     align-self:center;z-index:25;
@@ -897,6 +955,35 @@ body.erc-on #crosshair{ display:block !important; }
       </button>
       <button class="tourBtn" id="tourClose" data-i18n="ui.tour.chiudi">Chiudi</button>
     </div>
+    <div id="eruApri" hidden>
+      <button id="eruStart" class="eruGrande">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>
+        <span data-i18n="ui.eru.apri">L'eruzione ora per ora</span>
+      </button>
+      <span class="eruSotto" data-i18n="ui.eru.sotto">dal primo pomeriggio all'alba del terzo giorno, con le fonti</span>
+    </div>
+    <section id="eruBar" hidden aria-labelledby="eruTitolo">
+      <div id="eruTop">
+        <button id="eruPlay" class="tourBtn" aria-pressed="false">
+          <span data-i18n="ui.eru.avvia">Avvia</span>
+        </button>
+        <div id="eruOra" aria-live="polite"><span id="eruGiorno"></span><span id="eruOrario"></span></div>
+        <button id="eruPrev" class="tourBtn" data-i18n="ui.eru.prima">Evento prima</button>
+        <button id="eruNext" class="tourBtn" data-i18n="ui.eru.dopo">Evento dopo</button>
+        <button id="eruChiudi" class="tourBtn" data-i18n="ui.eru.chiudi">Chiudi</button>
+      </div>
+      <div id="eruLinea">
+        <div id="eruSegni"></div>
+        <input type="range" id="eruRange" min="0" max="1000" step="1" value="0"
+               aria-label="Ora dell'eruzione" data-i18n-attr="aria-label: ui.eru.cursore">
+      </div>
+      <div id="eruTesto">
+        <div id="eruRiga"><span id="eruLuogo"></span><span id="eruQuando"></span><span id="eruCert" class="eruCert"></span></div>
+        <h3 id="eruTitolo"></h3>
+        <p id="eruCorpo"></p>
+        <span id="eruFonte" class="cite"></span>
+      </div>
+    </section>
     <div id="caption">
       <div id="epMeta">
         <span id="epTag"></span>

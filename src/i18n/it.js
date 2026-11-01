@@ -188,6 +188,32 @@ export default {
     },
     "altro": {
       "titolo": "Altri strumenti"
+    },
+    "eru": {
+      "apri": "L'eruzione ora per ora",
+      "sotto": "dal primo pomeriggio all'alba del terzo giorno, con le fonti",
+      "avvia": "Avvia",
+      "pausa": "Pausa",
+      "prima": "Evento prima",
+      "dopo": "Evento dopo",
+      "chiudi": "Chiudi",
+      "cursore": "Ora dell'eruzione",
+      "giorno": "Giorno {n}",
+      "verso": "verso le {ora}",
+      "fascia": "tra le {da} e le {a}, ora incerta",
+      "luoghi": {
+        "miseno": "Miseno",
+        "pompei": "Pompei",
+        "ercolano": "Ercolano",
+        "stabia": "Stabia",
+        "mare": "Nel golfo"
+      },
+      "certezza": {
+        "primaria": "testimone · Plinio",
+        "studio": "studio scientifico",
+        "terziaria": "sintesi, da verificare",
+        "disegno": "scelta del modello"
+      }
     }
   },
   "epoche": [
@@ -448,6 +474,83 @@ export default {
       "bianchi": "lapilli bianchi",
       "piano": "piano del 79 d.C.",
       "suolo": "suolo dopo il 79 · spessore ?"
+    }
+  },
+  "eruzione": {
+    "nube": {
+      "titolo": "Una nube a forma di pino",
+      "testo": "Verso l'ora settima, poco dopo mezzogiorno, a Miseno la madre di Plinio il Giovane indica allo zio una nube <b>insolita per grandezza e aspetto</b>. Somiglia a un pino: un tronco altissimo che in cima si allarga in rami, ora bianca, ora sporca e macchiata, secondo la terra e la cenere che trascina. Il mese resta controverso: i manoscritti dicono agosto, altri indizi l'autunno.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4–6 · «Nonum Kal. Septembres hora fere septima»"
+    },
+    "bianca": {
+      "titolo": "Cade la pomice bianca",
+      "testo": "Su Pompei piovono lapilli di pomice chiara, spinti dal vento verso sud-est. I tetti cominciano a caricarsi. Le sintesi danno una colonna fra 15 e 30 km e una caduta di 18–20 ore; insieme, pomice bianca e grigia fanno <b>3,1–3,3 m</b>.",
+      "fonte": "Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b> · spessore: Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12"
+    },
+    "ercolano0": {
+      "titolo": "Ercolano, sopravvento",
+      "testo": "Le pomici cadono a sud-est: su Ercolano, che sta sopravvento, quasi niente. La città resta in piedi e ci si può muovere: le circa <b>300 vittime</b> dei fornici dicono che molti scesero alla spiaggia.",
+      "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "navi": {
+      "titolo": "Cenere sulle navi",
+      "testo": "Plinio il Vecchio salpa da Miseno con le quadriremi. Più si avvicina, più la cenere che cade sulle navi è fitta e calda; poi pomici e <b>pietre nere, bruciate e spezzate dal fuoco</b>. La riva è ostruita: piega su Stabia. L'ora della partenza non è nel testo: è il pomeriggio.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.8–12"
+    },
+    "crolli": {
+      "titolo": "I tetti crollano",
+      "testo": "Il peso delle pomici sfonda tetti e solai. Nello strato di lapilli di Pompei sono stati trovati <b>394 scheletri</b> di vittime di questa fase: il 90% morì dentro gli edifici, probabilmente per il crollo di tetti e pavimenti. La fascia di tempo è di disegno.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "grigia": {
+      "titolo": "La pomice diventa grigia",
+      "testo": "La colonna cambia e cadono lapilli grigi, più grossi. Le sintesi parlano di «alcune ore» di pomice bianca prima di quella grigia. <b>L'ora del passaggio non l'ho trovata</b>: qui è a metà della caduta, in proporzione agli spessori.",
+      "fonte": "Zanella et al. 2006, via en.wikipedia <b>[terziaria]</b> · ora del passaggio: disegno"
+    },
+    "stabia": {
+      "titolo": "Stabia: il cortile si riempie",
+      "testo": "Plinio il Vecchio dorme nella villa di Pomponiano. Il cortile davanti alla stanza si riempie di cenere e pomici: se fosse rimasto ancora, non sarebbe più potuto uscire. Le case tremano; si esce con <b>cuscini legati sulla testa</b> contro le pietre.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.13–16"
+    },
+    "ercolano1": {
+      "titolo": "Ercolano: le correnti",
+      "testo": "Le correnti piroclastiche investono Ercolano, a <b>circa 500 °C</b> secondo gli effetti del calore sulle ossa. Nei fornici sulla spiaggia restano circa 300 persone. Le fonti che ho letto dicono «nella notte o all'alba»: la fascia copre quelle ore, senza un orario preciso.",
+      "fonte": "en.wikipedia <b>[terziaria]</b> · temperatura: Mastrolorenzo et al. 2010, CC BY · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "mura": {
+      "titolo": "Le prime correnti si fermano alle mura",
+      "testo": "Le correnti S1, S2 e S3 si arrestano <b>davanti alle mura nord-occidentali</b> di Pompei. In città, chi è riparato sotto un tetto che ha retto è ancora vivo.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "s4": {
+      "titolo": "La corrente S4 entra in città",
+      "testo": "La quarta corrente supera le mura e attraversa Pompei. Lascia appena <b>3 cm</b> di deposito, ma è fra <b>250 e 600 °C</b> e passa in 30–150 secondi: bastano. Nel suo deposito stanno <b>650 vittime</b>, a lungo credute soffocate dalla cenere. L'ora: «nelle prime ore del secondo giorno», non più precisa.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY · ora: en.wikipedia <b>[terziaria]</b>"
+    },
+    "miseno": {
+      "titolo": "Miseno: notte di giorno",
+      "testo": "È già l'ora prima, ma la luce è incerta e debole. Plinio il Giovane fugge con la madre; la nube scende sulla terra e copre il mare. Poi il buio: «non come una notte senza luna o nuvolosa, ma come in una stanza chiusa, <b>a lume spento</b>».",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.20.6–14"
+    },
+    "plinio": {
+      "titolo": "Plinio il Vecchio muore sulla spiaggia",
+      "testo": "Altrove è già giorno, a Stabia una notte più nera di ogni notte. Plinio scende alla riva per vedere se si può partire, ma il mare è ancora avverso. Si sdraia su un telo; si rialza sorretto da due servi e <b>cade subito</b>. Il nipote pensa che lo abbia soffocato il fumo denso.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.17–19"
+    },
+    "ultime": {
+      "titolo": "S5 e S6",
+      "testo": "Altre due correnti, più potenti, scavalcano la città e arrivano <b>oltre 15 km</b> dal vulcano. Sopra le pomici restano circa <b>1,8 m</b> di depositi delle correnti. Il seppellimento è compiuto; l'ora di queste ultime è di disegno.",
+      "fonte": "Mastrolorenzo et al. 2010, CC BY · spessore: Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b>"
+    },
+    "sera": {
+      "titolo": "La sera: solo foschia",
+      "testo": "Alla sera del secondo giorno l'eruzione non tocca più Miseno: nell'aria resta una foschia che scherma il sole.",
+      "fonte": "en.wikipedia, <em>Eruption of Mount Vesuvius in 79 AD</em> <b>[terziaria]</b>"
+    },
+    "corpo": {
+      "titolo": "Il terzo giorno",
+      "testo": "Quando torna la luce, il terzo giorno contando da quello che aveva visto per ultimo, il corpo di Plinio il Vecchio viene trovato <b>intatto, senza ferite, vestito com'era</b>.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
     }
   }
 };

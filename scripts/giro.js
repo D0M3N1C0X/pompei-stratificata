@@ -3,7 +3,8 @@
 
      (0, eval)(await (await fetch('/scripts/giro.js')).text())
 
-   Apre ogni fase, ogni luogo di Pompei e di Ercolano, il confronto e le
+   Apre ogni fase, ogni evento dell'eruzione ora per ora, ogni luogo di
+   Pompei e di Ercolano, il confronto e le
    due viste «sotto la città», e cerca nel testo visibile i segni di un
    guasto: «undefined», «NaN», segnaposto {nome} non sostituiti, chiavi di
    traduzione rimaste in chiaro, schede vuote. Restituisce quanti luoghi ha
@@ -20,6 +21,20 @@
   const fatti = { luoghi:0, fasi:0, erc:0 };
   P.vista('pompei');
   for(let i = 0; i < 8; i++){ P.fase(i); controlla('fase ' + (i+1)); fatti.fasi++; }
+  // l'eruzione ora per ora, evento per evento
+  fatti.eruzione = 0;
+  try {
+    P.fase(1);
+    document.getElementById('eruStart').click();
+    document.getElementById('eruPlay').click();               // pausa
+    for(const b of document.querySelectorAll('.eruSegno')){
+      b.click(); controlla('eruzione ' + b.dataset.id);
+      if(!document.getElementById('eruTitolo').textContent.trim()) guai.push('eruzione ' + b.dataset.id + ': titolo vuoto');
+      fatti.eruzione++;
+    }
+    document.getElementById('eruChiudi').click();
+    if(document.body.classList.contains('eru-on')) guai.push('eruzione: non si chiude');
+  } catch(e){ guai.push('eruzione: ' + e.message); }
   for(const id of P.luoghi()){ try { P.apri(id); controlla('luogo ' + id); fatti.luoghi++; } catch(e){ guai.push('luogo ' + id + ': ' + e.message); } }
   document.getElementById('pClose').click();
   try { P.vista('confronto'); controlla('confronto'); } catch(e){ guai.push('confronto: ' + e.message); }

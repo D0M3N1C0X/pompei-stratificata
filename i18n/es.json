@@ -171,6 +171,32 @@
     },
     "altro": {
       "titolo": "Más herramientas"
+    },
+    "eru": {
+      "apri": "La erupción hora a hora",
+      "sotto": "de primera hora de la tarde al alba del tercer día, con las fuentes",
+      "avvia": "Reproducir",
+      "pausa": "Pausa",
+      "prima": "Evento anterior",
+      "dopo": "Evento siguiente",
+      "chiudi": "Cerrar",
+      "cursore": "Hora de la erupción",
+      "giorno": "Día {n}",
+      "verso": "hacia las {ora}",
+      "fascia": "entre las {da} y las {a}, hora incierta",
+      "luoghi": {
+        "miseno": "Miseno",
+        "pompei": "Pompeya",
+        "ercolano": "Herculano",
+        "stabia": "Estabia",
+        "mare": "En el golfo"
+      },
+      "certezza": {
+        "primaria": "testigo · Plinio",
+        "studio": "estudio científico",
+        "terziaria": "síntesis, por verificar",
+        "disegno": "decisión del modelo"
+      }
     }
   },
   "scena": {
@@ -431,6 +457,83 @@
       "sub": "cómo leer el plano",
       "body": "<p>La ciudad tiene <b>tres decumani</b>, de los cuales <b>dos excavados</b>, y <b>cinco cardines</b>, de los que son visibles el <b>tercero, el cuarto y el quinto</b>. Los Cardo I y II se conocen solo por los planos borbónicos.</p>\n      <p>Los decumani corren paralelos a la costa, los cardines perpendiculares. El Decumanus Maximus, hacia el monte, estaba cerrado a los carros: abierto solo a peatones, con aceras bajas y anchas y un pórtico sombreado.</p>\n      <p class=\"key\">Desde el 13 de octubre de 2026 la escena está construida sobre el <b>plano de OpenStreetMap</b>: casas, calles y perímetro en su posición real. Allí los cardines corren a <b>58°</b> y los decumanos a <b>147°</b> del norte: los decumanos van de noroeste a sureste, como dicen el Parque y Maiuri. La fuente británica que daba NE-SO no se sostiene.</p>\n      <p>Seis casas tienen también <b>estancias</b>: Bicentenario, Atrio de Mosaico, Casa Samnita, Atrio Corintio, Dos Atrios, Herma de Bronce. Proceden de los esquemas libres dibujados por «V. D.» en Wikimedia Commons, reescalados sobre el contorno de OSM: la <b>disposición</b> (atrio, impluvio, tablino, jardín) es la de los dibujos, las <b>medidas</b> son aproximadas. Las demás casas siguen siendo un contorno. El dibujo de la Herma de Bronce llama «Cardo III» a la calle de la entrada; en el plano de OSM la casa da al Cardo IV, y la escena sigue a OSM.</p>\n      <p class=\"warn\">⚠️ Los planos de OSM los trazan los colaboradores, normalmente sobre ortofotos: geometría real y comprobable, pero no un levantamiento arqueológico. La escena sigue en la convención del sitio — Decumano Máximo arriba, mar abajo — y la brújula dice «lado mar».</p>",
       "src": "Parco Archeologico di Ercolano · Maiuri, citato in herculaneum.uk, <em>Decumanus Maximus</em> · it.wikipedia <b>[terziaria]</b> · OpenStreetMap, © contributors, ODbL · «V. D.», planos en Wikimedia Commons (Ursus, 2009): dominio público, Casa Samnita CC BY-SA 4.0"
+    }
+  },
+  "eruzione": {
+    "nube": {
+      "titolo": "Una nube con forma de pino",
+      "testo": "Hacia la hora séptima, poco después del mediodía, en Miseno la madre de Plinio el Joven señala a su tío una nube <b>insólita por su tamaño y su aspecto</b>. Parece un pino: un tronco altísimo que arriba se abre en ramas, a veces blanca, a veces sucia y manchada, según la tierra y la ceniza que arrastra. El mes sigue discutido: los manuscritos dicen agosto, otros indicios el otoño.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4–6 · «Nonum Kal. Septembres hora fere septima»"
+    },
+    "bianca": {
+      "titolo": "Cae la pómez blanca",
+      "testo": "Sobre Pompeya llueven lapilli de pómez clara, empujados por el viento hacia el sureste. Los tejados empiezan a cargarse. Las síntesis dan una columna de 15 a 30 km y una caída de 18–20 horas; juntas, la pómez blanca y la gris suman <b>3,1–3,3 m</b>.",
+      "fonte": "Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b> · spessore: Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12"
+    },
+    "ercolano0": {
+      "titolo": "Herculano, a barlovento",
+      "testo": "La pómez cae hacia el sureste: sobre Herculano, a barlovento, casi nada. La ciudad sigue en pie y es posible moverse: las cerca de <b>300 víctimas</b> de los arcos dicen que muchos bajaron a la playa.",
+      "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "navi": {
+      "titolo": "Ceniza sobre las naves",
+      "testo": "Plinio el Viejo zarpa de Miseno con las cuatrirremes. Cuanto más se acerca, más espesa y caliente es la ceniza que cae sobre las naves; luego pómez y <b>piedras negras, quemadas y rotas por el fuego</b>. La orilla está obstruida: pone rumbo a Estabia. La hora de la salida no está en el texto: es por la tarde.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.8–12"
+    },
+    "crolli": {
+      "titolo": "Los tejados se hunden",
+      "testo": "El peso de la pómez rompe tejados y forjados. En la capa de lapilli de Pompeya se han hallado <b>394 esqueletos</b> de víctimas de esta fase: el 90 % murió dentro de los edificios, probablemente por el hundimiento de tejados y suelos. La franja de tiempo es una decisión de dibujo.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "grigia": {
+      "titolo": "La pómez se vuelve gris",
+      "testo": "La columna cambia y caen lapilli grises, más gruesos. Las síntesis hablan de «algunas horas» de pómez blanca antes de la gris. <b>No he encontrado la hora del cambio</b>: aquí está a mitad de la caída, en proporción a los espesores.",
+      "fonte": "Zanella et al. 2006, via en.wikipedia <b>[terziaria]</b> · ora del passaggio: disegno"
+    },
+    "stabia": {
+      "titolo": "Estabia: el patio se llena",
+      "testo": "Plinio el Viejo duerme en la villa de Pomponiano. El patio ante su habitación se llena de ceniza y pómez: si se hubiera quedado más, ya no habría podido salir. Las casas tiemblan; se sale con <b>almohadas atadas a la cabeza</b> contra las piedras.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.13–16"
+    },
+    "ercolano1": {
+      "titolo": "Herculano: las corrientes",
+      "testo": "Las corrientes piroclásticas golpean Herculano, a <b>unos 500 °C</b> según los efectos del calor en los huesos. En los arcos de la playa quedan unas 300 personas. Las fuentes que he leído dicen «de noche o al alba»: la franja cubre esas horas, sin horario preciso.",
+      "fonte": "en.wikipedia <b>[terziaria]</b> · temperatura: Mastrolorenzo et al. 2010, CC BY · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "mura": {
+      "titolo": "Las primeras corrientes se detienen en las murallas",
+      "testo": "Las corrientes S1, S2 y S3 se detienen <b>ante las murallas noroccidentales</b> de Pompeya. En la ciudad, quien se refugia bajo un tejado que ha resistido sigue vivo.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "s4": {
+      "titolo": "La corriente S4 entra en la ciudad",
+      "testo": "La cuarta corriente supera las murallas y atraviesa Pompeya. Deja apenas <b>3 cm</b> de depósito, pero está entre <b>250 y 600 °C</b> y pasa en 30–150 segundos: basta. En su depósito están <b>650 víctimas</b>, que durante mucho tiempo se creyeron asfixiadas por la ceniza. La hora: «en las primeras horas del segundo día», no más precisa.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY · ora: en.wikipedia <b>[terziaria]</b>"
+    },
+    "miseno": {
+      "titolo": "Miseno: noche en pleno día",
+      "testo": "Ya es la hora primera, pero la luz es débil e incierta. Plinio el Joven huye con su madre; la nube baja sobre la tierra y cubre el mar. Luego la oscuridad: «no como una noche sin luna o nublada, sino como en una habitación cerrada, <b>con la lámpara apagada</b>».",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.20.6–14"
+    },
+    "plinio": {
+      "titolo": "Plinio el Viejo muere en la playa",
+      "testo": "En otros lugares ya es de día; en Estabia, una noche más negra que todas las noches. Plinio baja a la orilla para ver si se puede zarpar, pero el mar sigue en contra. Se tiende sobre una tela; se levanta sostenido por dos esclavos y <b>cae enseguida</b>. Su sobrino piensa que lo ahogó el humo espeso.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.17–19"
+    },
+    "ultime": {
+      "titolo": "S5 y S6",
+      "testo": "Otras dos corrientes, más potentes, rebasan la ciudad y llegan a <b>más de 15 km</b> del volcán. Sobre la pómez quedan unos <b>1,8 m</b> de depósitos de las corrientes. El sepultamiento se ha consumado; la hora de estas últimas es una decisión de dibujo.",
+      "fonte": "Mastrolorenzo et al. 2010, CC BY · spessore: Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b>"
+    },
+    "sera": {
+      "titolo": "La tarde: solo bruma",
+      "testo": "Al atardecer del segundo día la erupción ya no alcanza Miseno: en el aire queda una bruma que vela el sol.",
+      "fonte": "en.wikipedia, <em>Eruption of Mount Vesuvius in 79 AD</em> <b>[terziaria]</b>"
+    },
+    "corpo": {
+      "titolo": "El tercer día",
+      "testo": "Cuando vuelve la luz, el tercer día contando desde el último que había visto, el cuerpo de Plinio el Viejo aparece <b>intacto, sin heridas, vestido como estaba</b>.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
     }
   }
 }

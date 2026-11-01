@@ -59,6 +59,7 @@ diversi di sparire, dalla stessa eruzione.
 | | |
 |---|---|
 | **Otto fasi** | 79 d.C. (vigilia e seppellimento) · I–III sec. · IV–V sec. · XV–XVI sec. · 1592–1600 · 1748–1763 · oggi |
+| **L'eruzione ora per ora** | dall'«ora settima» di Plinio all'alba del terzo giorno: la colonna a pino, la pomice bianca e poi grigia che cresce strato per strato, la corrente S4 che entra in Pompei; quindici eventi, ognuno con la fonte e il grado di certezza, e fasce di tempo dove l'ora non è documentata |
 | **Popolazioni** | persone, cani e piccioni animati per fase, con soste individuali e fuga durante l’eruzione; densità sceniche, non censimenti |
 | **Venti luoghi** | ciascuno con la scheda dei dati e la fonte in fondo al pannello |
 | **Modalità sezione** | taglia il terreno e mostra la stratigrafia dall'interno, con le quote sulla faccia del taglio |
@@ -215,6 +216,13 @@ della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
 
 ## Fonti principali
 
+- Plinio il Giovane, *Epistulae* 6.16 e 6.20 (latino: The Latin Library; traduzione
+  inglese di W. Melmoth, rivista da F. C. T. Bosanquet, Project Gutenberg 2811) —
+  la cronologia dell'eruzione ora per ora.
+- Mastrolorenzo, G., Petrone, P., Pappalardo, L., & Guarino, F. M. (2010). Lethal
+  thermal impact at periphery of pyroclastic surges: evidences at Pompeii. *PLoS
+  ONE*, 5(6), e11127, CC BY. https://doi.org/10.1371/journal.pone.0011127 — le
+  correnti S1–S6, le temperature, le vittime della caduta e della S4.
 - Sparice, D., Amoretti, V., Galadini, F., Di Vito, M. A., Terracciano, A.,
   Scarpati, G., & Zuchtriegel, G. (2024). A novel view of the destruction of
   Pompeii during the 79 CE eruption of Vesuvius (Italy). *Frontiers in Earth

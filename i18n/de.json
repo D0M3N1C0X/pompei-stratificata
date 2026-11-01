@@ -171,6 +171,32 @@
     },
     "altro": {
       "titolo": "Weitere Werkzeuge"
+    },
+    "eru": {
+      "apri": "Der Ausbruch Stunde für Stunde",
+      "sotto": "vom frühen Nachmittag bis zum Morgengrauen des dritten Tages, mit den Quellen",
+      "avvia": "Abspielen",
+      "pausa": "Pause",
+      "prima": "Vorheriges Ereignis",
+      "dopo": "Nächstes Ereignis",
+      "chiudi": "Schließen",
+      "cursore": "Zeitpunkt des Ausbruchs",
+      "giorno": "Tag {n}",
+      "verso": "gegen {ora}",
+      "fascia": "zwischen {da} und {a}, Zeit unsicher",
+      "luoghi": {
+        "miseno": "Misenum",
+        "pompei": "Pompeji",
+        "ercolano": "Herculaneum",
+        "stabia": "Stabiae",
+        "mare": "Im Golf"
+      },
+      "certezza": {
+        "primaria": "Augenzeuge · Plinius",
+        "studio": "wissenschaftliche Studie",
+        "terziaria": "Zusammenfassung, zu prüfen",
+        "disegno": "Entscheidung des Modells"
+      }
     }
   },
   "scena": {
@@ -431,6 +457,83 @@
       "sub": "wie man den Plan liest",
       "body": "<p>Die Stadt hat <b>drei Decumani</b>, davon <b>zwei ausgegraben</b>, und <b>fünf Cardines</b>, von denen der <b>dritte, vierte und fünfte</b> sichtbar sind. Cardo I und II sind nur aus den bourbonischen Plänen bekannt.</p>\n      <p>Die Decumani verlaufen parallel zur Küste, die Cardines rechtwinklig dazu. Der Decumanus Maximus, hangaufwärts, war für Wagen gesperrt: nur für Fußgänger offen, mit niedrigen breiten Gehsteigen und einer schattigen Säulenhalle.</p>\n      <p class=\"key\">Seit dem 13. Oktober 2026 ist die Szene auf dem <b>Plan von OpenStreetMap</b> gebaut: Häuser, Straßen und Umriss an ihrer wahren Stelle. Dort verlaufen die Cardines bei <b>58°</b> und die Decumani bei <b>147°</b> von Norden: Die Decumani laufen von Nordwest nach Südost, wie der Park und Maiuri sagen. Die britische Quelle mit NO-SW hält nicht.</p>\n      <p>Sechs Häuser haben auch <b>Räume</b>: Zweihundertjahrfeier, Mosaikatrium, Samnitisches Haus, Korinthisches Atrium, Zwei Atrien, Bronzeherme. Sie stammen aus den freien Planskizzen von „V. D.“ auf Wikimedia Commons, auf den OSM-Umriss skaliert: die <b>Raumfolge</b> (Atrium, Impluvium, Tablinum, Garten) folgt den Zeichnungen, die <b>Maße</b> sind Näherungen. Die übrigen Häuser bleiben ein Umriss. Die Zeichnung der Bronzeherme nennt die Eingangsstraße „Cardo III“; im OSM-Plan liegt das Haus am Cardo IV, und die Szene folgt OSM.</p>\n      <p class=\"warn\">⚠️ Die OSM-Pläne zeichnen Mitwirkende, meist auf Luftbildern: wahre, überprüfbare Geometrie, aber keine archäologische Vermessung. Die Szene bleibt in der Konvention des Ortes — Decumanus Maximus bergseits, Meer talseits — und der Kompass zeigt „Meerseite“.</p>",
       "src": "Parco Archeologico di Ercolano · Maiuri, citato in herculaneum.uk, <em>Decumanus Maximus</em> · it.wikipedia <b>[terziaria]</b> · OpenStreetMap, © contributors, ODbL · „V. D.“, Pläne auf Wikimedia Commons (Ursus, 2009): gemeinfrei, Samnitisches Haus CC BY-SA 4.0"
+    }
+  },
+  "eruzione": {
+    "nube": {
+      "titolo": "Eine Wolke wie eine Pinie",
+      "testo": "Um die siebte Stunde, kurz nach Mittag, zeigt in Misenum die Mutter von Plinius dem Jüngeren seinem Onkel eine Wolke, <b>ungewöhnlich in Größe und Gestalt</b>. Sie gleicht einer Pinie: ein sehr hoher Stamm, der sich oben in Äste breitet, mal weiß, mal schmutzig und fleckig, je nach Erde und Asche, die sie mitreißt. Der Monat ist umstritten: Die Handschriften nennen August, andere Indizien den Herbst.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4–6 · «Nonum Kal. Septembres hora fere septima»"
+    },
+    "bianca": {
+      "titolo": "Weißer Bims fällt",
+      "testo": "Auf Pompeji regnen helle Bimslapilli, vom Wind nach Südosten getrieben. Die Dächer beginnen sich zu belasten. Zusammenfassungen nennen eine Säule von 15 bis 30 km und einen Fall von 18–20 Stunden; weißer und grauer Bims ergeben zusammen <b>3,1–3,3 m</b>.",
+      "fonte": "Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b> · spessore: Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12"
+    },
+    "ercolano0": {
+      "titolo": "Herculaneum, im Wind",
+      "testo": "Der Bims fällt nach Südosten: auf Herculaneum, das im Wind liegt, fast nichts. Die Stadt steht, man kann sich bewegen: Die rund <b>300 Opfer</b> in den Bootshäusern zeigen, dass viele zum Strand hinuntergingen.",
+      "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "navi": {
+      "titolo": "Asche auf den Schiffen",
+      "testo": "Plinius der Ältere läuft mit den Quadriremen von Misenum aus. Je näher er kommt, desto dichter und heißer fällt die Asche auf die Schiffe; dann Bims und <b>schwarze, verbrannte, vom Feuer gesprengte Steine</b>. Das Ufer ist versperrt: Er hält auf Stabiae zu. Die Stunde der Abfahrt steht nicht im Text: Es ist Nachmittag.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.8–12"
+    },
+    "crolli": {
+      "titolo": "Die Dächer stürzen ein",
+      "testo": "Das Gewicht des Bimses durchbricht Dächer und Decken. In der Lapillischicht Pompejis fand man <b>394 Skelette</b> von Opfern dieser Phase: 90 % starben in Gebäuden, wohl durch einstürzende Dächer und Böden. Der Zeitraum ist zeichnerisch gewählt.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "grigia": {
+      "titolo": "Der Bims wird grau",
+      "testo": "Die Säule ändert sich, und größere graue Lapilli fallen. Zusammenfassungen sprechen von „einigen Stunden“ weißem Bims vor dem grauen. <b>Die Stunde des Wechsels habe ich nicht gefunden</b>: Hier liegt er in der Mitte des Falls, im Verhältnis der Mächtigkeiten.",
+      "fonte": "Zanella et al. 2006, via en.wikipedia <b>[terziaria]</b> · ora del passaggio: disegno"
+    },
+    "stabia": {
+      "titolo": "Stabiae: Der Hof füllt sich",
+      "testo": "Plinius der Ältere schläft in der Villa des Pomponianus. Der Hof vor seinem Zimmer füllt sich mit Asche und Bims: Wäre er länger geblieben, hätte er nicht mehr hinausgekonnt. Die Häuser beben; man geht mit <b>auf den Kopf gebundenen Kissen</b> gegen die Steine hinaus.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.13–16"
+    },
+    "ercolano1": {
+      "titolo": "Herculaneum: die Ströme",
+      "testo": "Pyroklastische Ströme treffen Herculaneum, mit <b>etwa 500 °C</b> nach den Hitzespuren an den Knochen. In den Bootshäusern am Strand bleiben rund 300 Menschen. Die Quellen, die ich gelesen habe, sagen „in der Nacht oder im Morgengrauen“: Der Zeitraum deckt diese Stunden ab, ohne genaue Uhrzeit.",
+      "fonte": "en.wikipedia <b>[terziaria]</b> · temperatura: Mastrolorenzo et al. 2010, CC BY · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "mura": {
+      "titolo": "Die ersten Ströme halten an den Mauern",
+      "testo": "Die Ströme S1, S2 und S3 kommen <b>vor den Nordwestmauern</b> Pompejis zum Stehen. In der Stadt lebt noch, wer unter einem Dach Schutz fand, das gehalten hat.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "s4": {
+      "titolo": "Strom S4 dringt in die Stadt",
+      "testo": "Der vierte Strom überwindet die Mauern und fegt durch Pompeji. Er hinterlässt kaum <b>3 cm</b> Ablagerung, ist aber zwischen <b>250 und 600 °C</b> heiß und zieht in 30–150 Sekunden vorbei: Das genügt. In seiner Ablagerung liegen <b>650 Opfer</b>, die man lange für in der Asche erstickt hielt. Die Zeit: „in den frühen Stunden des zweiten Tages“, nicht genauer.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY · ora: en.wikipedia <b>[terziaria]</b>"
+    },
+    "miseno": {
+      "titolo": "Misenum: Nacht am Tag",
+      "testo": "Es ist schon die erste Stunde, doch das Licht ist schwach und unsicher. Plinius der Jüngere flieht mit seiner Mutter; die Wolke senkt sich auf das Land und bedeckt das Meer. Dann Dunkelheit: „nicht wie eine mondlose oder bewölkte Nacht, sondern wie in einem geschlossenen Raum, <b>wenn das Licht gelöscht ist</b>“.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.20.6–14"
+    },
+    "plinio": {
+      "titolo": "Plinius der Ältere stirbt am Strand",
+      "testo": "Anderswo ist schon Tag, in Stabiae eine Nacht schwärzer als jede Nacht. Plinius geht zum Ufer, um zu sehen, ob man auslaufen kann, doch das Meer ist noch widrig. Er legt sich auf ein Tuch; er steht, von zwei Sklaven gestützt, auf und <b>bricht sofort zusammen</b>. Sein Neffe glaubt, der dichte Rauch habe ihn erstickt.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.17–19"
+    },
+    "ultime": {
+      "titolo": "S5 und S6",
+      "testo": "Zwei weitere, stärkere Ströme überrollen die Stadt und reichen <b>mehr als 15 km</b> weit vom Vulkan. Über dem Bims bleiben etwa <b>1,8 m</b> Ablagerungen der Ströme. Die Verschüttung ist vollendet; die Zeit dieser letzten ist zeichnerisch gewählt.",
+      "fonte": "Mastrolorenzo et al. 2010, CC BY · spessore: Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b>"
+    },
+    "sera": {
+      "titolo": "Am Abend: nur Dunst",
+      "testo": "Am Abend des zweiten Tages erreicht der Ausbruch Misenum nicht mehr: In der Luft bleibt ein Dunst, der die Sonne verschleiert.",
+      "fonte": "en.wikipedia, <em>Eruption of Mount Vesuvius in 79 AD</em> <b>[terziaria]</b>"
+    },
+    "corpo": {
+      "titolo": "Der dritte Tag",
+      "testo": "Als das Licht zurückkehrt, am dritten Tag, gezählt von dem, den er zuletzt gesehen hatte, wird der Leichnam von Plinius dem Älteren gefunden, <b>unversehrt, ohne Wunden, gekleidet wie er war</b>.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
     }
   }
 }

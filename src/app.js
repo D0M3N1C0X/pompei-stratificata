@@ -7,6 +7,7 @@ import {
   Color,
   ConeGeometry,
   CylinderGeometry,
+  SphereGeometry,
   DirectionalLight,
   Fog,
   Group,
@@ -15,6 +16,7 @@ import {
   Matrix4,
   Mesh,
   MeshBasicMaterial,
+  MeshLambertMaterial,
   MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
@@ -38,6 +40,7 @@ import {
 import { AUDIO } from './audio.js';
 import { CONFRONTO } from './confronto.js';
 import { EPOCHS } from './data/epochs.js';
+import { EVENTI, DURATA, statoEruzione, puntoEvento } from './data/eruzione.js';
 import { PLACES } from './data/places.js';
 import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
@@ -135,6 +138,9 @@ const ORA_INGRESSO = 9.5;
 let timeMode = 'manual';
 let manualHour = ORA_INGRESSO;
 let sunEl = 0.6, sunAz = Math.PI;
+// L'eruzione ora per ora (fase 2): dichiarata qui, prima del sole, perché
+// updateSun e applyLight la leggono fin dal primo fotogramma.
+const eru = { on:false, ore:0, play:false, luce:1, ultimo:null };
 
 function romeNow(){
   const f = new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Rome',
@@ -223,8 +229,10 @@ function updateSun(){
   const sp = solarPosition(dayOfYear(n.y, n.m, n.d), h, leap);
   sunEl = sp.el; sunAz = sp.az;
   const sky = paintSky(sunEl);
-  scene.background = skyTex;
-  scene.fog.color.setStyle(rgbStr(mix3(sky.lo, sky.hi, 0.35)));
+  if(!eru.on){
+    scene.background = skyTex;
+    scene.fog.color.setStyle(rgbStr(mix3(sky.lo, sky.hi, 0.35)));
+  }
   const hh = Math.floor(h), mm = Math.round((h - hh)*60) % 60;
   const el = document.getElementById('clockTime');
   if(el){
@@ -963,6 +971,8 @@ scene.add(roofsA, roofsB);
 /* ------------------------------ deposito, a strati veri per la sezione */
 
 const depositGroup = new Group(); scene.add(depositGroup);
+const STRATI = { bianca:new Group(), grigia:new Group(), correnti:new Group() };
+depositGroup.add(STRATI.bianca, STRATI.grigia, STRATI.correnti);
 {
   const base = [], white = [], grey = [], surge = [];
   for(let x=-212; x<212; x+=4){
@@ -975,11 +985,29 @@ const depositGroup = new Group(); scene.add(depositGroup);
     }
   }
   bakeTracked(base,  0x4c4639,     BOX, depositGroup, false);
-  bakeTracked(white, PAL.depWhite, BOX, depositGroup);
-  bakeTracked(grey,  PAL.depGrey,  BOX, depositGroup, false);
-  bakeTracked(surge, PAL.depSurge, BOX, depositGroup);
+  // ogni strato nel suo gruppo: nell'«eruzione ora per ora» crescono uno
+  // dopo l'altro (vedi crescitaStrati)
+  bakeTracked(white, PAL.depWhite, BOX, STRATI.bianca);
+  bakeTracked(grey,  PAL.depGrey,  BOX, STRATI.grigia, false);
+  bakeTracked(surge, PAL.depSurge, BOX, STRATI.correnti);
 }
 depositGroup.visible = false;
+// Quote locali degli strati (fondo e spessore, in unità) e la crescita:
+// ogni strato si allunga dal proprio fondo e poggia sulla cima di quello
+// sotto. Con tutti a 1 il deposito è quello di sempre.
+function crescitaStrati(fb, fg, fs){
+  const B0 = -1.25, HB = 0.40, G0 = -0.85, HG = 0.40, S0 = -0.45, HS = 0.45;
+  const cimaB = B0 + HB*fb, cimaG = cimaB + HG*fg;
+  const metti = (g, f, fondo, sopra) => {
+    g.visible = f > 0.002;
+    g.scale.y = Math.max(0.002, f);
+    g.position.y = sopra - fondo*g.scale.y;
+  };
+  metti(STRATI.bianca, fb, B0, B0);
+  metti(STRATI.grigia, fg, G0, cimaB);
+  metti(STRATI.correnti, fs, S0, cimaG);
+  return HB*fb + HG*fg + HS*fs;              // la quota della cima, nel mondo
+}
 
 const shantyGroup = new Group(); scene.add(shantyGroup);
 {
@@ -1335,12 +1363,12 @@ function applyLight(){
   // cielo un poco di più, così le ombre non sono buchi neri; il colore
   // scalda già sotto i 30° di altezza, non solo all'alba. La posizione del
   // sole resta quella calcolata (NOAA).
-  sun.intensity = 1.75 * k * day;
+  sun.intensity = 1.75 * k * day * eru.luce;
   const warmth = Math.max(0, 1 - Math.max(0, deg) / 30);
   const w = Math.max(warmth * warmth, (!sectionOn && e.warm > .5) ? 1 : 0);
   sun.color.setRGB(1, 0.95 - w*0.22, 0.88 - w*0.45);
   const night = 1 - day;
-  hemi.intensity = (0.40 + 0.86*day) * (sectionOn ? 1 : (0.55 + k*0.45));
+  hemi.intensity = (0.40 + 0.86*day) * (sectionOn ? 1 : (0.55 + k*0.45)) * (0.35 + 0.65*eru.luce);
   // il cielo tinge le ombre d'azzurro; il suolo di tufo e intonaco rimanda
   // una luce calda dal basso
   hemi.color.setRGB(0.84 - night*0.30, 0.90 - night*0.24, 0.98 - night*0.10);
@@ -1350,6 +1378,7 @@ function applyLight(){
 }
 
 function applyEpoch(i, silent){
+  if(i !== 1 && eru.on) chiudiEruzione(true);
   epoch = i;
   scriviStato();
   const e = EPOCHS[i];
@@ -1380,8 +1409,194 @@ function applyEpoch(i, silent){
 
   hotspots.forEach(h => { h.group.visible = i >= h.data.from && i <= h.data.to; });
   AUDIO.setEpoch(i);
+  aggiornaPortaEruzione();
   if(!silent) renderPlaceList();
 }
+
+/* ------------------------------------------- l'eruzione ora per ora
+   Dentro la fase 2. Un orologio che parte da «hora fere septima» del primo
+   giorno (Plinio) e arriva all'alba del terzo; gli strati crescono uno
+   dopo l'altro, la cenere cambia colore, il cielo si chiude, la corrente S4
+   passa. Gli eventi senza un'ora documentata sono fasce, non istanti: vedi
+   src/data/eruzione.js. */
+const ERU_VEL = 0.5;                        // ore di eruzione per secondo
+// La linea del tempo non è lineare: quasi tutto accade nelle prime 21 ore,
+// che prendono l'82% della barra; il resto, fino all'alba del terzo giorno,
+// sta nella coda. La barra lo dice con un segno di piega.
+const PIEGA = 21, QUOTA_PIEGA = 0.82;
+const posOra = ore => ore <= PIEGA ? ore / PIEGA * QUOTA_PIEGA
+  : QUOTA_PIEGA + (ore - PIEGA) / (DURATA - PIEGA) * (1 - QUOTA_PIEGA);
+const oraPos = p => p <= QUOTA_PIEGA ? p / QUOTA_PIEGA * PIEGA
+  : PIEGA + (p - QUOTA_PIEGA) / (1 - QUOTA_PIEGA) * (DURATA - PIEGA);
+const eruCielo = new Color(), eruNebbia = new Color();
+// La colonna sopra il Vesuvio, a forma di pino come la descrive Plinio
+// (Ep. 6.16.5–6): un tronco e una chioma che si allarga. Schematica e fuori
+// scala come il monte: i 15–30 km delle sintesi non entrano in questa
+// scena. Bianca, poi grigia e più alta; dopo la caduta si affloscia.
+const colonna = new Group(); colonna.visible = false; scene.add(colonna);
+const M_COLONNA = new MeshLambertMaterial({ color:0xe6e1d6, emissive:0x2a2621, transparent:true, opacity:0.95, fog:false });
+{
+  const tronco = new Mesh(new CylinderGeometry(0.16, 0.07, 1, 28, 1, true), M_COLONNA);
+  tronco.position.y = 0.4; tronco.scale.set(1, 0.8, 1);
+  const chioma = new Mesh(new SphereGeometry(0.5, 32, 16), M_COLONNA);
+  chioma.position.y = 0.86; chioma.scale.set(1.25, 0.32, 1.25);
+  const sbuffo = new Mesh(new SphereGeometry(0.5, 24, 12), M_COLONNA);
+  sbuffo.position.set(0.32, 0.8, 0.2); sbuffo.scale.set(0.7, 0.24, 0.6);   // la chioma piega col vento
+  colonna.add(tronco, chioma, sbuffo);
+  colonna.position.set(-66, 82, -252);       // il cratere (vedi costruisciVesuvio)
+}
+function aggiornaColonna(ore, buio){
+  const cresce = Math.max(0, Math.min(1, ore / 2));
+  const alta = ore < 9 ? 0.72 : 0.72 + 0.28 * Math.min(1, (ore - 9) / 2);
+  const cala = ore < 18 ? 1 : Math.max(0, 1 - (ore - 18) / 5);
+  const k = cresce * alta * cala;
+  colonna.visible = eru.on && k > 0.02;
+  colonna.scale.set(150 * k, 105 * k, 150 * k);
+  const grigia = ore >= 9 ? Math.min(1, (ore - 9) / 2) : 0;
+  M_COLONNA.color.setRGB(0.90 - grigia*0.36, 0.88 - grigia*0.36, 0.84 - grigia*0.36)
+    .multiplyScalar(1.15 - buio * 0.35);
+  M_COLONNA.opacity = 0.93 * Math.min(1, cala * 1.4);
+}
+const ERU_CHIARO = new Color(0x8f8a7e), ERU_SCURO = new Color(0x15130f), ERU_CORRENTE = new Color(0x5d574d);
+const eruEl = id => document.getElementById(id);
+const oraLeggibile = ore => {
+  const h = 13 + ore, giorno = 1 + Math.floor(h / 24), hh = Math.floor(h % 24), mm = Math.round((h % 1) * 60 / 15) * 15;
+  return { giorno, hh: mm === 60 ? (hh + 1) % 24 : hh, mm: mm === 60 ? 0 : mm };
+};
+function testoOra(ore){
+  const o = oraLeggibile(ore);
+  return { giorno: t('ui.eru.giorno', { n: fmt().n(o.giorno) }), ora: t('ui.eru.verso', { ora: fmt().orologio(o.hh, o.mm) }) };
+}
+function eventoAttivo(ore){
+  let ev = EVENTI[0];
+  for(const e of EVENTI) if(puntoEvento(e) <= ore + 1e-6) ev = e;
+  return ev;
+}
+function aggiornaPortaEruzione(){
+  eruEl('eruApri').hidden = epoch !== 1 || eru.on || sectionOn || ercOn || compareOn;
+}
+function costruisciSegni(){
+  const box = eruEl('eruSegni');
+  box.innerHTML = '<i class="eruPiega" style="left:' + (100 * QUOTA_PIEGA) + '%"></i>';
+  for(const e of EVENTI){
+    if(e.t1 !== undefined){
+      const f = document.createElement('i'); f.className = 'eruFascia';
+      f.style.left = (100 * posOra(e.t0)) + '%'; f.style.width = (100 * (posOra(e.t1) - posOra(e.t0))) + '%';
+      box.appendChild(f);
+    }
+    const b = document.createElement('button');
+    b.className = 'eruSegno c-' + e.certezza; b.dataset.id = e.id;
+    b.style.left = (100 * posOra(puntoEvento(e))) + '%';
+    b.setAttribute('aria-label', t('eruzione.' + e.id + '.titolo'));
+    b.title = t('eruzione.' + e.id + '.titolo');
+    b.addEventListener('click', () => { suonaEruzione(false); vaiEruzione(puntoEvento(e)); });
+    box.appendChild(b);
+  }
+}
+function mostraEvento(ev){
+  if(eru.ultimo === ev.id) return;
+  eru.ultimo = ev.id;
+  const k = 'eruzione.' + ev.id;
+  eruEl('eruLuogo').textContent = t('ui.eru.luoghi.' + ev.luogo);
+  let quando;
+  if(ev.t1 !== undefined){
+    const a = oraLeggibile(ev.t0), b = oraLeggibile(ev.t1);
+    quando = t('ui.eru.fascia', { da: fmt().orologio(a.hh, a.mm), a: fmt().orologio(b.hh, b.mm) });
+  } else quando = testoOra(ev.t0).ora;
+  eruEl('eruQuando').textContent = quando;
+  eruEl('eruTitolo').textContent = t(k + '.titolo');
+  eruEl('eruCorpo').innerHTML = t(k + '.testo');
+  eruEl('eruCert').textContent = t('ui.eru.certezza.' + ev.certezza);
+  eruEl('eruCert').className = 'eruCert c-' + ev.certezza;
+  eruEl('eruFonte').innerHTML = t(k + '.fonte');
+  document.querySelectorAll('.eruSegno').forEach(b => b.classList.toggle('on', b.dataset.id === ev.id));
+}
+function vaiEruzione(ore){
+  eru.ore = Math.max(0, Math.min(DURATA, ore));
+  const st = statoEruzione(eru.ore);
+  // gli strati: la quota della cima è anche il suolo su cui si cammina
+  depositGroup.visible = true;
+  depositGroup.position.y = EPOCHS[1].deposit;
+  depositCurrent = depositTarget = crescitaStrati(st.bianca, st.grigia, st.correnti);
+  // la cenere che cade, bianca e poi grigia
+  ashGroup.visible = st.cenere;
+  ashGroup.children[0].material.color.setHex(st.cenereGrigia ? 0x9c978d : 0xe8e3d4);
+  aggiornaColonna(eru.ore, st.buio);
+  // il cielo e la nebbia: la nube, la notte, la corrente che passa
+  eru.luce = 1 - st.buio * 0.92;
+  eruCielo.copy(ERU_CHIARO).lerp(ERU_SCURO, st.buio).lerp(ERU_CORRENTE, st.corrente);
+  eruNebbia.copy(eruCielo);
+  scene.background = eruCielo;
+  scene.fog.color.copy(eruNebbia);
+  scene.fog.near = 2 + 60 * (1 - st.buio) * (1 - st.corrente);
+  scene.fog.far = Math.max(14, (eru.farBase || 860) * (1 - 0.82 * st.buio) * (1 - 0.95 * st.corrente));
+  applyLight();
+  // l'interfaccia
+  const o = testoOra(eru.ore);
+  eruEl('eruGiorno').textContent = o.giorno;
+  eruEl('eruOrario').textContent = o.ora;
+  eruEl('eruRange').value = String(Math.round(posOra(eru.ore) * 1000));
+  eruEl('eruRange').setAttribute('aria-valuetext', o.giorno + ', ' + o.ora);
+  mostraEvento(eventoAttivo(eru.ore));
+  scriviStato();
+}
+function suonaEruzione(on){
+  eru.play = on && eru.ore < DURATA;
+  const b = eruEl('eruPlay');
+  b.setAttribute('aria-pressed', eru.play ? 'true' : 'false');
+  b.querySelector('span').textContent = t(eru.play ? 'ui.eru.pausa' : 'ui.eru.avvia');
+}
+function apriEruzione(ore){
+  if(epoch !== 1) applyEpoch(1);
+  if(sectionOn) setSection(false);
+  eru.on = true; eru.ultimo = null;
+  eru.farBase = scene.fog.far;
+  document.body.classList.add('eru-on');
+  eruEl('eruBar').hidden = false;
+  costruisciSegni();
+  vaiEruzione(ore ?? 0);
+  suonaEruzione(ore === undefined);
+  aggiornaPortaEruzione();
+}
+function chiudiEruzione(silenzioso){
+  eru.on = false; eru.play = false; eru.luce = 1;
+  document.body.classList.remove('eru-on');
+  eruEl('eruBar').hidden = true;
+  colonna.visible = false;
+  crescitaStrati(1, 1, 1);
+  scene.fog.near = 240; scene.fog.far = eru.farBase || scene.fog.far;
+  depositTarget = EPOCHS[epoch].deposit;
+  ashGroup.children[0].material.color.setHex(0xcfc9bb);
+  ashGroup.visible = !!EPOCHS[epoch].ash;
+  updateSun();
+  aggiornaPortaEruzione();
+  if(!silenzioso) scriviStato();
+}
+function aggiornaEruzione(dt){
+  if(!eru.play) return;
+  const prima = eventoAttivo(eru.ore);
+  vaiEruzione(eru.ore + dt * ERU_VEL);
+  // una breve sosta su ogni evento nuovo, perché si legga
+  if(eventoAttivo(eru.ore) !== prima){ eru.sosta = 2.5; }
+  if(eru.ore >= DURATA) suonaEruzione(false);
+}
+eruEl('eruStart').addEventListener('click', () => apriEruzione());
+eruEl('eruPlay').addEventListener('click', () => {
+  if(eru.ore >= DURATA) vaiEruzione(0);
+  suonaEruzione(!eru.play);
+});
+eruEl('eruChiudi').addEventListener('click', () => chiudiEruzione());
+eruEl('eruRange').addEventListener('input', e => { suonaEruzione(false); vaiEruzione(oraPos(Number(e.target.value) / 1000)); });
+eruEl('eruPrev').addEventListener('click', () => {
+  suonaEruzione(false);
+  const prima = [...EVENTI].reverse().find(e => puntoEvento(e) < eru.ore - 0.01);
+  vaiEruzione(prima ? puntoEvento(prima) : 0);
+});
+eruEl('eruNext').addEventListener('click', () => {
+  suonaEruzione(false);
+  const dopo = EVENTI.find(e => puntoEvento(e) > eru.ore + 0.01);
+  vaiEruzione(dopo ? puntoEvento(dopo) : DURATA);
+});
 
 let filterText = '';
 function renderPlaceList(){
@@ -1680,6 +1895,7 @@ function aggiornaSezioneVuota(){
 }
 
 function setSection(on){
+  if(on && eru.on) chiudiEruzione(true);
   sectionOn = on;
   fermaPercorso();
   document.getElementById('btnSection').classList.toggle('on', on);
@@ -2087,6 +2303,7 @@ btnAudio.addEventListener('click', () => {
 /* -------------------------------------------------------- confronto */
 let compareOn = false;
 function setCompare(v){
+  if(v && eru.on) chiudiEruzione(true);
   compareOn = !!v;
   document.body.classList.toggle('cmp-on', compareOn);
   document.getElementById('cmpHud').hidden = !compareOn;
@@ -2131,6 +2348,7 @@ function aggiornaComandiErcolano(){
 }
 
 function setErc(v){
+  if(v && eru.on) chiudiEruzione(true);
   ercOn = !!v;
   document.body.classList.toggle('erc-on', ercOn);
   if(!ercOn) document.body.classList.remove('erc-galleria');
@@ -2372,10 +2590,15 @@ function passo(){
   autoQuality(dt);
   pollGamepad(dt);
 
-  depositCurrent += (depositTarget - depositCurrent) * Math.min(1, dt*2.2);
-  contornoMisura.visible = depositCurrent < 0.05;   // sepolta, la misura non si vede
-  for(const g of [depositGroup, shantyGroup, vegGroup, canalGroup, spoilGroup])
-    g.position.y = depositCurrent;
+  if(eru.on){
+    if(eru.sosta > 0) eru.sosta -= dt; else aggiornaEruzione(dt);
+    contornoMisura.visible = depositCurrent < 0.05;
+  } else {
+    depositCurrent += (depositTarget - depositCurrent) * Math.min(1, dt*2.2);
+    contornoMisura.visible = depositCurrent < 0.05;   // sepolta, la misura non si vede
+    for(const g of [depositGroup, shantyGroup, vegGroup, canalGroup, spoilGroup])
+      g.position.y = depositCurrent;
+  }
 
   stepParticles(dt, t);
   // sui marciapiedi prima del 79, sul deposito dopo: a scala vera chi lavora
@@ -2632,12 +2855,13 @@ function scriviStato(){
   if(!statoPronto || presenting) return;
   const u = new URL(location.href);
   const q = u.searchParams;
-  ['fase','luogo','vista','momento'].forEach(k => q.delete(k));
+  ['fase','luogo','vista','momento','eruzione'].forEach(k => q.delete(k));
   if(ercOn) q.set('vista', 'ercolano');
   if(ercOn && ERCOLANO.momentoAttivo() !== 'oggi') q.set('momento', ERCOLANO.momentoAttivo());
   else if(compareOn) q.set('vista', 'confronto');
   if(!ercOn && !compareOn && (epoch !== 0 || luogoAperto)) q.set('fase', String(epoch + 1));
   if(luogoAperto && !compareOn) q.set('luogo', luogoAperto);
+  if(eru.on && !ercOn && !compareOn) q.set('eruzione', String(Math.round(eru.ore * 10) / 10));
   const nuovo = u.pathname + (q.toString() ? '?' + q.toString() : '') + u.hash;
   if(nuovo !== location.pathname + location.search + location.hash)
     history.replaceState(null, '', nuovo);
@@ -2671,6 +2895,8 @@ function applicaCollegamento(){
       applyEpoch(fase);
       usato = true;
     }
+    const oreEru = parseFloat(q.get('eruzione'));
+    if(Number.isFinite(oreEru) && !h){ apriEruzione(Math.max(0, Math.min(DURATA, oreEru))); usato = true; }
   }
   // Chi arriva da un collegamento diretto vuole atterrare lì, non leggere
   // la scheda d'ingresso: resta raggiungibile da «Comandi».

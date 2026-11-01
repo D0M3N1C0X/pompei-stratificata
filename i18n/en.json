@@ -171,6 +171,32 @@
     },
     "altro": {
       "titolo": "More tools"
+    },
+    "eru": {
+      "apri": "The eruption hour by hour",
+      "sotto": "from early afternoon to dawn on the third day, with the sources",
+      "avvia": "Play",
+      "pausa": "Pause",
+      "prima": "Previous event",
+      "dopo": "Next event",
+      "chiudi": "Close",
+      "cursore": "Time of the eruption",
+      "giorno": "Day {n}",
+      "verso": "around {ora}",
+      "fascia": "between {da} and {a}, time uncertain",
+      "luoghi": {
+        "miseno": "Misenum",
+        "pompei": "Pompeii",
+        "ercolano": "Herculaneum",
+        "stabia": "Stabiae",
+        "mare": "In the bay"
+      },
+      "certezza": {
+        "primaria": "eyewitness · Pliny",
+        "studio": "scientific study",
+        "terziaria": "summary, to be checked",
+        "disegno": "model choice"
+      }
     }
   },
   "scena": {
@@ -431,6 +457,83 @@
       "sub": "how to read the plan",
       "body": "<p>The city has <b>three decumani</b>, of which <b>two are excavated</b>, and <b>five cardines</b>, of which the <b>third, fourth and fifth</b> are visible. Cardo I and II are known only from the Bourbon plans.</p>\n      <p>The decumani run parallel to the coast, the cardines at right angles to it. The Decumanus Maximus, uphill, was closed to carts: open to pedestrians only, with low wide pavements and a shaded portico.</p>\n      <p class=\"key\">Since 13 October 2026 the scene is built on the <b>OpenStreetMap plan</b>: houses, streets and perimeter in their true positions. There the cardines run at <b>58°</b> and the decumani at <b>147°</b> from north: the decumani run north-west to south-east, as the Park and Maiuri say. The British source that gave NE-SW does not hold.</p>\n      <p>Six houses also have <b>rooms</b>: the Bicentenary, Mosaic Atrium, Samnite House, Corinthian Atrium, Two Atria and Bronze Herm. They come from the free schematic plans drawn by \"V. D.\" on Wikimedia Commons, rescaled to the OSM outline: the <b>layout</b> (atrium, impluvium, tablinum, garden) follows the drawings, the <b>measurements</b> are approximate. The other houses remain an outline. The Bronze Herm drawing labels the entrance street \"Cardo III\"; in the OSM plan the house faces Cardo IV, and the scene follows OSM.</p>\n      <p class=\"warn\">⚠️ OSM plans are traced by contributors, usually on aerial photographs: true, checkable geometry, but not an archaeological survey. The scene stays in the site convention — Decumanus Maximus uphill, sea downhill — and the compass says «sea side».</p>",
       "src": "Parco Archeologico di Ercolano · Maiuri, citato in herculaneum.uk, <em>Decumanus Maximus</em> · it.wikipedia <b>[terziaria]</b> · OpenStreetMap, © contributors, ODbL · \"V. D.\", plans on Wikimedia Commons (Ursus, 2009): public domain, Samnite House CC BY-SA 4.0"
+    }
+  },
+  "eruzione": {
+    "nube": {
+      "titolo": "A cloud shaped like a pine",
+      "testo": "Around the seventh hour, just after midday, at Misenum Pliny the Younger's mother points out to his uncle a cloud <b>unusual in size and appearance</b>. It looks like a pine: a very tall trunk spreading into branches at the top, sometimes white, sometimes dirty and blotched, depending on the earth and ash it carries. The month is still disputed: the manuscripts say August, other evidence autumn.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.4–6 · «Nonum Kal. Septembres hora fere septima»"
+    },
+    "bianca": {
+      "titolo": "White pumice falls",
+      "testo": "Light-coloured pumice lapilli rain on Pompeii, driven south-east by the wind. Roofs begin to load up. Summaries give a column of 15 to 30 km and a fall lasting 18–20 hours; together, white and grey pumice make <b>3.1–3.3 m</b>.",
+      "fonte": "Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b> · spessore: Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12"
+    },
+    "ercolano0": {
+      "titolo": "Herculaneum, upwind",
+      "testo": "The pumice falls to the south-east: on Herculaneum, upwind, almost nothing. The town stands and people can move: the roughly <b>300 victims</b> in the boat sheds show that many went down to the beach.",
+      "fonte": "Sigurðsson &amp; Casey 2002, via en.wikipedia <b>[terziaria]</b> · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "navi": {
+      "titolo": "Ash on the ships",
+      "testo": "Pliny the Elder sails from Misenum with the quadriremes. The closer he gets, the thicker and hotter the ash falling on the ships; then pumice and <b>black stones, burnt and cracked by fire</b>. The shore is blocked: he turns to Stabiae. The hour of departure is not in the text: it is the afternoon.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.8–12"
+    },
+    "crolli": {
+      "titolo": "Roofs collapse",
+      "testo": "The weight of the pumice breaks through roofs and upper floors. In the lapilli layer at Pompeii <b>394 skeletons</b> of victims of this phase have been found: 90% died inside buildings, probably from collapsing roofs and floors. The time band is a drawing choice.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "grigia": {
+      "titolo": "The pumice turns grey",
+      "testo": "The column changes and larger grey lapilli fall. Summaries speak of \"several hours\" of white pumice before the grey. <b>I have not found the hour of the change</b>: here it is halfway through the fall, in proportion to the thicknesses.",
+      "fonte": "Zanella et al. 2006, via en.wikipedia <b>[terziaria]</b> · ora del passaggio: disegno"
+    },
+    "stabia": {
+      "titolo": "Stabiae: the courtyard fills up",
+      "testo": "Pliny the Elder sleeps in Pomponianus's villa. The courtyard outside his room fills with ash and pumice: had he stayed longer, he could not have got out. The houses shake; people go out with <b>pillows tied on their heads</b> against the stones.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.13–16"
+    },
+    "ercolano1": {
+      "titolo": "Herculaneum: the currents",
+      "testo": "Pyroclastic currents strike Herculaneum, at <b>about 500 °C</b> judging by the effects of heat on the bones. About 300 people remain in the boat sheds on the beach. The sources I read say \"in the night or at dawn\": the band covers those hours, with no precise time.",
+      "fonte": "en.wikipedia <b>[terziaria]</b> · temperatura: Mastrolorenzo et al. 2010, CC BY · Parco Archeologico di Ercolano, <em>Guida</em> 2024"
+    },
+    "mura": {
+      "titolo": "The first currents stop at the walls",
+      "testo": "Currents S1, S2 and S3 come to a halt <b>in front of the north-western walls</b> of Pompeii. In town, anyone sheltering under a roof that has held is still alive.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY"
+    },
+    "s4": {
+      "titolo": "Current S4 enters the town",
+      "testo": "The fourth current overtops the walls and sweeps through Pompeii. It leaves barely <b>3 cm</b> of deposit, but it is between <b>250 and 600 °C</b> and passes in 30–150 seconds: enough. Its deposit holds <b>650 victims</b>, long believed to have suffocated in the ash. The time: \"in the early hours of the second day\", no more precise.",
+      "fonte": "Mastrolorenzo et al. 2010, <em>PLoS ONE</em> 5(6) e11127, CC BY · ora: en.wikipedia <b>[terziaria]</b>"
+    },
+    "miseno": {
+      "titolo": "Misenum: night in the day",
+      "testo": "It is already the first hour, but the light is faint and doubtful. Pliny the Younger flees with his mother; the cloud comes down over the land and covers the sea. Then darkness: \"not like a moonless or cloudy night, but like a closed room <b>with the lamp put out</b>\".",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.20.6–14"
+    },
+    "plinio": {
+      "titolo": "Pliny the Elder dies on the beach",
+      "testo": "Elsewhere it is already day; at Stabiae a night blacker than any night. Pliny goes down to the shore to see if they can sail, but the sea is still against them. He lies down on a sheet; he gets up, supported by two slaves, and <b>falls at once</b>. His nephew thinks the thick fumes choked him.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.17–19"
+    },
+    "ultime": {
+      "titolo": "S5 and S6",
+      "testo": "Two more powerful currents overrun the town and reach <b>more than 15 km</b> from the volcano. Above the pumice there remain about <b>1.8 m</b> of current deposits. The burial is complete; the time of these last ones is a drawing choice.",
+      "fonte": "Mastrolorenzo et al. 2010, CC BY · spessore: Sigurdsson, Cashdollar &amp; Sparks 1982, via en.wikipedia <b>[terziaria]</b>"
+    },
+    "sera": {
+      "titolo": "Evening: only haze",
+      "testo": "By the evening of the second day the eruption no longer reaches Misenum: a haze remains in the air, screening the sun.",
+      "fonte": "en.wikipedia, <em>Eruption of Mount Vesuvius in 79 AD</em> <b>[terziaria]</b>"
+    },
+    "corpo": {
+      "titolo": "The third day",
+      "testo": "When daylight returns, on the third day counting from the last one he had seen, the body of Pliny the Elder is found <b>intact, unharmed, dressed as he had been</b>.",
+      "fonte": "Plinio il Giovane, <em>Ep.</em> 6.16.20 · «ubi dies redditus»"
     }
   }
 }
