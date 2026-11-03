@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dopo il 79 in classe</title>
+<style>
+  :root{--ink:#1d1d1f;--soft:#4a4a4f;--line:#d9d6cf;--accent:#2f7d63;--bg:#fbfaf7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+  main{max-width:46rem;margin:0 auto;padding:2.2rem 1.1rem 4rem}
+  .occhiello{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0}
+  h1{font-size:2rem;line-height:1.15;margin:.3rem 0 .6rem;letter-spacing:-.02em}
+  .lead{font-size:1.12rem;color:var(--soft);margin:0 0 1.6rem}
+  h2{font-size:1.25rem;margin:2.2rem 0 .6rem;letter-spacing:-.01em}
+  p{margin:.5rem 0}
+  .scheda{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:1rem 0}
+  .passi{counter-reset:p;list-style:none;padding:0;margin:.6rem 0}
+  .passi li{counter-increment:p;position:relative;padding:.35rem 0 .35rem 2.4rem}
+  .passi li::before{content:counter(p);position:absolute;left:0;top:.35rem;width:1.7rem;height:1.7rem;border-radius:50%;
+    background:var(--accent);color:#fff;font-weight:600;font-size:.95rem;display:flex;align-items:center;justify-content:center}
+  .tasto{display:inline-block;border:1px solid var(--line);border-radius:7px;padding:0 .4rem;background:#fff;font-weight:600;white-space:nowrap}
+  a.grande{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.75rem 1.1rem;border-radius:12px;margin:.3rem .4rem .3rem 0}
+  table{width:100%;border-collapse:collapse;font-size:.96rem;margin:.4rem 0}
+  th,td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--soft)}
+  td.min{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+  .nota{font-size:.92rem;color:var(--soft)}
+  .riga{border-bottom:1px solid #bbb;height:1.8rem}
+  @media print{body{background:#fff;font-size:12pt}a.grande{border:1px solid #333;color:#000;background:#fff}main{padding:0}.noprint{display:none}}
+</style>
+</head>
+<body>
+<main>
+<p class="occhiello">Kit per la classe · versione del 3 novembre 2026</p>
+<h1>Dopo il 79 in classe</h1>
+<p class="lead">Un simulatore 3D gratuito di Pompei ed Ercolano, dall'eruzione a oggi. Ogni affermazione ha la sua fonte, e quello che non si sa è dichiarato. Questa pagina spiega come usarlo in una lezione da 20 o da 50 minuti.</p>
+
+<div class="scheda">
+  <p><b>Per cominciare, un solo link.</b> Si apre già in modalità Lavagna, sul percorso breve:</p>
+  <a class="grande" href="https://d0m3n1c0x.github.io/pompei-stratificata/?classe=lavagna&amp;percorso=breve&amp;tappa=1">Apri la lezione da 20 minuti</a>
+  <a class="grande" href="https://d0m3n1c0x.github.io/pompei-stratificata/?classe=lavagna&amp;percorso=completo&amp;tappa=1">Apri la lezione da 50 minuti</a>
+  <p class="nota">Funziona nel browser: niente da installare, niente account, niente pubblicità. Dopo la prima apertura funziona anche senza connessione.</p>
+</div>
+
+<h2>Che cosa serve</h2>
+<ul>
+  <li>Un computer o un iPad collegato al proiettore o alla lavagna interattiva.</li>
+  <li>La connessione a internet per la prima apertura: il simulatore pesa circa 22 MB. Conviene aprirlo una volta prima della lezione.</li>
+  <li>Se gli studenti lo usano da soli: un iPad o un computer ogni due o tre studenti.</li>
+  <li>La scheda stampata per ogni studente (si stampa dal simulatore, vedi sotto).</li>
+</ul>
+
+<h2>Come si conduce</h2>
+<ol class="passi">
+  <li>Apri il link della lezione. Se vedi la pagina d'ingresso, tocca <span class="tasto">Sono un insegnante · Lavagna</span>.</li>
+  <li>A sinistra c'è il pannello della classe: la tappa, i minuti consigliati e una o due domande. Leggi la domanda ad alta voce e lascia discutere.</li>
+  <li>Quando vuoi, tocca <span class="tasto">Mostra la risposta</span>: compaiono la risposta e la fonte. Le risposte non aggiungono fatti nuovi, rimettono in ordine quelli delle schede.</li>
+  <li>Passa alla tappa dopo con <span class="tasto">Avanti</span>. Nelle tappe dell'eruzione puoi anche toccare <span class="tasto">Avvia</span> e lasciar scorrere l'orologio, o toccare i pallini sulla linea del tempo.</li>
+  <li>Per mostrare solo la scena, tocca <span class="tasto">Nascondi l'interfaccia</span> (sulla tastiera: <span class="tasto">H</span>). Un tasto in basso a destra la fa ricomparire.</li>
+</ol>
+
+<h2>I due percorsi</h2>
+<table>
+  <thead><tr><th>Lezione da 20 minuti · L'eruzione e il seppellimento</th><th class="min">min</th></tr></thead>
+  <tbody>
+    <tr><td>L'eruzione: la nube a forma di pino (Plinio)</td><td class="min">3</td></tr>
+    <tr><td>L'eruzione: i tetti crollano sotto le pomici</td><td class="min">3</td></tr>
+    <tr><td>L'eruzione: la corrente S4 entra in Pompei</td><td class="min">4</td></tr>
+    <tr><td>L'eruzione a Ercolano, sulla spiaggia dei fornici</td><td class="min">4</td></tr>
+    <tr><td>Cinque metri di deposito: che cosa resta fuori</td><td class="min">3</td></tr>
+    <tr><td>Quello che nessuno ha studiato</td><td class="min">3</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th>Lezione da 50 minuti · Sedici secoli, dall'eruzione al nome ritrovato</th><th class="min">min</th></tr></thead>
+  <tbody>
+    <tr><td>La nube · la corrente S4 · Ercolano</td><td class="min">13</td></tr>
+    <tr><td>Cinque metri contro venti: Pompei ed Ercolano</td><td class="min">4</td></tr>
+    <tr><td>I soccorsi di Tito: perché nessuno ricostruisce</td><td class="min">4</td></tr>
+    <tr><td>Il Foro smontato · una moneta del 161 d.C.</td><td class="min">7</td></tr>
+    <tr><td>Un forno nel V secolo · l'«inconscio archeologico»</td><td class="min">8</td></tr>
+    <tr><td>Il canale di Fontana · l'iscrizione del 1763</td><td class="min">8</td></tr>
+    <tr><td>Quello che nessuno ha studiato</td><td class="min">6</td></tr>
+  </tbody>
+</table>
+
+<h2>La scheda per gli studenti</h2>
+<p>Nel pannello della classe tocca <span class="tasto">Scheda da stampare</span>: si apre una pagina con le domande del percorso e le righe per rispondere, da stampare o salvare in PDF.</p>
+
+<h2>Se gli studenti lo usano da soli</h2>
+<p>Tocca <span class="tasto">Copia il link per gli studenti</span> e condividilo (registro elettronico, Classroom, un QR alla lavagna). Il link apre la modalità Studente sulla stessa tappa: le stesse domande, senza risposte, e il tasto <span class="tasto">Riprendi la tappa</span> per chi si perde.</p>
+
+<h2>Che cosa sapere prima</h2>
+<ul>
+  <li>Il modello è <b>schematico</b>: le misure vere ci sono dove sono pubblicate, il resto è disegnato e dichiarato, scheda per scheda. È parte della lezione, non un difetto da nascondere.</li>
+  <li>Alcuni eventi dell'eruzione sono <b>fasce di tempo</b>, non orari: nessuna fonte letta dà l'ora precisa. Anche questo si può discutere in classe.</li>
+  <li>La <b>data dell'eruzione è controversa</b> (agosto nei manoscritti, autunno secondo altri indizi). Il simulatore non sceglie.</li>
+</ul>
+
+<h2>Dopo la lezione</h2>
+<p>Se avete tempo, fate compilare il questionario anonimo agli studenti (5 minuti):</p>
+<a class="grande noprint" href="questionario-studenti.html">Apri il questionario per gli studenti</a>
+<p>E se puoi, rispondi tu a queste cinque domande. Bastano poche parole.</p>
+<div class="scheda">
+  <p>1. Quanto è durata davvero la lezione, e quali tappe avete saltato?</p><div class="riga"></div>
+  <p>2. Quale domanda ha fatto discutere di più? Quale non ha funzionato?</p><div class="riga"></div><div class="riga"></div>
+  <p>3. Ci sono stati problemi tecnici (caricamento, proiettore, iPad)?</p><div class="riga"></div>
+  <p>4. Che cosa è stato difficile da trovare o da capire nell'interfaccia?</p><div class="riga"></div>
+  <p>5. Lo useresti di nuovo? Con quale classe e per quale argomento?</p><div class="riga"></div>
+</div>
+<p>Le risposte vanno a Domenico Perroni, che cura il progetto: [contatto]. Non servono nomi di studenti, né della scuola se preferisci.</p>
+
+<p class="nota">Codice, fonti e registro delle verifiche: https://github.com/D0M3N1C0X/pompei-stratificata</p>
+</main>
+</body>
+</html>

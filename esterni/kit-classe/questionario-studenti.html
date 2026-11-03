@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Questionario Dopo il 79</title>
+<style>
+  :root{--ink:#1d1d1f;--soft:#4a4a4f;--line:#d9d6cf;--accent:#2f7d63;--bg:#fbfaf7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+  main{max-width:44rem;margin:0 auto;padding:2rem 1.1rem 4rem}
+  h1{font-size:1.7rem;margin:.2rem 0 .4rem;letter-spacing:-.02em}
+  .lead{color:var(--soft);margin:0 0 1rem}
+  h2{font-size:1.1rem;margin:1.8rem 0 .4rem}
+  .campi{display:flex;gap:1.2rem;margin:.8rem 0 1.2rem}
+  .campi span{flex:1;border-bottom:1px solid #999;padding-bottom:.2rem}
+  .d{margin:.9rem 0}
+  .d p{margin:0 0 .3rem}
+  .riga{border-bottom:1px solid #bbb;height:1.9rem}
+  .scala{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:.3rem 0}
+  .scala span{display:inline-flex;align-items:center;justify-content:center;width:2.6rem;height:2.6rem;border:1.5px solid #999;border-radius:50%;font-size:1.3rem}
+  .scala em{font-style:normal;font-size:.85rem;color:var(--soft)}
+  .nota{font-size:.9rem;color:var(--soft)}
+  button{font:inherit;padding:.6rem 1rem;border-radius:10px;border:1px solid #333;background:#fff;cursor:pointer}
+  @media print{body{background:#fff;font-size:11.5pt}main{padding:0}button{display:none}h2{break-after:avoid}.d{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+<button onclick="print()">Stampa o salva in PDF</button>
+<h1>Dopo il 79 · che cosa ne pensi?</h1>
+<p class="lead">Questionario <b>anonimo</b>: non scrivere il tuo nome. Servono 5 minuti. Non è un compito: serve a migliorare il simulatore.</p>
+<div class="campi"><span>Classe</span><span>Età</span><span>Data</span></div>
+
+<h2>1. Che cosa hai capito</h2>
+<div class="d"><p>Perché a Pompei i piani superiori di molte case restarono fuori dal deposito, e a Ercolano no?</p><div class="riga"></div><div class="riga"></div></div>
+<div class="d"><p>La corrente S4 lasciò solo 3 cm di deposito. Perché fu così pericolosa?</p><div class="riga"></div><div class="riga"></div></div>
+<div class="d"><p>Nella linea del tempo alcuni eventi sono fasce colorate, non punti. Che cosa vuol dire?</p><div class="riga"></div><div class="riga"></div></div>
+
+<h2>2. Com'è stato usarlo</h2>
+<p class="nota">Cerchia un numero: 1 = per niente, 5 = moltissimo.</p>
+<div class="d"><p>È stato facile capire dove andare e che cosa toccare.</p>
+  <div class="scala"><em>per niente</em><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><em>moltissimo</em></div></div>
+<div class="d"><p>I testi si leggevano bene.</p>
+  <div class="scala"><em>per niente</em><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><em>moltissimo</em></div></div>
+<div class="d"><p>Vedere le città in 3D mi ha aiutato a capire.</p>
+  <div class="scala"><em>per niente</em><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><em>moltissimo</em></div></div>
+<div class="d"><p>Mi è piaciuto.</p>
+  <div class="scala"><em>per niente</em><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><em>moltissimo</em></div></div>
+<div class="d"><p>Lo userei di nuovo, anche da solo a casa.</p>
+  <div class="scala"><em>per niente</em><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><em>moltissimo</em></div></div>
+<div class="d"><p>Ti sei perso almeno una volta? &nbsp; ☐ sì &nbsp; ☐ no &nbsp; Se sì, dove?</p><div class="riga"></div></div>
+
+<h2>3. In due righe</h2>
+<div class="d"><p>Una cosa che hai capito oggi e che prima non sapevi:</p><div class="riga"></div><div class="riga"></div></div>
+<div class="d"><p>Una cosa che non funzionava, o che era confusa:</p><div class="riga"></div><div class="riga"></div></div>
+
+<p class="nota">Grazie. Il simulatore è gratuito e senza pubblicità: https://d0m3n1c0x.github.io/pompei-stratificata/</p>
+</main>
+</body>
+</html>
