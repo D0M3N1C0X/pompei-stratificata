@@ -43,6 +43,7 @@ import { EPOCHS } from './data/epochs.js';
 import { EVENTI, DURATA, statoEruzione, puntoEvento } from './data/eruzione.js';
 import { PERCORSI, MODALITA } from './data/classe.js';
 import { PLACES } from './data/places.js';
+import INTERNI_P from './data/pompei-interni.json';
 import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
 import { POST } from './post.js';
@@ -314,7 +315,9 @@ const STREETS = [
   { a:[-72,14],   b:[-72,56],   tot:4.5,  marc:1.0, h:0.30, n:'Via dei Teatri' },
   { a:[-56,14],   b:[-56,48],   tot:4.5,  marc:1.0, h:0.30, n:'Via del Tempio d’Iside' },
   { a:[-119,-56], b:[-98,-30],  tot:6.0,  marc:1.5, h:0.30, n:'Via Consolare',       lab:[-110,-45], fonte:'entro Mau 1899' },
-  { a:[-100,-52], b:[-35,-52],  tot:4.5,  marc:1.0, h:0.30, n:'Vicolo di Mercurio' },
+  // 54,4 e non 52 (3 novembre 2026): la Casa del Fauno occupa l'isolato intero,
+  // 92 m da Via della Fortuna al Vicolo di Mercurio (OSM; Mau fig. 137)
+  { a:[-100,-54.4], b:[-35,-54.4], tot:4.5, marc:1.0, h:0.30, n:'Vicolo di Mercurio' },
   { a:[-20,-52],  b:[-20,-30],  tot:3.0,  marc:0.6, h:0.30, n:'Vicolo dei Balconi' },
   { a:[74,30],    b:[141,30],   tot:6.0,  marc:1.5, h:0.30, n:'Viale dell’Anfiteatro' },
   { a:[14,-78],   b:[14,14],    tot:3.6,  marc:0.8, h:0.30, n:'vicolo' },
@@ -502,6 +505,28 @@ function overlaps(x,z,w,d,gap=0.8){
 }
 
 const HOUSES = [];
+/* Tre case con gli interni, dalle piante libere con la scala grafica
+   (strumenti/piante/case_pompei.py → src/data/pompei-interni.json). Le misure
+   vengono dal disegno; il POSTO nella scena è approssimato, perché la città
+   della scena ha la griglia raddrizzata: ogni casa sta nell'isolato giusto
+   rispetto alle vie della scena, e le tre stanno fra loro come nel vero
+   (Vettii a nord-est del Fauno, di là dall'incrocio). Angolo nord-ovest, in
+   unità. Le impronte si riservano prima del generatore delle case, che non
+   cambia sequenza: altrove la città resta identica. */
+const dimInterna = k => INTERNI_P.case[k].dim.map(v => v / 4);
+const CASE_INTERNE = {
+  // fra il vicolo a ovest e Via della Fortuna a sud (il filo del marciapiede)
+  fauno:    { x0:-69.625, z0:-31.0625 - dimInterna('fauno')[1] },
+  // a nord del Vicolo di Mercurio e 5,4 m a est del Fauno, come in OSM
+  vettii:   { x0:-69.625 + dimInterna('fauno')[0] + 5.4/4, z0:-54.9625 - dimInterna('vettii')[1] },
+  // Regio I, a sud di Via dell'Abbondanza [approssimato]
+  menandro: { x0:-5, z0:32.5 }
+};
+for(const [k, c] of Object.entries(CASE_INTERNE)){
+  [c.w, c.d] = dimInterna(k);
+  // l'impronta e un margine di un metro e mezzo, perché le porte restino libere
+  taken.push([c.x0 - 0.4, c.z0 - 0.4, c.w + 0.8, c.d + 0.8]);
+}
 // Prima le case sul fronte stradale. A Pompei le facciate stanno sul filo
 // del marciapiede, una accanto all'altra; il generatore casuale qui sotto,
 // da solo, lasciava spiazzi vuoti fra strada e case, che con le larghezze
@@ -551,6 +576,10 @@ for(const pass of [{step:4, min:8, span:5, skip:0.55}, {step:3, min:4, span:4, s
   }
 }
 
+for(const [k, c] of Object.entries(CASE_INTERNE)){
+  for(const [a, b, e, f] of INTERNI_P.case[k].muri)
+    block(c.x0 + (a+e)/8, 0, c.z0 + (b+f)/8, (e-a)/4, 1.0, (f-b)/4, PAL.wall2);
+}
 for(const [x,z,w,d,grand] of HOUSES){
   const cx = x+w/2, cz = z+d/2;
   const tone = [PAL.wall1,PAL.wall2,PAL.wall3][Math.floor(rnd()*3)];
@@ -1211,6 +1240,17 @@ function markRect(x,z,w,d){
       if(i>=0 && i<GW && j>=0 && j<GD) solid[j*GW+i] = 1;
 }
 for(const [x,z,w,d] of HOUSES) markRect(x,z,w,d);
+// Dentro le tre case con gli interni le collisioni non usano la griglia da
+// 1 m, che chiuderebbe le porte, né i quattro punti di blockedAt, fra i quali
+// un muro di 25 cm passerebbe: il corpo è un cerchio di 32 cm di raggio
+// contro i rettangoli dei muri, come a Ercolano (vedi bloccatoInterno).
+const R_INTERNI = 0.08;
+const MURI_INTERNI = [];
+for(const [k, c] of Object.entries(CASE_INTERNE)){
+  const rects = INTERNI_P.case[k].muri.map(([a, b, e, f]) =>
+    ({ x0:c.x0 + a/4, z0:c.z0 + b/4, x1:c.x0 + e/4, z1:c.z0 + f/4 }));
+  MURI_INTERNI.push({ x0:c.x0, z0:c.z0, x1:c.x0 + c.w, z1:c.z0 + c.d, rects });
+}
 // monumenti solidi (escluse le piazze percorribili: Foro, Foro Triangolare, Palestra)
 [[-131,16,26,20],[-148,26,20,16],[-107,42,30,14],[-80,40,28,26],
  [-74,54,26,14],[-64,36,16,14],[-55,-3,15,13],[-96,-24,18,14],
@@ -1226,6 +1266,9 @@ for(let i=0;i<WALLS.length;i++){
   }
 }
 function isSolid(x,z){
+  for(const c of MURI_INTERNI)
+    if(x > c.x0 && x < c.x1 && z > c.z0 && z < c.z1)
+      return c.rects.some(r => x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1);
   const i = Math.floor((x-GX0)/CELLA), j = Math.floor((z-GZ0)/CELLA);
   if(i<0 || i>=GW || j<0 || j>=GD) return false;
   return solid[j*GW+i] === 1;
@@ -1864,7 +1907,20 @@ function findSpawn(x0, z0){
   }
   return [x0, z0];
 }
+// null fuori dalle tre case con gli interni; altrimenti se il cerchio del
+// corpo tocca un muro
+function bloccatoInterno(x, z){
+  for(const c of MURI_INTERNI)
+    if(x > c.x0 - 0.25 && x < c.x1 + 0.25 && z > c.z0 - 0.25 && z < c.z1 + 0.25)
+      return c.rects.some(r => {
+        const dx = Math.max(r.x0 - x, 0, x - r.x1), dz = Math.max(r.z0 - z, 0, z - r.z1);
+        return dx*dx + dz*dz < R_INTERNI*R_INTERNI;
+      });
+  return null;
+}
 function blockedAt(x, z){
+  const bi = bloccatoInterno(x, z);
+  if(bi !== null) return bi;
   for(const [ox,oz] of [[RADIUS,0],[-RADIUS,0],[0,RADIUS],[0,-RADIUS]])
     if(isSolid(x+ox, z+oz)) return true;
   return false;
@@ -3139,6 +3195,7 @@ if(new URLSearchParams(location.search).has('debug')){
     scena: scene,
     camera,
     solido: (x, z) => isSolid(x, z),
+    bloccato: (x, z) => blockedAt(x, z),
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e
     // ritaglia), una fascia scura in alto e la didascalia in Spectral, il

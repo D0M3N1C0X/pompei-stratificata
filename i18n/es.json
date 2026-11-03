@@ -427,6 +427,24 @@
       "sub": "la gente, fase por fase",
       "body": "<p>Las personas que encuentras van vestidas según una imagen de su época, una por fase. El 79 sigue la escultura y la pintura romanas; la reocupación de los siglos IV–V el mosaico de la Villa del Casale (túnicas a la rodilla con mangas largas, polainas oscuras) y el fresco de Teotecno en las catacumbas de Nápoles (el manto oscuro de las mujeres); la Civita de los siglos XV–XVI los mozos de cuerda de la Tavola Strozzi; el canal de Fontana los obreros de su libro de 1590; la excavación borbónica el grabado de Fabris; en Herculano, los obreros de Maiuri, las fotos de la Soprintendenza de 1931.</p>\n      <p class=\"warn\">⚠️ Donde la fuente no basta, lo digo: el mosaico es siciliano y el fresco retrata a una familia acomodada, mientras que quienes reocuparon Pompeya eran pobres; en la Tavola Strozzi no se distinguen mujeres, así que en la Civita solo hay hombres; el grabado de Fontana y las fotos de Herculano son en blanco y negro, así que los colores son de dibujo; las fotos son de 1931, la escena de 1958. Ninguna fuente dice cuántas personas había: el número es una decisión de puesta en escena.</p>",
       "src": "Brown, <em>Clothing in Roman Art</em> (79) · Villa del Casale, Piazza Armerina, mosaico, Commons PD · Catacombe di San Gennaro, arcosolio di Teotecno, foto Commons di AlMare, CC BY-SA 2.5 · Tavola Strozzi, Napoli c. 1472, Commons PD · D. Fontana, <em>Della trasportatione dell’obelisco vaticano</em>, 1590, Commons PD · Fabris 1776, Wellcome 43680i, PD · Parco Archeologico di Ercolano, foto storiche C2510 e C2537 (1931), open data"
+    },
+    "fauno": {
+      "label": "Casa del Fauno",
+      "sub": "VI.12.2 · las estancias según el plano de Mau",
+      "body": "<p>Una de las casas más grandes de Pompeya: ocupa una manzana entera, de la Via della Fortuna al Vicolo di Mercurio, con dos atrios y dos peristilos. El nombre viene de la estatuilla de bronce de un fauno danzante hallada en el impluvio.</p>\n    <p class=\"key\">Las estancias que recorres proceden del plano de <b>August Mau</b> (1899), con su escala gráfica: la casa mide <b>35 × 91 m</b>. El contorno de OpenStreetMap da <b>2.932 m²</b>, el dibujo 3.146: un 7 % más, de dos fuentes independientes.</p>\n    <p class=\"warn\">⚠️ Su lugar en la escena es aproximado: la ciudad está dibujada sobre una cuadrícula enderezada, y el Vicolo di Mercurio se ha desplazado unos diez metros para que la manzana tenga su profundidad real. Los muros miden 4 m por hipótesis: el plano da la planta baja, no las alturas ni el piso superior. No hay tejado, para que se vean las estancias.</p>",
+      "src": "A. Mau, <em>Pompeii, its Life and Art</em>, fig. 137 (1899/1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · nome: it.wikipedia <b>[terziaria]</b>"
+    },
+    "vettii": {
+      "label": "Casa de los Vetios",
+      "sub": "VI.15.1 · las estancias según el plano de Mau",
+      "body": "<p>La casa de dos libertos, Aulo Vetio Restituto y Aulo Vetio Conviva, organizada en torno a un gran peristilo con un jardín de fuentes.</p>\n    <p class=\"key\">Las estancias proceden del plano de <b>August Mau</b> (1907), con escala gráfica: <b>33 × 39 m</b>, 1.211 m². OpenStreetMap da <b>1.216 m²</b>: las dos fuentes coinciden con un 0,4 % de diferencia. La entrada está al este, como en el plano, cuya flecha pone el norte arriba.</p>\n    <p class=\"warn\">⚠️ Lugar en la escena aproximado, pero con la relación real: al noreste de la Casa del Fauno, al otro lado del cruce. Muros de 4 m por hipótesis, sin piso superior ni tejado.</p>",
+      "src": "A. Mau, pianta della Casa dei Vettii (1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · proprietari: it.wikipedia <b>[terziaria]</b>"
+    },
+    "menandro": {
+      "label": "Casa del Menandro",
+      "sub": "I.10.4 · las estancias según un plano en Commons",
+      "body": "<p>Debe su nombre al retrato del poeta Menandro pintado en una exedra del peristilo. En la casa se halló un tesoro de vajilla de plata.</p>\n    <p class=\"key\">Las estancias proceden de un plano dibujado por Udimu en Wikimedia Commons, con escala gráfica: <b>56 × 71 m</b> de huella, unos 1.930 m².</p>\n    <p class=\"warn\">⚠️ Aquí las fuentes <b>no coinciden</b>: el contorno de OpenStreetMap da 1.586 m² y otra forma, y ninguna rotación del dibujo, ni siquiera en espejo, encaja bien. La orientación sigue a la entrada: I.10.4 da al Vicolo del Menandro, al norte, y el atrio es el ala del dibujo que mira hacia él. Lugar aproximado, muros de 4 m por hipótesis, sin tejado.</p>",
+      "src": "Udimu, <em>Casa menandro plan</em>, Wikimedia Commons, CC BY-SA 4.0 · OpenStreetMap, © contributors, ODbL · nome e tesoro: it.wikipedia <b>[terziaria]</b>"
     }
   },
   "ercolano": {

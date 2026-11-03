@@ -427,6 +427,24 @@
       "sub": "die Menschen, Phase für Phase",
       "body": "<p>Die Menschen, denen du begegnest, sind nach einem Bild ihrer Zeit gekleidet, eines pro Phase. Das Jahr 79 folgt der römischen Skulptur und Malerei; die Wiederbesiedlung im 4.–5. Jahrhundert dem Mosaik der Villa del Casale (knielange Tuniken mit langen Ärmeln, dunkle Beinbinden) und dem Fresko des Theotecnus in den Katakomben von Neapel (der dunkle Mantel der Frauen); die Civita im 15.–16. Jahrhundert den Lastträgern der Tavola Strozzi; Fontanas Kanal den Arbeitern seines Buches von 1590; die bourbonische Grabung dem Stich von Fabris; Maiuris Arbeiter in Herculaneum den Fotos der Soprintendenza von 1931.</p>\n      <p class=\"warn\">⚠️ Wo die Quelle nicht reicht, sage ich es: Das Mosaik ist sizilianisch und das Fresko zeigt eine wohlhabende Familie, während die Wiederbesiedler Pompejis arm waren; in der Tavola Strozzi sind keine Frauen zu erkennen, daher gibt es in der Civita nur Männer; Fontanas Stich und die Fotos aus Herculaneum sind schwarzweiß, die Farben sind also gezeichnet; die Fotos sind von 1931, die Szene von 1958. Wie viele Menschen es waren, sagt keine Quelle: Die Zahl ist eine Inszenierung.</p>",
       "src": "Brown, <em>Clothing in Roman Art</em> (79) · Villa del Casale, Piazza Armerina, mosaico, Commons PD · Catacombe di San Gennaro, arcosolio di Teotecno, foto Commons di AlMare, CC BY-SA 2.5 · Tavola Strozzi, Napoli c. 1472, Commons PD · D. Fontana, <em>Della trasportatione dell’obelisco vaticano</em>, 1590, Commons PD · Fabris 1776, Wellcome 43680i, PD · Parco Archeologico di Ercolano, foto storiche C2510 e C2537 (1931), open data"
+    },
+    "fauno": {
+      "label": "Haus des Fauns",
+      "sub": "VI.12.2 · Räume nach dem Plan von Mau",
+      "body": "<p>Eines der größten Häuser Pompejis: Es füllt eine ganze Insula, von der Via della Fortuna bis zum Vicolo di Mercurio, mit zwei Atrien und zwei Peristylen. Der Name kommt von der Bronzestatuette eines tanzenden Fauns aus dem Impluvium.</p>\n    <p class=\"key\">Die Räume, durch die du gehst, stammen aus dem Plan von <b>August Mau</b> (1899) mit seinem Maßstab: Das Haus misst <b>35 × 91 m</b>. Der OpenStreetMap-Umriss ergibt <b>2.932 m²</b>, die Zeichnung 3.146: 7 % mehr, aus zwei unabhängigen Quellen.</p>\n    <p class=\"warn\">⚠️ Der Ort in der Szene ist ungefähr: Die Stadt ist auf einem begradigten Raster gezeichnet, und der Vicolo di Mercurio wurde um etwa zehn Meter verschoben, damit die Insula ihre wahre Tiefe hat. Die Mauern sind als Annahme 4 m hoch: Der Plan gibt das Erdgeschoss, nicht die Höhen und nicht das Obergeschoss. Ein Dach fehlt, damit man die Räume sieht.</p>",
+      "src": "A. Mau, <em>Pompeii, its Life and Art</em>, fig. 137 (1899/1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · nome: it.wikipedia <b>[terziaria]</b>"
+    },
+    "vettii": {
+      "label": "Haus der Vettier",
+      "sub": "VI.15.1 · Räume nach dem Plan von Mau",
+      "body": "<p>Das Haus zweier Freigelassener, Aulus Vettius Restitutus und Aulus Vettius Conviva, um ein großes Peristyl mit einem Brunnengarten angelegt.</p>\n    <p class=\"key\">Die Räume stammen aus dem Plan von <b>August Mau</b> (1907) mit Maßstab: <b>33 × 39 m</b>, 1.211 m². OpenStreetMap ergibt <b>1.216 m²</b>: Die beiden Quellen stimmen auf 0,4 % überein. Der Eingang liegt im Osten, wie im Plan, dessen Pfeil den Norden nach oben setzt.</p>\n    <p class=\"warn\">⚠️ Ort in der Szene ungefähr, aber mit dem wahren Verhältnis: nordöstlich vom Haus des Fauns, jenseits der Kreuzung. Mauern als Annahme 4 m hoch, ohne Obergeschoss und ohne Dach.</p>",
+      "src": "A. Mau, pianta della Casa dei Vettii (1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · proprietari: it.wikipedia <b>[terziaria]</b>"
+    },
+    "menandro": {
+      "label": "Haus des Menander",
+      "sub": "I.10.4 · Räume nach einem Plan auf Commons",
+      "body": "<p>Es ist nach dem Bildnis des Dichters Menander benannt, das in einer Exedra des Peristyls gemalt ist. Im Haus wurde ein Silberschatz gefunden.</p>\n    <p class=\"key\">Die Räume stammen aus einem Plan von Udimu auf Wikimedia Commons, mit Maßstab: <b>56 × 71 m</b> Ausdehnung, etwa 1.930 m².</p>\n    <p class=\"warn\">⚠️ Hier <b>stimmen die Quellen nicht überein</b>: Der OpenStreetMap-Umriss ergibt 1.586 m² und eine andere Form, und keine Drehung der Zeichnung, auch nicht gespiegelt, deckt sich gut damit. Die Ausrichtung folgt dem Eingang: I.10.4 öffnet sich zum Vicolo del Menandro im Norden, und das Atrium ist der Flügel der Zeichnung, der ihm zugewandt ist. Ort ungefähr, Mauern als Annahme 4 m hoch, ohne Dach.</p>",
+      "src": "Udimu, <em>Casa menandro plan</em>, Wikimedia Commons, CC BY-SA 4.0 · OpenStreetMap, © contributors, ODbL · nome e tesoro: it.wikipedia <b>[terziaria]</b>"
     }
   },
   "ercolano": {

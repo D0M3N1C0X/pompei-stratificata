@@ -42,6 +42,7 @@ without knowing what lay beneath. **Pompeii became unreadable, Herculaneum unrea
 |---|---|
 | **Eight phases** | AD 79 (the eve and the burial) · 1st–3rd c. · 4th–5th c. · 15th–16th c. · 1592–1600 · 1748–1763 · today |
 | **The eruption hour by hour** | from Pliny's "seventh hour" to dawn on the third day: the pine-shaped column, white then grey pumice growing layer by layer, the S4 current entering Pompeii; fifteen events, each with its source and a certainty label, and time bands where no hour is documented |
+| **Rooms you can walk** | six houses at Herculaneum and three at Pompeii (Faun, Vettii, Menander) built from free plans; at Pompeii the measurements come from each drawing's scale bar and are checked against OpenStreetMap |
 | **Populations** | people, dogs and pigeons animated by phase, fleeing during the eruption; scenic densities, not censuses |
 | **Twenty places** | each with its data card and the source at the bottom of the panel |
 | **Section mode** | cuts the ground and shows the stratigraphy from inside, with heights on the cut face |

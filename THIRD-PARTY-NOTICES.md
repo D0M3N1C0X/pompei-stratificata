@@ -89,3 +89,21 @@ Commons dall'utente Ursus (2009). I disegni non sono inclusi nel repository:
 - Le misure vengono dal contorno di OpenStreetMap (ODbL, sopra): il disegno si
   riscala sul riquadro della casa. Disposizione dagli schemi, dimensioni
   approssimate: non è un rilievo.
+
+## Interni di tre case di Pompei — piante con scala grafica
+
+Le stanze della Casa del Fauno, della Casa dei Vettii e della Casa del Menandro
+vengono da piante con la loro scala grafica, ricavate da
+`strumenti/piante/case_pompei.py` in `src/data/pompei-interni.json`. I disegni
+non sono inclusi nel repository: lo strumento li scarica in
+`strumenti/piante/fonti/`.
+
+- `File:Plan of the house of the Faun in Mau fig137.png` e
+  `File:Floor Plan of the House of the Vettii Pompeii (VI 15,1) by August Mau 1907.jpg`:
+  A. Mau, *Pompeii, its Life and Art* (1899/1907), pubblico dominio.
+- `File:Casa menandro plan.jpg`: Udimu, Wikimedia Commons, Creative Commons
+  Attribution-ShareAlike 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
+  I dati ricavati da questo disegno, la voce «menandro» di
+  `src/data/pompei-interni.json`, restano sotto CC BY-SA 4.0.
+- I contorni di OpenStreetMap (ODbL) servono solo al controllo della misura e
+  dell'orientamento; non sono copiati nei dati.

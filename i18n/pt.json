@@ -427,6 +427,24 @@
       "sub": "as pessoas, fase a fase",
       "body": "<p>As pessoas que encontras estão vestidas segundo uma imagem da sua época, uma por fase. O ano 79 segue a escultura e a pintura romanas; a reocupação dos séculos IV–V o mosaico da Villa del Casale (túnicas pelo joelho de mangas compridas, perneiras escuras) e o fresco de Teotecno nas catacumbas de Nápoles (o manto escuro das mulheres); a Civita dos séculos XV–XVI os carregadores da Tavola Strozzi; o canal de Fontana os operários do seu livro de 1590; a escavação bourbónica a gravura de Fabris; em Herculano, os operários de Maiuri, as fotografias da Soprintendenza de 1931.</p>\n      <p class=\"warn\">⚠️ Onde a fonte não chega, digo-o: o mosaico é siciliano e o fresco retrata uma família abastada, enquanto quem reocupou Pompeia era pobre; na Tavola Strozzi não se distinguem mulheres, por isso na Civita só há homens; a gravura de Fontana e as fotografias de Herculano são a preto e branco, por isso as cores são de desenho; as fotografias são de 1931, a cena de 1958. Nenhuma fonte diz quantas pessoas havia: o número é uma escolha de encenação.</p>",
       "src": "Brown, <em>Clothing in Roman Art</em> (79) · Villa del Casale, Piazza Armerina, mosaico, Commons PD · Catacombe di San Gennaro, arcosolio di Teotecno, foto Commons di AlMare, CC BY-SA 2.5 · Tavola Strozzi, Napoli c. 1472, Commons PD · D. Fontana, <em>Della trasportatione dell’obelisco vaticano</em>, 1590, Commons PD · Fabris 1776, Wellcome 43680i, PD · Parco Archeologico di Ercolano, foto storiche C2510 e C2537 (1931), open data"
+    },
+    "fauno": {
+      "label": "Casa do Fauno",
+      "sub": "VI.12.2 · as divisões segundo a planta de Mau",
+      "body": "<p>Uma das maiores casas de Pompeia: ocupa um quarteirão inteiro, da Via della Fortuna ao Vicolo di Mercurio, com dois átrios e dois peristilos. O nome vem da estatueta de bronze de um fauno a dançar encontrada no implúvio.</p>\n    <p class=\"key\">As divisões que percorres vêm da planta de <b>August Mau</b> (1899), com a sua escala gráfica: a casa mede <b>35 × 91 m</b>. O contorno do OpenStreetMap dá <b>2.932 m²</b>, o desenho 3.146: mais 7 %, de duas fontes independentes.</p>\n    <p class=\"warn\">⚠️ O lugar na cena é aproximado: a cidade está desenhada sobre uma grelha endireitada, e o Vicolo di Mercurio foi deslocado cerca de dez metros para que o quarteirão tenha a profundidade verdadeira. As paredes têm 4 m por hipótese: a planta dá o rés-do-chão, não as alturas nem o andar de cima. Não há telhado, para se verem as divisões.</p>",
+      "src": "A. Mau, <em>Pompeii, its Life and Art</em>, fig. 137 (1899/1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · nome: it.wikipedia <b>[terziaria]</b>"
+    },
+    "vettii": {
+      "label": "Casa dos Vétios",
+      "sub": "VI.15.1 · as divisões segundo a planta de Mau",
+      "body": "<p>A casa de dois libertos, Aulo Vétio Restituto e Aulo Vétio Conviva, organizada em torno de um grande peristilo com um jardim de fontes.</p>\n    <p class=\"key\">As divisões vêm da planta de <b>August Mau</b> (1907), com escala gráfica: <b>33 × 39 m</b>, 1.211 m². O OpenStreetMap dá <b>1.216 m²</b>: as duas fontes concordam com 0,4 % de diferença. A entrada é a leste, como na planta, cuja seta põe o norte em cima.</p>\n    <p class=\"warn\">⚠️ Lugar na cena aproximado, mas com a relação verdadeira: a nordeste da Casa do Fauno, do outro lado do cruzamento. Paredes de 4 m por hipótese, sem andar de cima nem telhado.</p>",
+      "src": "A. Mau, pianta della Casa dei Vettii (1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · proprietari: it.wikipedia <b>[terziaria]</b>"
+    },
+    "menandro": {
+      "label": "Casa do Menandro",
+      "sub": "I.10.4 · as divisões segundo uma planta no Commons",
+      "body": "<p>Deve o nome ao retrato do poeta Menandro pintado numa exedra do peristilo. Na casa foi encontrado um tesouro de baixela de prata.</p>\n    <p class=\"key\">As divisões vêm de uma planta desenhada por Udimu no Wikimedia Commons, com escala gráfica: <b>56 × 71 m</b> de implantação, cerca de 1.930 m².</p>\n    <p class=\"warn\">⚠️ Aqui as fontes <b>não concordam</b>: o contorno do OpenStreetMap dá 1.586 m² e outra forma, e nenhuma rotação do desenho, nem sequer espelhada, coincide bem. A orientação segue a entrada: I.10.4 dá para o Vicolo del Menandro, a norte, e o átrio é a ala do desenho virada para ele. Lugar aproximado, paredes de 4 m por hipótese, sem telhado.</p>",
+      "src": "Udimu, <em>Casa menandro plan</em>, Wikimedia Commons, CC BY-SA 4.0 · OpenStreetMap, © contributors, ODbL · nome e tesoro: it.wikipedia <b>[terziaria]</b>"
     }
   },
   "ercolano": {

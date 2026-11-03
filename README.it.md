@@ -216,6 +216,9 @@ della colonna stratigrafica sopra il livello del 79 dentro le mura di Pompei**.
 
 ## Fonti principali
 
+- Mau, A. (1899/1907). *Pompeii, its Life and Art*, fig. 137 e pianta della Casa dei
+  Vettii, pubblico dominio; Udimu, pianta della Casa del Menandro, Wikimedia Commons,
+  CC BY-SA 4.0 — gli interni delle tre case, via `strumenti/piante/case_pompei.py`.
 - Plinio il Giovane, *Epistulae* 6.16 e 6.20 (latino: The Latin Library; traduzione
   inglese di W. Melmoth, rivista da F. C. T. Bosanquet, Project Gutenberg 2811) —
   la cronologia dell'eruzione ora per ora.

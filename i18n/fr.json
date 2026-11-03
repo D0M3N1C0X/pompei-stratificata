@@ -427,6 +427,24 @@
       "sub": "les gens, phase par phase",
       "body": "<p>Les personnes que tu croises sont habillées d'après une image de leur époque, une par phase. L'an 79 suit la sculpture et la peinture romaines ; la réoccupation des IVe–Ve siècles la mosaïque de la Villa del Casale (tuniques au genou à manches longues, jambières sombres) et la fresque de Théotecnus dans les catacombes de Naples (le manteau sombre des femmes) ; la Civita des XVe–XVIe siècles les portefaix de la Tavola Strozzi ; le canal de Fontana les ouvriers de son livre de 1590 ; la fouille bourbonienne l'estampe de Fabris ; à Herculanum, les ouvriers de Maiuri, les photos de la Soprintendenza de 1931.</p>\n      <p class=\"warn\">⚠️ Là où la source ne suffit pas, je le dis : la mosaïque est sicilienne et la fresque montre une famille aisée, alors que ceux qui réoccupèrent Pompéi étaient pauvres ; on ne distingue pas de femmes dans la Tavola Strozzi, et la Civita n'a donc que des hommes ; la gravure de Fontana et les photos d'Herculanum sont en noir et blanc, les couleurs sont donc un choix de dessin ; les photos datent de 1931, la scène de 1958. Aucune source ne dit combien de personnes il y avait : le nombre est un choix de mise en scène.</p>",
       "src": "Brown, <em>Clothing in Roman Art</em> (79) · Villa del Casale, Piazza Armerina, mosaico, Commons PD · Catacombe di San Gennaro, arcosolio di Teotecno, foto Commons di AlMare, CC BY-SA 2.5 · Tavola Strozzi, Napoli c. 1472, Commons PD · D. Fontana, <em>Della trasportatione dell’obelisco vaticano</em>, 1590, Commons PD · Fabris 1776, Wellcome 43680i, PD · Parco Archeologico di Ercolano, foto storiche C2510 e C2537 (1931), open data"
+    },
+    "fauno": {
+      "label": "Maison du Faune",
+      "sub": "VI.12.2 · les pièces d'après le plan de Mau",
+      "body": "<p>L'une des plus grandes maisons de Pompéi : elle occupe tout un îlot, de la Via della Fortuna au Vicolo di Mercurio, avec deux atriums et deux péristyles. Son nom vient de la statuette en bronze d'un faune dansant trouvée dans l'impluvium.</p>\n    <p class=\"key\">Les pièces que tu parcours viennent du plan d'<b>August Mau</b> (1899), avec son échelle graphique : la maison mesure <b>35 × 91 m</b>. Le contour d'OpenStreetMap donne <b>2 932 m²</b>, le dessin 3 146 : 7 % de plus, d'après deux sources indépendantes.</p>\n    <p class=\"warn\">⚠️ Sa place dans la scène est approximative : la ville est dessinée sur une grille redressée, et le Vicolo di Mercurio a été déplacé d'une dizaine de mètres pour que l'îlot ait sa vraie profondeur. Les murs font 4 m de haut par hypothèse : le plan donne le rez-de-chaussée, pas les hauteurs ni l'étage. Il n'y a pas de toit, pour montrer les pièces.</p>",
+      "src": "A. Mau, <em>Pompeii, its Life and Art</em>, fig. 137 (1899/1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · nome: it.wikipedia <b>[terziaria]</b>"
+    },
+    "vettii": {
+      "label": "Maison des Vettii",
+      "sub": "VI.15.1 · les pièces d'après le plan de Mau",
+      "body": "<p>La maison de deux affranchis, Aulus Vettius Restitutus et Aulus Vettius Conviva, organisée autour d'un grand péristyle avec un jardin de fontaines.</p>\n    <p class=\"key\">Les pièces viennent du plan d'<b>August Mau</b> (1907), avec l'échelle graphique : <b>33 × 39 m</b>, 1 211 m². OpenStreetMap donne <b>1 216 m²</b> : les deux sources concordent à 0,4 % près. L'entrée est à l'est, comme sur le plan, dont la flèche met le nord en haut.</p>\n    <p class=\"warn\">⚠️ Place dans la scène approximative, mais avec le rapport vrai : au nord-est de la Maison du Faune, de l'autre côté du carrefour. Murs de 4 m par hypothèse, sans étage ni toit.</p>",
+      "src": "A. Mau, pianta della Casa dei Vettii (1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · proprietari: it.wikipedia <b>[terziaria]</b>"
+    },
+    "menandro": {
+      "label": "Maison du Ménandre",
+      "sub": "I.10.4 · les pièces d'après un plan sur Commons",
+      "body": "<p>Elle doit son nom au portrait du poète Ménandre peint dans une exèdre du péristyle. On y a trouvé un trésor d'argenterie.</p>\n    <p class=\"key\">Les pièces viennent d'un plan dessiné par Udimu sur Wikimedia Commons, avec l'échelle graphique : <b>56 × 71 m</b> d'emprise, environ 1 930 m².</p>\n    <p class=\"warn\">⚠️ Ici les sources <b>ne concordent pas</b> : le contour d'OpenStreetMap donne 1 586 m² et une autre forme, et aucune rotation du dessin, même en miroir, ne s'y superpose bien. L'orientation suit l'entrée : I.10.4 donne sur le Vicolo del Menandro, au nord, et l'atrium est l'aile du dessin qui y fait face. Position approximative, murs de 4 m par hypothèse, sans toit.</p>",
+      "src": "Udimu, <em>Casa menandro plan</em>, Wikimedia Commons, CC BY-SA 4.0 · OpenStreetMap, © contributors, ODbL · nome e tesoro: it.wikipedia <b>[terziaria]</b>"
     }
   },
   "ercolano": {

@@ -25,6 +25,11 @@ export const PLACES = [
   { id:"nome", x:-100, z:20, y:3, from:6, to:7 },
   { id:"sicilo", x:-150, z:52, y:6, from:0, to:7 },
   { id:"strumenti", x:-96, z:44, y:6, from:0, to:7 },
+  // le tre case con gli interni dalle piante (vedi CASE_INTERNE in app.js):
+  // il cono sopra l'atrio, per tutte le fasi
+  { id:"fauno", x:-65.2, z:-36.5, y:3, from:0, to:7 },
+  { id:"vettii", x:-53.2, z:-60.5, y:3, from:0, to:7 },
+  { id:"menandro", x:-1.5, z:36.5, y:3, from:0, to:7 },
   // accanto al punto d'ingresso: di che cosa sono fatti strada e muri
   { id:"materiali", x:-74, z:14.6, y:2.4, from:0, to:7 },
   // accanto: chi sono le persone che si vedono, fase per fase, e da dove vengono

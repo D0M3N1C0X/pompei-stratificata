@@ -430,6 +430,24 @@ export default {
       "sub": "le persone, fase per fase",
       "body": "<p>Le persone che incontri sono vestite secondo un'immagine dell'epoca, una per fase. Il 79 segue la scultura e la pittura romana; la rioccupazione del IV–V secolo il mosaico della Villa del Casale (tuniche al ginocchio a maniche lunghe, calzari scuri) e l'affresco di Teotecno nelle catacombe di Napoli (il manto scuro delle donne); la Civita del XV–XVI secolo i facchini della Tavola Strozzi; il canale di Fontana gli operai della sua opera del 1590; lo scavo borbonico la stampa di Fabris; a Ercolano gli operai di Maiuri le foto della Soprintendenza del 1931.</p>\n      <p class=\"warn\">⚠️ Dove la fonte non basta, lo dico: il mosaico è siciliano e l'affresco ritrae una famiglia agiata, mentre chi rioccupò Pompei era povero; nella Tavola Strozzi non si distinguono donne, e alla Civita ci sono solo uomini; l'incisione di Fontana e le foto di Ercolano sono in bianco e nero, quindi i colori sono di disegno; le foto sono del 1931, la scena del 1958. Quante persone ci fossero non lo dice nessuna fonte: il numero è una scelta di regia.</p>",
       "src": "Brown, <em>Clothing in Roman Art</em> (79) · Villa del Casale, Piazza Armerina, mosaico, Commons PD · Catacombe di San Gennaro, arcosolio di Teotecno, foto Commons di AlMare, CC BY-SA 2.5 · Tavola Strozzi, Napoli c. 1472, Commons PD · D. Fontana, <em>Della trasportatione dell’obelisco vaticano</em>, 1590, Commons PD · Fabris 1776, Wellcome 43680i, PD · Parco Archeologico di Ercolano, foto storiche C2510 e C2537 (1931), open data"
+    },
+    "fauno": {
+      "label": "Casa del Fauno",
+      "sub": "VI.12.2 · le stanze dalla pianta di Mau",
+      "body": "<p>Una delle case più grandi di Pompei: occupa un isolato intero, da Via della Fortuna al Vicolo di Mercurio, con due atri e due peristili. Il nome viene dalla statuetta bronzea di un fauno danzante trovata nell'impluvio.</p>\n    <p class=\"key\">Le stanze che percorri vengono dalla pianta di <b>August Mau</b> (1899), con la sua scala grafica: la casa misura <b>35 × 91 m</b>. Il contorno di OpenStreetMap dà <b>2.932 m²</b>, il disegno 3.146: il 7% in più, da due fonti indipendenti.</p>\n    <p class=\"warn\">⚠️ Il posto nella scena è approssimato: la città è disegnata su una griglia raddrizzata, e il Vicolo di Mercurio è stato spostato di una decina di metri perché l'isolato avesse la profondità vera. I muri sono alti 4 m per ipotesi: la pianta dà il piano terra, non le altezze né il piano superiore. Il tetto non c'è, per far vedere le stanze.</p>",
+      "src": "A. Mau, <em>Pompeii, its Life and Art</em>, fig. 137 (1899/1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · nome: it.wikipedia <b>[terziaria]</b>"
+    },
+    "vettii": {
+      "label": "Casa dei Vettii",
+      "sub": "VI.15.1 · le stanze dalla pianta di Mau",
+      "body": "<p>La casa di due liberti, Aulo Vettio Restituto e Aulo Vettio Conviva, raccolta attorno a un grande peristilio con un giardino di fontane.</p>\n    <p class=\"key\">Le stanze vengono dalla pianta di <b>August Mau</b> (1907), con la scala grafica: <b>33 × 39 m</b>, 1.211 m². OpenStreetMap dà <b>1.216 m²</b>: le due fonti concordano entro lo 0,4%. L'ingresso è a est, come nella pianta, la cui freccia indica il nord in alto.</p>\n    <p class=\"warn\">⚠️ Posizione nella scena approssimata, ma con il rapporto vero: a nord-est del Fauno, di là dall'incrocio. Muri alti 4 m per ipotesi, senza piano superiore e senza tetto.</p>",
+      "src": "A. Mau, pianta della Casa dei Vettii (1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · proprietari: it.wikipedia <b>[terziaria]</b>"
+    },
+    "menandro": {
+      "label": "Casa del Menandro",
+      "sub": "I.10.4 · le stanze da una pianta su Commons",
+      "body": "<p>Prende il nome dal ritratto del poeta Menandro dipinto in un'esedra del peristilio. Nella casa fu trovato un tesoro di argenteria.</p>\n    <p class=\"key\">Le stanze vengono da una pianta disegnata da Udimu su Wikimedia Commons, con la scala grafica: <b>56 × 71 m</b> di ingombro, circa 1.930 m².</p>\n    <p class=\"warn\">⚠️ Qui le fonti <b>non concordano</b>: il contorno di OpenStreetMap dà 1.586 m² e una forma diversa, e nessuna rotazione del disegno, nemmeno a specchio, ci si sovrappone bene. L'orientamento segue l'ingresso: I.10.4 dà sul Vicolo del Menandro, a nord, e l'atrio è l'ala del disegno che vi si affaccia. Posizione approssimata, muri alti 4 m per ipotesi, senza tetto.</p>",
+      "src": "Udimu, <em>Casa menandro plan</em>, Wikimedia Commons, CC BY-SA 4.0 · OpenStreetMap, © contributors, ODbL · nome e tesoro: it.wikipedia <b>[terziaria]</b>"
     }
   },
   "ercolano": {

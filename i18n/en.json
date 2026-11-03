@@ -427,6 +427,24 @@
       "sub": "the people, phase by phase",
       "body": "<p>The people you meet are dressed after one image of their time, one per phase. AD 79 follows Roman sculpture and painting; the 4th–5th-century reoccupation the mosaic of the Villa del Casale (knee-length tunics with long sleeves, dark leg wraps) and the Theotecnus fresco in the catacombs of Naples (the women's dark mantle); the 15th–16th-century Civita the porters of the Tavola Strozzi; Fontana's canal the workmen of his 1590 book; the Bourbon dig Fabris's print; Maiuri's workmen at Herculaneum the Soprintendenza photographs of 1931.</p>\n      <p class=\"warn\">⚠️ Where the source falls short, I say so: the mosaic is Sicilian and the fresco shows a well-off family, while those who reoccupied Pompeii were poor; no women can be made out in the Tavola Strozzi, so the Civita has only men; Fontana's engraving and the Herculaneum photographs are black and white, so the colours are a drawing choice; the photographs are from 1931, the scene from 1958. No source says how many people there were: the number is a staging choice.</p>",
       "src": "Brown, <em>Clothing in Roman Art</em> (79) · Villa del Casale, Piazza Armerina, mosaico, Commons PD · Catacombe di San Gennaro, arcosolio di Teotecno, foto Commons di AlMare, CC BY-SA 2.5 · Tavola Strozzi, Napoli c. 1472, Commons PD · D. Fontana, <em>Della trasportatione dell’obelisco vaticano</em>, 1590, Commons PD · Fabris 1776, Wellcome 43680i, PD · Parco Archeologico di Ercolano, foto storiche C2510 e C2537 (1931), open data"
+    },
+    "fauno": {
+      "label": "House of the Faun",
+      "sub": "VI.12.2 · rooms from Mau's plan",
+      "body": "<p>One of the largest houses in Pompeii: it fills a whole block, from Via della Fortuna to Vicolo di Mercurio, with two atria and two peristyles. The name comes from the bronze statuette of a dancing faun found in the impluvium.</p>\n    <p class=\"key\">The rooms you walk through come from <b>August Mau</b>'s plan (1899), with its scale bar: the house measures <b>35 × 91 m</b>. The OpenStreetMap outline gives <b>2,932 m²</b>, the drawing 3,146: 7% more, from two independent sources.</p>\n    <p class=\"warn\">⚠️ Its place in the scene is approximate: the town is drawn on a straightened grid, and Vicolo di Mercurio has been moved about ten metres so the block has its true depth. Walls are 4 m high as a hypothesis: the plan gives the ground floor, not the heights or the upper floor. There is no roof, so the rooms can be seen.</p>",
+      "src": "A. Mau, <em>Pompeii, its Life and Art</em>, fig. 137 (1899/1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · nome: it.wikipedia <b>[terziaria]</b>"
+    },
+    "vettii": {
+      "label": "House of the Vettii",
+      "sub": "VI.15.1 · rooms from Mau's plan",
+      "body": "<p>The house of two freedmen, Aulus Vettius Restitutus and Aulus Vettius Conviva, gathered around a large peristyle with a garden of fountains.</p>\n    <p class=\"key\">The rooms come from <b>August Mau</b>'s plan (1907), with its scale bar: <b>33 × 39 m</b>, 1,211 m². OpenStreetMap gives <b>1,216 m²</b>: the two sources agree within 0.4%. The entrance is on the east, as in the plan, whose arrow puts north at the top.</p>\n    <p class=\"warn\">⚠️ Its place in the scene is approximate, but keeps the true relation: north-east of the House of the Faun, across the crossroads. Walls 4 m high as a hypothesis, with no upper floor and no roof.</p>",
+      "src": "A. Mau, pianta della Casa dei Vettii (1907), pubblico dominio, via Wikimedia Commons · OpenStreetMap, © contributors, ODbL · proprietari: it.wikipedia <b>[terziaria]</b>"
+    },
+    "menandro": {
+      "label": "House of the Menander",
+      "sub": "I.10.4 · rooms from a plan on Commons",
+      "body": "<p>It is named after the portrait of the poet Menander painted in an exedra of the peristyle. A hoard of silverware was found in the house.</p>\n    <p class=\"key\">The rooms come from a plan drawn by Udimu on Wikimedia Commons, with its scale bar: <b>56 × 71 m</b> overall, about 1,930 m².</p>\n    <p class=\"warn\">⚠️ Here the sources <b>disagree</b>: the OpenStreetMap outline gives 1,586 m² and a different shape, and no rotation of the drawing, not even mirrored, matches it well. The orientation follows the entrance: I.10.4 opens onto Vicolo del Menandro, to the north, and the atrium is the wing of the drawing that faces it. Approximate position, walls 4 m high as a hypothesis, no roof.</p>",
+      "src": "Udimu, <em>Casa menandro plan</em>, Wikimedia Commons, CC BY-SA 4.0 · OpenStreetMap, © contributors, ODbL · nome e tesoro: it.wikipedia <b>[terziaria]</b>"
     }
   },
   "ercolano": {
