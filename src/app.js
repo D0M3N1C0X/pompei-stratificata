@@ -1804,11 +1804,17 @@ document.querySelectorAll('#clPercorsi button').forEach(b => b.addEventListener(
   try { localStorage.setItem(CHIAVE_CLASSE, JSON.stringify({ modo:cl.modo, percorso:cl.percorso })); } catch(e){}
   vaiTappa(0);
 }));
-// H nasconde e rimostra l'interfaccia, solo alla lavagna (in un campo di testo no)
+// H nasconde e rimostra l'interfaccia, per guardare solo la città (in un
+// campo di testo no). Era solo della lavagna; dal 6 novembre 2026 vale per
+// tutti, e c'è anche in «Altro».
 addEventListener('keydown', e => {
-  if(e.code !== 'KeyH' || cl.modo !== 'lavagna' || /INPUT|TEXTAREA/.test(document.activeElement?.tagName || '')) return;
+  if(e.code !== 'KeyH' || e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '')) return;
   nascondiUI(!document.body.classList.contains('ui-nascosta'));
 });
+clEl('btnNascondi').addEventListener('click', () => nascondiUI(true));
+// su schermo basso i testi lunghi sono accorciati: un tocco li apre
+clEl('epText').addEventListener('click', e => { if(!e.target.closest('a')) e.currentTarget.classList.toggle('aperto'); });
+clEl('eruTesto').addEventListener('click', e => { if(!e.target.closest('a')) e.currentTarget.classList.toggle('aperto'); });
 
 let filterText = '';
 function renderPlaceList(){
@@ -1936,16 +1942,17 @@ function groundY(){
   return quotaCarreggiata(player.x, player.z) ?? 0;
 }
 
+// Il passo usa la stessa regola di blockedAt: fuori dalle case quattro punti
+// a 60 cm, dentro le tre case con gli interni il cerchio contro i muri.
+// Fino al 6 novembre 2026 il passo usava soltanto i quattro punti anche
+// dentro le case, e le porte più strette di 1,2 m restavano chiuse: misurato
+// sul modello, circa 88 m² irraggiungibili nel Fauno, 33 nei Vettii, 245 nel
+// Menandro. La prova d'avvio ora lo controlla (giro-comandi.js).
 function tryMove(dx, dz){
   const nx = player.x + dx;
-  if(!blocked(nx, player.z)) player.x = nx;
+  if(!blockedAt(nx, player.z)) player.x = nx;
   const nz = player.z + dz;
-  if(!blocked(player.x, nz)) player.z = nz;
-}
-function blocked(x, z){
-  for(const [ox,oz] of [[RADIUS,0],[-RADIUS,0],[0,RADIUS],[0,-RADIUS]])
-    if(isSolid(x+ox, z+oz)) return true;
-  return false;
+  if(!blockedAt(player.x, nz)) player.z = nz;
 }
 
 addEventListener('keydown', e => {
@@ -2077,7 +2084,7 @@ function camminaVerso(ev){
   pianoSuolo.constant = -groundY();
   if(!raycaster.ray.intersectPlane(pianoSuolo, puntoSuolo)) return false;
   if(puntoSuolo.distanceTo(camera.position) > 160) return false;
-  const punti = trovaPercorso({ libero:(x, z) => !blocked(x, z), da:[player.x, player.z],
+  const punti = trovaPercorso({ libero:(x, z) => !blockedAt(x, z), da:[player.x, player.z],
                                 a:[puntoSuolo.x, puntoSuolo.z], passo:CELLA, margine:10 });
   if(!punti){ fermaPercorso(); return false; }
   const [fx, fz] = punti[punti.length - 1];
@@ -2796,6 +2803,12 @@ function autoQuality(dt){
 // dtFisso esiste solo per ?debug: fa avanzare la scena a passi uguali senza
 // aspettare i fotogrammi del browser (un Chrome senza schermo non ne disegna)
 let dtFisso = null;
+// e senzaDisegno, solo per ?debug, la fa avanzare senza disegnarla: la prova
+// dei comandi controlla stati e pulsanti, e sul processore (SwiftShader) un
+// fotogramma della città vista dall'alto costa secondi
+let senzaDisegno = false;
+let contoFotogramma = { chiamate:0, triangoli:0 };
+const pixelProva = new Uint8Array(4);
 function tick(){
   requestAnimationFrame(tick);
   passo();
@@ -2805,16 +2818,19 @@ function passo(){
   const t = clock.elapsedTime;
   if(ercOn){
     ERCOLANO.update(dt, t);
-    if(!POST.render(renderer, ERCOLANO.scene, ERCOLANO.camera))
+    if(!senzaDisegno && !POST.render(renderer, ERCOLANO.scene, ERCOLANO.camera))
       renderer.render(ERCOLANO.scene, ERCOLANO.camera);
     return;
   }
   if(compareOn){
     CONFRONTO.update(dt);
-    renderer.render(CONFRONTO.scene, CONFRONTO.camera);
+    if(!senzaDisegno) renderer.render(CONFRONTO.scene, CONFRONTO.camera);
     return;
   }
-  autoQuality(dt);
+  // a passi fissi (le foto per lo store, le prove) i fotogrammi non sono
+  // veri: la qualità automatica vi leggeva 30 al secondo e abbassava la
+  // risoluzione a metà scatto
+  if(dtFisso === null) autoQuality(dt);
   pollGamepad(dt);
 
   if(eru.on){
@@ -3047,7 +3063,7 @@ function passo(){
     }
   }
 
-  if(!POST.render(renderer, scene, camera)) renderer.render(scene, camera);
+  if(!senzaDisegno && !POST.render(renderer, scene, camera)) renderer.render(scene, camera);
 }
 
 addEventListener('resize', () => {
@@ -3196,6 +3212,15 @@ if(new URLSearchParams(location.search).has('debug')){
     camera,
     solido: (x, z) => isSolid(x, z),
     bloccato: (x, z) => blockedAt(x, z),
+    // un passo con la regola vera del movimento, da (x,z) di (dx,dz): dove
+    // si arriva. Il giocatore torna dov'era.
+    muovi(x, z, dx, dz){
+      const px = player.x, pz = player.z;
+      player.x = x; player.z = z; tryMove(dx, dz);
+      const r = [player.x, player.z]; player.x = px; player.z = pz;
+      return r;
+    },
+    caseInterne: () => MURI_INTERNI.map(c => ({ x0:c.x0, z0:c.z0, x1:c.x1, z1:c.z1 })),
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e
     // ritaglia), una fascia scura in alto e la didascalia in Spectral, il
@@ -3225,12 +3250,47 @@ if(new URLSearchParams(location.search).has('debug')){
       if(v === 'confronto') setCompare(true);
       if(v === 'ercolano') setErc(true);
     },
+    // per la prova delle risorse: n passi di scena da 1/30 s, senza leggere
+    // l'immagine; restituisce i millisecondi di ciascun passo, così chi
+    // misura può prendere la mediana e non la media di un passo storto
+    // con disegna = false la scena avanza senza essere disegnata
+    passi(n = 30, disegna = true){
+      dtFisso = 1/30; senzaDisegno = !disegna;
+      const ms = [];
+      // il conto di three.js si azzera a ogni render(): l'ultimo fotogramma
+      // si conta per intero (ombre, scena, rifinitura)
+      try {
+        for(let i = 0; i < n; i++){
+          const ultimo = i === n - 1 && disegna;
+          if(ultimo){ renderer.info.autoReset = false; renderer.info.reset(); }
+          const t0 = performance.now(); passo();
+          // leggere un pixel obbliga ad aspettare la fine del disegno: senza,
+          // si misurerebbe solo il tempo per mandarlo
+          if(disegna){ const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelProva); }
+          ms.push(performance.now() - t0);
+          if(ultimo){ const r = renderer.info.render; contoFotogramma = { chiamate:r.calls, triangoli:r.triangles }; }
+        }
+      }
+      finally { dtFisso = null; senzaDisegno = false; renderer.info.autoReset = true; }
+      return ms;
+    },
+    // quanto ha disegnato l'ultimo fotogramma di passi() e quanta memoria della scheda video
+    // tiene la pagina: chiamate, triangoli, geometrie, texture, programmi
+    info(){
+      const i = renderer.info;
+      return { chiamate:contoFotogramma.chiamate, triangoli:contoFotogramma.triangoli, geometrie:i.memory.geometries,
+               texture:i.memory.textures, programmi:(i.programs || []).length,
+               heap: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null };
+    },
+    giocatore: () => ({ x:player.x, z:player.z, cx:camera.position.x, cz:camera.position.z, volo:flyMode }),
     // avanza la scena di n passi da 1/30 s e restituisce l'immagine del canvas,
     // letta nello stesso giro in cui è stata disegnata
     foto(n = 60){
+      // la scena avanza n passi ma si disegna solo l'ultimo: la foto è la
+      // stessa, e sul processore costa un fotogramma invece di n
       dtFisso = 1/30;
-      for(let i = 0; i < n; i++) passo();
-      dtFisso = null;
+      try { for(let i = 0; i < n; i++){ senzaDisegno = i < n - 1; passo(); } }
+      finally { dtFisso = null; senzaDisegno = false; }
       return renderer.domElement.toDataURL('image/png');
     }
   };

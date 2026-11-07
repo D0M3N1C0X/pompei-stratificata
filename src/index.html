@@ -840,6 +840,90 @@ body.erc-on #crosshair{ display:block !important; }
 .cmpT em{ display:block; font-size:13.5px; color:#efe9da; font-style:normal; margin-top:4px; opacity:.92; }
 .plSep{ margin:14px 0 6px; padding:0 4px 12px; font-size:13px; letter-spacing:.10em;
   text-transform:uppercase; color:#8d8779; border-top:1px solid rgba(255,255,255,.10); padding-top:12px; }
+
+/* ------------------------------------------------- spazio alla scena
+   Misurato il 6 novembre 2026 con scripts/giro-layout.js: a 1280×720
+   l'eruzione copriva il 65% della scena e la barra di Ercolano andava su
+   due righe; a 1024 la bussola copriva la didascalia; sul telefono in
+   orizzontale la barra dell'eruzione usciva dall'alto dello schermo. */
+/* l'eruzione su schermo largo: comandi e linea del tempo a sinistra, il
+   testo con la sua fonte a destra, invece che tutto in colonna */
+@media (min-width:60rem){
+  #eruBar{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);column-gap:1.4rem;row-gap:.6rem;align-items:start}
+  #eruTop{grid-column:1;grid-row:1}
+  #eruLinea{grid-column:1;grid-row:2}
+  #eruTesto{grid-column:2;grid-row:1 / span 2;max-width:none;max-height:min(12.5rem,30vh);overflow:auto;scrollbar-width:thin;
+    padding-left:1.1rem;border-left:1px solid var(--line)}
+  #eruTitolo{font-size:1.12rem}
+  #eruCorpo{font-size:1rem;line-height:1.5}
+}
+/* Ercolano: i comandi in una riga sola, che scorre se non basta */
+@media (min-width:44.01rem){
+  #ercHud .ercBar{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:thin}
+  #ercHud .ercBar > *{flex:none}
+  .ercNote{max-width:min(720px,calc(100vw - 32px))}
+}
+/* l'orologio sta in alto a destra, sotto la barra: in basso urtava la
+   didascalia quando è lunga (in tedesco, a 1280×720); la didascalia, su
+   schermo largo, usa righe più lunghe e così meno righe */
+#clock{bottom:auto;top:5.6rem}
+@media (min-width:75rem){ #epText{max-width:82ch} }
+/* la bussola, su schermo stretto, sale sotto la barra in alto; fra 52 e
+   64rem la barra perde la riga della nota, che resta nella scheda d'ingresso */
+@media (max-width:64rem){
+  #compass{bottom:auto;top:5.8rem;right:auto;left:1.1rem;align-items:flex-start}
+  #brand .note{display:none}
+}
+/* schermo basso (il telefono in orizzontale, una finestra ridotta): i
+   testi lunghi si accorciano a due righe e un tocco li apre per intero,
+   fonte compresa */
+@media (max-height:30rem){
+  #brand,#compass{display:none}
+  #top{padding-top:.45rem;padding-bottom:.45rem}
+  body.eru-on #epochs,body.eru-on #touch{display:none!important}
+  #bottom{padding-top:.7rem;padding-bottom:.4rem}
+  #epochWrap{gap:.35rem}
+  .ep{padding:.26rem .45rem}
+  #epText{font-size:.92rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+  #epText.aperto{display:block}
+  #epText .cite{display:none}
+  #epText.aperto .cite{display:block}
+  #eruBar{padding:.45rem .65rem;gap:.35rem;max-height:calc(100vh - 4.2rem);overflow:auto}
+  #eruPlay,#eruBar .tourBtn{min-height:2.4rem;padding-top:.3rem;padding-bottom:.3rem}
+  #eruOrario{font-size:1.15rem}
+  #eruTesto{cursor:pointer}
+  #eruCorpo{font-size:.95rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  #eruFonte{display:none}
+  #eruTesto.aperto #eruCorpo{display:block}
+  #eruTesto.aperto #eruFonte{display:block}
+  #eruTop{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  #eruTop > *{flex:none}
+  #eruOra{order:0;width:auto;min-width:0}
+  #eruChiudi{order:1}
+  #eruPrev,#eruNext,#eruCitta{order:2}
+  #eruLinea{padding-top:1rem}
+  #eruRange{height:1.6rem}
+  #eruTesto{gap:.15rem}
+  #eruRiga{font-size:.85rem}
+  #eruTitolo{font-size:1.02rem}
+  /* come sul telefono in verticale: la nota generale sta nelle schede
+     «Quanto è scavato» e «Cardini e decumani», il nome nella testata */
+  #ercHud{bottom:8px;gap:5px}
+  body #ercHud .ercKeys,body #ercHud .ercTatto,.ercName{display:none!important}
+  .ercNote:not(.ercMomentoNota){display:none}
+  .ercBar{padding:6px 9px}
+}
+/* telefono in verticale: il testo dell'evento in tre righe, un tocco lo
+   apre con la fonte; il confronto lascia vedere le due colonne sopra */
+@media (max-width:44rem){
+  body.eru-on #touch{display:none!important}
+  #eruTesto{cursor:pointer}
+  #eruCorpo{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  #eruFonte{display:none}
+  #eruTesto.aperto #eruCorpo{display:block}
+  #eruTesto.aperto #eruFonte{display:block}
+  .cmpBox{max-height:44vh}
+}
 </style>
 
 <div id="app"></div>
@@ -886,6 +970,7 @@ body.erc-on #crosshair{ display:block !important; }
     <button class="tool" id="btnHelp" data-i18n="ui.tool.comandi">Comandi</button>
     <button class="tool" id="btnLavagna" data-i18n="ui.classe.lavagna">Lavagna</button>
     <button class="tool" id="btnStudente" data-i18n="ui.classe.studenteBreve">Studente</button>
+    <button class="tool" id="btnNascondi" data-i18n="ui.classe.nascondiUI" title="H">Nascondi l'interfaccia</button>
   </div>
 </div>
 
