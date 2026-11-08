@@ -1312,8 +1312,11 @@ function stepParticles(dt, t){
       lapilli.pos[i*3]   += 0.35 * dt;                       // il vento verso sud-est
       lapilli.pos[i*3+2] += 0.25 * dt;
       const dx = lapilli.pos[i*3] - cx, dz = lapilli.pos[i*3+2] - cz;
-      if(lapilli.pos[i*3+1] < suolo || lapilli.pos[i*3+1] < cy - 10 || dx*dx + dz*dz > 576){
-        const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * 24;
+      // né troppo lontano né troppo vicino: a meno di 8 m un lapillo, con la
+      // dimensione che cresce avvicinandosi, diventava una macchia bianca
+      const d2 = dx*dx + dz*dz;
+      if(lapilli.pos[i*3+1] < suolo || lapilli.pos[i*3+1] < cy - 10 || d2 > 576 || d2 < 4){
+        const a = Math.random() * Math.PI * 2, r = 2 + Math.sqrt(Math.random()) * 22;
         lapilli.pos[i*3]   = cx + Math.cos(a) * r;
         lapilli.pos[i*3+1] = cy + 4 + Math.random() * 10;
         lapilli.pos[i*3+2] = cz + Math.sin(a) * r;
