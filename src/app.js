@@ -580,11 +580,13 @@ for(const [k, c] of Object.entries(CASE_INTERNE)){
   for(const [a, b, e, f] of INTERNI_P.case[k].muri)
     block(c.x0 + (a+e)/8, 0, c.z0 + (b+f)/8, (e-a)/4, 1.0, (f-b)/4, PAL.wall2);
 }
-for(const [x,z,w,d,grand] of HOUSES){
+for(const casa of HOUSES){
+  const [x,z,w,d,grand] = casa;
   const cx = x+w/2, cz = z+d/2;
   const tone = [PAL.wall1,PAL.wall2,PAL.wall3][Math.floor(rnd()*3)];
   const t = 1.0;
   const floors = grand ? 2 : (rnd() > 0.32 ? 2 : 1);
+  casa[5] = floors;                      // per le finestre del piano di sopra
   for(let f=0; f<floors; f++){
     const y = f;
     block(cx, y, z+t/2,     w, 1, t, tone);
@@ -826,6 +828,85 @@ CROSSINGS.forEach(({ c:[cx,cz], vie }, i) => {
   }
 });
 
+/* ---------------------------------------------- facciate e cortili
+
+   Aggiunti il 6 novembre 2026: lo zoccolo dipinto lungo la strada, le
+   botteghe con il bancone ai lati della porta, le finestre piccole del
+   piano di sopra; nelle case grandi l'impluvio dell'atrio e il colonnato
+   del peristilio. Sono gli elementi tipici della casa pompeiana, ma qui
+   misure, frequenza e posizione sono tutte [ipotesi]: nessuna casa del
+   generatore è rilevata, e queste non lo diventano.
+
+   Non usano rnd(): una scelta presa dal generatore della città sposterebbe
+   tutto quello che viene dopo (cipressi, abitanti). La «sorte» viene da
+   un'impronta della posizione, sempre la stessa per la stessa casa. */
+const sorte = (x, z, k) => { const n = Math.sin(x*12.9898 + z*78.233 + k*37.719) * 43758.5453; return n - Math.floor(n); };
+const BOTTEGHE = [];                   // dove stanno, per le inquadrature di prova
+const ZOCCOLO = 0x7c4536, BANCONE = 0x8f8674, MARMO = PAL.column, VANO = 0x3a342c;
+// lato bi della casa (0 nord, 1 sud, 2 ovest, 3 est): lungo la facciata `a`
+// dall'inizio, `fuori` dal filo del muro verso la strada
+function sulLato(x, z, w, d, bi){
+  const orizz = bi < 2, n = (bi === 0 || bi === 2) ? -1 : 1;
+  const filo = bi === 0 ? z : bi === 1 ? z + d : bi === 2 ? x : x + w;
+  const inizio = orizz ? x : z, L = orizz ? w : d;
+  return { L, pezzo(a, y, h, lungo, prof, fuori, col, geo){
+    const c = inizio + a, o = filo + n * fuori;
+    if(orizz) block(c, y, o, lungo, h, prof, col, geo); else block(o, y, c, prof, h, lungo, col, geo);
+  }};
+}
+function facciata(x, z, w, d, bi, piani){
+  const f = sulLato(x, z, w, d, bi), L = f.L, mezzo = L / 2;
+  // botteghe: aperture di 2,4 × 2,8 m con il bancone alto 95 cm e il piano di
+  // marmo, ai lati della porta, se la facciata è lunga almeno 13 m [ipotesi]
+  const aperture = [[mezzo - 0.25, mezzo + 0.25]];        // la porta, già disegnata
+  if(L >= 3.2 && sorte(x, z, 1) < 0.6){
+    for(const k of L >= 5 ? [1, 2] : [1]) for(const verso of [-1, 1]){
+      const a = mezzo + verso * k * 0.85;
+      if(a - 0.3 < 0.25 || a + 0.3 > L - 0.25) continue;
+      aperture.push([a - 0.3, a + 0.3]);
+      f.pezzo(a, 0, 0.7, 0.6, 0.3, -0.1, VANO);
+      f.pezzo(a, 0.7, 0.05, 0.68, 0.33, -0.1, PAL.stone);   // architrave
+      f.pezzo(a, 0, 0.24, 0.5, 0.1, 0.03, BANCONE);
+      f.pezzo(a, 0.24, 0.02, 0.52, 0.12, 0.03, MARMO);
+      BOTTEGHE.push(bi < 2 ? [x + a, bi === 0 ? z : z + d, bi] : [bi === 2 ? x : x + w, z + a, bi]);
+    }
+  }
+  // zoccolo dipinto alto un metro, fra un'apertura e l'altra [ipotesi]
+  aperture.sort((p, q) => p[0] - q[0]);
+  let da = 0.02;
+  for(const [a0, a1] of [...aperture, [L - 0.02, L]]){
+    if(a0 - da > 0.05) f.pezzo((da + a0) / 2, 0, 0.25, a0 - da, 0.02, 0.01, ZOCCOLO);
+    da = Math.max(da, a1);
+  }
+  // finestre piccole del piano di sopra, 70 × 90 cm, una ogni 6 m [ipotesi]
+  if(piani >= 2){
+    const n = Math.max(1, Math.floor(L / 1.5));
+    for(let i = 0; i < n; i++){
+      const a = (i + 0.5) * L / n;
+      f.pezzo(a, 1.32, 0.22, 0.18, 0.3, -0.1, VANO);
+      f.pezzo(a, 1.3, 0.025, 0.24, 0.08, 0.03, PAL.stone);  // davanzale
+    }
+  }
+}
+// l'atrio con l'impluvio e il peristilio con il colonnato, nelle case
+// grandi divise dal muro di mezzo; colonne di 40 cm, alte 3 m, ogni 3 m [ipotesi]
+function cortili(x, z, w, d){
+  const t = 1.0, diviso = w > 7, muro = x + w * 0.45;
+  if(diviso){
+    const ax = (x + t + muro - 0.35) / 2, az = z + d / 2;
+    block(ax, 0, az, 0.6, 0.04, 0.45, PAL.stone);
+    block(ax, 0.04, az, 0.5, 0.004, 0.35, 0x5d7278);
+  }
+  const px0 = (diviso ? muro + 0.35 : x + t) + 0.4, px1 = x + w - t - 0.4;
+  const pz0 = z + t + 0.4, pz1 = z + d - t - 0.4;
+  if(px1 - px0 < 1 || pz1 - pz0 < 1) return;
+  const nx = Math.max(2, Math.round((px1 - px0) / 0.75)), nz = Math.max(2, Math.round((pz1 - pz0) / 0.75));
+  for(let i = 0; i <= nx; i++) for(let j = 0; j <= nz; j++){
+    if(i > 0 && i < nx && j > 0 && j < nz) continue;       // solo il giro
+    block(px0 + (px1 - px0) * i / nx, 0, pz0 + (pz1 - pz0) * j / nz, 0.1, 0.75, 0.1, PAL.column, CYL);
+  }
+}
+
 // porte sulla strada e alberi nei peristili
 function distToStreet(x,z){
   let best = 1e9;
@@ -838,7 +919,8 @@ function distToStreet(x,z){
   }
   return best;
 }
-for(const [x,z,w,d,grand] of HOUSES){
+for(const casa of HOUSES){
+  const [x,z,w,d,grand] = casa;
   const cx = x+w/2, cz = z+d/2;
   const sides = [
     { p:[cx, z+0.1],     s:[1.0,0.22] },
@@ -854,6 +936,8 @@ for(const [x,z,w,d,grand] of HOUSES){
     block(sd.p[0], 0, sd.p[1], sd.s[0]*0.5, 0.75, sd.s[1]*1.35, 0x3a342c);
     block(sd.p[0], 0.75, sd.p[1], sd.s[0]*0.62, 0.06, sd.s[1]*1.6, PAL.stone);
   }
+  if(bd < 6) facciata(x, z, w, d, bi, casa[5] || 1);
+  if(grand) cortili(x, z, w, d);
   if(grand && rnd() > 0.45){             // cipresso nel peristilio
     const tx = cx + (rnd()-0.5)*1.6, tz = cz + (rnd()-0.5)*1.6;
     block(tx, 0, tz, 0.34, 0.6, 0.34, 0x5a4a37);
@@ -3220,6 +3304,7 @@ if(new URLSearchParams(location.search).has('debug')){
       const r = [player.x, player.z]; player.x = px; player.z = pz;
       return r;
     },
+    botteghe: () => BOTTEGHE.slice(),
     caseInterne: () => MURI_INTERNI.map(c => ({ x0:c.x0, z0:c.z0, x1:c.x1, z1:c.z1 })),
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e

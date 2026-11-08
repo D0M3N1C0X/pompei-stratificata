@@ -357,5 +357,6 @@ export const TEXMAP = new Map([
   [0x4c4639,'ash'],[PAL.mountain,'ash'],[0x6d6a64,'ash'],[0x555350,'ash'],
   [PAL.veg,'veg'],[PAL.crude,'plaster'],[PAL.spoil,'tuff'],
   [0x3a342c,'vano'],[0x5a4a37,'tuffNoise'],[0x54633f,'veg'],[0x5f6e48,'veg'],
-  [0x8f8674,'tuff'],[0x5d7278,'stone'],[0x6d8286,'stone']
+  [0x8f8674,'tuff'],[0x5d7278,'stone'],[0x6d8286,'stone'],
+  [0x7c4536,'plaster']                     // lo zoccolo dipinto delle facciate
 ]);
