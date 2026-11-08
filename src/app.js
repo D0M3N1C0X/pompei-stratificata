@@ -796,6 +796,7 @@ for(let i=0;i<MAIN.length;i++) for(let j=i+1;j<MAIN.length;j++){
   if(c && inPoly(c[0], c[1], WALLS)) CROSSINGS.push({ c, vie:[MAIN[i], MAIN[j]] });
 }
 
+const FONTANE = [];                     // dove la gente si ferma (inhabitants.js)
 // Pietre di attraversamento e fontane pubbliche. Mau 1899: pietre oblunghe
 // con gli angoli arrotondati, «the surface being on a level with the
 // sidewalk», il numero secondo la larghezza della carreggiata (fino a
@@ -824,6 +825,7 @@ CROSSINGS.forEach(({ c:[cx,cz], vie }, i) => {
     // [ordine di grandezza, non rilevato]. Prima: 8 × 6 m e 2,5 m d'altezza.
     const a0 = vie[0], b0 = vie[1];
     const fx = cx + b0.w/2 + b0.mw*0.5 + 0.2, fz = cz + a0.w/2 + a0.mw*0.5 + 0.2;
+    FONTANE.push({ x:fx, z:fz, id:'fontana', raggio:1.2 });
     block(fx, 0, fz, 0.4, 0.2, 0.3, PAL.stone);
     block(fx, 0.2, fz, 0.34, 0.01, 0.24, 0x5d7278);
     block(fx, 0, fz-0.18, 0.11, 0.35, 0.11, PAL.civic);
@@ -1008,7 +1010,10 @@ const contornoMisura = (() => {
   return new LineLoop(g, new LineBasicMaterial({ color:PAL.accent }));
 })();
 piscina.add(contornoMisura);
-const inhabitants = createInhabitants({ streets:STREETS });
+// nel 79 la gente si ferma anche alle fontane e davanti ai banconi
+const inhabitants = createInhabitants({ streets:STREETS, siti:{
+  0: [...FONTANE, ...BOTTEGHE.map(([x, z]) => ({ x, z, id:'bottega', raggio:0.5 }))]
+}});
 scene.add(inhabitants.group);
 // le figure di Blender arrivano dopo il primo disegno: fino ad allora, e se
 // qualcosa va storto, restano i manichini

@@ -173,8 +173,26 @@ const ACTIVITY_PLACE_IDS = new Set([
   'casa-giardino','foro','anfiteatro','palestra','horrea','mosaici',
   'quadriportico','basilica','canale','porta-ercolano','giulia-felice'
 ]);
-function activitySites(epoch, routes){
+// extra: altri punti che attirano gente in quella fase (le fontane e i
+// banconi delle botteghe, dal 7 novembre 2026), { x, z, id, raggio }; per
+// loro conta anche il lato della strada, così chi compra sta davanti al
+// bancone e non sul marciapiede di fronte
+function activitySites(epoch, routes, extra=[]){
   if(!routes.length) return [];
+  const vicino = (p, max) => {
+    let best=null;
+    for(const route of routes){
+      const t=Math.max(0,Math.min(1,((p.x-route.a[0])*route.dx+(p.z-route.a[1])*route.dz)/(route.length*route.length)));
+      const x=route.a[0]+route.dx*t, z=route.a[1]+route.dz*t;
+      const distanceSquared=(p.x-x)**2+(p.z-z)**2;
+      if(!best || distanceSquared<best.distanceSquared){
+        const lato=Math.sign((p.x-x)*(-route.dz)+(p.z-z)*route.dx) || 1;
+        best={placeId:p.id,route,distance:t*route.length,distanceSquared,raggio:p.raggio,lato};
+      }
+    }
+    return best && best.distanceSquared<=max*max ? best : null;
+  };
+  const altri = extra.map(p => vicino(p, 4)).filter(Boolean);
   return PLACES.filter(p => ACTIVITY_PLACE_IDS.has(p.id) && p.from<=epoch && p.to>=epoch)
     .map(place => {
       let best=null;
@@ -188,14 +206,17 @@ function activitySites(epoch, routes){
       }
       return best;
     })
-    .filter(site => site && site.distanceSquared<=18*18);
+    .filter(site => site && site.distanceSquared<=18*18)
+    .concat(altri);
 }
 
 function makeAgents(count, species, routes, random, flow, sites=[]){
   if(!routes.length || count<=0) return [];
   const weights=routes.map(r=>r.length), total=weights.reduce((a,b)=>a+b,0);
   return Array.from({length:count},(_,index)=>{
-    const siteChance=flow==='out' || species==='birds' ? 0 : species==='dogs' ? 0.16 : 0.12;
+    // con le botteghe e le fontane (nel 79) i punti sono centinaia: una
+    // persona su tre si ferma a uno di loro [regia]
+    const siteChance=flow==='out' || species==='birds' ? 0 : species==='dogs' ? 0.16 : sites.length > 40 ? 0.34 : 0.12;
     const site=sites.length && random()<siteChance ? sites[Math.floor(random()*sites.length)] : null;
     let route=site?.route;
     if(!route){
@@ -206,14 +227,15 @@ function makeAgents(count, species, routes, random, flow, sites=[]){
         if(pick<=0){ route=routes[i]; break; }
       }
     }
-    const wanderRadius=site ? 3.5+random()*5.5 : 0;
+    const wanderRadius=site ? (site.raggio ? site.raggio*(0.6+random()*0.8) : 3.5+random()*5.5) : 0;
     const lowDistance=site ? Math.max(0,site.distance-wanderRadius) : 0;
     const highDistance=site ? Math.min(route.length,site.distance+wanderRadius) : route.length;
     const initialDistance=site
       ? Math.max(lowDistance,Math.min(highDistance,site.distance+(random()-0.5)*wanderRadius))
       : random()*route.length*(flow==='out'?1:2);
     // metri al secondo: chi passeggia va a 0,9–1,4 m/s
-    const speedMetres=species==='people' ? 0.86+random()*0.52 :
+    // nell'eruzione chi fugge va più svelto, 1,4–2,4 m/s [regia]
+    const speedMetres=species==='people' ? (flow==='out' ? 1.4+random()*1.0 : 0.86+random()*0.52) :
       species==='dogs' ? 0.65+random()*0.90 : 2.2+random()*1.8;
     const speed=speedMetres*METRO;
     const stride=species==='people' ? 0.72 : species==='dogs' ? 0.50 : 0.46;
@@ -236,7 +258,7 @@ function makeAgents(count, species, routes, random, flow, sites=[]){
       // carreggiata, al livello del basolato
       inStrada:species!=='people',
       laneOffset:species==='people'
-        ? (random()<0.5 ? -1 : 1)*(route.width/2 + route.marciapiede*(0.3+random()*0.4))
+        ? (site?.lato ?? (random()<0.5 ? -1 : 1))*(route.width/2 + route.marciapiede*(site?.lato ? 0.55+random()*0.35 : 0.3+random()*0.4))
         : (random()-0.5)*route.width*0.7,
       pauseChance, idle, pauseDuration, walkDuration,
       stateRemaining:idle && site ? pauseDuration : random()*(idle ? pauseDuration : walkDuration),
@@ -339,7 +361,7 @@ function updateMesh(mesh, agents, count, delta, flow, suolo=0){
   if(walkBlendDirty) walkBlends.needsUpdate=true;
 }
 
-export function createInhabitants({ streets=[], populations=POPULATIONS, places=true }={}){
+export function createInhabitants({ streets=[], populations=POPULATIONS, places=true, siti={} }={}){
   const group = new Group();
   group.name='popolazioni-per-epoca';
   const routes=routeTable(streets), entries=[];
@@ -349,7 +371,7 @@ export function createInhabitants({ streets=[], populations=POPULATIONS, places=
 
   for(const profile of populations){
     const random=seeded(0x51f15e + profile.epoch*997);
-    const sites=places ? activitySites(profile.epoch,routes) : [];
+    const sites=places ? activitySites(profile.epoch,routes,siti[profile.epoch]||[]) : [];
     const people=makeAgents(profile.people,'people',routes,random,profile.flow,sites);
     const dogs=makeAgents(profile.dogs,'dogs',routes,random,profile.flow,sites);
     const birds=makeAgents(profile.pigeons,'birds',routes,random,profile.flow,sites);
