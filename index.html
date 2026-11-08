@@ -4999,6 +4999,10 @@ body.erc-on #crosshair{ display:block !important; }
   #ercHud .ercBar > *{flex:none}
   .ercNote{max-width:min(720px,calc(100vw - 32px))}
 }
+/* l'uscita sta subito dopo il nome: in fondo alla riga finiva tagliata
+   (a 1280×720, «Torna a Pompei») */
+.ercName{order:-2}
+#ercExit{order:-1}
 /* l'orologio sta in alto a destra, sotto la barra: in basso urtava la
    didascalia quando è lunga (in tedesco, a 1280×720); la didascalia, su
    schermo largo, usa righe più lunghe e così meno righe */

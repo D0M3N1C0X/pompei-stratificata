@@ -68,6 +68,19 @@
       const ox = Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0), oy = Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0);
       if(ox > 4 && oy > 4) guai.push(`${misura} ${stato}: #${a.id} e #${b.id} si coprono (${Math.round(ox)}×${Math.round(oy)} px)`);
     }
+    // i pulsanti per uscire da una modalità devono vedersi per intero
+    for(const id of ['ercExit', 'eruChiudi', 'cmpClose', 'pClose', 'tourClose']){
+      const el = $(id);
+      if(!visibile(el)) continue;
+      const r = el.getBoundingClientRect();
+      let cont = el.parentElement, taglio = null;
+      while(cont && cont !== document.body){
+        const c = cont.getBoundingClientRect(), o = getComputedStyle(cont);
+        if(/auto|scroll|hidden/.test(o.overflowX) && (r.right > c.right + 1 || r.left < c.left - 1)) { taglio = cont.id || cont.className; break; }
+        cont = cont.parentElement;
+      }
+      if(r.right > W + 1 || r.left < -1 || taglio) guai.push(`${misura} ${stato}: #${id} non si vede per intero${taglio ? ' (tagliato da ' + taglio + ')' : ''}`);
+    }
     // la barra delle fasi: tutte dentro, o si scorre
     const ep = $('epochs');
     if(visibile(ep)){

@@ -21,8 +21,9 @@
       scripts/budget.json, che si aggiorna a mano quando la scena si
       arricchisce apposta (con --budget li riscrive questa prova);
    5. il giro di verifica nelle altre cinque lingue;
-   6. l'impaginazione a sei misure di finestra, in tedesco, la lingua con
-      le parole più lunghe (scripts/giro-layout.js);
+   6. l'impaginazione a sei misure di finestra, in italiano e in tedesco,
+      la lingua con le parole più lunghe (scripts/giro-layout.js): la prima
+      volta un pulsante tagliato si vedeva in una sola delle due;
    7. le schermate: le inquadrature di store/scatti.json più Ercolano e il
       confronto, in schermate/ con un foglio che le mostra tutte
       (schermate/index.html). Fallisce se una è vuota o quasi uniforme;
@@ -183,13 +184,13 @@ try {
     }
 
     // 6. l'impaginazione
-    for(const [w, h, tocco] of [[1920, 1080], [1366, 768], [1280, 720], [1024, 768], [844, 390, true], [390, 844, true]]){
-      fase = `impaginazione ${w}×${h}`;
+    for(const lingua of ['it', 'de']) for(const [w, h, tocco] of [[1920, 1080], [1366, 768], [1280, 720], [1024, 768], [844, 390, true], [390, 844, true]]){
+      fase = `impaginazione ${w}×${h} in ${lingua}`;
       await misura(w, h, tocco);
-      await apri('?debug&lang=de');
+      await apri('?debug&lang=' + lingua);
       const l = await script('giro-layout.js');
-      guai.push(...l.guai);
-      console.log(`${l.guai.length ? '✗' : '✓'} impaginazione ${l.misura}: interfaccia sulla scena ` + l.stati.map(s => `${s.stato} ${s.coperto}%`).join(', '));
+      guai.push(...l.guai.map(g => `[${lingua}] ${g}`));
+      console.log(`${l.guai.length ? '✗' : '✓'} impaginazione ${l.misura} in ${lingua}: interfaccia sulla scena ` + l.stati.map(s => `${s.stato} ${s.coperto}%`).join(', '));
     }
 
     // 7. le schermate
