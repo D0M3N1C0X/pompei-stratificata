@@ -49,7 +49,7 @@ jobs:
       # novembre 2026 fa anche i comandi, le risorse, le sei lingue,
       # l'impaginazione a sei misure e le schermate (scripts/prova-avvio.mjs).
       - name: Prova d'avvio in Chrome
-        timeout-minutes: 30
+        timeout-minutes: 45
         run: |
           python3 -m http.server 8000 >/dev/null 2>&1 &
           sleep 2

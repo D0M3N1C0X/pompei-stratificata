@@ -63,7 +63,7 @@ const chrome = spawn(CHROME, [
   '--window-size=1280,720', 'about:blank'
 ], { stdio:'ignore' });
 const fine = codice => { try { chrome.kill('SIGKILL'); } catch(e){} process.exit(codice); };
-const LIMITE = RAPIDA ? 8 : 25;
+const LIMITE = RAPIDA ? 8 : 40;
 setTimeout(() => { console.error(`✗ tempo scaduto (${LIMITE} minuti) durante: ${fase}`); fine(1); }, LIMITE * 60000);
 
 try {
@@ -84,8 +84,14 @@ try {
       errori.push(fase + ': ' + (d.exception && d.exception.description || d.text || 'eccezione').split('\n')[0]);
     }
   };
-  const cmd = (method, params = {}) => new Promise(ok => {
-    const n = ++id; attese.set(n, ok); ws.send(JSON.stringify({ id:n, method, params }));
+  // ogni comando ha un tempo massimo: il 7 novembre 2026 la scheda ha smesso
+  // di rispondere a metà dell'impaginazione e la prova è rimasta ad
+  // aspettare fino al limite dei 25 minuti, senza dire dove
+  const cmd = (method, params = {}, secondi = 240) => new Promise((ok, ko) => {
+    const n = ++id;
+    const timer = setTimeout(() => { attese.delete(n); ko(new Error(`Chrome non risponde a ${method} da ${secondi} s (scheda in crash?)`)); }, secondi * 1000);
+    attese.set(n, m => { clearTimeout(timer); ok(m); });
+    ws.send(JSON.stringify({ id:n, method, params }));
   });
   const valuta = async (expression, awaitPromise = false) => {
     const r = await cmd('Runtime.evaluate', { expression, awaitPromise, returnByValue:true });
@@ -96,6 +102,9 @@ try {
 
   // apre un indirizzo e aspetta la fine dell'avvio; fallisce sul pannello del guasto
   async function apri(query){
+    // prima una pagina vuota: libera la memoria grafica della scena precedente
+    await cmd('Page.navigate', { url:'about:blank' });
+    await pausa(300);
     await cmd('Page.navigate', { url: base + query });
     let stato = null;
     for(let i = 0; i < 120; i++){
@@ -184,7 +193,11 @@ try {
     }
 
     // 6. l'impaginazione
-    for(const lingua of ['it', 'de']) for(const [w, h, tocco] of [[1920, 1080], [1366, 768], [1280, 720], [1024, 768], [844, 390, true], [390, 844, true]]){
+    // prima gli schermi da computer in tutte e due le lingue, poi i telefoni:
+    // spenta l'emulazione del tocco, Chrome continua a dichiarare un
+    // puntatore «coarse» e la pagina accende i comandi touch (visto il
+    // 7 novembre 2026: «Corri» sul 1920×1080 tedesco dopo il telefono italiano)
+    for(const [w, h, tocco] of [[1920, 1080], [1366, 768], [1280, 720], [1024, 768], [844, 390, true], [390, 844, true]]) for(const lingua of ['it', 'de']){
       fase = `impaginazione ${w}×${h} in ${lingua}`;
       await misura(w, h, tocco);
       await apri('?debug&lang=' + lingua);
