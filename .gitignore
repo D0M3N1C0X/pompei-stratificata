@@ -11,3 +11,6 @@ strumenti/piante/fonti/
 
 # configurazione locale dell'anteprima
 .claude/
+
+# le schermate della prova d'avvio: si rifanno con node scripts/prova-avvio.mjs
+schermate/

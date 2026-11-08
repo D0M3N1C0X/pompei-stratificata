@@ -12,6 +12,7 @@ import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { scarto } from './cifre.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = f => readFileSync(join(root, f), 'utf8');
@@ -117,6 +118,50 @@ if(IT_JSON) for(const cod of LINGUE_PRONTE){
   const mancanti = attese.filter(k => !presenti.has(k));
   esigi(mancanti.length === 0, `${f} ha tutte le ${attese.length} chiavi`,
         `mancano ${mancanti.length}: ${mancanti.slice(0,6).join(', ')}${mancanti.length>6 ? '…' : ''}`);
+}
+
+// ── le stesse cifre in ogni lingua. Una traduzione cambia le parole, non
+//    i numeri: chiave per chiave, ogni lingua deve portare le stesse cifre
+//    dell'italiano (scripts/cifre.js dice come si confrontano secoli,
+//    date e separatori). Al 6 novembre 2026 nessuna chiave differisce.
+function piatto(o, pre = '', out = {}){
+  for(const [k, v] of Object.entries(o)){
+    if(v && typeof v === 'object') piatto(v, pre + k + '.', out); else out[pre + k] = String(v);
+  }
+  return out;
+}
+if(IT_JSON){
+  const it = piatto(IT_JSON);
+  for(const cod of LINGUE_PRONTE){
+    let tr; try { tr = piatto(JSON.parse(read(`i18n/${cod}.json`))); } catch(e){ continue; }
+    const diverse = Object.keys(tr).filter(k => k in it && scarto(it[k], tr[k]).length)
+      .map(k => `${k} (${scarto(it[k], tr[k]).join(' ')})`);
+    esigi(!diverse.length, `i18n/${cod}.json porta le stesse cifre dell'italiano`,
+          `${diverse.length} chiavi diverse: ${diverse.slice(0, 4).join('; ')}`);
+  }
+}
+
+// ── e il dossier inglese le stesse cifre dell'italiano, blocco per blocco
+//    (titoli, paragrafi, voci, righe di tabella). Le differenze ammesse sono
+//    elencate qui sotto, con il perché; ogni altra ferma il controllo.
+if(existsSync(join(root, 'dossier/en/index.html'))){
+  const AMMESSE = [
+    ['25 2026', 'la riga «English translation of the Italian original, 25 September 2026» esiste solo in inglese'],
+    ['1980', '«dagli anni Ottanta» a parole in italiano, «since the 1980s» in inglese'],
+    ['1 23 2026 3 24 2026', 'le versioni del dossier (v1 23/08/2026 · v3 24/08/2026) stanno solo nel piede italiano']
+  ];
+  const blocchi = f => read(f).replace(/^[\s\S]*?<body/, '')
+    .replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '')
+    .split(/<(?:h2|h3|p|li|tr|blockquote)[\s>]/);
+  const A = blocchi('dossier/index.html'), B = blocchi('dossier/en/index.html');
+  const guai = [];
+  for(let i = 0; i < Math.min(A.length, B.length); i++){
+    const d = scarto(A[i], B[i]).join(' ');
+    if(d && !AMMESSE.some(([x]) => x === d))
+      guai.push(`«${A[i].replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().slice(0, 60)}…» (${d})`);
+  }
+  esigi(!guai.length, 'il dossier inglese porta le stesse cifre di quello italiano',
+        `${guai.length} blocchi diversi: ${guai.slice(0, 3).join('; ')}`);
 }
 
 // ── il nome della cache porta l'impronta di ciò che è pubblicato: se non

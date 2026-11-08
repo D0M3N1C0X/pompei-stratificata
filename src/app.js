@@ -6,6 +6,8 @@ import {
   Clock,
   Color,
   ConeGeometry,
+  IcosahedronGeometry,
+  LineSegments,
   CylinderGeometry,
   SphereGeometry,
   DirectionalLight,
@@ -580,11 +582,13 @@ for(const [k, c] of Object.entries(CASE_INTERNE)){
   for(const [a, b, e, f] of INTERNI_P.case[k].muri)
     block(c.x0 + (a+e)/8, 0, c.z0 + (b+f)/8, (e-a)/4, 1.0, (f-b)/4, PAL.wall2);
 }
-for(const [x,z,w,d,grand] of HOUSES){
+for(const casa of HOUSES){
+  const [x,z,w,d,grand] = casa;
   const cx = x+w/2, cz = z+d/2;
   const tone = [PAL.wall1,PAL.wall2,PAL.wall3][Math.floor(rnd()*3)];
   const t = 1.0;
   const floors = grand ? 2 : (rnd() > 0.32 ? 2 : 1);
+  casa[5] = floors;                      // per le finestre del piano di sopra
   for(let f=0; f<floors; f++){
     const y = f;
     block(cx, y, z+t/2,     w, 1, t, tone);
@@ -792,6 +796,7 @@ for(let i=0;i<MAIN.length;i++) for(let j=i+1;j<MAIN.length;j++){
   if(c && inPoly(c[0], c[1], WALLS)) CROSSINGS.push({ c, vie:[MAIN[i], MAIN[j]] });
 }
 
+const FONTANE = [];                     // dove la gente si ferma (inhabitants.js)
 // Pietre di attraversamento e fontane pubbliche. Mau 1899: pietre oblunghe
 // con gli angoli arrotondati, «the surface being on a level with the
 // sidewalk», il numero secondo la larghezza della carreggiata (fino a
@@ -820,11 +825,91 @@ CROSSINGS.forEach(({ c:[cx,cz], vie }, i) => {
     // [ordine di grandezza, non rilevato]. Prima: 8 × 6 m e 2,5 m d'altezza.
     const a0 = vie[0], b0 = vie[1];
     const fx = cx + b0.w/2 + b0.mw*0.5 + 0.2, fz = cz + a0.w/2 + a0.mw*0.5 + 0.2;
+    FONTANE.push({ x:fx, z:fz, id:'fontana', raggio:1.2 });
     block(fx, 0, fz, 0.4, 0.2, 0.3, PAL.stone);
     block(fx, 0.2, fz, 0.34, 0.01, 0.24, 0x5d7278);
     block(fx, 0, fz-0.18, 0.11, 0.35, 0.11, PAL.civic);
   }
 });
+
+/* ---------------------------------------------- facciate e cortili
+
+   Aggiunti il 6 novembre 2026: lo zoccolo dipinto lungo la strada, le
+   botteghe con il bancone ai lati della porta, le finestre piccole del
+   piano di sopra; nelle case grandi l'impluvio dell'atrio e il colonnato
+   del peristilio. Sono gli elementi tipici della casa pompeiana, ma qui
+   misure, frequenza e posizione sono tutte [ipotesi]: nessuna casa del
+   generatore è rilevata, e queste non lo diventano.
+
+   Non usano rnd(): una scelta presa dal generatore della città sposterebbe
+   tutto quello che viene dopo (cipressi, abitanti). La «sorte» viene da
+   un'impronta della posizione, sempre la stessa per la stessa casa. */
+const sorte = (x, z, k) => { const n = Math.sin(x*12.9898 + z*78.233 + k*37.719) * 43758.5453; return n - Math.floor(n); };
+const BOTTEGHE = [];                   // dove stanno, per le inquadrature di prova
+const ZOCCOLO = 0x7c4536, BANCONE = 0x8f8674, MARMO = PAL.column, VANO = 0x3a342c;
+// lato bi della casa (0 nord, 1 sud, 2 ovest, 3 est): lungo la facciata `a`
+// dall'inizio, `fuori` dal filo del muro verso la strada
+function sulLato(x, z, w, d, bi){
+  const orizz = bi < 2, n = (bi === 0 || bi === 2) ? -1 : 1;
+  const filo = bi === 0 ? z : bi === 1 ? z + d : bi === 2 ? x : x + w;
+  const inizio = orizz ? x : z, L = orizz ? w : d;
+  return { L, pezzo(a, y, h, lungo, prof, fuori, col, geo){
+    const c = inizio + a, o = filo + n * fuori;
+    if(orizz) block(c, y, o, lungo, h, prof, col, geo); else block(o, y, c, prof, h, lungo, col, geo);
+  }};
+}
+function facciata(x, z, w, d, bi, piani){
+  const f = sulLato(x, z, w, d, bi), L = f.L, mezzo = L / 2;
+  // botteghe: aperture di 2,4 × 2,8 m con il bancone alto 95 cm e il piano di
+  // marmo, ai lati della porta, se la facciata è lunga almeno 13 m [ipotesi]
+  const aperture = [[mezzo - 0.25, mezzo + 0.25]];        // la porta, già disegnata
+  if(L >= 3.2 && sorte(x, z, 1) < 0.6){
+    for(const k of L >= 5 ? [1, 2] : [1]) for(const verso of [-1, 1]){
+      const a = mezzo + verso * k * 0.85;
+      if(a - 0.3 < 0.25 || a + 0.3 > L - 0.25) continue;
+      aperture.push([a - 0.3, a + 0.3]);
+      f.pezzo(a, 0, 0.7, 0.6, 0.3, -0.1, VANO);
+      f.pezzo(a, 0.7, 0.05, 0.68, 0.33, -0.1, PAL.stone);   // architrave
+      f.pezzo(a, 0, 0.24, 0.5, 0.1, 0.03, BANCONE);
+      f.pezzo(a, 0.24, 0.02, 0.52, 0.12, 0.03, MARMO);
+      BOTTEGHE.push(bi < 2 ? [x + a, bi === 0 ? z : z + d, bi] : [bi === 2 ? x : x + w, z + a, bi]);
+    }
+  }
+  // zoccolo dipinto alto un metro, fra un'apertura e l'altra [ipotesi]
+  aperture.sort((p, q) => p[0] - q[0]);
+  let da = 0.02;
+  for(const [a0, a1] of [...aperture, [L - 0.02, L]]){
+    if(a0 - da > 0.05) f.pezzo((da + a0) / 2, 0, 0.25, a0 - da, 0.02, 0.01, ZOCCOLO);
+    da = Math.max(da, a1);
+  }
+  // finestre piccole del piano di sopra, 70 × 90 cm, una ogni 6 m [ipotesi]
+  if(piani >= 2){
+    const n = Math.max(1, Math.floor(L / 1.5));
+    for(let i = 0; i < n; i++){
+      const a = (i + 0.5) * L / n;
+      f.pezzo(a, 1.32, 0.22, 0.18, 0.3, -0.1, VANO);
+      f.pezzo(a, 1.3, 0.025, 0.24, 0.08, 0.03, PAL.stone);  // davanzale
+    }
+  }
+}
+// l'atrio con l'impluvio e il peristilio con il colonnato, nelle case
+// grandi divise dal muro di mezzo; colonne di 40 cm, alte 3 m, ogni 3 m [ipotesi]
+function cortili(x, z, w, d){
+  const t = 1.0, diviso = w > 7, muro = x + w * 0.45;
+  if(diviso){
+    const ax = (x + t + muro - 0.35) / 2, az = z + d / 2;
+    block(ax, 0, az, 0.6, 0.04, 0.45, PAL.stone);
+    block(ax, 0.04, az, 0.5, 0.004, 0.35, 0x5d7278);
+  }
+  const px0 = (diviso ? muro + 0.35 : x + t) + 0.4, px1 = x + w - t - 0.4;
+  const pz0 = z + t + 0.4, pz1 = z + d - t - 0.4;
+  if(px1 - px0 < 1 || pz1 - pz0 < 1) return;
+  const nx = Math.max(2, Math.round((px1 - px0) / 0.75)), nz = Math.max(2, Math.round((pz1 - pz0) / 0.75));
+  for(let i = 0; i <= nx; i++) for(let j = 0; j <= nz; j++){
+    if(i > 0 && i < nx && j > 0 && j < nz) continue;       // solo il giro
+    block(px0 + (px1 - px0) * i / nx, 0, pz0 + (pz1 - pz0) * j / nz, 0.1, 0.75, 0.1, PAL.column, CYL);
+  }
+}
 
 // porte sulla strada e alberi nei peristili
 function distToStreet(x,z){
@@ -838,7 +923,8 @@ function distToStreet(x,z){
   }
   return best;
 }
-for(const [x,z,w,d,grand] of HOUSES){
+for(const casa of HOUSES){
+  const [x,z,w,d,grand] = casa;
   const cx = x+w/2, cz = z+d/2;
   const sides = [
     { p:[cx, z+0.1],     s:[1.0,0.22] },
@@ -854,6 +940,8 @@ for(const [x,z,w,d,grand] of HOUSES){
     block(sd.p[0], 0, sd.p[1], sd.s[0]*0.5, 0.75, sd.s[1]*1.35, 0x3a342c);
     block(sd.p[0], 0.75, sd.p[1], sd.s[0]*0.62, 0.06, sd.s[1]*1.6, PAL.stone);
   }
+  if(bd < 6) facciata(x, z, w, d, bi, casa[5] || 1);
+  if(grand) cortili(x, z, w, d);
   if(grand && rnd() > 0.45){             // cipresso nel peristilio
     const tx = cx + (rnd()-0.5)*1.6, tz = cz + (rnd()-0.5)*1.6;
     block(tx, 0, tz, 0.34, 0.6, 0.34, 0x5a4a37);
@@ -922,7 +1010,10 @@ const contornoMisura = (() => {
   return new LineLoop(g, new LineBasicMaterial({ color:PAL.accent }));
 })();
 piscina.add(contornoMisura);
-const inhabitants = createInhabitants({ streets:STREETS });
+// nel 79 la gente si ferma anche alle fontane e davanti ai banconi
+const inhabitants = createInhabitants({ streets:STREETS, siti:{
+  0: [...FONTANE, ...BOTTEGHE.map(([x, z]) => ({ x, z, id:'bottega', raggio:0.5 }))]
+}});
 scene.add(inhabitants.group);
 // le figure di Blender arrivano dopo il primo disegno: fino ad allora, e se
 // qualcosa va storto, restano i manichini
@@ -1150,6 +1241,20 @@ for(let i=0;i<dust.count;i++){
   dustSpeed[i]    = 0.15 + Math.random()*0.5;
 }
 
+// lapilli attorno a chi guarda (7 novembre 2026): la cenere grande, sparsa
+// su tutta la città, vicino alla camera quasi non si vedeva. Cadono a 2–4,5
+// unità al secondo, cioè 8–18 m/s, con un filo di vento [disegno].
+const lapilli = makePoints(2600, 0.06, 0xe8e3d4, 0.9);
+scene.add(lapilli.points);
+lapilli.points.visible = false;
+const lapilliVel = new Float32Array(lapilli.count);
+for(let i = 0; i < lapilli.count; i++){
+  lapilli.pos[i*3]   = (Math.random() - 0.5) * 48;
+  lapilli.pos[i*3+1] = Math.random() * 16;
+  lapilli.pos[i*3+2] = (Math.random() - 0.5) * 48;
+  lapilliVel[i] = 2 + Math.random() * 2.5;
+}
+
 // fumo dai forni della rioccupazione
 const SMOKE_SPOTS = [[-104,44],[-95,48],[-83,47],[-124,42],[-70,54]];
 const smoke = makePoints(600, 0.55, 0x8d8a80, 0.28);
@@ -1181,6 +1286,8 @@ function setParticleDensity(k){
   dust.live  = Math.floor(dust.count * k);
   smoke.live = Math.floor(smoke.count * k);
   birds.children.forEach((b,i) => { b.userData.hidden = i >= Math.ceil(12*k); });
+  lapilli.live = Math.floor(lapilli.count * Math.max(0.35, k));
+  lapilli.points.geometry.setDrawRange(0, lapilli.live);
   dust.points.geometry.setDrawRange(0, dust.live);
   smoke.points.geometry.setDrawRange(0, smoke.live);
 }
@@ -1201,6 +1308,26 @@ function stepParticles(dt, t){
       }
     }
     dust.points.geometry.attributes.position.needsUpdate = true;
+  }
+  if(lapilli.points.visible && lapilli.live > 0){
+    const cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+    const suolo = depositCurrent;
+    for(let i = 0; i < lapilli.live; i++){
+      lapilli.pos[i*3+1] -= lapilliVel[i] * dt;
+      lapilli.pos[i*3]   += 0.35 * dt;                       // il vento verso sud-est
+      lapilli.pos[i*3+2] += 0.25 * dt;
+      const dx = lapilli.pos[i*3] - cx, dz = lapilli.pos[i*3+2] - cz;
+      // né troppo lontano né troppo vicino: a meno di 8 m un lapillo, con la
+      // dimensione che cresce avvicinandosi, diventava una macchia bianca
+      const d2 = dx*dx + dz*dz;
+      if(lapilli.pos[i*3+1] < suolo || lapilli.pos[i*3+1] < cy - 10 || d2 > 576 || d2 < 4){
+        const a = Math.random() * Math.PI * 2, r = 2 + Math.sqrt(Math.random()) * 22;
+        lapilli.pos[i*3]   = cx + Math.cos(a) * r;
+        lapilli.pos[i*3+1] = cy + 4 + Math.random() * 10;
+        lapilli.pos[i*3+2] = cz + Math.sin(a) * r;
+      }
+    }
+    lapilli.points.geometry.attributes.position.needsUpdate = true;
   }
   if(smoke.points.visible && smoke.live > 0){
     for(let i=0;i<smoke.live;i++){
@@ -1439,6 +1566,7 @@ function applyEpoch(i, silent){
   spoilGroup.visible = !!e.spoil;
   depositGroup.visible = e.deposit > 0.01;
   ashGroup.visible = !!e.ash;
+  if(!eru.on) lapilli.points.visible = false;
   smoke.points.visible = !!e.shanty;
   birds.visible = (i === 0 || i === 4 || i === 7);
   inhabitants.setEpoch(i);
@@ -1490,6 +1618,73 @@ const M_COLONNA = new MeshLambertMaterial({ color:0xe6e1d6, emissive:0x2a2621, t
   sbuffo.position.set(0.32, 0.8, 0.2); sbuffo.scale.set(0.7, 0.24, 0.6);   // la chioma piega col vento
   colonna.add(tronco, chioma, sbuffo);
   colonna.position.set(-66, 82, -252);       // il cratere (vedi costruisciVesuvio)
+}
+/* La colonna a cavolfiore e i lampi (7 novembre 2026). Gli sbuffi attorno al
+   tronco e sotto la chioma tolgono il profilo liscio; respirano piano mentre
+   l'eruzione scorre. I lampi: Plinio il Giovane, a Miseno, vede la nube nera
+   squarciata da lingue di fuoco, «fulguribus illae et similes et maiores
+   erant» (Ep. 6.20.9). Forma, frequenza e posizione qui sono [disegno]. */
+const SBUFFI = [];
+{
+  const geo = new IcosahedronGeometry(0.5, 2);
+  let seme = 79;
+  const caso = () => (seme = (seme * 16807) % 2147483647) / 2147483647;
+  // lungo il tronco, sempre più larghi salendo
+  for(let i = 0; i < 18; i++){
+    const y = 0.06 + i * 0.042, r = 0.05 + y * 0.12, a = caso() * Math.PI * 2;
+    SBUFFI.push({ x:Math.cos(a) * r * 0.6, y, z:Math.sin(a) * r * 0.6, s:r * (1.3 + caso() * 0.7) });
+  }
+  // sotto e attorno alla chioma, che si allarga sottovento
+  for(let i = 0; i < 26; i++){
+    const a = caso() * Math.PI * 2, r = 0.25 + caso() * 0.42;
+    SBUFFI.push({ x:Math.cos(a) * r + 0.12, y:0.8 + caso() * 0.12 - r * 0.08, z:Math.sin(a) * r * 0.9, s:0.14 + caso() * 0.16 });
+  }
+  // tutti in una sola istanza: una chiamata di disegno invece di quarantaquattro
+  SBUFFI.mesh = new InstancedMesh(geo, M_COLONNA, SBUFFI.length);
+  SBUFFI.mesh.frustumCulled = false;
+  for(const b of SBUFFI){ b.s *= 1.35; b.fase = caso() * 6.28; }
+  colonna.add(SBUFFI.mesh);
+}
+const sbuffoM = new Object3D();
+// il lampo: un segmento spezzato dentro la nube, acceso per pochi decimi
+const lampo = (() => {
+  const pts = [];
+  let x = 0, y = 0.84, z = 0;
+  for(let i = 0; i < 9; i++){
+    const nx = x + (Math.sin(i * 7.3) * 0.06), ny = y - 0.035, nz = z + Math.cos(i * 4.1) * 0.04;
+    pts.push(x, y, z, nx, ny, nz); x = nx; y = ny; z = nz;
+  }
+  const g = new BufferGeometry();
+  g.setAttribute('position', new BufferAttribute(new Float32Array(pts), 3));
+  const l = new LineSegments(g, new LineBasicMaterial({ color:0xfff4d8, fog:false, transparent:true, opacity:0.95 }));
+  l.visible = false;
+  colonna.add(l);
+  return l;
+})();
+const EMISSIVA_NUBE = new Color(0x2a2621), EMISSIVA_LAMPO = new Color(0xb8a98a);
+let lampoResto = 0, lampoAttesa = 3;
+function animaNube(dt, t, buio){
+  if(!colonna.visible) return;
+  SBUFFI.forEach((b, i) => {
+    sbuffoM.position.set(b.x, b.y, b.z);
+    sbuffoM.scale.setScalar(b.s * (1 + Math.sin(t * 0.35 + b.fase) * 0.08));
+    sbuffoM.updateMatrix();
+    SBUFFI.mesh.setMatrixAt(i, sbuffoM.matrix);
+  });
+  SBUFFI.mesh.instanceMatrix.needsUpdate = true;
+  colonna.rotation.y = Math.sin(t * 0.05) * 0.08;
+  // al buio, un lampo ogni tre-sette secondi [disegno]
+  if(lampoResto > 0){
+    lampoResto -= dt;
+    if(lampoResto <= 0){ lampo.visible = false; M_COLONNA.emissive.copy(EMISSIVA_NUBE); }
+  } else if(buio > 0.45 && (lampoAttesa -= dt) <= 0){
+    lampoAttesa = 3 + ((Math.sin(t * 12.9898) * 43758.5453) % 1 + 1) % 1 * 4;
+    lampoResto = 0.14;
+    lampo.position.set(Math.sin(t) * 0.18, 0, Math.cos(t * 1.3) * 0.15);
+    lampo.rotation.y = t;
+    lampo.visible = true;
+    M_COLONNA.emissive.copy(EMISSIVA_LAMPO);
+  }
 }
 function aggiornaColonna(ore, buio){
   const cresce = Math.max(0, Math.min(1, ore / 2));
@@ -1567,6 +1762,9 @@ function vaiEruzione(ore){
   // la cenere che cade, bianca e poi grigia
   ashGroup.visible = st.cenere;
   ashGroup.children[0].material.color.setHex(st.cenereGrigia ? 0x9c978d : 0xe8e3d4);
+  lapilli.points.visible = st.cenere;
+  lapilli.points.material.color.setHex(st.cenereGrigia ? 0x9c978d : 0xe8e3d4);
+  eru.buio = st.buio;
   aggiornaColonna(eru.ore, st.buio);
   // il cielo e la nebbia: la nube, la notte, la corrente che passa
   eru.luce = 1 - st.buio * 0.92;
@@ -1627,6 +1825,8 @@ function chiudiEruzione(silenzioso){
   depositTarget = EPOCHS[epoch].deposit;
   ashGroup.children[0].material.color.setHex(0xcfc9bb);
   ashGroup.visible = !!EPOCHS[epoch].ash;
+  lapilli.points.visible = false;
+  lampo.visible = false; lampoResto = 0; M_COLONNA.emissive.copy(EMISSIVA_NUBE);
   updateSun();
   aggiornaPortaEruzione();
   if(!silenzioso) scriviStato();
@@ -1804,11 +2004,17 @@ document.querySelectorAll('#clPercorsi button').forEach(b => b.addEventListener(
   try { localStorage.setItem(CHIAVE_CLASSE, JSON.stringify({ modo:cl.modo, percorso:cl.percorso })); } catch(e){}
   vaiTappa(0);
 }));
-// H nasconde e rimostra l'interfaccia, solo alla lavagna (in un campo di testo no)
+// H nasconde e rimostra l'interfaccia, per guardare solo la città (in un
+// campo di testo no). Era solo della lavagna; dal 6 novembre 2026 vale per
+// tutti, e c'è anche in «Altro».
 addEventListener('keydown', e => {
-  if(e.code !== 'KeyH' || cl.modo !== 'lavagna' || /INPUT|TEXTAREA/.test(document.activeElement?.tagName || '')) return;
+  if(e.code !== 'KeyH' || e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '')) return;
   nascondiUI(!document.body.classList.contains('ui-nascosta'));
 });
+clEl('btnNascondi').addEventListener('click', () => nascondiUI(true));
+// su schermo basso i testi lunghi sono accorciati: un tocco li apre
+clEl('epText').addEventListener('click', e => { if(!e.target.closest('a')) e.currentTarget.classList.toggle('aperto'); });
+clEl('eruTesto').addEventListener('click', e => { if(!e.target.closest('a')) e.currentTarget.classList.toggle('aperto'); });
 
 let filterText = '';
 function renderPlaceList(){
@@ -1936,16 +2142,17 @@ function groundY(){
   return quotaCarreggiata(player.x, player.z) ?? 0;
 }
 
+// Il passo usa la stessa regola di blockedAt: fuori dalle case quattro punti
+// a 60 cm, dentro le tre case con gli interni il cerchio contro i muri.
+// Fino al 6 novembre 2026 il passo usava soltanto i quattro punti anche
+// dentro le case, e le porte più strette di 1,2 m restavano chiuse: misurato
+// sul modello, circa 88 m² irraggiungibili nel Fauno, 33 nei Vettii, 245 nel
+// Menandro. La prova d'avvio ora lo controlla (giro-comandi.js).
 function tryMove(dx, dz){
   const nx = player.x + dx;
-  if(!blocked(nx, player.z)) player.x = nx;
+  if(!blockedAt(nx, player.z)) player.x = nx;
   const nz = player.z + dz;
-  if(!blocked(player.x, nz)) player.z = nz;
-}
-function blocked(x, z){
-  for(const [ox,oz] of [[RADIUS,0],[-RADIUS,0],[0,RADIUS],[0,-RADIUS]])
-    if(isSolid(x+ox, z+oz)) return true;
-  return false;
+  if(!blockedAt(player.x, nz)) player.z = nz;
 }
 
 addEventListener('keydown', e => {
@@ -2077,7 +2284,7 @@ function camminaVerso(ev){
   pianoSuolo.constant = -groundY();
   if(!raycaster.ray.intersectPlane(pianoSuolo, puntoSuolo)) return false;
   if(puntoSuolo.distanceTo(camera.position) > 160) return false;
-  const punti = trovaPercorso({ libero:(x, z) => !blocked(x, z), da:[player.x, player.z],
+  const punti = trovaPercorso({ libero:(x, z) => !blockedAt(x, z), da:[player.x, player.z],
                                 a:[puntoSuolo.x, puntoSuolo.z], passo:CELLA, margine:10 });
   if(!punti){ fermaPercorso(); return false; }
   const [fx, fz] = punti[punti.length - 1];
@@ -2796,6 +3003,12 @@ function autoQuality(dt){
 // dtFisso esiste solo per ?debug: fa avanzare la scena a passi uguali senza
 // aspettare i fotogrammi del browser (un Chrome senza schermo non ne disegna)
 let dtFisso = null;
+// e senzaDisegno, solo per ?debug, la fa avanzare senza disegnarla: la prova
+// dei comandi controlla stati e pulsanti, e sul processore (SwiftShader) un
+// fotogramma della città vista dall'alto costa secondi
+let senzaDisegno = false;
+let contoFotogramma = { chiamate:0, triangoli:0 };
+const pixelProva = new Uint8Array(4);
 function tick(){
   requestAnimationFrame(tick);
   passo();
@@ -2805,20 +3018,24 @@ function passo(){
   const t = clock.elapsedTime;
   if(ercOn){
     ERCOLANO.update(dt, t);
-    if(!POST.render(renderer, ERCOLANO.scene, ERCOLANO.camera))
+    if(!senzaDisegno && !POST.render(renderer, ERCOLANO.scene, ERCOLANO.camera))
       renderer.render(ERCOLANO.scene, ERCOLANO.camera);
     return;
   }
   if(compareOn){
     CONFRONTO.update(dt);
-    renderer.render(CONFRONTO.scene, CONFRONTO.camera);
+    if(!senzaDisegno) renderer.render(CONFRONTO.scene, CONFRONTO.camera);
     return;
   }
-  autoQuality(dt);
+  // a passi fissi (le foto per lo store, le prove) i fotogrammi non sono
+  // veri: la qualità automatica vi leggeva 30 al secondo e abbassava la
+  // risoluzione a metà scatto
+  if(dtFisso === null) autoQuality(dt);
   pollGamepad(dt);
 
   if(eru.on){
     if(eru.sosta > 0) eru.sosta -= dt; else aggiornaEruzione(dt);
+    animaNube(dt, t, eru.buio || 0);
     contornoMisura.visible = depositCurrent < 0.05;
   } else {
     depositCurrent += (depositTarget - depositCurrent) * Math.min(1, dt*2.2);
@@ -3047,7 +3264,7 @@ function passo(){
     }
   }
 
-  if(!POST.render(renderer, scene, camera)) renderer.render(scene, camera);
+  if(!senzaDisegno && !POST.render(renderer, scene, camera)) renderer.render(scene, camera);
 }
 
 addEventListener('resize', () => {
@@ -3196,6 +3413,16 @@ if(new URLSearchParams(location.search).has('debug')){
     camera,
     solido: (x, z) => isSolid(x, z),
     bloccato: (x, z) => blockedAt(x, z),
+    // un passo con la regola vera del movimento, da (x,z) di (dx,dz): dove
+    // si arriva. Il giocatore torna dov'era.
+    muovi(x, z, dx, dz){
+      const px = player.x, pz = player.z;
+      player.x = x; player.z = z; tryMove(dx, dz);
+      const r = [player.x, player.z]; player.x = px; player.z = pz;
+      return r;
+    },
+    botteghe: () => BOTTEGHE.slice(),
+    caseInterne: () => MURI_INTERNI.map(c => ({ x0:c.x0, z0:c.z0, x1:c.x1, z1:c.z1 })),
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e
     // ritaglia), una fascia scura in alto e la didascalia in Spectral, il
@@ -3225,12 +3452,47 @@ if(new URLSearchParams(location.search).has('debug')){
       if(v === 'confronto') setCompare(true);
       if(v === 'ercolano') setErc(true);
     },
+    // per la prova delle risorse: n passi di scena da 1/30 s, senza leggere
+    // l'immagine; restituisce i millisecondi di ciascun passo, così chi
+    // misura può prendere la mediana e non la media di un passo storto
+    // con disegna = false la scena avanza senza essere disegnata
+    passi(n = 30, disegna = true){
+      dtFisso = 1/30; senzaDisegno = !disegna;
+      const ms = [];
+      // il conto di three.js si azzera a ogni render(): l'ultimo fotogramma
+      // si conta per intero (ombre, scena, rifinitura)
+      try {
+        for(let i = 0; i < n; i++){
+          const ultimo = i === n - 1 && disegna;
+          if(ultimo){ renderer.info.autoReset = false; renderer.info.reset(); }
+          const t0 = performance.now(); passo();
+          // leggere un pixel obbliga ad aspettare la fine del disegno: senza,
+          // si misurerebbe solo il tempo per mandarlo
+          if(disegna){ const gl = renderer.getContext(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelProva); }
+          ms.push(performance.now() - t0);
+          if(ultimo){ const r = renderer.info.render; contoFotogramma = { chiamate:r.calls, triangoli:r.triangles }; }
+        }
+      }
+      finally { dtFisso = null; senzaDisegno = false; renderer.info.autoReset = true; }
+      return ms;
+    },
+    // quanto ha disegnato l'ultimo fotogramma di passi() e quanta memoria della scheda video
+    // tiene la pagina: chiamate, triangoli, geometrie, texture, programmi
+    info(){
+      const i = renderer.info;
+      return { chiamate:contoFotogramma.chiamate, triangoli:contoFotogramma.triangoli, geometrie:i.memory.geometries,
+               texture:i.memory.textures, programmi:(i.programs || []).length,
+               heap: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null };
+    },
+    giocatore: () => ({ x:player.x, z:player.z, cx:camera.position.x, cz:camera.position.z, volo:flyMode }),
     // avanza la scena di n passi da 1/30 s e restituisce l'immagine del canvas,
     // letta nello stesso giro in cui è stata disegnata
     foto(n = 60){
+      // la scena avanza n passi ma si disegna solo l'ultimo: la foto è la
+      // stessa, e sul processore costa un fotogramma invece di n
       dtFisso = 1/30;
-      for(let i = 0; i < n; i++) passo();
-      dtFisso = null;
+      try { for(let i = 0; i < n; i++){ senzaDisegno = i < n - 1; passo(); } }
+      finally { dtFisso = null; senzaDisegno = false; }
       return renderer.domElement.toDataURL('image/png');
     }
   };

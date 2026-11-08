@@ -45,10 +45,21 @@ jobs:
         run: npm run check
 
       # Il 14 ottobre 2026 un errore d'avvio è passato tutti i controlli sui
-      # file: questa prova apre davvero il simulatore in Chrome e fa il giro
-      # di verifica (scripts/prova-avvio.mjs, scripts/giro.js).
+      # file: questa prova apre davvero il simulatore in Chrome. Dal 6
+      # novembre 2026 fa anche i comandi, le risorse, le sei lingue,
+      # l'impaginazione a sei misure e le schermate (scripts/prova-avvio.mjs).
       - name: Prova d'avvio in Chrome
+        timeout-minutes: 45
         run: |
           python3 -m http.server 8000 >/dev/null 2>&1 &
           sleep 2
           node scripts/prova-avvio.mjs http://localhost:8000/
+
+      # le schermate restano da guardare anche quando la prova fallisce
+      - name: Schermate di prova
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schermate
+          path: schermate/
+          if-no-files-found: ignore

@@ -1,0 +1,45 @@
+{
+  "_come": "Chiamate di disegno e triangoli per vista, misurati da scripts/prova-avvio.mjs a 1280×720. La prova fallisce oltre il 25% in più: quando la scena si arricchisce apposta, si riscrive con node scripts/prova-avvio.mjs <indirizzo> --budget e si committa insieme alla modifica.",
+  "viste": {
+    "fase 1": {
+      "chiamate": 70,
+      "triangoli": 1047590
+    },
+    "fase 2": {
+      "chiamate": 74,
+      "triangoli": 1184474
+    },
+    "fase 3": {
+      "chiamate": 74,
+      "triangoli": 1067686
+    },
+    "fase 4": {
+      "chiamate": 72,
+      "triangoli": 970150
+    },
+    "fase 5": {
+      "chiamate": 75,
+      "triangoli": 1017606
+    },
+    "fase 6": {
+      "chiamate": 75,
+      "triangoli": 1025030
+    },
+    "fase 7": {
+      "chiamate": 80,
+      "triangoli": 1041770
+    },
+    "fase 8": {
+      "chiamate": 72,
+      "triangoli": 763290
+    },
+    "Ercolano": {
+      "chiamate": 62,
+      "triangoli": 167914
+    },
+    "confronto": {
+      "chiamate": 67,
+      "triangoli": 960
+    }
+  }
+}
