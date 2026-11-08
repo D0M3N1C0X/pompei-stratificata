@@ -6,6 +6,8 @@ import {
   Clock,
   Color,
   ConeGeometry,
+  IcosahedronGeometry,
+  LineSegments,
   CylinderGeometry,
   SphereGeometry,
   DirectionalLight,
@@ -1234,6 +1236,20 @@ for(let i=0;i<dust.count;i++){
   dustSpeed[i]    = 0.15 + Math.random()*0.5;
 }
 
+// lapilli attorno a chi guarda (7 novembre 2026): la cenere grande, sparsa
+// su tutta la città, vicino alla camera quasi non si vedeva. Cadono a 2–4,5
+// unità al secondo, cioè 8–18 m/s, con un filo di vento [disegno].
+const lapilli = makePoints(2600, 0.06, 0xe8e3d4, 0.9);
+scene.add(lapilli.points);
+lapilli.points.visible = false;
+const lapilliVel = new Float32Array(lapilli.count);
+for(let i = 0; i < lapilli.count; i++){
+  lapilli.pos[i*3]   = (Math.random() - 0.5) * 48;
+  lapilli.pos[i*3+1] = Math.random() * 16;
+  lapilli.pos[i*3+2] = (Math.random() - 0.5) * 48;
+  lapilliVel[i] = 2 + Math.random() * 2.5;
+}
+
 // fumo dai forni della rioccupazione
 const SMOKE_SPOTS = [[-104,44],[-95,48],[-83,47],[-124,42],[-70,54]];
 const smoke = makePoints(600, 0.55, 0x8d8a80, 0.28);
@@ -1265,6 +1281,8 @@ function setParticleDensity(k){
   dust.live  = Math.floor(dust.count * k);
   smoke.live = Math.floor(smoke.count * k);
   birds.children.forEach((b,i) => { b.userData.hidden = i >= Math.ceil(12*k); });
+  lapilli.live = Math.floor(lapilli.count * Math.max(0.35, k));
+  lapilli.points.geometry.setDrawRange(0, lapilli.live);
   dust.points.geometry.setDrawRange(0, dust.live);
   smoke.points.geometry.setDrawRange(0, smoke.live);
 }
@@ -1285,6 +1303,23 @@ function stepParticles(dt, t){
       }
     }
     dust.points.geometry.attributes.position.needsUpdate = true;
+  }
+  if(lapilli.points.visible && lapilli.live > 0){
+    const cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+    const suolo = depositCurrent;
+    for(let i = 0; i < lapilli.live; i++){
+      lapilli.pos[i*3+1] -= lapilliVel[i] * dt;
+      lapilli.pos[i*3]   += 0.35 * dt;                       // il vento verso sud-est
+      lapilli.pos[i*3+2] += 0.25 * dt;
+      const dx = lapilli.pos[i*3] - cx, dz = lapilli.pos[i*3+2] - cz;
+      if(lapilli.pos[i*3+1] < suolo || lapilli.pos[i*3+1] < cy - 10 || dx*dx + dz*dz > 576){
+        const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * 24;
+        lapilli.pos[i*3]   = cx + Math.cos(a) * r;
+        lapilli.pos[i*3+1] = cy + 4 + Math.random() * 10;
+        lapilli.pos[i*3+2] = cz + Math.sin(a) * r;
+      }
+    }
+    lapilli.points.geometry.attributes.position.needsUpdate = true;
   }
   if(smoke.points.visible && smoke.live > 0){
     for(let i=0;i<smoke.live;i++){
@@ -1523,6 +1558,7 @@ function applyEpoch(i, silent){
   spoilGroup.visible = !!e.spoil;
   depositGroup.visible = e.deposit > 0.01;
   ashGroup.visible = !!e.ash;
+  if(!eru.on) lapilli.points.visible = false;
   smoke.points.visible = !!e.shanty;
   birds.visible = (i === 0 || i === 4 || i === 7);
   inhabitants.setEpoch(i);
@@ -1574,6 +1610,73 @@ const M_COLONNA = new MeshLambertMaterial({ color:0xe6e1d6, emissive:0x2a2621, t
   sbuffo.position.set(0.32, 0.8, 0.2); sbuffo.scale.set(0.7, 0.24, 0.6);   // la chioma piega col vento
   colonna.add(tronco, chioma, sbuffo);
   colonna.position.set(-66, 82, -252);       // il cratere (vedi costruisciVesuvio)
+}
+/* La colonna a cavolfiore e i lampi (7 novembre 2026). Gli sbuffi attorno al
+   tronco e sotto la chioma tolgono il profilo liscio; respirano piano mentre
+   l'eruzione scorre. I lampi: Plinio il Giovane, a Miseno, vede la nube nera
+   squarciata da lingue di fuoco, «fulguribus illae et similes et maiores
+   erant» (Ep. 6.20.9). Forma, frequenza e posizione qui sono [disegno]. */
+const SBUFFI = [];
+{
+  const geo = new IcosahedronGeometry(0.5, 2);
+  let seme = 79;
+  const caso = () => (seme = (seme * 16807) % 2147483647) / 2147483647;
+  // lungo il tronco, sempre più larghi salendo
+  for(let i = 0; i < 18; i++){
+    const y = 0.06 + i * 0.042, r = 0.05 + y * 0.12, a = caso() * Math.PI * 2;
+    SBUFFI.push({ x:Math.cos(a) * r * 0.6, y, z:Math.sin(a) * r * 0.6, s:r * (1.3 + caso() * 0.7) });
+  }
+  // sotto e attorno alla chioma, che si allarga sottovento
+  for(let i = 0; i < 26; i++){
+    const a = caso() * Math.PI * 2, r = 0.25 + caso() * 0.42;
+    SBUFFI.push({ x:Math.cos(a) * r + 0.12, y:0.8 + caso() * 0.12 - r * 0.08, z:Math.sin(a) * r * 0.9, s:0.14 + caso() * 0.16 });
+  }
+  // tutti in una sola istanza: una chiamata di disegno invece di quarantaquattro
+  SBUFFI.mesh = new InstancedMesh(geo, M_COLONNA, SBUFFI.length);
+  SBUFFI.mesh.frustumCulled = false;
+  for(const b of SBUFFI){ b.s *= 1.35; b.fase = caso() * 6.28; }
+  colonna.add(SBUFFI.mesh);
+}
+const sbuffoM = new Object3D();
+// il lampo: un segmento spezzato dentro la nube, acceso per pochi decimi
+const lampo = (() => {
+  const pts = [];
+  let x = 0, y = 0.84, z = 0;
+  for(let i = 0; i < 9; i++){
+    const nx = x + (Math.sin(i * 7.3) * 0.06), ny = y - 0.035, nz = z + Math.cos(i * 4.1) * 0.04;
+    pts.push(x, y, z, nx, ny, nz); x = nx; y = ny; z = nz;
+  }
+  const g = new BufferGeometry();
+  g.setAttribute('position', new BufferAttribute(new Float32Array(pts), 3));
+  const l = new LineSegments(g, new LineBasicMaterial({ color:0xfff4d8, fog:false, transparent:true, opacity:0.95 }));
+  l.visible = false;
+  colonna.add(l);
+  return l;
+})();
+const EMISSIVA_NUBE = new Color(0x2a2621), EMISSIVA_LAMPO = new Color(0xb8a98a);
+let lampoResto = 0, lampoAttesa = 3;
+function animaNube(dt, t, buio){
+  if(!colonna.visible) return;
+  SBUFFI.forEach((b, i) => {
+    sbuffoM.position.set(b.x, b.y, b.z);
+    sbuffoM.scale.setScalar(b.s * (1 + Math.sin(t * 0.35 + b.fase) * 0.08));
+    sbuffoM.updateMatrix();
+    SBUFFI.mesh.setMatrixAt(i, sbuffoM.matrix);
+  });
+  SBUFFI.mesh.instanceMatrix.needsUpdate = true;
+  colonna.rotation.y = Math.sin(t * 0.05) * 0.08;
+  // al buio, un lampo ogni tre-sette secondi [disegno]
+  if(lampoResto > 0){
+    lampoResto -= dt;
+    if(lampoResto <= 0){ lampo.visible = false; M_COLONNA.emissive.copy(EMISSIVA_NUBE); }
+  } else if(buio > 0.45 && (lampoAttesa -= dt) <= 0){
+    lampoAttesa = 3 + ((Math.sin(t * 12.9898) * 43758.5453) % 1 + 1) % 1 * 4;
+    lampoResto = 0.14;
+    lampo.position.set(Math.sin(t) * 0.18, 0, Math.cos(t * 1.3) * 0.15);
+    lampo.rotation.y = t;
+    lampo.visible = true;
+    M_COLONNA.emissive.copy(EMISSIVA_LAMPO);
+  }
 }
 function aggiornaColonna(ore, buio){
   const cresce = Math.max(0, Math.min(1, ore / 2));
@@ -1651,6 +1754,9 @@ function vaiEruzione(ore){
   // la cenere che cade, bianca e poi grigia
   ashGroup.visible = st.cenere;
   ashGroup.children[0].material.color.setHex(st.cenereGrigia ? 0x9c978d : 0xe8e3d4);
+  lapilli.points.visible = st.cenere;
+  lapilli.points.material.color.setHex(st.cenereGrigia ? 0x9c978d : 0xe8e3d4);
+  eru.buio = st.buio;
   aggiornaColonna(eru.ore, st.buio);
   // il cielo e la nebbia: la nube, la notte, la corrente che passa
   eru.luce = 1 - st.buio * 0.92;
@@ -1711,6 +1817,8 @@ function chiudiEruzione(silenzioso){
   depositTarget = EPOCHS[epoch].deposit;
   ashGroup.children[0].material.color.setHex(0xcfc9bb);
   ashGroup.visible = !!EPOCHS[epoch].ash;
+  lapilli.points.visible = false;
+  lampo.visible = false; lampoResto = 0; M_COLONNA.emissive.copy(EMISSIVA_NUBE);
   updateSun();
   aggiornaPortaEruzione();
   if(!silenzioso) scriviStato();
@@ -2919,6 +3027,7 @@ function passo(){
 
   if(eru.on){
     if(eru.sosta > 0) eru.sosta -= dt; else aggiornaEruzione(dt);
+    animaNube(dt, t, eru.buio || 0);
     contornoMisura.visible = depositCurrent < 0.05;
   } else {
     depositCurrent += (depositTarget - depositCurrent) * Math.min(1, dt*2.2);
