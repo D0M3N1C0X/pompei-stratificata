@@ -1,0 +1,22 @@
+[
+ {
+  "file": "cane-00.glb",
+  "specie": "cane",
+  "ruolo": "cane"
+ },
+ {
+  "file": "cane-01.glb",
+  "specie": "cane",
+  "ruolo": "cane"
+ },
+ {
+  "file": "cane-02.glb",
+  "specie": "cane",
+  "ruolo": "cane"
+ },
+ {
+  "file": "piccione.glb",
+  "specie": "piccione",
+  "ruolo": "piccione"
+ }
+]

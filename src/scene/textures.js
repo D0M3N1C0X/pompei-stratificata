@@ -14,6 +14,16 @@ import roofColorUrl from '../assets/pbr/pompeii/roof-diffuse.webp';
 import roofNormalUrl from '../assets/pbr/pompeii/roof-normal.webp';
 import roofRoughUrl from '../assets/pbr/pompeii/roof-roughness.webp';
 import tuffColorUrl from '../assets/pbr/pompeii/tuff-color.webp';
+// marmo, pietra e intonaco cotti in Blender (strumenti/blender/materiali.py)
+import marmoColUrl from '../assets/pbr/procedurali/marmo-colore.webp';
+import marmoNorUrl from '../assets/pbr/procedurali/marmo-normale.webp';
+import marmoRugUrl from '../assets/pbr/procedurali/marmo-ruvido.webp';
+import pietraColUrl from '../assets/pbr/procedurali/pietra-colore.webp';
+import pietraNorUrl from '../assets/pbr/procedurali/pietra-normale.webp';
+import pietraRugUrl from '../assets/pbr/procedurali/pietra-ruvido.webp';
+import intonacoColUrl from '../assets/pbr/procedurali/intonaco-colore.webp';
+import intonacoNorUrl from '../assets/pbr/procedurali/intonaco-normale.webp';
+import intonacoRugUrl from '../assets/pbr/procedurali/intonaco-ruvido.webp';
 
 
 /* --------------------------------------------------------- texture */
@@ -61,7 +71,14 @@ export const PBR = {
   // colore era un grigio-blu scuro, media RGB 69/73/77, e moltiplicata per il
   // beige delle pareti dava muri neri in ogni scena. Le pareti tornano
   // all'intonaco procedurale, TEX.plaster qui sotto.
-  tile: pbrSet(roofColorUrl, roofNormalUrl, roofRoughUrl, 5)
+  tile: pbrSet(roofColorUrl, roofNormalUrl, roofRoughUrl, 5),
+  // Dal 9 novembre 2026 marmo, pietra e intonaco vengono da Blender: colore,
+  // rilievo e ruvidità che si ripetono senza giunture, al posto della sola
+  // grana disegnata qui sotto (che resta per le superfici minori). Il colore
+  // è chiaro, media 0,85–0,93: la tinta la dà la tavolozza.
+  marble: pbrSet(marmoColUrl, marmoNorUrl, marmoRugUrl, 1),
+  stone: pbrSet(pietraColUrl, pietraNorUrl, pietraRugUrl, 1),
+  plaster: pbrSet(intonacoColUrl, intonacoNorUrl, intonacoRugUrl, 1)
 };
 
 // pallino morbido per le particelle: senza, i punti si vedono come quadratini

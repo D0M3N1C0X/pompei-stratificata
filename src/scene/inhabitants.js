@@ -435,11 +435,46 @@ export function createInhabitants({ streets=[], populations=POPULATIONS, places=
             // con la persona, così i piedi non scivolano
             g.getAttribute('instanceRate').array[j] = a.speedMetres/fig.velocitaPasso;
             g.getAttribute('instanceWalkBlend').array[j] = a.walkBlend;
+            // il gesto per chi si ferma al bancone o alla fontana, la corsa
+            // per chi fugge (se movimenti.glb li ha: vedi figure.js)
+            g.getAttribute('instanceGesto').array[j] = a.activityPlace === 'bottega' || a.activityPlace === 'fontana' ? 1 : 0;
+            g.getAttribute('instanceCorsa').array[j] = item.profile.flow === 'out' ? 1 : 0;
           });
           item.group.add(mesh);
           return { mesh, agents };
         }).filter(x => x.agents.length);
         item.human.visible = false;
+      }
+    },
+    // gli animali di Blender al posto dei solidi disegnati nel codice
+    // (strumenti/blender/animali.py): i cani si dividono fra i mantelli
+    usaAnimali(varianti){
+      const cani = varianti.filter(v => v.specie === 'cane'), piccioni = varianti.filter(v => v.specie === 'piccione');
+      for(const item of populationGroups){
+        const random = seeded(0xa71 + item.profile.epoch*17);
+        const metti = (gruppo, attori, vecchio) => {
+          if(!gruppo.length || !attori.length) return null;
+          const gruppi = gruppo.map(() => []);
+          attori.forEach(a => gruppi[Math.floor(random()*gruppo.length)].push(a));
+          const parti = gruppo.map((v, i) => {
+            const agents = gruppi[i];
+            if(!agents.length) return null;
+            const mesh = mescolaFigure(v, agents.length);
+            mesh.userData.fronte = Math.PI;
+            const g = mesh.geometry;
+            agents.forEach((a, j) => {
+              g.getAttribute('instancePhase').array[j] = a.phase/(Math.PI*2);
+              g.getAttribute('instanceRate').array[j] = a.speedMetres/v.velocitaPasso;
+              g.getAttribute('instanceWalkBlend').array[j] = a.walkBlend;
+            });
+            item.group.add(mesh);
+            return { mesh, agents };
+          }).filter(Boolean);
+          vecchio.visible = false;
+          return parti;
+        };
+        item.cani = metti(cani, item.dogs, item.dogMesh);
+        item.uccelli = metti(piccioni, item.birds, item.birdMesh);
       }
     },
     setDensity(value){
@@ -455,8 +490,10 @@ export function createInhabitants({ streets=[], populations=POPULATIONS, places=
       if(active.figure)
         for(const part of active.figure) updateMesh(part.mesh,part.agents,count(part.agents),delta,active.profile.flow,suolo);
       else updateMesh(active.human,active.people,count(active.people),delta,active.profile.flow,suolo);
-      updateMesh(active.dogMesh,active.dogs,count(active.dogs),delta,active.profile.flow,suolo);
-      updateMesh(active.birdMesh,active.birds,count(active.birds),delta,active.profile.flow,suolo);
+      if(active.cani) for(const part of active.cani) updateMesh(part.mesh,part.agents,count(part.agents),delta,active.profile.flow,suolo);
+      else updateMesh(active.dogMesh,active.dogs,count(active.dogs),delta,active.profile.flow,suolo);
+      if(active.uccelli) for(const part of active.uccelli) updateMesh(part.mesh,part.agents,count(part.agents),delta,active.profile.flow,suolo);
+      else updateMesh(active.birdMesh,active.birds,count(active.birds),delta,active.profile.flow,suolo);
     }
   };
 }

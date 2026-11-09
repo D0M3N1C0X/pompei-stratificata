@@ -22,6 +22,7 @@ import CIVITA from '../assets/figure/civita.json';
 import CANALE from '../assets/figure/canale.json';
 import OPERAI1958 from '../assets/figure/operai1958.json';
 import movimentiUrl from '../assets/figure/movimenti.glb?url';
+import ANIMALI from '../assets/figure/animali.json';
 
 /* =====================================================================
    LE FIGURE DEL 79
@@ -41,7 +42,7 @@ import movimentiUrl from '../assets/figure/movimenti.glb?url';
    nel browser.
    ===================================================================== */
 
-const FILE = import.meta.glob(['../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb', '../assets/figure/borb-*.glb',
+const FILE = import.meta.glob(['../assets/figure/cane-*.glb', '../assets/figure/piccione.glb', '../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb', '../assets/figure/borb-*.glb',
   '../assets/figure/tard-*.glb', '../assets/figure/civ-*.glb', '../assets/figure/can-*.glb', '../assets/figure/mai-*.glb'], { eager:true, query:'?url', import:'default' });
 // le serie: chi veste come, e da quale script di Blender viene
 const SERIE = [
@@ -57,6 +58,10 @@ const SERIE = [
 
 const PASSO_F = 20;      // fotogrammi del passo (clip di circa 1 s)
 const SOSTA_F = 24;      // fotogrammi della sosta (clip di circa 5 s)
+// facoltativi (movimenti_ridotti.py gesto=… corsa=…): se il file non li ha,
+// il gesto usa la sosta e la corsa usa il passo
+const GESTO_F = 24;      // il gesto al bancone o alla fontana
+const CORSA_F = 16;      // la corsa di chi fugge
 const LARGO = 1024;      // larghezza delle texture dei vertici
 
 export const ORA = { value:0 };   // il tempo, condiviso da tutti i materiali
@@ -79,13 +84,40 @@ export async function caricaFigure(){
   return { varianti, passo: clip.cammina2.duration, sosta: clip.fermo.duration, velocitaPasso: 1.104 };
 }
 
+/* Gli animali (strumenti/blender/animali.py): un cane in tre mantelli e un
+   piccione, ciascuno con il suo scheletro e i suoi due movimenti, «passo» e
+   «sosta». Stessa tecnica delle figure: le pose si scrivono in una texture
+   all'avvio e tutti gli animali di una variante si disegnano in un colpo.
+   velocitaPasso: a quale velocità, in m/s, il passo registrato non scivola
+   (il cane trotta; il piccione batte le ali qualunque sia la velocità). */
+const VELOCITA_ANIMALI = { cane:1.25, piccione:3.0 };
+export async function caricaAnimali(){
+  const loader = new GLTFLoader();
+  const varianti = [];
+  for(const info of ANIMALI){
+    const url = FILE[`../assets/figure/${info.file}`];
+    if(!url) continue;
+    const gltf = await loader.loadAsync(url);
+    const clip = Object.fromEntries(gltf.animations.map(c => [c.name, c]));
+    if(!clip.passo || !clip.sosta) continue;
+    const v = prepara(gltf.scene, info, clip, 1, ['passo', 'sosta']);
+    v.specie = info.specie;
+    v.velocitaPasso = VELOCITA_ANIMALI[info.specie] || 1;
+    varianti.push(v);
+    await new Promise(r => setTimeout(r, 0));
+  }
+  return varianti;
+}
+
 function altezzaAnche(radice){
   let y = 0.874;
   radice.traverse(o => { if(o.name === 'Hips') y = o.position.y; });
   return y;
 }
 
-function prepara(radice, info, clip, k){
+// nomi: i due movimenti da usare, il passo e la sosta (le figure umane li
+// prendono da movimenti.glb, gli animali dal proprio file)
+function prepara(radice, info, clip, k, nomi = ['cammina2', 'fermo', 'gesto', 'corsa']){
   // le anche: la traslazione registrata vale per lo scheletro di riferimento
   const scala = c => {
     // clone() non copia i valori, li condivide: senza slice() la correzione
@@ -103,7 +135,15 @@ function prepara(radice, info, clip, k){
     }
     return copia;
   };
-  const passo = scala(clip.cammina2), sosta = scala(clip.fermo);
+  const passo = scala(clip[nomi[0]]), sosta = scala(clip[nomi[1]]);
+  const gesto = nomi[2] && clip[nomi[2]] ? scala(clip[nomi[2]]) : null;
+  const corsa = nomi[3] && clip[nomi[3]] ? scala(clip[nomi[3]]) : null;
+  // la velocità a cui la corsa registrata non scivola: dalle anche
+  let velocitaCorsa = 0;
+  if(corsa){
+    const t = corsa.tracks.find(t => t.name === 'Hips.position'), v = t && t.values;
+    if(v && v.length >= 6) velocitaCorsa = Math.hypot(v[v.length-3] - v[0], v[v.length-1] - v[2]) / corsa.duration;
+  }
 
   const pezzi = [], materiali = [];
   radice.traverse(o => {
@@ -129,7 +169,9 @@ function prepara(radice, info, clip, k){
   });
   const geometria = mergeGeometries(geos, true);
   const V = geometria.attributes.position.count;
-  const F = PASSO_F + SOSTA_F;
+  // dove sta ogni movimento nella texture: passo, sosta, poi gesto e corsa se ci sono
+  const BASE_G = PASSO_F + SOSTA_F, BASE_C = BASE_G + (gesto ? GESTO_F : 0);
+  const F = BASE_C + (corsa ? CORSA_F : 0);
   const righe = Math.ceil(V * F / LARGO);
   const pos = new Uint16Array(LARGO * righe * 4);
   const nor = new Uint8Array(LARGO * righe * 4);
@@ -169,6 +211,8 @@ function prepara(radice, info, clip, k){
   };
   for(let f = 0; f < PASSO_F; f++) posa(passo, passo.duration * f / PASSO_F, f);
   for(let f = 0; f < SOSTA_F; f++) posa(sosta, sosta.duration * f / SOSTA_F, PASSO_F + f);
+  if(gesto) for(let f = 0; f < GESTO_F; f++) posa(gesto, gesto.duration * f / GESTO_F, BASE_G + f);
+  if(corsa) for(let f = 0; f < CORSA_F; f++) posa(corsa, corsa.duration * f / CORSA_F, BASE_C + f);
   mixer.stopAllAction();
   tmp.dispose();
 
@@ -187,23 +231,34 @@ function prepara(radice, info, clip, k){
   for(let j = 1; j < pp.length; j += 3) riposo = Math.max(riposo, pp[j]);
   return {
     info, geometria, V, altezze, riposo: +riposo.toFixed(3),
-    materiali: materiali.map(m => conPose(m.clone(), texPos, texNor, V, passo.duration, sosta.duration)),
+    gesto: !!gesto, corsa: !!corsa,
+    materiali: materiali.map(m => conPose(m.clone(), texPos, texNor, V, passo.duration, sosta.duration, {
+      baseG: gesto ? BASE_G : PASSO_F, nG: gesto ? GESTO_F : SOSTA_F, durG: gesto ? gesto.duration : sosta.duration,
+      baseC: corsa ? BASE_C : 0, nC: corsa ? CORSA_F : PASSO_F, durC: corsa ? corsa.duration : passo.duration,
+      // la corsa a passo costante: rate × rapC = velocità / velocità della corsa
+      rapC: corsa && velocitaCorsa > 0.5 ? 1.104 / velocitaCorsa : 1
+    })),
     ruolo: info.ruolo
   };
 }
 
 // il materiale della figura, con le pose lette dalla texture
-function conPose(m, texPos, texNor, V, durataPasso, durataSosta){
+function conPose(m, texPos, texNor, V, durataPasso, durataSosta, extra){
   m.onBeforeCompile = shader => {
     Object.assign(shader.uniforms, {
       uPose: { value:texPos }, uNorm: { value:texNor }, uOra: ORA,
       uV: { value:V }, uLargo: { value:LARGO },
-      uPasso: { value:durataPasso }, uSosta: { value:durataSosta }
+      uPasso: { value:durataPasso }, uSosta: { value:durataSosta },
+      uBaseG: { value:extra.baseG }, uNG: { value:extra.nG }, uDurG: { value:extra.durG },
+      uBaseC: { value:extra.baseC }, uNC: { value:extra.nC }, uDurC: { value:extra.durC }, uRapC: { value:extra.rapC }
     });
     shader.vertexShader = shader.vertexShader.replace('#include <common>', `#include <common>
 uniform sampler2D uPose; uniform sampler2D uNorm; uniform float uOra;
 uniform float uV; uniform float uLargo; uniform float uPasso; uniform float uSosta;
+uniform float uBaseG; uniform float uNG; uniform float uDurG;
+uniform float uBaseC; uniform float uNC; uniform float uDurC; uniform float uRapC;
 attribute float instancePhase; attribute float instanceRate; attribute float instanceWalkBlend;
+attribute float instanceGesto; attribute float instanceCorsa;
 vec4 leggi(sampler2D t, float f){
   float i = f * uV + float(gl_VertexID);
   return texelFetch(t, ivec2(int(mod(i, uLargo)), int(floor(i / uLargo))), 0);
@@ -213,16 +268,29 @@ vec3 posa(sampler2D t, float f0, float n, float base){
   return mix(leggi(t, base + a).xyz, leggi(t, base + b).xyz, f - a);
 }
 vec3 figura(sampler2D t){
-  float fp = (uOra * instanceRate / uPasso + instancePhase) * ${PASSO_F}.0;
-  float fs = (uOra / uSosta + instancePhase) * ${SOSTA_F}.0;
-  return mix(posa(t, fs, ${SOSTA_F}.0, ${PASSO_F}.0), posa(t, fp, ${PASSO_F}.0, 0.0), instanceWalkBlend);
+  vec3 cammina, ferma;
+  if(instanceCorsa > 0.5){
+    float fc = (uOra * instanceRate * uRapC / uDurC + instancePhase) * uNC;
+    cammina = posa(t, fc, uNC, uBaseC);
+  } else {
+    float fp = (uOra * instanceRate / uPasso + instancePhase) * ${PASSO_F}.0;
+    cammina = posa(t, fp, ${PASSO_F}.0, 0.0);
+  }
+  if(instanceGesto > 0.5){
+    float fg = (uOra / uDurG + instancePhase) * uNG;
+    ferma = posa(t, fg, uNG, uBaseG);
+  } else {
+    float fs = (uOra / uSosta + instancePhase) * ${SOSTA_F}.0;
+    ferma = posa(t, fs, ${SOSTA_F}.0, ${PASSO_F}.0);
+  }
+  return mix(ferma, cammina, instanceWalkBlend);
 }`);
     shader.vertexShader = shader.vertexShader.replace('#include <beginnormal_vertex>',
       'vec3 objectNormal = normalize(figura(uNorm) * 2.0 - 1.0);');
     shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>',
       'vec3 transformed = figura(uPose);');
   };
-  m.customProgramCacheKey = () => 'pompei-figura-vat-v1';
+  m.customProgramCacheKey = () => 'pompei-figura-vat-v2';
   return m;
 }
 
@@ -234,6 +302,9 @@ export function mescolaFigure(variante, quante){
   const blend = new InstancedBufferAttribute(new Float32Array(quante), 1);
   blend.setUsage(DynamicDrawUsage);
   g.setAttribute('instanceWalkBlend', blend);
+  // chi fa il gesto (al bancone, alla fontana) e chi corre (la fuga): 0 o 1
+  g.setAttribute('instanceGesto', new InstancedBufferAttribute(new Float32Array(quante), 1));
+  g.setAttribute('instanceCorsa', new InstancedBufferAttribute(new Float32Array(quante), 1));
   const mesh = new InstancedMesh(g, variante.materiali, Math.max(1, quante));
   mesh.instanceMatrix.setUsage(DynamicDrawUsage);
   mesh.frustumCulled = false;
