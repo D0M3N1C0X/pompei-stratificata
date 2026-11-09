@@ -14,3 +14,6 @@ strumenti/piante/fonti/
 
 # le schermate della prova d'avvio: si rifanno con node scripts/prova-avvio.mjs
 schermate/
+
+# la geometria esportata per la luce cotta: la rifà npm run luce
+strumenti/blender/citta.json

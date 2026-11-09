@@ -35,6 +35,8 @@ import {
   SpriteMaterial,
   Vector2,
   Vector3,
+  Vector4,
+  TextureLoader,
   LineLoop,
   LineBasicMaterial,
   WebGLRenderer
@@ -56,6 +58,8 @@ import { caricaFigure } from './scene/figure.js';
 import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
+import aoSuoloUrl from './assets/luce/ao-suolo.png?url';
+import AO_SUOLO from './assets/luce/ao-suolo.json';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -1020,6 +1024,64 @@ scene.add(inhabitants.group);
 caricaFigure().then(f => { inhabitants.usaFigure(f); ERCOLANO.usaFigure(f); if(window.pompei) window.pompei.figure = f; })
   .catch(e => console.warn('Figure del 79 non caricate:', e));
 
+/* ---------------------------------------------------- la luce cotta
+
+   L'occlusione ambientale del suolo, cotta da Cycles in Blender
+   (strumenti/blender/luce_cotta.py, «npm run luce»): una texture vista
+   dall'alto, letta in coordinate di mondo. Lungo i muri, nei vicoli e nei
+   cortili il suolo riceve meno cielo; nelle piazze resta pieno. Attenua
+   soprattutto la luce indiretta, e un poco quella del sole. Si applica solo
+   ai materiali del suolo: terreno, basolato, cordoli, deposito. */
+const AO_TEX = new TextureLoader().load(aoSuoloUrl);
+const AO_UNI = {
+  tex: { value: AO_TEX },
+  box: { value: new Vector4(AO_SUOLO.x0, AO_SUOLO.z0, 1 / (AO_SUOLO.x1 - AO_SUOLO.x0), 1 / (AO_SUOLO.z1 - AO_SUOLO.z0)) },
+  forza: { value: 1 }
+};
+const SUOLO_AO = new Set([0x8f8776, 0x847c6b, PAL.terrace, PAL.street, PAL.kerb,
+  PAL.depWhite, PAL.depGrey, PAL.depSurge, 0x4c4639]);
+// i muri e le pietre: alla base prendono l'occlusione del suolo che hanno
+// davanti, e la perdono salendo entro 3,6 m [disegno]
+const MURI_AO = new Set([PAL.wall1, PAL.wall2, PAL.wall3, PAL.stone, PAL.civic, PAL.column,
+  0x7c4536, 0x8f8674, PAL.crude]);
+AO_UNI.quota = { value: 0 };
+function luceCotta(mat, muro){
+  const prima = mat.onBeforeCompile;
+  mat.onBeforeCompile = (sh, r) => {
+    if(prima) prima.call(mat, sh, r);
+    sh.uniforms.uAoSuolo = AO_UNI.tex; sh.uniforms.uAoBox = AO_UNI.box;
+    sh.uniforms.uAoForza = AO_UNI.forza; sh.uniforms.uAoQuota = AO_UNI.quota;
+    sh.vertexShader = 'varying vec3 vAoP;\nvarying vec3 vAoN;\n' + sh.vertexShader.replace('#include <project_vertex>', `#include <project_vertex>
+{
+  vec4 aw = vec4( transformed, 1.0 );
+  vec3 an = objectNormal;
+  #ifdef USE_INSTANCING
+    aw = instanceMatrix * aw;
+    an = mat3( instanceMatrix ) * an;
+  #endif
+  vAoP = ( modelMatrix * aw ).xyz;
+  vAoN = normalize( mat3( modelMatrix ) * an );
+}`);
+    sh.fragmentShader = 'uniform sampler2D uAoSuolo;\nuniform vec4 uAoBox;\nuniform float uAoForza;\nuniform float uAoQuota;\nvarying vec3 vAoP;\nvarying vec3 vAoN;\n' +
+      sh.fragmentShader.replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
+{
+  ${muro ? `
+  // il suolo appena davanti alla faccia, 1,4 m in fuori
+  vec2 axz = vAoP.xz + normalize( vAoN.xz + 1e-5 ) * 0.35;
+  float ao = texture2D( uAoSuolo, ( axz - uAoBox.xy ) * uAoBox.zw ).r;
+  float verticale = 1.0 - smoothstep( 0.4, 0.7, abs( vAoN.y ) );
+  ao = mix( ao, 1.0, smoothstep( 0.0, 0.9, vAoP.y - uAoQuota ) );
+  ao = mix( 1.0, ao, uAoForza * verticale );` : `
+  float ao = texture2D( uAoSuolo, ( vAoP.xz - uAoBox.xy ) * uAoBox.zw ).r;
+  ao = mix( 1.0, ao, uAoForza );`}
+  reflectedLight.indirectDiffuse *= ao;
+  reflectedLight.directDiffuse *= mix( 1.0, ao, 0.4 );
+}`);
+  };
+  const chiave = mat.customProgramCacheKey ? mat.customProgramCacheKey() : '';
+  mat.customProgramCacheKey = () => chiave + (muro ? '|aomuro' : '|aosuolo');
+}
+
 const dummy = new Object3D();
 const allMaterials = [];
 const tintColor = new Color();
@@ -1040,6 +1102,8 @@ function bake(list, color, geo, parent, shadows, vary){
     clippingPlanes:[clipPlane], clipShadows:true
   });
   if(SCALA_MONDO[texName]) mappaMondo(mat, SCALA_MONDO[texName]);
+  if(SUOLO_AO.has(color)) luceCotta(mat, false);
+  else if(MURI_AO.has(color)) luceCotta(mat, true);
   // il vano della porta: la penombra della stanza non dipende dal sole sulla
   // facciata (in ombra tornava nera); la si disegna come luce propria
   if(texName === 'vano'){
@@ -1555,6 +1619,9 @@ function applyEpoch(i, silent){
   epoch = i;
   scriviStato();
   const e = EPOCHS[i];
+  // sul deposito i muri sporgono meno: l'occlusione cotta col piano del 79
+  // va attenuata [disegno]
+  AO_UNI.forza.value = 1 - 0.45 * Math.min(1, e.deposit / 1.25);
   aggiornaSezioneVuota();
   aggiornaQuotaCorpo();
   depositTarget = e.deposit;
@@ -3044,6 +3111,7 @@ function passo(){
       g.position.y = depositCurrent;
   }
 
+  AO_UNI.quota.value = depositCurrent;
   stepParticles(dt, t);
   // sui marciapiedi prima del 79, sul deposito dopo: a scala vera chi lavora
   // ai recuperi sparirebbe sotto la cenere
@@ -3422,6 +3490,13 @@ if(new URLSearchParams(location.search).has('debug')){
       return r;
     },
     botteghe: () => BOTTEGHE.slice(),
+    // la città come elenco di blocchi [x, y, z, l, h, p] (centro e misure,
+    // in unità), per cuocere la luce in Blender (strumenti/blender/luce_cotta.py)
+    geometria: () => ({
+      blocchi: [...buckets.values()].flatMap(b => b.list.map(c => c.slice(0, 6))),
+      tetti: HOUSES_ROOF.map(r => r.slice(0, 6)),
+      terreno: TERRACE.map(p => p.slice())
+    }),
     caseInterne: () => MURI_INTERNI.map(c => ({ x0:c.x0, z0:c.z0, x1:c.x1, z1:c.z1 })),
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e
