@@ -435,6 +435,10 @@ export function createInhabitants({ streets=[], populations=POPULATIONS, places=
             // con la persona, così i piedi non scivolano
             g.getAttribute('instanceRate').array[j] = a.speedMetres/fig.velocitaPasso;
             g.getAttribute('instanceWalkBlend').array[j] = a.walkBlend;
+            // il gesto per chi si ferma al bancone o alla fontana, la corsa
+            // per chi fugge (se movimenti.glb li ha: vedi figure.js)
+            g.getAttribute('instanceGesto').array[j] = a.activityPlace === 'bottega' || a.activityPlace === 'fontana' ? 1 : 0;
+            g.getAttribute('instanceCorsa').array[j] = item.profile.flow === 'out' ? 1 : 0;
           });
           item.group.add(mesh);
           return { mesh, agents };
