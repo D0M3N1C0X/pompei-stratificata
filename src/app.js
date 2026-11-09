@@ -54,7 +54,7 @@ import { POST } from './post.js';
 import { PAL } from './scene/palette.js';
 import { DOT, PBR, TEX, TEXMAP, SCALA_MONDO, mappaMondo, px } from './scene/textures.js';
 import { createInhabitants } from './scene/inhabitants.js';
-import { caricaFigure } from './scene/figure.js';
+import { caricaFigure, caricaAnimali } from './scene/figure.js';
 import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
@@ -1022,6 +1022,7 @@ scene.add(inhabitants.group);
 // le figure di Blender arrivano dopo il primo disegno: fino ad allora, e se
 // qualcosa va storto, restano i manichini
 caricaFigure().then(f => { inhabitants.usaFigure(f); ERCOLANO.usaFigure(f); if(window.pompei) window.pompei.figure = f; })
+  .then(() => caricaAnimali()).then(a => { inhabitants.usaAnimali(a); ERCOLANO.usaAnimali(a); if(window.pompei) window.pompei.animali = a; })
   .catch(e => console.warn('Figure del 79 non caricate:', e));
 
 /* ---------------------------------------------------- la luce cotta

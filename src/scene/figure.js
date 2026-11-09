@@ -22,6 +22,7 @@ import CIVITA from '../assets/figure/civita.json';
 import CANALE from '../assets/figure/canale.json';
 import OPERAI1958 from '../assets/figure/operai1958.json';
 import movimentiUrl from '../assets/figure/movimenti.glb?url';
+import ANIMALI from '../assets/figure/animali.json';
 
 /* =====================================================================
    LE FIGURE DEL 79
@@ -41,7 +42,7 @@ import movimentiUrl from '../assets/figure/movimenti.glb?url';
    nel browser.
    ===================================================================== */
 
-const FILE = import.meta.glob(['../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb', '../assets/figure/borb-*.glb',
+const FILE = import.meta.glob(['../assets/figure/cane-*.glb', '../assets/figure/piccione.glb', '../assets/figure/romana-*.glb', '../assets/figure/oggi-*.glb', '../assets/figure/borb-*.glb',
   '../assets/figure/tard-*.glb', '../assets/figure/civ-*.glb', '../assets/figure/can-*.glb', '../assets/figure/mai-*.glb'], { eager:true, query:'?url', import:'default' });
 // le serie: chi veste come, e da quale script di Blender viene
 const SERIE = [
@@ -79,13 +80,40 @@ export async function caricaFigure(){
   return { varianti, passo: clip.cammina2.duration, sosta: clip.fermo.duration, velocitaPasso: 1.104 };
 }
 
+/* Gli animali (strumenti/blender/animali.py): un cane in tre mantelli e un
+   piccione, ciascuno con il suo scheletro e i suoi due movimenti, «passo» e
+   «sosta». Stessa tecnica delle figure: le pose si scrivono in una texture
+   all'avvio e tutti gli animali di una variante si disegnano in un colpo.
+   velocitaPasso: a quale velocità, in m/s, il passo registrato non scivola
+   (il cane trotta; il piccione batte le ali qualunque sia la velocità). */
+const VELOCITA_ANIMALI = { cane:1.25, piccione:3.0 };
+export async function caricaAnimali(){
+  const loader = new GLTFLoader();
+  const varianti = [];
+  for(const info of ANIMALI){
+    const url = FILE[`../assets/figure/${info.file}`];
+    if(!url) continue;
+    const gltf = await loader.loadAsync(url);
+    const clip = Object.fromEntries(gltf.animations.map(c => [c.name, c]));
+    if(!clip.passo || !clip.sosta) continue;
+    const v = prepara(gltf.scene, info, clip, 1, ['passo', 'sosta']);
+    v.specie = info.specie;
+    v.velocitaPasso = VELOCITA_ANIMALI[info.specie] || 1;
+    varianti.push(v);
+    await new Promise(r => setTimeout(r, 0));
+  }
+  return varianti;
+}
+
 function altezzaAnche(radice){
   let y = 0.874;
   radice.traverse(o => { if(o.name === 'Hips') y = o.position.y; });
   return y;
 }
 
-function prepara(radice, info, clip, k){
+// nomi: i due movimenti da usare, il passo e la sosta (le figure umane li
+// prendono da movimenti.glb, gli animali dal proprio file)
+function prepara(radice, info, clip, k, nomi = ['cammina2', 'fermo']){
   // le anche: la traslazione registrata vale per lo scheletro di riferimento
   const scala = c => {
     // clone() non copia i valori, li condivide: senza slice() la correzione
@@ -103,7 +131,7 @@ function prepara(radice, info, clip, k){
     }
     return copia;
   };
-  const passo = scala(clip.cammina2), sosta = scala(clip.fermo);
+  const passo = scala(clip[nomi[0]]), sosta = scala(clip[nomi[1]]);
 
   const pezzi = [], materiali = [];
   radice.traverse(o => {
