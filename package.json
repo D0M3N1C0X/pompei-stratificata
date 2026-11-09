@@ -15,7 +15,8 @@
     "figure": "~/Applications/Blender.app/Contents/MacOS/Blender -b --python strumenti/blender/figure_romane.py && ~/Applications/Blender.app/Contents/MacOS/Blender -b --python strumenti/blender/figure_oggi.py && ~/Applications/Blender.app/Contents/MacOS/Blender -b --python strumenti/blender/figure_borbonici.py && ~/Applications/Blender.app/Contents/MacOS/Blender -b --python strumenti/blender/figure_fasi.py",
     "avvio": "node scripts/prova-avvio.mjs http://localhost:8000/",
     "luce": "node scripts/luce-cotta.mjs",
-    "animali": "${BLENDER_PY:-python3} strumenti/blender/animali.py"
+    "animali": "${BLENDER_PY:-python3} strumenti/blender/animali.py",
+    "materiali": "${BLENDER_PY:-python3} strumenti/blender/materiali.py"
   },
   "dependencies": {
     "three": "0.169.0"
