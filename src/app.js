@@ -3,7 +3,6 @@ import {
   BufferAttribute,
   BufferGeometry,
   CanvasTexture,
-  Clock,
   Color,
   ConeGeometry,
   IcosahedronGeometry,
@@ -22,7 +21,7 @@ import {
   MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
-  PCFSoftShadowMap,
+  PCFShadowMap,
   PerspectiveCamera,
   Plane,
   Points,
@@ -97,7 +96,9 @@ renderer.shadowMap.enabled = true;
 // PCFSoft: provato il 22/10/2026 il PCF con raggio, a Ercolano (texel di
 // 23 cm) faceva scalini a rombo su muri e acqua. La morbidezza delle ombre
 // viene invece dalla luce del cielo più forte (applyLight).
-renderer.shadowMap.type = PCFSoftShadowMap;
+// three.js 0.187 ha tolto PCFSoftShadowMap e usa PCFShadowMap al suo posto:
+// lo si dichiara, invece di lasciarlo fare con un avviso a ogni avvio
+renderer.shadowMap.type = PCFShadowMap;
 renderer.localClippingEnabled = true;
 app.appendChild(renderer.domElement);
 
@@ -3035,7 +3036,10 @@ EPOCHS.forEach((e,i) => {
 
 /* --------------------------------------------------------------- loop */
 
-const clock = new Clock();
+// il tempo della scena: secondi dall'avvio e dal fotogramma prima (three.js
+// 0.187 ha deprecato Clock; due righe bastano)
+const clock = { t0: performance.now(), prima: performance.now(), elapsedTime: 0,
+  getDelta(){ const ora = performance.now(), dt = (ora - this.prima) / 1000; this.prima = ora; this.elapsedTime = (ora - this.t0) / 1000; return dt; } };
 const fwd = new Vector3(), right = new Vector3(), up = new Vector3(0,1,0);
 const camWorld = new Vector3();
 const compassSvg = document.querySelector('#compass svg');
