@@ -68,12 +68,22 @@ try {
   const file = join(radice, 'strumenti/blender/citta.json');
   writeFileSync(file, JSON.stringify(geo));
   console.log(`✓ geometria: ${geo.blocchi.length} blocchi, ${geo.tetti.length} pezzi di tetto → strumenti/blender/citta.json`);
+  // Ercolano: due momenti, il 79 e oggi (il 1958 usa oggi, il 1738 niente)
+  const cotture = [[file, lato, campioni, 'src/assets/luce/ao-suolo.png']];
+  for(const mo of ['oggi', '79']){
+    const g = await valuta(`(() => { window.pompei.vista('ercolano'); return window.pompei.ercolano.geometria('${mo}'); })()`);
+    const f = join(radice, `strumenti/blender/ercolano-${mo}.json`);
+    writeFileSync(f, JSON.stringify(g));
+    console.log(`✓ Ercolano ${mo}: ${g.triangoli.length / 9} triangoli, ${g.livelli.length} fasce di suolo`);
+    cotture.push([f, '1024', '64', `src/assets/luce/ao-ercolano-${mo}.png`]);
+  }
   ws.close(); try { chrome.kill('SIGKILL'); } catch(e){}
 
-  const r = spawnSync(BLENDER_PY, [join(radice, 'strumenti/blender/luce_cotta.py'), lato, campioni, file,
-    join(radice, 'src/assets/luce/ao-suolo.png')], { stdio:'inherit' });
-  if(r.status !== 0) throw new Error(`Blender è uscito con codice ${r.status} (BLENDER_PY=${BLENDER_PY} ha il modulo bpy?)`);
-  console.log('✓ luce cotta: src/assets/luce/ao-suolo.png — ora npm run build');
+  for(const [sorgente, px, n, uscita] of cotture){
+    const r = spawnSync(BLENDER_PY, [join(radice, 'strumenti/blender/luce_cotta.py'), px, n, sorgente, join(radice, uscita)], { stdio:'inherit' });
+    if(r.status !== 0) throw new Error(`Blender è uscito con codice ${r.status} (BLENDER_PY=${BLENDER_PY} ha il modulo bpy?)`);
+  }
+  console.log('✓ luce cotta: Pompei e i due momenti di Ercolano in src/assets/luce/ — ora npm run build');
   process.exit(0);
 } catch(e){
   console.error('✗ ' + (e.message || e));

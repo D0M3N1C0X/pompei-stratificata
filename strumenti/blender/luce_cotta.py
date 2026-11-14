@@ -41,15 +41,26 @@ def main():
         campioni = int(args[1])
 
     geo = json.load(open(sorgente))
-    # solo ciò che sta sopra il suolo: le lastre di strade, marciapiedi e
-    # terreno (cima sotto i 40 cm) coprirebbero il piano su cui si cuoce
-    blocchi = [b for b in geo['blocchi'] + geo['tetti'] if b[1] + b[4] / 2 > SOPRA]
-
-    # l'estensione del piano: la terrazza della città, con un margine
-    xs = [p[0] for p in geo['terreno']] + [b[0] for b in blocchi]
-    zs = [p[1] for p in geo['terreno']] + [b[2] for b in blocchi]
-    x0, x1 = min(xs) - MARGINE, max(xs) + MARGINE
-    z0, z1 = min(zs) - MARGINE, max(zs) + MARGINE
+    # Due forme d'ingresso. Pompei: blocchi [x, y, z, l, h, p] e un piano
+    # solo, alla quota del marciapiede. Ercolano: triangoli qualsiasi e più
+    # fasce di suolo a quote diverse (livelli: y, x0, x1, z0, z1).
+    if 'triangoli' in geo:
+        blocchi = []
+        tri = geo['triangoli']
+        livelli = geo['livelli']
+        x0 = min(l['x0'] for l in livelli); x1 = max(l['x1'] for l in livelli)
+        z0 = min(l['z0'] for l in livelli); z1 = max(l['z1'] for l in livelli)
+    else:
+        tri = []
+        # solo ciò che sta sopra il suolo: le lastre di strade, marciapiedi e
+        # terreno (cima sotto i 40 cm) coprirebbero il piano su cui si cuoce
+        blocchi = [b for b in geo['blocchi'] + geo['tetti'] if b[1] + b[4] / 2 > SOPRA]
+        # l'estensione del piano: la terrazza della città, con un margine
+        xs = [p[0] for p in geo['terreno']] + [b[0] for b in blocchi]
+        zs = [p[1] for p in geo['terreno']] + [b[2] for b in blocchi]
+        x0, x1 = min(xs) - MARGINE, max(xs) + MARGINE
+        z0, z1 = min(zs) - MARGINE, max(zs) + MARGINE
+        livelli = [{'y': 0.0, 'x0': x0, 'x1': x1, 'z0': z0, 'z1': z1}]
     larghezza = lato
     altezza = max(64, round(lato * (z1 - z0) / (x1 - x0)))
 
@@ -71,6 +82,19 @@ def main():
              for sx in (-1, 1) for sy in (-1, 1) for sz in (-1, 1)]
         for f in ((0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)):
             bm.faces.new([v[i] for i in f])
+    vi = {}
+    def vert(x, y, z):
+        k = (x, y, z)
+        if k not in vi:
+            vi[k] = bm.verts.new((x, -z, y))
+        return vi[k]
+    for i in range(0, len(tri) - 8, 9):
+        a, b, c = vert(*tri[i:i+3]), vert(*tri[i+3:i+6]), vert(*tri[i+6:i+9])
+        if len({a, b, c}) == 3:
+            try:
+                bm.faces.new((a, b, c))
+            except ValueError:
+                pass                        # faccia doppia: già c'è
     me = bpy.data.meshes.new('citta')
     bm.to_mesh(me)
     bm.free()
@@ -83,14 +107,16 @@ def main():
     # l'ordine dei vertici fa guardare il piano verso l'alto: invertire z per
     # passare a Blender ribalta il giro, e un piano rivolto in basso cuoceva
     # tutto bianco (provato con un muro solo)
-    angoli = [(x0, z0), (x0, z1), (x1, z1), (x1, z0)]
-    vv = [bm.verts.new((x, -z, 0.0)) for x, z in angoli]
-    faccia = bm.faces.new(vv)
-    faccia.normal_update()
-    assert faccia.normal.z > 0.99, 'il piano del suolo deve guardare in alto'
     uv = bm.loops.layers.uv.new('UVMap')
-    for loop, (x, z) in zip(faccia.loops, angoli):
-        loop[uv].uv = ((x - x0) / (x1 - x0), (z - z0) / (z1 - z0))
+    for lv in livelli:
+        # una fascia per livello, appena sopra la sua quota (1 cm in scena)
+        angoli = [(lv['x0'], lv['z0']), (lv['x0'], lv['z1']), (lv['x1'], lv['z1']), (lv['x1'], lv['z0'])]
+        vv = [bm.verts.new((x, -z, lv['y'] + (0.0025 if 'triangoli' in geo else 0.0))) for x, z in angoli]
+        faccia = bm.faces.new(vv)
+        faccia.normal_update()
+        assert faccia.normal.z > 0.99, 'il piano del suolo deve guardare in alto'
+        for loop, (x, z) in zip(faccia.loops, angoli):
+            loop[uv].uv = ((x - x0) / (x1 - x0), (z - z0) / (z1 - z0))
     me = bpy.data.meshes.new('suolo')
     bm.to_mesh(me)
     bm.free()
@@ -110,7 +136,7 @@ def main():
     bpy.context.view_layer.objects.active = suolo
     t = time.time()
     bpy.ops.object.bake(type='AO', margin=2)
-    print(f'cottura: {larghezza}×{altezza} px, {campioni} campioni, {len(blocchi)} blocchi, {time.time() - t:.0f} s')
+    print(f'cottura: {larghezza}×{altezza} px, {campioni} campioni, {len(blocchi)} blocchi, {len(tri) // 9} triangoli, {len(livelli)} livelli, {time.time() - t:.0f} s')
 
     img.filepath_raw = uscita
     img.file_format = 'PNG'
