@@ -34,8 +34,6 @@ import {
   SpriteMaterial,
   Vector2,
   Vector3,
-  Vector4,
-  TextureLoader,
   LineLoop,
   LineBasicMaterial,
   WebGLRenderer
@@ -59,6 +57,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
 import aoSuoloUrl from './assets/luce/ao-suolo.png?url';
 import AO_SUOLO from './assets/luce/ao-suolo.json';
+import { creaLuceCotta } from './scene/luce.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -1027,62 +1026,15 @@ caricaFigure().then(f => { inhabitants.usaFigure(f); ERCOLANO.usaFigure(f); if(w
   .catch(e => console.warn('Figure del 79 non caricate:', e));
 
 /* ---------------------------------------------------- la luce cotta
-
-   L'occlusione ambientale del suolo, cotta da Cycles in Blender
-   (strumenti/blender/luce_cotta.py, «npm run luce»): una texture vista
-   dall'alto, letta in coordinate di mondo. Lungo i muri, nei vicoli e nei
-   cortili il suolo riceve meno cielo; nelle piazze resta pieno. Attenua
-   soprattutto la luce indiretta, e un poco quella del sole. Si applica solo
-   ai materiali del suolo: terreno, basolato, cordoli, deposito. */
-const AO_TEX = new TextureLoader().load(aoSuoloUrl);
-const AO_UNI = {
-  tex: { value: AO_TEX },
-  box: { value: new Vector4(AO_SUOLO.x0, AO_SUOLO.z0, 1 / (AO_SUOLO.x1 - AO_SUOLO.x0), 1 / (AO_SUOLO.z1 - AO_SUOLO.z0)) },
-  forza: { value: 1 }
-};
+   L'occlusione ambientale cotta in Blender (src/scene/luce.js): a Pompei
+   una texture sola, il suolo a una quota sola che segue il deposito. */
+const LUCE = creaLuceCotta(aoSuoloUrl, AO_SUOLO);
+const AO_UNI = LUCE.uni;
 const SUOLO_AO = new Set([0x8f8776, 0x847c6b, PAL.terrace, PAL.street, PAL.kerb,
   PAL.depWhite, PAL.depGrey, PAL.depSurge, 0x4c4639]);
-// i muri e le pietre: alla base prendono l'occlusione del suolo che hanno
-// davanti, e la perdono salendo entro 3,6 m [disegno]
 const MURI_AO = new Set([PAL.wall1, PAL.wall2, PAL.wall3, PAL.stone, PAL.civic, PAL.column,
   0x7c4536, 0x8f8674, PAL.crude]);
-AO_UNI.quota = { value: 0 };
-function luceCotta(mat, muro){
-  const prima = mat.onBeforeCompile;
-  mat.onBeforeCompile = (sh, r) => {
-    if(prima) prima.call(mat, sh, r);
-    sh.uniforms.uAoSuolo = AO_UNI.tex; sh.uniforms.uAoBox = AO_UNI.box;
-    sh.uniforms.uAoForza = AO_UNI.forza; sh.uniforms.uAoQuota = AO_UNI.quota;
-    sh.vertexShader = 'varying vec3 vAoP;\nvarying vec3 vAoN;\n' + sh.vertexShader.replace('#include <project_vertex>', `#include <project_vertex>
-{
-  vec4 aw = vec4( transformed, 1.0 );
-  vec3 an = objectNormal;
-  #ifdef USE_INSTANCING
-    aw = instanceMatrix * aw;
-    an = mat3( instanceMatrix ) * an;
-  #endif
-  vAoP = ( modelMatrix * aw ).xyz;
-  vAoN = normalize( mat3( modelMatrix ) * an );
-}`);
-    sh.fragmentShader = 'uniform sampler2D uAoSuolo;\nuniform vec4 uAoBox;\nuniform float uAoForza;\nuniform float uAoQuota;\nvarying vec3 vAoP;\nvarying vec3 vAoN;\n' +
-      sh.fragmentShader.replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
-{
-  ${muro ? `
-  // il suolo appena davanti alla faccia, 1,4 m in fuori
-  vec2 axz = vAoP.xz + normalize( vAoN.xz + 1e-5 ) * 0.35;
-  float ao = texture2D( uAoSuolo, ( axz - uAoBox.xy ) * uAoBox.zw ).r;
-  float verticale = 1.0 - smoothstep( 0.4, 0.7, abs( vAoN.y ) );
-  ao = mix( ao, 1.0, smoothstep( 0.0, 0.9, vAoP.y - uAoQuota ) );
-  ao = mix( 1.0, ao, uAoForza * verticale );` : `
-  float ao = texture2D( uAoSuolo, ( vAoP.xz - uAoBox.xy ) * uAoBox.zw ).r;
-  ao = mix( 1.0, ao, uAoForza );`}
-  reflectedLight.indirectDiffuse *= ao;
-  reflectedLight.directDiffuse *= mix( 1.0, ao, 0.4 );
-}`);
-  };
-  const chiave = mat.customProgramCacheKey ? mat.customProgramCacheKey() : '';
-  mat.customProgramCacheKey = () => chiave + (muro ? '|aomuro' : '|aosuolo');
-}
+const luceCotta = (mat, muro) => LUCE.applica(mat, muro);
 
 const dummy = new Object3D();
 const allMaterials = [];
@@ -3116,7 +3068,7 @@ function passo(){
       g.position.y = depositCurrent;
   }
 
-  AO_UNI.quota.value = depositCurrent;
+  LUCE.quota(depositCurrent);
   stepParticles(dt, t);
   // sui marciapiedi prima del 79, sul deposito dopo: a scala vera chi lavora
   // ai recuperi sparirebbe sotto la cenere
