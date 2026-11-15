@@ -85,3 +85,23 @@ export function rettangoli(W, D, cella, scelta){
   }
   return fuori;
 }
+
+/* L'atrio attorno a un impluvio: la stanza che contiene la vasca, con le
+   porte chiuse quanto basta perché sia una stanza sola. Si prova a chiudere
+   le aperture fino a 2, 3, 4 e 5 m (chiudi 4, 6, 8, 10 celle) e si tiene la
+   prima stanza sotto `max` m²: fra atrio e peristilio o tablino le aperture
+   sono larghe, e con le porte normali i due spazi restavano uno. Restituisce
+   la maschera delle celle dell'atrio sulla griglia di stanze(..., 4). */
+export function atrio(muri, dim, vasca, max = 250, cella = 0.25){
+  const [a, b, e, f] = vasca;
+  for(const chiudi of [4, 6, 8, 10]){
+    const s = stanze(muri, dim, cella, chiudi);
+    const i = Math.round((a + e) / 2 / cella), j = Math.round((b + f) / 2 / cella);
+    const l = s.lab[j * s.W + i];
+    if(l < 0 || s.area[l] > max) continue;
+    const maschera = new Uint8Array(s.W * s.D);
+    for(let p = 0; p < maschera.length; p++) if(s.lab[p] === l) maschera[p] = 1;
+    return { maschera, area: s.area[l], chiudi };
+  }
+  return null;
+}

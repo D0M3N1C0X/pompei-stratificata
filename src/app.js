@@ -45,7 +45,8 @@ import { EVENTI, DURATA, statoEruzione, puntoEvento } from './data/eruzione.js';
 import { PERCORSI, MODALITA } from './data/classe.js';
 import { PLACES } from './data/places.js';
 import INTERNI_P from './data/pompei-interni.json';
-import { stanze, rettangoli } from './scene/stanze.js';
+import { stanze, rettangoli, atrio } from './scene/stanze.js';
+import IMPLUVI_P from './data/pompei-impluvi.json';
 import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
 import { POST } from './post.js';
@@ -1123,43 +1124,69 @@ const intonaci = new Group(); scene.add(intonaci);
       z.push([c.x0 + (a+e)/8, 0.125, c.z0 + (b+f)/8, (e-a)/4 + 0.01, 0.25, (f-b)/4 + 0.01]);
   bakeTracked(z, ZOCCOLO, BOX, intonaci);
 }
-/* I tetti (e i pavimenti) delle tre case misurate. La pianta dice dove corrono i muri, non
-   quali spazi erano coperti; qui vale una regola sola [ipotesi]: gli spazi
-   sotto i 50 m² (cubicoli, botteghe, triclini, corridoi) hanno il tetto,
-   quelli più grandi (peristili, giardini, e anche gli atri, che invece
-   erano coperti con l'apertura al centro) restano aperti. Le stanze vengono
-   da src/scene/stanze.js. Il tetto è una lastra di coppi piana sulla cima
-   dei muri, che copre la stanza e un palmo dei muri intorno [disegno]. */
+/* I tetti (e i pavimenti) delle tre case misurate. La pianta dice dove
+   corrono i muri, non quali spazi erano coperti; qui valgono due regole
+   [ipotesi]:
+   · gli spazi sotto i 50 m² (cubicoli, botteghe, triclini, corridoi) hanno
+     il tetto, quelli più grandi (peristili, giardini) restano aperti;
+   · gli atri con l'impluvio disegnato da Mau (src/data/pompei-impluvi.json:
+     due nel Fauno, due nei Vettii) hanno il tetto con il compluvio, largo il
+     doppio della vasca come a Ercolano, e la vasca con l'acqua. Gli altri
+     atri, e quelli del Menandro, restano aperti.
+   Le stanze vengono da src/scene/stanze.js. Il tetto è una lastra di coppi
+   piana sulla cima dei muri, che copre la stanza e un palmo dei muri
+   intorno; il pavimento delle stanze coperte è di cocciopesto [disegno]. */
 const TETTO_SOGLIA_M2 = 50;
-const COCCIOPESTO = 0x9c6f5c;
+const COCCIOPESTO = 0x9c6f5c, ACQUA_IMPLUVIO = 0x5d7278;
 const TETTI_PIANTA = {};
 {
-  const t = [], pav = [];
+  const t = [], pav = [], vasche = [], acque = [];
   for(const [k, c] of Object.entries(CASE_INTERNE)){
     const casa = INTERNI_P.case[k];
     const s = stanze(casa.muri, casa.dim);
-    const coperta = l => l >= 0 && s.area[l] < TETTO_SOGLIA_M2;
-    const W = s.W, N = s.W * s.D;
+    const W = s.W, N = s.W * s.D, cel = s.cella;
+    // le celle coperte: stanze piccole e atri con l'impluvio
+    const coperta = new Uint8Array(N), compluvio = new Uint8Array(N);
+    for(let p = 0; p < N; p++) if(s.lab[p] >= 0 && s.area[s.lab[p]] < TETTO_SOGLIA_M2) coperta[p] = 1;
+    const atri = [];
+    for(const { vasca } of IMPLUVI_P.case[k] || []){
+      const at = atrio(casa.muri, casa.dim, vasca);
+      if(!at) continue;
+      for(let p = 0; p < N; p++) if(at.maschera[p]) coperta[p] = 1;
+      const [a, b, e, f] = vasca, cx = (a+e)/2, cz = (b+f)/2, hw = e - a, hd = f - b;
+      for(let j = Math.floor((cz - hd) / cel); j < Math.ceil((cz + hd) / cel); j++)
+        for(let i = Math.floor((cx - hw) / cel); i < Math.ceil((cx + hw) / cel); i++)
+          if(i >= 0 && i < W && j >= 0 && j < s.D) compluvio[j * W + i] = 1;
+      atri.push(Math.round(at.area));
+      // la vasca: il bordo di pietra alto 20 cm e l'acqua appena sotto [disegno]
+      vasche.push([c.x0 + (a+e)/8, 0, c.z0 + (b+f)/8, (e-a)/4, 0.05, (f-b)/4]);
+      acque.push([c.x0 + (a+e)/8, 0.05, c.z0 + (b+f)/8, (e-a)/4 - 0.06, 0.004, (f-b)/4 - 0.06]);
+    }
+    // sui muri il tetto arriva fino a 75 cm da una stanza coperta: così i
+    // muri fra due stanze coperte non restano strisce scoperte
     const sceglie = p => {
-      if(coperta(s.lab[p])) return true;
+      if(compluvio[p]) return false;
+      if(coperta[p]) return true;
       if(!s.muro[p]) return false;
-      const i = p % W;
-      return (i > 0 && coperta(s.lab[p - 1])) || (i < W - 1 && coperta(s.lab[p + 1])) ||
-             (p >= W && coperta(s.lab[p - W])) || (p < N - W && coperta(s.lab[p + W]));
+      const i = p % W, j = (p / W) | 0;
+      for(let d = 1; d <= 3; d++)
+        if((i - d >= 0 && coperta[p - d]) || (i + d < W && coperta[p + d]) ||
+           (j - d >= 0 && coperta[p - d * W]) || (j + d < s.D && coperta[p + d * W])) return true;
+      return false;
     };
-    const r = rettangoli(s.W, s.D, s.cella, sceglie);
-    // il pavimento delle stanze coperte, in cocciopesto [disegno]: gli
-    // spazi aperti restano di terra battuta, come il resto della città
-    for(const [a, b, e, f] of rettangoli(s.W, s.D, s.cella, q => coperta(s.lab[q])))
+    const r = rettangoli(W, s.D, cel, sceglie);
+    for(const [a, b, e, f] of rettangoli(W, s.D, cel, q => coperta[q] && !s.muro[q]))
       pav.push([c.x0 + (a+e)/8, 0.004, c.z0 + (b+f)/8, (e-a)/4, 0.008, (f-b)/4]);
-    let coperte = 0, area = 0;
-    for(let l = 0; l < s.n; l++) if(coperta(l)){ coperte++; area += s.area[l]; }
-    TETTI_PIANTA[k] = { stanze: s.n, coperte, m2: Math.round(area), pezzi: r.length };
+    let piccole = 0, area = 0;
+    for(let l = 0; l < s.n; l++) if(s.area[l] < TETTO_SOGLIA_M2){ piccole++; area += s.area[l]; }
+    TETTI_PIANTA[k] = { stanze: s.n, coperte: piccole, m2: Math.round(area), atri, pezzi: r.length };
     for(const [a, b, e, f] of r)
       t.push([c.x0 + (a+e)/8, 1.0 + 0.03, c.z0 + (b+f)/8, (e-a)/4, 0.06, (f-b)/4]);
   }
   bakeTracked(t, PAL.roof, BOX, intonaci);
   bakeTracked(pav, COCCIOPESTO, BOX, intonaci);
+  bakeTracked(vasche, PAL.stone, BOX, intonaci);
+  bakeTracked(acque, ACQUA_IMPLUVIO, BOX, intonaci, false);
 }
 
 /* ------------------------------ deposito, a strati veri per la sezione */

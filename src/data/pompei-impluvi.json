@@ -1,0 +1,15 @@
+{
+  "fonte": "A. Mau: Casa del Fauno (fig. 137, 1899/1907) e Casa dei Vettii (1907), pubblico dominio; le miniature a 1280 px di Wikimedia Commons degli stessi file da cui vengono i muri (strumenti/piante/case_pompei.py)",
+  "metodo": "Ogni miniatura è allineata ai muri di src/data/pompei-interni.json cercando scala e spostamento che fanno coincidere di più i pixel neri spessi con i muri (Fauno: orientamento come nei dati, 13,15 px/m, spostamento 26/12 px; Vettii: 29,4 px/m, 189,5/52,5 px). Il riquadro interno dell'impluvio, la vasca, è letto a vista sull'ingrandimento: errore dell'ordine di un pixel, 4–8 cm. Il Menandro manca: la sua miniatura non si è potuta scaricare (Wikimedia ha rifiutato la richiesta).",
+  "nota": "Metri nella griglia locale della casa, come pompei-interni.json: [x0, z0, x1, z1].",
+  "case": {
+    "fauno": [
+      { "atrio": "B, tuscanico", "vasca": [9.92, 73.34, 12.46, 77.27] },
+      { "atrio": "b, tetrastilo", "vasca": [24.12, 71.18, 25.76, 74.63] }
+    ],
+    "vettii": [
+      { "atrio": "c", "vasca": [22.90, 21.03, 25.64, 23.53] },
+      { "atrio": "v, secondario", "vasca": [27.81, 12.94, 29.48, 14.80] }
+    ]
+  }
+}
