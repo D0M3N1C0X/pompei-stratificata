@@ -60,6 +60,7 @@ import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
 import aoSuoloUrl from './assets/luce/ao-suolo.png?url';
 import AO_SUOLO from './assets/luce/ao-suolo.json';
 import { creaLuceCotta } from './scene/luce.js';
+import { creaCielo, creaMonti } from './scene/cielo.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -114,6 +115,13 @@ ERCOLANO.textures(TEX, { SCALA_MONDO, mappaMondo });
 
 const scene = new Scene();
 scene.fog = new Fog(PAL.fog, 240, 860);
+// la cupola del cielo e i Monti Lattari all'orizzonte (src/scene/cielo.js)
+const CIELO = creaCielo();
+scene.add(CIELO.mesh);
+const MONTI = creaMonti(0x6f7368);
+MONTI.material.fog = false;            // la foschia la fa il colore, vedi updateSun
+scene.add(MONTI);
+const MONTI_BASE = new Color(0x5c6155), MONTI_ARIA = new Color();
 
 const camera = new PerspectiveCamera(64, innerWidth/innerHeight, 0.12, 1600);
 
@@ -245,6 +253,11 @@ function updateSun(){
     scene.background = skyTex;
     scene.fog.color.setStyle(rgbStr(mix3(sky.lo, sky.hi, 0.35)));
   }
+  CIELO.colori(sky.hi, sky.lo);
+  CIELO.sole(sunEl, sunAz);
+  // i monti lontani prendono il colore dell'aria: due terzi orizzonte
+  MONTI_ARIA.setRGB(sky.lo[0]/255, sky.lo[1]/255, sky.lo[2]/255, SRGBColorSpace);
+  MONTI.material.color.copy(MONTI_BASE).lerp(MONTI_ARIA, 0.62);
   const hh = Math.floor(h), mm = Math.round((h - hh)*60) % 60;
   const el = document.getElementById('clockTime');
   if(el){
@@ -3397,6 +3410,9 @@ function passo(){
     }
   }
 
+  CIELO.mesh.visible = MONTI.visible = !eru.on;
+  CIELO.segui(camera, clock.elapsedTime);
+  CIELO.uni.uNebbia.value.copy(scene.fog.color);
   if(!senzaDisegno && !POST.render(renderer, scene, camera)) renderer.render(scene, camera);
 }
 
