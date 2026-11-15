@@ -370,6 +370,48 @@ export const AUDIO = (function(){
   ];
 
   // chiamata di cornu/tibia: nota sola tenuta, nessuna melodia
+  // VICINO ALLE BOTTEGHE — cocci e monete sul bancone, il pestello nel
+  // mortaio, voci più vicine. Sintesi, non registrazioni; che suoni
+  // facesse una bottega del 79 nessuna fonte lo dice [regia].
+  function coccio_(when, gain){                   // terracotta o moneta sul banco
+    const n = Math.random() < 0.4 ? 2 : 1;
+    for(let i = 0; i < n; i++){
+      const t = when + i*rnd(0.06, 0.14);
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = rnd(1700, 3100);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(gain, t + 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + rnd(0.08, 0.16));
+      o.connect(g); g.connect(dry); g.connect(wet);
+      o.start(t); o.stop(t + 0.2);
+      burst(t, 0.03, 'highpass', 3200, 0.8, gain*0.5);
+    }
+  }
+  function pestello_(when, gain){                 // colpo sordo nel mortaio
+    const n = Math.floor(rnd(2, 5));
+    for(let i = 0; i < n; i++) burst(when + i*rnd(0.45, 0.6), 0.12, 'bandpass', rnd(150, 240), 1.6, gain);
+  }
+  const BOTTEGA = [[coccio_, 1.2, 4.5, 0.05], [voice_, 1.0, 3.2, 0.06], [pestello_, 6, 14, 0.07]];
+  let vicinoBottega = 0, vicinoFontana = 0, acquaG = null, acquaSrc = null;
+  let bottegaQueue = [];
+  // l'acqua che cade nella vasca della fontana: rumore filtrato, continuo,
+  // che sale avvicinandosi [regia]
+  function acqua(){
+    if(acquaG) return;
+    acquaSrc = noiseSrc();
+    const hp = ctx.createBiquadFilter(); hp.type = 'bandpass'; hp.frequency.value = 1500; hp.Q.value = 0.5;
+    acquaG = ctx.createGain(); acquaG.gain.value = 0;
+    acquaSrc.connect(hp).connect(acquaG); acquaG.connect(dry); acquaG.connect(wet);
+    acquaSrc.start();
+  }
+  function setVicino(bottega, fontana){
+    vicinoBottega = Math.max(0, Math.min(1, bottega || 0));
+    vicinoFontana = Math.max(0, Math.min(1, fontana || 0));
+    if(!ready || !on) return;
+    acqua();
+    acquaG.gain.setTargetAtTime(0.11 * vicinoFontana * vicinoFontana, now(), 0.4);
+  }
+
   function tibiaCall(when, gain){
     if(Math.random() < 0.5) tibia(CETRA_HZ[Math.floor(Math.random()*4)]*2, when, rnd(0.7,1.5), gain);
     else cornu(rnd(96,132), when, rnd(1.1,2.0), gain*0.9);
@@ -389,6 +431,15 @@ export const AUDIO = (function(){
   function pump(){
     if(!ready || !on) return;
     const t = now(), horizon = t + 0.6;
+    // le botteghe: la coda corre sempre, ma suona solo vicino a un bancone
+    if(!bottegaQueue.length) bottegaQueue = BOTTEGA.map(e => ({ fn:e[0], lo:e[1], hi:e[2], gain:e[3], next: t + rnd(0, e[2]) }));
+    for(const e of bottegaQueue){
+      while(e.next < horizon){
+        const g = e.gain * vicinoBottega * vicinoBottega;
+        if(g > 0.002){ try { e.fn(Math.max(e.next, t + 0.02), g * rnd(0.7, 1.25)); } catch(err){} }
+        e.next += rnd(e.lo, e.hi);
+      }
+    }
     for(const e of evQueue){
       while(e.next < horizon){
         try { e.fn(Math.max(e.next, t + 0.02), e.gain * rnd(0.7, 1.25)); } catch(err){}
@@ -431,6 +482,7 @@ export const AUDIO = (function(){
       bedNodes.forEach(n => n.stop && n.stop());
       bedNodes = [];
       evQueue = [];
+      if(acquaG){ try { acquaSrc.stop(); } catch(e){} acquaG = null; acquaSrc = null; }
       if(evTimer){ clearInterval(evTimer); evTimer = null; }
     }
     return on;
@@ -452,7 +504,7 @@ export const AUDIO = (function(){
     else master.gain.setTargetAtTime(0.9, now(), 0.5);
   });
 
-  return { init, setEnabled, setEpoch, playFootstep, isOn: () => on, isReady: () => ready };
+  return { init, setEnabled, setEpoch, playFootstep, setVicino, isOn: () => on, isReady: () => ready };
 })();
 
 /* =====================================================================

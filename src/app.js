@@ -3629,6 +3629,27 @@ function applicaCamera(){
   } else if(v.length === 6) window.pompei.guarda(...v);
 }
 
+// I suoni vicino alle botteghe e alle fontane: quattro volte al secondo la
+// distanza dal bancone o dalla fontana più vicina, solo nel 79 (a Pompei la
+// vigilia, a Ercolano il momento «79»). Si sentono entro 24 m [regia].
+const VICINO_U = 6;
+setInterval(() => {
+  if(!AUDIO.isOn()) return;
+  const vicino = (x, z, punti) => {
+    let d = 1e9;
+    for(const p of punti) d = Math.min(d, Math.hypot(p.x - x, p.z - z));
+    return Math.max(0, 1 - d / VICINO_U);
+  };
+  if(ercOn){
+    if(ERCOLANO.momentoOra() !== '79'){ AUDIO.setVicino(0, 0); return; }
+    const p = ERCOLANO.posizione();
+    AUDIO.setVicino(vicino(p.x, p.z, ERCOLANO.puntiBotteghe), 0);
+  } else if(epoch === 0){
+    const { x, z } = camera.position;
+    AUDIO.setVicino(vicino(x, z, BOTTEGHE.map(([bx, bz]) => ({ x:bx, z:bz }))), vicino(x, z, FONTANE));
+  } else AUDIO.setVicino(0, 0);
+}, 250);
+
 // «Copia il link»: l'indirizzo è già quello giusto, basta prenderlo
 document.getElementById('pLink').addEventListener('click', async () => {
   const btn = document.getElementById('pLink');
