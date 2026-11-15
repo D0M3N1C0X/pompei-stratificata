@@ -177,7 +177,7 @@ const ACTIVITY_PLACE_IDS = new Set([
 // banconi delle botteghe, dal 7 novembre 2026), { x, z, id, raggio }; per
 // loro conta anche il lato della strada, così chi compra sta davanti al
 // bancone e non sul marciapiede di fronte
-function activitySites(epoch, routes, extra=[]){
+function activitySites(epoch, routes, extra=[], luoghi=true){
   if(!routes.length) return [];
   const vicino = (p, max) => {
     let best=null;
@@ -193,7 +193,7 @@ function activitySites(epoch, routes, extra=[]){
     return best && best.distanceSquared<=max*max ? best : null;
   };
   const altri = extra.map(p => vicino(p, 4)).filter(Boolean);
-  return PLACES.filter(p => ACTIVITY_PLACE_IDS.has(p.id) && p.from<=epoch && p.to>=epoch)
+  return PLACES.filter(p => luoghi && ACTIVITY_PLACE_IDS.has(p.id) && p.from<=epoch && p.to>=epoch)
     .map(place => {
       let best=null;
       for(const route of routes){
@@ -371,7 +371,8 @@ export function createInhabitants({ streets=[], populations=POPULATIONS, places=
 
   for(const profile of populations){
     const random=seeded(0x51f15e + profile.epoch*997);
-    const sites=places ? activitySites(profile.epoch,routes,siti[profile.epoch]||[]) : [];
+    // places:false (Ercolano) toglie i luoghi di Pompei, non gli altri punti
+    const sites=activitySites(profile.epoch,routes,siti[profile.epoch]||[],places);
     const people=makeAgents(profile.people,'people',routes,random,profile.flow,sites);
     const dogs=makeAgents(profile.dogs,'dogs',routes,random,profile.flow,sites);
     const birds=makeAgents(profile.pigeons,'birds',routes,random,profile.flow,sites);

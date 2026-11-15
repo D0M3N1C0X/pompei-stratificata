@@ -81,6 +81,14 @@ export const ANCORE = (() => {
   };
 })();
 
+/* Le botteghe con il nome in OpenStreetMap (osterie, tintorie, il forno di
+   Sex. Patulcius Felix, il tagliatore di gemme...): il centro della pianta,
+   in unità. Nel 79 attirano la gente come i banconi di Pompei (vedi
+   ercolano.js); il posto viene dalla pianta, che cosa vi si fa no. */
+const NOME_BOTTEGA = /bottega|botteghe|shop|osteria|negozio|tintore|pistrinum/i;
+export const BOTTEGHE = PIANTA.edifici.filter(e => e.nome && NOME_BOTTEGA.test(e.nome))
+  .map(e => { const [x, z] = centro(e.punti).map(m); return { x, z, nome:e.nome }; });
+
 const BOX = new BoxGeometry(1, 1, 1);
 const T = new Object3D();
 
@@ -179,6 +187,60 @@ function muro(a, b, spessore, h, y0){
   T.updateMatrix(); M4.copy(T.matrix);
   g.applyMatrix4(M4);
   return g;
+}
+/* Il fronte delle botteghe nel 79: sul lato della pianta più vicino a una
+   via, al suo mezzo, il vano scuro di 2,4 × 2,8 m e il bancone alto 95 cm
+   col piano di marmo, come le botteghe del generatore di Pompei. Il posto
+   viene dalla pianta OSM; misure e forma del bancone sono [ipotesi]. */
+export function botteghe79({ parent, vano, bancone, marmo }){
+  const vie = percorsi();
+  const daVia = (x, z) => {
+    let best = 1e9;
+    for(const v of vie){
+      const dx = v.b[0]-v.a[0], dz = v.b[1]-v.a[1], L2 = dx*dx + dz*dz;
+      const t = L2 ? Math.max(0, Math.min(1, ((x-v.a[0])*dx + (z-v.a[1])*dz) / L2)) : 0;
+      best = Math.min(best, Math.hypot(x - v.a[0] - t*dx, z - v.a[1] - t*dz));
+    }
+    return best;
+  };
+  const pezzi = { vano:[], bancone:[], marmo:[] };
+  const pezzo = (lista, x, y, z, ang, lungo, alto, prof) => {
+    const g = BOX.clone();
+    T.position.set(x, y + alto/2, z); T.rotation.set(0, ang, 0); T.scale.set(lungo, alto, prof);
+    T.updateMatrix(); g.applyMatrix4(T.matrix); lista.push(g);
+  };
+  let n = 0;
+  for(const e of PIANTA.edifici){
+    if(!e.nome || !NOME_BOTTEGA.test(e.nome)) continue;
+    const p = e.punti.map(q => [m(q[0]), m(q[1])]);
+    let lato = null;
+    for(let i = 0; i < p.length - 1; i++){
+      const [ax, az] = p[i], [bx, bz] = p[i+1], L = Math.hypot(bx-ax, bz-az);
+      if(L < m(3)) continue;                          // un lato troppo corto per un vano
+      const d = daVia((ax+bx)/2, (az+bz)/2);
+      if(!lato || d < lato.d) lato = { ax, az, bx, bz, L, d };
+    }
+    if(!lato || lato.d > m(8)) continue;
+    const { ax, az, bx, bz, L } = lato, mx = (ax+bx)/2, mz = (az+bz)/2;
+    const ux = (bx-ax)/L, uz = (bz-az)/L;
+    // la normale verso la via
+    let nx = -uz, nz = ux;
+    if(daVia(mx + nx*0.5, mz + nz*0.5) > daVia(mx - nx*0.5, mz - nz*0.5)){ nx = -nx; nz = -nz; }
+    const ang = -Math.atan2(uz, ux), y0 = quotaDi(mz * U);
+    const fuori = (o) => [mx + nx*o, mz + nz*o];
+    let [x, z] = fuori(m(0.45)/2 + 0.004);
+    pezzo(pezzi.vano, x, y0, z, ang, m(2.4), m(2.8), 0.006);
+    [x, z] = fuori(m(0.45)/2 + m(0.2));
+    pezzo(pezzi.bancone, x, y0, z, ang, m(2.0), m(0.95), m(0.4));
+    pezzo(pezzi.marmo, x, y0 + m(0.95), z, ang, m(2.08), m(0.06), m(0.48));
+    n++;
+  }
+  for(const [k, mat] of [['vano', vano], ['bancone', bancone], ['marmo', marmo]]){
+    if(!pezzi[k].length) continue;
+    const mesh = new Mesh(mergeGeometries(pezzi[k], false), mat);
+    mesh.castShadow = k !== 'vano'; mesh.receiveShadow = true; parent.add(mesh);
+  }
+  return n;
 }
 function casuale(seme){ let s = seme >>> 0; return () => (s = (s*1664525 + 1013904223) >>> 0) / 4294967296; }
 
