@@ -1032,7 +1032,7 @@ caricaFigure().then(f => { inhabitants.usaFigure(f); ERCOLANO.usaFigure(f); if(w
 const LUCE = creaLuceCotta(aoSuoloUrl, AO_SUOLO);
 const AO_UNI = LUCE.uni;
 const SUOLO_AO = new Set([0x8f8776, 0x847c6b, PAL.terrace, PAL.street, PAL.kerb,
-  PAL.depWhite, PAL.depGrey, PAL.depSurge, 0x4c4639]);
+  PAL.depWhite, PAL.depGrey, PAL.depSurge, 0x4c4639, 0x9c6f5c]);   // l'ultimo: il cocciopesto delle case misurate
 const MURI_AO = new Set([PAL.wall1, PAL.wall2, PAL.wall3, PAL.stone, PAL.civic, PAL.column,
   0x7c4536, 0x8f8674, PAL.crude]);
 const luceCotta = (mat, muro) => LUCE.applica(mat, muro);
@@ -1123,7 +1123,7 @@ const intonaci = new Group(); scene.add(intonaci);
       z.push([c.x0 + (a+e)/8, 0.125, c.z0 + (b+f)/8, (e-a)/4 + 0.01, 0.25, (f-b)/4 + 0.01]);
   bakeTracked(z, ZOCCOLO, BOX, intonaci);
 }
-/* I tetti delle tre case misurate. La pianta dice dove corrono i muri, non
+/* I tetti (e i pavimenti) delle tre case misurate. La pianta dice dove corrono i muri, non
    quali spazi erano coperti; qui vale una regola sola [ipotesi]: gli spazi
    sotto i 50 m² (cubicoli, botteghe, triclini, corridoi) hanno il tetto,
    quelli più grandi (peristili, giardini, e anche gli atri, che invece
@@ -1131,9 +1131,10 @@ const intonaci = new Group(); scene.add(intonaci);
    da src/scene/stanze.js. Il tetto è una lastra di coppi piana sulla cima
    dei muri, che copre la stanza e un palmo dei muri intorno [disegno]. */
 const TETTO_SOGLIA_M2 = 50;
+const COCCIOPESTO = 0x9c6f5c;
 const TETTI_PIANTA = {};
 {
-  const t = [];
+  const t = [], pav = [];
   for(const [k, c] of Object.entries(CASE_INTERNE)){
     const casa = INTERNI_P.case[k];
     const s = stanze(casa.muri, casa.dim);
@@ -1147,6 +1148,10 @@ const TETTI_PIANTA = {};
              (p >= W && coperta(s.lab[p - W])) || (p < N - W && coperta(s.lab[p + W]));
     };
     const r = rettangoli(s.W, s.D, s.cella, sceglie);
+    // il pavimento delle stanze coperte, in cocciopesto [disegno]: gli
+    // spazi aperti restano di terra battuta, come il resto della città
+    for(const [a, b, e, f] of rettangoli(s.W, s.D, s.cella, q => coperta(s.lab[q])))
+      pav.push([c.x0 + (a+e)/8, 0.004, c.z0 + (b+f)/8, (e-a)/4, 0.008, (f-b)/4]);
     let coperte = 0, area = 0;
     for(let l = 0; l < s.n; l++) if(coperta(l)){ coperte++; area += s.area[l]; }
     TETTI_PIANTA[k] = { stanze: s.n, coperte, m2: Math.round(area), pezzi: r.length };
@@ -1154,6 +1159,7 @@ const TETTI_PIANTA = {};
       t.push([c.x0 + (a+e)/8, 1.0 + 0.03, c.z0 + (b+f)/8, (e-a)/4, 0.06, (f-b)/4]);
   }
   bakeTracked(t, PAL.roof, BOX, intonaci);
+  bakeTracked(pav, COCCIOPESTO, BOX, intonaci);
 }
 
 /* ------------------------------ deposito, a strati veri per la sezione */
