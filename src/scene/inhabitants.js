@@ -264,6 +264,9 @@ function makeAgents(count, species, routes, random, flow, sites=[]){
       stateRemaining:idle && site ? pauseDuration : random()*(idle ? pauseDuration : walkDuration),
       walkBlend:idle ? 0 : 1,
       activityPlace:site?.placeId || null,
+      // da che lato sta il bancone o la fontana: chi si ferma lo guarda
+      faccia:site?.lato ? Math.sign(site.lato) : 0,
+      yaw:null,
       activityRange:site ? { low:lowDistance, high:highDistance } : null,
       hover:species==='birds',
       index
@@ -325,7 +328,11 @@ function updateMesh(mesh, agents, count, delta, flow, suolo=0){
       }
     }
     const cycle=flow==='out' ? route.length : route.length*2;
-    actor.distance+=actor.speed*delta*actor.walkBlend;
+    // il passo non è un metronomo: ±8% lento, diverso per ognuno [regia];
+    // e mentre si gira di molto, rallenta (vedi sotto)
+    const passo=1+0.08*Math.sin(WALK.value*0.37+actor.phase*3.1);
+    const girando=actor.giro ? Math.max(0.25, 1-actor.giro/Math.PI) : 1;
+    actor.distance+=actor.speed*delta*actor.walkBlend*passo*girando;
     if(flow==='out' && actor.distance>=route.length){
       actor.exited=true;
       TEMP.position.set(route.b[0],actor.offset,route.b[1]);
@@ -352,7 +359,22 @@ function updateMesh(mesh, agents, count, delta, flow, suolo=0){
     );
     // i manichini guardano verso −Z, le figure di Blender verso +Z: per
     // loro mezzo giro in più, o camminerebbero all'indietro (misurato)
-    TEMP.rotation.set(0,Math.atan2(-direction*route.dx,-direction*route.dz)+(mesh.userData.fronte||0),0);
+    // la direzione del corpo: lungo la via, o verso il bancone per chi vi
+    // sta fermo; ci si gira a 3,5 rad/s (i cani a 6), non di colpo: prima
+    // a fine via il mezzo giro avveniva in un fotogramma
+    const fronte=mesh.userData.fronte||0;
+    let meta=Math.atan2(-direction*route.dx,-direction*route.dz)+fronte;
+    if(actor.faccia && actor.walkBlend<0.5){
+      const fx=-route.dz/route.length*actor.faccia, fz=route.dx/route.length*actor.faccia;
+      meta=Math.atan2(-fx,-fz)+fronte;
+    }
+    if(actor.yaw===null) actor.yaw=meta;
+    let diff=meta-actor.yaw;
+    diff=Math.atan2(Math.sin(diff),Math.cos(diff));
+    const velGiro=(actor.hover ? 12 : actor.inStrada ? 6 : 3.5)*delta;
+    actor.yaw+=Math.max(-velGiro,Math.min(velGiro,diff));
+    actor.giro=Math.abs(diff);
+    TEMP.rotation.set(0,actor.yaw,0);
     TEMP.scale.setScalar(actor.scale);
     TEMP.updateMatrix();
     mesh.setMatrixAt(i,TEMP.matrix);
