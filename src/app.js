@@ -1108,6 +1108,20 @@ scene.add(roofsA, roofsB);
   for(const [col,list] of byColor(a)) bakeTracked(list, col, BOX, roofsA);
   for(const [col,list] of byColor(b)) bakeTracked(list, col, BOX, roofsB);
 }
+/* Lo zoccolo dipinto nelle tre case misurate: una fascia rossa alta un metro
+   su ogni faccia dei muri della pianta, come sulle facciate del generatore.
+   Senza, nella vigilia queste tre erano le sole case di muro nudo, già
+   rovine in una città viva. Colore e altezza [ipotesi]: la pianta dà dove
+   corrono i muri, non com'erano dipinti. Solo finché la città è intera
+   (le fasi con i tetti): oggi i muri scavati restano di pietra. */
+const intonaci = new Group(); scene.add(intonaci);
+{
+  const z = [];
+  for(const [k, c] of Object.entries(CASE_INTERNE))
+    for(const [a, b, e, f] of INTERNI_P.case[k].muri)
+      z.push([c.x0 + (a+e)/8, 0.125, c.z0 + (b+f)/8, (e-a)/4 + 0.01, 0.25, (f-b)/4 + 0.01]);
+  bakeTracked(z, ZOCCOLO, BOX, intonaci);
+}
 
 /* ------------------------------ deposito, a strati veri per la sezione */
 
@@ -1581,6 +1595,7 @@ function applyEpoch(i, silent){
   depositTarget = e.deposit;
   roofsA.visible = !!e.roofsA;
   roofsB.visible = !!e.roofsB;
+  intonaci.visible = !!e.roofsA;
   shantyGroup.visible = !!e.shanty;
   vegGroup.visible = !!e.veg;
   canalGroup.visible = !!e.canal;
