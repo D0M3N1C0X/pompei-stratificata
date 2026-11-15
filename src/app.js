@@ -745,14 +745,21 @@ function costruisciVesuvio(){
   // dice la sua scheda), ma come superficie continua invece che a gradini
   // di blocchi da 32 m (28/10/2026). Anelli concentrici, un poco irregolari.
   const VX = -66, VZ = -252, R = 128, H = 104, NR = 48, NS = 96;
+  // i canaloni: solchi radiali sui fianchi, più profondi a metà costa [disegno]
+  const canaloni = (dr, a) => {
+    const t = dr / R, quanto = Math.sin(Math.PI * Math.min(1, Math.max(0, (t - 0.12) / 0.8)));
+    const solco = Math.pow(Math.abs(Math.sin(a*19 + 1.7*Math.sin(a*3) + dr*0.012)), 3);
+    return 1 - 0.1 * quanto * solco;
+  };
   const quota = (dr, a) => {
     let h = H * Math.pow(1 - dr/R, 1.35);
     if(dr < 20) h -= (20-dr)*1.1;
-    h = Math.max(1.5, h) * (1 + 0.035*Math.sin(a*5 + dr*0.05) + 0.02*Math.sin(a*11 - dr*0.09));
+    h = Math.max(1.5, h) * (1 + 0.035*Math.sin(a*5 + dr*0.05) + 0.02*Math.sin(a*11 - dr*0.09)) * canaloni(dr, a);
     return dr >= R ? -0.5 : h;
   };
-  const pos = [], col = [], idx = [];
+  const pos = [], col = [], verde = [], idx = [];
   const c1 = new Color(0x6d6a64), c2 = new Color(PAL.mountain), c3 = new Color(0x555350), cc = new Color();
+  const campo1 = new Color(0x84914a), campo2 = new Color(0xa09a58), bosco = new Color(0x617343), cv = new Color();
   for(let i = 0; i <= NR; i++){
     const dr = R * i / NR;
     const t = dr / R;
@@ -762,6 +769,12 @@ function costruisciVesuvio(){
       const a = j / NS * Math.PI * 2;
       pos.push(VX + Math.cos(a)*dr, quota(dr, a), VZ + Math.sin(a)*dr);
       col.push(cc.r, cc.g, cc.b);
+      // il verde dei fianchi bassi, a campi irregolari; la cima resta cenere
+      const n = 0.5 + 0.5*Math.sin(a*37 + dr*0.21) * Math.sin(a*13 - dr*0.13);
+      const k = Math.min(1, Math.max(0, (t - 0.34) / 0.2)) * (0.75 + 0.25*n);
+      cv.copy(n > 0.55 ? campo2 : campo1).lerp(bosco, Math.max(0, 0.6 - t) * 1.5);
+      cv.lerp(cc, 1 - k);
+      verde.push(cv.r, cv.g, cv.b);
     }
   }
   for(let i = 0; i < NR; i++) for(let j = 0; j < NS; j++){
@@ -780,7 +793,20 @@ function costruisciVesuvio(){
   const monte = new Mesh(geo, mm);
   monte.receiveShadow = true;
   cityGroup.add(monte);
+  // quanto verde: Strabone (V 4, 8), prima dell'eruzione, vede i fianchi
+  // coltivati e fertili e la cima piana, sterile, color cenere. Dopo il 79
+  // tutto cenere; il verde che torna nei secoli è [disegno]
+  const cenere = Float32Array.from(col), campi = Float32Array.from(verde);
+  const attr = geo.getAttribute('color');
+  VESUVIO.verde = f => {
+    for(let i = 0; i < attr.array.length; i++) attr.array[i] = cenere[i] + (campi[i] - cenere[i]) * f;
+    attr.needsUpdate = true;
+  };
 }
+const VESUVIO = { verde: () => {} };
+// fase → quanto verde sui fianchi: la vigilia (Strabone), poi cenere, poi il
+// ritorno della vegetazione [disegno]
+const VERDE_FASE = [1, 0, 0.25, 0.45, 0.65, 0.7, 0.7, 0.75];
 
 /* ------------------------------------------------------ dettagli urbani */
 
@@ -1662,6 +1688,7 @@ function applyEpoch(i, silent){
   roofsA.visible = !!e.roofsA;
   roofsB.visible = !!e.roofsB;
   intonaci.visible = !!e.roofsA;
+  VESUVIO.verde(VERDE_FASE[i] ?? 0);
   shantyGroup.visible = !!e.shanty;
   vegGroup.visible = !!e.veg;
   canalGroup.visible = !!e.canal;
