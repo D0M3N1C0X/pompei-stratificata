@@ -61,6 +61,7 @@ import aoSuoloUrl from './assets/luce/ao-suolo.png?url';
 import AO_SUOLO from './assets/luce/ao-suolo.json';
 import { creaLuceCotta } from './scene/luce.js';
 import { creaCielo, creaMonti } from './scene/cielo.js';
+import { creaLucerne } from './scene/lucerne.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -1163,6 +1164,12 @@ const intonaci = new Group(); scene.add(intonaci);
       z.push([c.x0 + (a+e)/8, 0.125, c.z0 + (b+f)/8, (e-a)/4 + 0.01, 0.25, (f-b)/4 + 0.01]);
   bakeTracked(z, ZOCCOLO, BOX, intonaci);
 }
+// le lucerne accese di sera davanti alle botteghe, solo nella vigilia
+// (src/scene/lucerne.js)
+const NORMALE_LATO = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+const LUCERNE = creaLucerne(BOTTEGHE.map(([x, z, bi]) => ({ x, z, nx:NORMALE_LATO[bi][0], nz:NORMALE_LATO[bi][1] })));
+scene.add(LUCERNE.group);
+
 /* I tetti (e i pavimenti) delle tre case misurate. La pianta dice dove
    corrono i muri, non quali spazi erano coperti; qui valgono due regole
    [ipotesi]:
@@ -1678,7 +1685,8 @@ function applyLight(){
   const w = Math.max(warmth * warmth, (!sectionOn && e.warm > .5) ? 1 : 0);
   sun.color.setRGB(1, 0.95 - w*0.22, 0.88 - w*0.45);
   const night = 1 - day;
-  hemi.intensity = (0.40 + 0.86*day) * (sectionOn ? 1 : (0.55 + k*0.45)) * (0.35 + 0.65*eru.luce);
+  // di notte un poco più buio (15/11/2026), perché le lucerne si leggano
+  hemi.intensity = (0.26 + 1.00*day) * (sectionOn ? 1 : (0.55 + k*0.45)) * (0.35 + 0.65*eru.luce);
   // il cielo tinge le ombre d'azzurro; il suolo di tufo e intonaco rimanda
   // una luce calda dal basso
   hemi.color.setRGB(0.84 - night*0.30, 0.90 - night*0.24, 0.98 - night*0.10);
@@ -3413,6 +3421,7 @@ function passo(){
   CIELO.mesh.visible = MONTI.visible = !eru.on;
   CIELO.segui(camera, clock.elapsedTime);
   CIELO.uni.uNebbia.value.copy(scene.fog.color);
+  LUCERNE.notte(epoch === 0 && !eru.on ? CIELO.uni.uNotte.value : 0, clock.elapsedTime);
   if(!senzaDisegno && !POST.render(renderer, scene, camera)) renderer.render(scene, camera);
 }
 
