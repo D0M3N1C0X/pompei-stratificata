@@ -1,5 +1,5 @@
 import { DEC_MAX, DEC_INF, C3, C4, C5, BEACH_Y, LUOGHI } from './data/ercolano-places.js';
-import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79, percorsi, BOTTEGHE, botteghe79 } from './ercolano-pianta.js';
+import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79, percorsi, BOTTEGHE, botteghe79, costruisciFontane } from './ercolano-pianta.js';
 import { createInhabitants } from './scene/inhabitants.js';
 import { POPULATIONS_ERCOLANO } from './data/populations.js';
 import { PAL } from './scene/palette.js';
@@ -174,10 +174,11 @@ export const ERCOLANO = (function(){
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'rovina', parent:G.rovine, solids });
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'intera', parent:G.intere, solids:[] });
   const N_BOTTEGHE = botteghe79({ parent:G.intere, vano:mat(0x2e2923), bancone:mat(0x8f8674, 'stone'), marmo:M.colonna });
+  const FONTANE_E = costruisciFontane({ parent:G.intere, pietra:M.marcia, acqua:M.acqua, pilastro:M.tufo });
   // gli abitanti: le stesse figure di Pompei, sulle vie della pianta vera
   // nel 79 qualcuno si ferma davanti alle botteghe con il nome in OSM
   const abitanti = createInhabitants({ streets:percorsi(), populations:POPULATIONS_ERCOLANO, places:false,
-    siti:{ 0: BOTTEGHE.map(b => ({ x:b.x, z:b.z, id:'bottega', raggio:0.5 })) } });
+    siti:{ 0: [...BOTTEGHE.map(b => ({ x:b.x, z:b.z, id:'bottega', raggio:0.5 })), ...FONTANE_E] } });
   eRoot.add(abitanti.group);
   const M_LINEA = new LineBasicMaterial({ color:PAL.accent });
   terreno79({ terra:M.terra, sabbia:M.sabbia, acqua:M.acqua, linea:M_LINEA, parent:G.terra79, LineLoop, BufferGeometry, Vector3 });
@@ -948,7 +949,7 @@ export const ERCOLANO = (function(){
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, puntiBotteghe: BOTTEGHE, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
+           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
            momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots, geometria, LIVELLI,
            isActive: () => active };
 })();

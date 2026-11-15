@@ -3670,7 +3670,7 @@ setInterval(() => {
   if(ercOn){
     if(ERCOLANO.momentoOra() !== '79'){ AUDIO.setVicino(0, 0); return; }
     const p = ERCOLANO.posizione();
-    AUDIO.setVicino(vicino(p.x, p.z, ERCOLANO.puntiBotteghe), 0);
+    AUDIO.setVicino(vicino(p.x, p.z, ERCOLANO.puntiBotteghe), vicino(p.x, p.z, ERCOLANO.puntiFontane));
   } else if(epoch === 0){
     const { x, z } = camera.position;
     AUDIO.setVicino(vicino(x, z, BOTTEGHE.map(([bx, bz]) => ({ x:bx, z:bz }))), vicino(x, z, FONTANE));

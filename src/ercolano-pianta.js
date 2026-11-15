@@ -188,6 +188,50 @@ function muro(a, b, spessore, h, y0){
   g.applyMatrix4(M4);
   return g;
 }
+/* Le fontane pubbliche del 79: a ogni incrocio di un cardine con un
+   decumano, all'angolo sul marciapiede, come a Pompei. Quante fossero e
+   dove stessero di preciso la pianta OSM non lo dice: posto all'incrocio e
+   misure (vasca 1,6 × 1,2 m alta 0,8, pilastro 1,4 m) sono [ipotesi]. */
+export function fontane79(){
+  const vie = percorsi(), out = [];
+  const taglio = (p, q) => {
+    const [x1, z1] = p.a, [x2, z2] = p.b, [x3, z3] = q.a, [x4, z4] = q.b;
+    const den = (x1-x2)*(z3-z4) - (z1-z2)*(x3-x4);
+    if(Math.abs(den) < 1e-9) return null;
+    const t = ((x1-x3)*(z3-z4) - (z1-z3)*(x3-x4)) / den, u = -((x1-x2)*(z1-z3) - (z1-z2)*(x1-x3)) / den;
+    // gli estremi contano: i tratti delle vie si toccano proprio all'incrocio
+    if(t < -0.02 || t > 1.02 || u < -0.02 || u > 1.02) return null;
+    return [x1 + t*(x2-x1), z1 + t*(z2-z1)];
+  };
+  for(const c of vie.filter(v => v.n.startsWith('Cardo')))
+    for(const d of vie.filter(v => v.n.startsWith('Decumano'))){
+      const x = taglio(c, d);
+      if(!x || out.some(f => Math.hypot(f.cx - x[0], f.cz - x[1]) < 1)) continue;
+      out.push({ cx:x[0], cz:x[1], x:x[0] + c.w/2 + c.mw*0.5 + 0.2, z:x[1] + d.w/2 + d.mw*0.5 + 0.2,
+                 id:'fontana', raggio:1.2, vie:[c.n, d.n] });
+    }
+  return out;
+}
+export function costruisciFontane({ parent, pietra, acqua, pilastro }){
+  const fontane = fontane79(), pezzi = { pietra:[], acqua:[], pilastro:[] };
+  const pezzo = (lista, x, y, z, w, h, d) => {
+    const g = BOX.clone(); T.position.set(x, y + h/2, z); T.rotation.set(0, 0, 0); T.scale.set(w, h, d);
+    T.updateMatrix(); g.applyMatrix4(T.matrix); lista.push(g);
+  };
+  for(const f of fontane){
+    const y0 = quotaDi(f.z * U);
+    pezzo(pezzi.pietra, f.x, y0, f.z, 0.4, 0.2, 0.3);
+    pezzo(pezzi.acqua, f.x, y0 + 0.2, f.z, 0.34, 0.01, 0.24);
+    pezzo(pezzi.pilastro, f.x, y0, f.z - 0.18, 0.11, 0.35, 0.11);
+  }
+  for(const [k, mat] of [['pietra', pietra], ['acqua', acqua], ['pilastro', pilastro]]){
+    if(!pezzi[k].length) continue;
+    const mesh = new Mesh(mergeGeometries(pezzi[k], false), mat);
+    mesh.castShadow = k !== 'acqua'; mesh.receiveShadow = true; parent.add(mesh);
+  }
+  return fontane;
+}
+
 /* Il fronte delle botteghe nel 79: sul lato della pianta più vicino a una
    via, al suo mezzo, il vano scuro di 2,4 × 2,8 m e il bancone alto 95 cm
    col piano di marmo, come le botteghe del generatore di Pompei. Il posto
