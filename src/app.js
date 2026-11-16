@@ -256,6 +256,7 @@ function updateSun(){
   }
   CIELO.colori(sky.hi, sky.lo);
   CIELO.sole(sunEl, sunAz);
+  ERCOLANO.luceDelGiorno(sunEl, sunAz, sky.hi, sky.lo);
   // i monti lontani prendono il colore dell'aria: due terzi orizzonte
   MONTI_ARIA.setRGB(sky.lo[0]/255, sky.lo[1]/255, sky.lo[2]/255, SRGBColorSpace);
   MONTI.material.color.copy(MONTI_BASE).lerp(MONTI_ARIA, 0.62);

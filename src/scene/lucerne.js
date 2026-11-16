@@ -44,12 +44,12 @@ export function creaLucerne(punti, { altezza = 0.45, fuori = 0.06 } = {}){
     map: tex, transparent: true, opacity: 0, depthWrite: false, blending: AdditiveBlending, fog: true }));
   // la pozza sul selciato, davanti alla bottega
   const disco = new PlaneGeometry(1, 1); disco.rotateX(-Math.PI / 2);
-  const pozza = new InstancedMesh(disco, new MeshBasicMaterial({ color: new Color(0xff9a48), map: tex,
+  const pozza = new InstancedMesh(disco, new MeshBasicMaterial({ color: new Color(0xffa860), map: tex,
     transparent: true, opacity: 0, depthWrite: false, blending: AdditiveBlending, fog: true,
     polygonOffset: true, polygonOffsetFactor: -2 }), punti.length);
   const M = new Matrix4();
   punti.forEach((p, i) => {
-    M.makeScale(1.6, 1, 1.6).setPosition(p.x + p.nx * 0.45, 0.012, p.z + p.nz * 0.45);
+    M.makeScale(1.15, 1, 1.15).setPosition(p.x + p.nx * 0.35, 0.012, p.z + p.nz * 0.35);
     pozza.setMatrixAt(i, M);
   });
   pozza.instanceMatrix.needsUpdate = true;
@@ -62,8 +62,8 @@ export function creaLucerne(punti, { altezza = 0.45, fuori = 0.06 } = {}){
       if(!group.visible) return;
       const t = 0.92 + 0.08 * Math.sin(tempo * 9.3) * Math.sin(tempo * 5.1);
       fiamma.material.opacity = f;
-      luce.material.opacity = 0.55 * f * t;
-      pozza.material.opacity = 0.42 * f * t;
+      luce.material.opacity = 0.45 * f * t;
+      pozza.material.opacity = 0.26 * f * t;
     }
   };
 }
