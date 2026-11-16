@@ -10,6 +10,7 @@ import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
 import { creaLuceCotta } from './scene/luce.js';
 import { creaCielo } from './scene/cielo.js';
 import { creaLucerne } from './scene/lucerne.js';
+import { creaMare } from './scene/mare.js';
 import aoOggiUrl from './assets/luce/ao-ercolano-oggi.png?url';
 import AO_OGGI from './assets/luce/ao-ercolano-oggi.json';
 import ao79Url from './assets/luce/ao-ercolano-79.png?url';
@@ -217,6 +218,9 @@ export const ERCOLANO = (function(){
   eRoot.add(abitanti.group);
   const M_LINEA = new LineBasicMaterial({ color:PAL.accent });
   terreno79({ terra:M.terra, sabbia:M.sabbia, acqua:M.acqua, linea:M_LINEA, parent:G.terra79, LineLoop, BufferGeometry, Vector3 });
+  // il mare del 79 davanti alla spiaggia, fino all'orizzonte
+  const MARE = creaMare({ riva:m(140), y:BEACH_Y - 0.05 });
+  G.terra79.add(...MARE.meshes);
 
   // ---- INSULA ORIENTALIS II — la Palestra
   // Campo di 77 × 47 m (Maiuri 1960, «l'area rettangolare della palestra»):
@@ -690,6 +694,7 @@ export const ERCOLANO = (function(){
     CIELO_E.segui(eCam, elapsed);
     CIELO_E.uni.uNebbia.value.copy(eScene.fog ? eScene.fog.color : eScene.background);
     LUCERNE_E.notte(momento === '79' && eruOre === null ? notteE : 0, elapsed);
+    if(G.terra79.visible) MARE.update(elapsed);
 
     hotspots.forEach((h,i) => {
       h.cone.position.y = Math.sin(elapsed*1.6 + i) * 0.10;
