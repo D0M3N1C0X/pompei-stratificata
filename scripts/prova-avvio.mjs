@@ -149,17 +149,29 @@ try {
   // 4. le risorse
   fase = 'risorse';
   await apri('?debug');
-  const ris = await valuta(`(() => {
-    const P = window.pompei, med = a => a.slice().sort((x, y) => x - y)[a.length >> 1];
-    const viste = [...Array(8).keys()].map(i => ['fase ' + (i + 1), () => { P.vista('pompei'); P.fase(i); }])
-      .concat([['Ercolano', () => P.vista('ercolano')], ['confronto', () => P.vista('confronto')]]);
-    // la scena avanza senza disegno fino al punto, poi si disegnano pochi
-    // fotogrammi: chiamate e triangoli sono quelli dell'ultimo
-    const giro = n => viste.map(([nome, vai]) => { vai(); P.passi(20, false); const ms = P.passi(n); return { nome, ...P.info(), ms: Math.round(med(ms) * 10) / 10 }; });
-    const primo = giro(3); giro(1); const terzo = giro(1);
-    P.vista('pompei'); P.fase(0);
-    return { viste: primo, memoria: [primo.at(-1), terzo.at(-1)] };
-  })()`);
+  // Una vista per comando, non tutte in uno: il 9 novembre 2026, su main,
+  // l'unico comando da cinquanta fotogrammi ha superato i 240 s concessi a
+  // ogni comando (con i materiali nuovi un fotogramma sul processore costa di
+  // più) e la prova è fallita senza che niente fosse rotto. Così ogni comando
+  // disegna al massimo tre fotogrammi.
+  const VISTE = [...Array(8).keys()].map(i => ['fase ' + (i + 1), `P.vista('pompei'); P.fase(${i});`])
+    .concat([['Ercolano', `P.vista('ercolano');`], ['confronto', `P.vista('confronto');`]]);
+  const giroRisorse = async n => {
+    const esiti = [];
+    for(const [nome, vai] of VISTE){
+      fase = 'risorse, ' + nome;
+      // la scena avanza senza disegno fino al punto, poi si disegnano pochi
+      // fotogrammi: chiamate e triangoli sono quelli dell'ultimo
+      esiti.push(await valuta(`(() => { const P = window.pompei; ${vai} P.passi(20, false);
+        const ms = P.passi(${n}).slice().sort((x, y) => x - y);
+        return { nome: ${JSON.stringify(nome)}, ...P.info(), ms: Math.round(ms[ms.length >> 1] * 10) / 10 }; })()`));
+    }
+    return esiti;
+  };
+  const primo = await giroRisorse(3); await giroRisorse(1); const terzo = await giroRisorse(1);
+  await valuta(`window.pompei.vista('pompei'); window.pompei.fase(0);`);
+  fase = 'risorse';
+  const ris = { viste: primo, memoria: [primo.at(-1), terzo.at(-1)] };
   const fileBudget = join(radice, 'scripts/budget.json');
   const budget = existsSync(fileBudget) ? JSON.parse(readFileSync(fileBudget, 'utf8')) : null;
   for(const v of ris.viste){

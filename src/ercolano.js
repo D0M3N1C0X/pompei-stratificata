@@ -1,5 +1,5 @@
 import { DEC_MAX, DEC_INF, C3, C4, C5, BEACH_Y, LUOGHI } from './data/ercolano-places.js';
-import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79, percorsi } from './ercolano-pianta.js';
+import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79, percorsi, BOTTEGHE, botteghe79, costruisciFontane } from './ercolano-pianta.js';
 import { createInhabitants } from './scene/inhabitants.js';
 import { POPULATIONS_ERCOLANO } from './data/populations.js';
 import { PAL } from './scene/palette.js';
@@ -7,12 +7,18 @@ import { statoEruzione } from './data/eruzione.js';
 import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
+import { creaLuceCotta } from './scene/luce.js';
+import aoOggiUrl from './assets/luce/ao-ercolano-oggi.png?url';
+import AO_OGGI from './assets/luce/ao-ercolano-oggi.json';
+import ao79Url from './assets/luce/ao-ercolano-79.png?url';
+import AO_79 from './assets/luce/ao-ercolano-79.json';
 import {
   BoxGeometry,
   BufferGeometry,
   LineBasicMaterial,
   LineLoop,
   Vector3,
+  Matrix4,
   Color,
   ConeGeometry,
   CylinderGeometry,
@@ -83,7 +89,17 @@ export const ERCOLANO = (function(){
       if(o.tex === 'basoli' || o.tex === 'laterizio') o.mm.color.set(0xffffff);
       o.mm.needsUpdate = true;
     });
+    // la luce cotta dopo la mappatura di mondo, che sostituisce l'aggancio
+    // allo shader invece di aggiungersi (src/scene/luce.js lo concatena)
+    for(const m of [M.strada, M.marcia, M.terra, M.sabbia, M.erba]) LUCE.applica(m, false);
+    for(const m of [M.tufo, M.tufo2, M.mattone, M.colonna]) LUCE.applica(m, true);
   }
+  /* La luce cotta di Ercolano (strumenti/blender/luce_cotta.py, «npm run
+     luce»): due cotture, il 79 con le case intere e oggi con le rovine e il
+     fronte di scavo; il 1958 usa quella di oggi, il 1738, tutto sepolto,
+     nessuna. Il suolo sta su tre fasce di quota: città, terrazza, spiaggia. */
+  const LUCE = creaLuceCotta(aoOggiUrl, AO_OGGI);
+  const LUCE_MOMENTO = { oggi:[aoOggiUrl, AO_OGGI], '1958':[aoOggiUrl, AO_OGGI], '79':[ao79Url, AO_79], '1738':[null] };
   const M = {
     tufo:    mat(0xc6b89c, 'plaster'),   // opus reticulatum e intonaci
     tufo2:   mat(0x9e9078, 'plaster'),
@@ -137,6 +153,13 @@ export const ERCOLANO = (function(){
   flat(-12, TOWN_Y, -5, 150, 50, M.terra);
   flat(-12, TER_Y, 24.1, 150, 8.3, M.terra);
   flat(-12, BEACH_Y, 32.2, 150, 8, M.sabbia);
+  // le stesse tre fasce, per la luce cotta: quota e limiti in z
+  const LIVELLI = [
+    { y:TOWN_Y,  x0:-87, x1:63, z0:-30,   z1:20.0 },
+    { y:TER_Y,   x0:-87, x1:63, z0:20.0,  z1:28.2 },
+    { y:BEACH_Y, x0:-87, x1:63, z0:28.2,  z1:36.2 }
+  ];
+  LUCE.quota(TOWN_Y, TER_Y, BEACH_Y, LIVELLI[0].z1, LIVELLI[1].z1);
   vie({ basolato:M.strada, marciapiede:M.marcia, parent:eRoot });
 
   /* ---------------------------------------------------- i quattro momenti
@@ -150,8 +173,12 @@ export const ERCOLANO = (function(){
   const solidiDeposito = { oggi:[], '1958':[], '1738':[], '79':[] };
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'rovina', parent:G.rovine, solids });
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'intera', parent:G.intere, solids:[] });
+  const N_BOTTEGHE = botteghe79({ parent:G.intere, vano:mat(0x2e2923), bancone:mat(0x8f8674, 'stone'), marmo:M.colonna });
+  const FONTANE_E = costruisciFontane({ parent:G.intere, pietra:M.marcia, acqua:M.acqua, pilastro:M.tufo });
   // gli abitanti: le stesse figure di Pompei, sulle vie della pianta vera
-  const abitanti = createInhabitants({ streets:percorsi(), populations:POPULATIONS_ERCOLANO, places:false });
+  // nel 79 qualcuno si ferma davanti alle botteghe con il nome in OSM
+  const abitanti = createInhabitants({ streets:percorsi(), populations:POPULATIONS_ERCOLANO, places:false,
+    siti:{ 0: [...BOTTEGHE.map(b => ({ x:b.x, z:b.z, id:'bottega', raggio:0.5 })), ...FONTANE_E] } });
   eRoot.add(abitanti.group);
   const M_LINEA = new LineBasicMaterial({ color:PAL.accent });
   terreno79({ terra:M.terra, sabbia:M.sabbia, acqua:M.acqua, linea:M_LINEA, parent:G.terra79, LineLoop, BufferGeometry, Vector3 });
@@ -715,6 +742,7 @@ export const ERCOLANO = (function(){
     if(!MOMENTI.includes(mo)) mo = 'oggi';
     if(inGalleria && mo !== '1738' && mo !== 'oggi') galleria(false);
     momento = mo;
+    LUCE.usa(...LUCE_MOMENTO[mo]);
     G.rovine.visible = mo === 'oggi' || mo === '1958';
     G.intere.visible = mo === '79';
     G.terra79.visible = mo === '79';
@@ -886,10 +914,42 @@ export const ERCOLANO = (function(){
   }
   const eruzioneAttiva = () => eruOre !== null;
 
+  // la geometria di un momento, per cuocere la luce in Blender
+  // (strumenti/blender/luce_cotta.py): i triangoli di ciò che fa ombra, in
+  // coordinate di mondo, e le tre fasce del suolo. Il suolo, le vie e
+  // l'acqua non fanno ombra: ricevono.
+  const RICEVONO = new Set([M.strada, M.marcia, M.terra, M.sabbia, M.erba, M.acqua]);
+  function geometria(mo){
+    const prima = momento;
+    setMomento(mo);
+    eRoot.updateMatrixWorld(true);
+    const tri = [], v = new Vector3(), mi = new Matrix4(), mm = new Matrix4();
+    const visibile = o => { for(let p = o; p; p = p.parent) if(!p.visible) return false; return true; };
+    const abitante = o => { for(let p = o; p; p = p.parent) if(p === abitanti.group) return true; return false; };
+    eRoot.traverse(o => {
+      if(!o.isMesh || o.isSkinnedMesh || !visibile(o) || abitante(o)) return;
+      if(RICEVONO.has(o.material)) return;
+      const g = o.geometry, pos = g.attributes.position;
+      if(!pos) return;
+      const idx = g.index ? g.index.array : null, n = idx ? idx.length : pos.count;
+      // il deposito è in istanze: ogni istanza conta
+      const quante = o.isInstancedMesh ? o.count : 1;
+      for(let k = 0; k < quante; k++){
+        if(o.isInstancedMesh){ o.getMatrixAt(k, mi); mm.multiplyMatrices(o.matrixWorld, mi); } else mm.copy(o.matrixWorld);
+        for(let i = 0; i < n; i++){
+          v.fromBufferAttribute(pos, idx ? idx[i] : i).applyMatrix4(mm);
+          tri.push(+v.x.toFixed(3), +v.y.toFixed(3), +v.z.toFixed(3));
+        }
+      }
+    });
+    setMomento(prima);
+    return { triangoli: tri, livelli: LIVELLI };
+  }
+
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
-           momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots,
+           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
+           momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots, geometria, LIVELLI,
            isActive: () => active };
 })();

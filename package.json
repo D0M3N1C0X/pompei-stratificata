@@ -19,7 +19,7 @@
     "materiali": "${BLENDER_PY:-python3} strumenti/blender/materiali.py"
   },
   "dependencies": {
-    "three": "0.169.0"
+    "three": "0.187.0"
   },
   "devDependencies": {
     "@capacitor/cli": "8.5.2",

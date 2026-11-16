@@ -3,7 +3,6 @@ import {
   BufferAttribute,
   BufferGeometry,
   CanvasTexture,
-  Clock,
   Color,
   ConeGeometry,
   IcosahedronGeometry,
@@ -22,7 +21,7 @@ import {
   MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
-  PCFSoftShadowMap,
+  PCFShadowMap,
   PerspectiveCamera,
   Plane,
   Points,
@@ -35,8 +34,6 @@ import {
   SpriteMaterial,
   Vector2,
   Vector3,
-  Vector4,
-  TextureLoader,
   LineLoop,
   LineBasicMaterial,
   WebGLRenderer
@@ -48,6 +45,8 @@ import { EVENTI, DURATA, statoEruzione, puntoEvento } from './data/eruzione.js';
 import { PERCORSI, MODALITA } from './data/classe.js';
 import { PLACES } from './data/places.js';
 import INTERNI_P from './data/pompei-interni.json';
+import { stanze, rettangoli, atrio } from './scene/stanze.js';
+import IMPLUVI_P from './data/pompei-impluvi.json';
 import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
 import { POST } from './post.js';
@@ -60,6 +59,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import piscinaUrl from './assets/modelli/palestra-piscina.glb?url';
 import aoSuoloUrl from './assets/luce/ao-suolo.png?url';
 import AO_SUOLO from './assets/luce/ao-suolo.json';
+import { creaLuceCotta } from './scene/luce.js';
+import { creaCielo, creaMonti } from './scene/cielo.js';
+import { creaLucerne } from './scene/lucerne.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -97,7 +99,9 @@ renderer.shadowMap.enabled = true;
 // PCFSoft: provato il 22/10/2026 il PCF con raggio, a Ercolano (texel di
 // 23 cm) faceva scalini a rombo su muri e acqua. La morbidezza delle ombre
 // viene invece dalla luce del cielo più forte (applyLight).
-renderer.shadowMap.type = PCFSoftShadowMap;
+// three.js 0.187 ha tolto PCFSoftShadowMap e usa PCFShadowMap al suo posto:
+// lo si dichiara, invece di lasciarlo fare con un avviso a ogni avvio
+renderer.shadowMap.type = PCFShadowMap;
 renderer.localClippingEnabled = true;
 app.appendChild(renderer.domElement);
 
@@ -112,6 +116,13 @@ ERCOLANO.textures(TEX, { SCALA_MONDO, mappaMondo });
 
 const scene = new Scene();
 scene.fog = new Fog(PAL.fog, 240, 860);
+// la cupola del cielo e i Monti Lattari all'orizzonte (src/scene/cielo.js)
+const CIELO = creaCielo();
+scene.add(CIELO.mesh);
+const MONTI = creaMonti(0x6f7368);
+MONTI.material.fog = false;            // la foschia la fa il colore, vedi updateSun
+scene.add(MONTI);
+const MONTI_BASE = new Color(0x5c6155), MONTI_ARIA = new Color();
 
 const camera = new PerspectiveCamera(64, innerWidth/innerHeight, 0.12, 1600);
 
@@ -243,6 +254,11 @@ function updateSun(){
     scene.background = skyTex;
     scene.fog.color.setStyle(rgbStr(mix3(sky.lo, sky.hi, 0.35)));
   }
+  CIELO.colori(sky.hi, sky.lo);
+  CIELO.sole(sunEl, sunAz);
+  // i monti lontani prendono il colore dell'aria: due terzi orizzonte
+  MONTI_ARIA.setRGB(sky.lo[0]/255, sky.lo[1]/255, sky.lo[2]/255, SRGBColorSpace);
+  MONTI.material.color.copy(MONTI_BASE).lerp(MONTI_ARIA, 0.62);
   const hh = Math.floor(h), mm = Math.round((h - hh)*60) % 60;
   const el = document.getElementById('clockTime');
   if(el){
@@ -743,14 +759,21 @@ function costruisciVesuvio(){
   // dice la sua scheda), ma come superficie continua invece che a gradini
   // di blocchi da 32 m (28/10/2026). Anelli concentrici, un poco irregolari.
   const VX = -66, VZ = -252, R = 128, H = 104, NR = 48, NS = 96;
+  // i canaloni: solchi radiali sui fianchi, più profondi a metà costa [disegno]
+  const canaloni = (dr, a) => {
+    const t = dr / R, quanto = Math.sin(Math.PI * Math.min(1, Math.max(0, (t - 0.12) / 0.8)));
+    const solco = Math.pow(Math.abs(Math.sin(a*19 + 1.7*Math.sin(a*3) + dr*0.012)), 3);
+    return 1 - 0.1 * quanto * solco;
+  };
   const quota = (dr, a) => {
     let h = H * Math.pow(1 - dr/R, 1.35);
     if(dr < 20) h -= (20-dr)*1.1;
-    h = Math.max(1.5, h) * (1 + 0.035*Math.sin(a*5 + dr*0.05) + 0.02*Math.sin(a*11 - dr*0.09));
+    h = Math.max(1.5, h) * (1 + 0.035*Math.sin(a*5 + dr*0.05) + 0.02*Math.sin(a*11 - dr*0.09)) * canaloni(dr, a);
     return dr >= R ? -0.5 : h;
   };
-  const pos = [], col = [], idx = [];
+  const pos = [], col = [], verde = [], idx = [];
   const c1 = new Color(0x6d6a64), c2 = new Color(PAL.mountain), c3 = new Color(0x555350), cc = new Color();
+  const campo1 = new Color(0x84914a), campo2 = new Color(0xa09a58), bosco = new Color(0x617343), cv = new Color();
   for(let i = 0; i <= NR; i++){
     const dr = R * i / NR;
     const t = dr / R;
@@ -760,6 +783,12 @@ function costruisciVesuvio(){
       const a = j / NS * Math.PI * 2;
       pos.push(VX + Math.cos(a)*dr, quota(dr, a), VZ + Math.sin(a)*dr);
       col.push(cc.r, cc.g, cc.b);
+      // il verde dei fianchi bassi, a campi irregolari; la cima resta cenere
+      const n = 0.5 + 0.5*Math.sin(a*37 + dr*0.21) * Math.sin(a*13 - dr*0.13);
+      const k = Math.min(1, Math.max(0, (t - 0.34) / 0.2)) * (0.75 + 0.25*n);
+      cv.copy(n > 0.55 ? campo2 : campo1).lerp(bosco, Math.max(0, 0.6 - t) * 1.5);
+      cv.lerp(cc, 1 - k);
+      verde.push(cv.r, cv.g, cv.b);
     }
   }
   for(let i = 0; i < NR; i++) for(let j = 0; j < NS; j++){
@@ -778,7 +807,20 @@ function costruisciVesuvio(){
   const monte = new Mesh(geo, mm);
   monte.receiveShadow = true;
   cityGroup.add(monte);
+  // quanto verde: Strabone (V 4, 8), prima dell'eruzione, vede i fianchi
+  // coltivati e fertili e la cima piana, sterile, color cenere. Dopo il 79
+  // tutto cenere; il verde che torna nei secoli è [disegno]
+  const cenere = Float32Array.from(col), campi = Float32Array.from(verde);
+  const attr = geo.getAttribute('color');
+  VESUVIO.verde = f => {
+    for(let i = 0; i < attr.array.length; i++) attr.array[i] = cenere[i] + (campi[i] - cenere[i]) * f;
+    attr.needsUpdate = true;
+  };
 }
+const VESUVIO = { verde: () => {} };
+// fase → quanto verde sui fianchi: la vigilia (Strabone), poi cenere, poi il
+// ritorno della vegetazione [disegno]
+const VERDE_FASE = [1, 0, 0.25, 0.45, 0.65, 0.7, 0.7, 0.75];
 
 /* ------------------------------------------------------ dettagli urbani */
 
@@ -1026,62 +1068,15 @@ caricaFigure().then(f => { inhabitants.usaFigure(f); ERCOLANO.usaFigure(f); if(w
   .catch(e => console.warn('Figure del 79 non caricate:', e));
 
 /* ---------------------------------------------------- la luce cotta
-
-   L'occlusione ambientale del suolo, cotta da Cycles in Blender
-   (strumenti/blender/luce_cotta.py, «npm run luce»): una texture vista
-   dall'alto, letta in coordinate di mondo. Lungo i muri, nei vicoli e nei
-   cortili il suolo riceve meno cielo; nelle piazze resta pieno. Attenua
-   soprattutto la luce indiretta, e un poco quella del sole. Si applica solo
-   ai materiali del suolo: terreno, basolato, cordoli, deposito. */
-const AO_TEX = new TextureLoader().load(aoSuoloUrl);
-const AO_UNI = {
-  tex: { value: AO_TEX },
-  box: { value: new Vector4(AO_SUOLO.x0, AO_SUOLO.z0, 1 / (AO_SUOLO.x1 - AO_SUOLO.x0), 1 / (AO_SUOLO.z1 - AO_SUOLO.z0)) },
-  forza: { value: 1 }
-};
+   L'occlusione ambientale cotta in Blender (src/scene/luce.js): a Pompei
+   una texture sola, il suolo a una quota sola che segue il deposito. */
+const LUCE = creaLuceCotta(aoSuoloUrl, AO_SUOLO);
+const AO_UNI = LUCE.uni;
 const SUOLO_AO = new Set([0x8f8776, 0x847c6b, PAL.terrace, PAL.street, PAL.kerb,
-  PAL.depWhite, PAL.depGrey, PAL.depSurge, 0x4c4639]);
-// i muri e le pietre: alla base prendono l'occlusione del suolo che hanno
-// davanti, e la perdono salendo entro 3,6 m [disegno]
+  PAL.depWhite, PAL.depGrey, PAL.depSurge, 0x4c4639, 0x9c6f5c]);   // l'ultimo: il cocciopesto delle case misurate
 const MURI_AO = new Set([PAL.wall1, PAL.wall2, PAL.wall3, PAL.stone, PAL.civic, PAL.column,
   0x7c4536, 0x8f8674, PAL.crude]);
-AO_UNI.quota = { value: 0 };
-function luceCotta(mat, muro){
-  const prima = mat.onBeforeCompile;
-  mat.onBeforeCompile = (sh, r) => {
-    if(prima) prima.call(mat, sh, r);
-    sh.uniforms.uAoSuolo = AO_UNI.tex; sh.uniforms.uAoBox = AO_UNI.box;
-    sh.uniforms.uAoForza = AO_UNI.forza; sh.uniforms.uAoQuota = AO_UNI.quota;
-    sh.vertexShader = 'varying vec3 vAoP;\nvarying vec3 vAoN;\n' + sh.vertexShader.replace('#include <project_vertex>', `#include <project_vertex>
-{
-  vec4 aw = vec4( transformed, 1.0 );
-  vec3 an = objectNormal;
-  #ifdef USE_INSTANCING
-    aw = instanceMatrix * aw;
-    an = mat3( instanceMatrix ) * an;
-  #endif
-  vAoP = ( modelMatrix * aw ).xyz;
-  vAoN = normalize( mat3( modelMatrix ) * an );
-}`);
-    sh.fragmentShader = 'uniform sampler2D uAoSuolo;\nuniform vec4 uAoBox;\nuniform float uAoForza;\nuniform float uAoQuota;\nvarying vec3 vAoP;\nvarying vec3 vAoN;\n' +
-      sh.fragmentShader.replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
-{
-  ${muro ? `
-  // il suolo appena davanti alla faccia, 1,4 m in fuori
-  vec2 axz = vAoP.xz + normalize( vAoN.xz + 1e-5 ) * 0.35;
-  float ao = texture2D( uAoSuolo, ( axz - uAoBox.xy ) * uAoBox.zw ).r;
-  float verticale = 1.0 - smoothstep( 0.4, 0.7, abs( vAoN.y ) );
-  ao = mix( ao, 1.0, smoothstep( 0.0, 0.9, vAoP.y - uAoQuota ) );
-  ao = mix( 1.0, ao, uAoForza * verticale );` : `
-  float ao = texture2D( uAoSuolo, ( vAoP.xz - uAoBox.xy ) * uAoBox.zw ).r;
-  ao = mix( 1.0, ao, uAoForza );`}
-  reflectedLight.indirectDiffuse *= ao;
-  reflectedLight.directDiffuse *= mix( 1.0, ao, 0.4 );
-}`);
-  };
-  const chiave = mat.customProgramCacheKey ? mat.customProgramCacheKey() : '';
-  mat.customProgramCacheKey = () => chiave + (muro ? '|aomuro' : '|aosuolo');
-}
+const luceCotta = (mat, muro) => LUCE.applica(mat, muro);
 
 const dummy = new Object3D();
 const allMaterials = [];
@@ -1154,6 +1149,90 @@ scene.add(roofsA, roofsB);
   };
   for(const [col,list] of byColor(a)) bakeTracked(list, col, BOX, roofsA);
   for(const [col,list] of byColor(b)) bakeTracked(list, col, BOX, roofsB);
+}
+/* Lo zoccolo dipinto nelle tre case misurate: una fascia rossa alta un metro
+   su ogni faccia dei muri della pianta, come sulle facciate del generatore.
+   Senza, nella vigilia queste tre erano le sole case di muro nudo, già
+   rovine in una città viva. Colore e altezza [ipotesi]: la pianta dà dove
+   corrono i muri, non com'erano dipinti. Solo finché la città è intera
+   (le fasi con i tetti): oggi i muri scavati restano di pietra. */
+const intonaci = new Group(); scene.add(intonaci);
+{
+  const z = [];
+  for(const [k, c] of Object.entries(CASE_INTERNE))
+    for(const [a, b, e, f] of INTERNI_P.case[k].muri)
+      z.push([c.x0 + (a+e)/8, 0.125, c.z0 + (b+f)/8, (e-a)/4 + 0.01, 0.25, (f-b)/4 + 0.01]);
+  bakeTracked(z, ZOCCOLO, BOX, intonaci);
+}
+// le lucerne accese di sera davanti alle botteghe, solo nella vigilia
+// (src/scene/lucerne.js)
+const NORMALE_LATO = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+const LUCERNE = creaLucerne(BOTTEGHE.map(([x, z, bi]) => ({ x, z, nx:NORMALE_LATO[bi][0], nz:NORMALE_LATO[bi][1] })));
+scene.add(LUCERNE.group);
+
+/* I tetti (e i pavimenti) delle tre case misurate. La pianta dice dove
+   corrono i muri, non quali spazi erano coperti; qui valgono due regole
+   [ipotesi]:
+   · gli spazi sotto i 50 m² (cubicoli, botteghe, triclini, corridoi) hanno
+     il tetto, quelli più grandi (peristili, giardini) restano aperti;
+   · gli atri con l'impluvio disegnato da Mau (src/data/pompei-impluvi.json:
+     due nel Fauno, due nei Vettii) hanno il tetto con il compluvio, largo il
+     doppio della vasca come a Ercolano, e la vasca con l'acqua. Gli altri
+     atri, e quelli del Menandro, restano aperti.
+   Le stanze vengono da src/scene/stanze.js. Il tetto è una lastra di coppi
+   piana sulla cima dei muri, che copre la stanza e un palmo dei muri
+   intorno; il pavimento delle stanze coperte è di cocciopesto [disegno]. */
+const TETTO_SOGLIA_M2 = 50;
+const COCCIOPESTO = 0x9c6f5c, ACQUA_IMPLUVIO = 0x5d7278;
+const TETTI_PIANTA = {};
+{
+  const t = [], pav = [], vasche = [], acque = [];
+  for(const [k, c] of Object.entries(CASE_INTERNE)){
+    const casa = INTERNI_P.case[k];
+    const s = stanze(casa.muri, casa.dim);
+    const W = s.W, N = s.W * s.D, cel = s.cella;
+    // le celle coperte: stanze piccole e atri con l'impluvio
+    const coperta = new Uint8Array(N), compluvio = new Uint8Array(N);
+    for(let p = 0; p < N; p++) if(s.lab[p] >= 0 && s.area[s.lab[p]] < TETTO_SOGLIA_M2) coperta[p] = 1;
+    const atri = [];
+    for(const { vasca } of IMPLUVI_P.case[k] || []){
+      const at = atrio(casa.muri, casa.dim, vasca);
+      if(!at) continue;
+      for(let p = 0; p < N; p++) if(at.maschera[p]) coperta[p] = 1;
+      const [a, b, e, f] = vasca, cx = (a+e)/2, cz = (b+f)/2, hw = e - a, hd = f - b;
+      for(let j = Math.floor((cz - hd) / cel); j < Math.ceil((cz + hd) / cel); j++)
+        for(let i = Math.floor((cx - hw) / cel); i < Math.ceil((cx + hw) / cel); i++)
+          if(i >= 0 && i < W && j >= 0 && j < s.D) compluvio[j * W + i] = 1;
+      atri.push(Math.round(at.area));
+      // la vasca: il bordo di pietra alto 20 cm e l'acqua appena sotto [disegno]
+      vasche.push([c.x0 + (a+e)/8, 0, c.z0 + (b+f)/8, (e-a)/4, 0.05, (f-b)/4]);
+      acque.push([c.x0 + (a+e)/8, 0.05, c.z0 + (b+f)/8, (e-a)/4 - 0.06, 0.004, (f-b)/4 - 0.06]);
+    }
+    // sui muri il tetto arriva fino a 75 cm da una stanza coperta: così i
+    // muri fra due stanze coperte non restano strisce scoperte
+    const sceglie = p => {
+      if(compluvio[p]) return false;
+      if(coperta[p]) return true;
+      if(!s.muro[p]) return false;
+      const i = p % W, j = (p / W) | 0;
+      for(let d = 1; d <= 3; d++)
+        if((i - d >= 0 && coperta[p - d]) || (i + d < W && coperta[p + d]) ||
+           (j - d >= 0 && coperta[p - d * W]) || (j + d < s.D && coperta[p + d * W])) return true;
+      return false;
+    };
+    const r = rettangoli(W, s.D, cel, sceglie);
+    for(const [a, b, e, f] of rettangoli(W, s.D, cel, q => coperta[q] && !s.muro[q]))
+      pav.push([c.x0 + (a+e)/8, 0.004, c.z0 + (b+f)/8, (e-a)/4, 0.008, (f-b)/4]);
+    let piccole = 0, area = 0;
+    for(let l = 0; l < s.n; l++) if(s.area[l] < TETTO_SOGLIA_M2){ piccole++; area += s.area[l]; }
+    TETTI_PIANTA[k] = { stanze: s.n, coperte: piccole, m2: Math.round(area), atri, pezzi: r.length };
+    for(const [a, b, e, f] of r)
+      t.push([c.x0 + (a+e)/8, 1.0 + 0.03, c.z0 + (b+f)/8, (e-a)/4, 0.06, (f-b)/4]);
+  }
+  bakeTracked(t, PAL.roof, BOX, intonaci);
+  bakeTracked(pav, COCCIOPESTO, BOX, intonaci);
+  bakeTracked(vasche, PAL.stone, BOX, intonaci);
+  bakeTracked(acque, ACQUA_IMPLUVIO, BOX, intonaci, false);
 }
 
 /* ------------------------------ deposito, a strati veri per la sezione */
@@ -1606,7 +1685,8 @@ function applyLight(){
   const w = Math.max(warmth * warmth, (!sectionOn && e.warm > .5) ? 1 : 0);
   sun.color.setRGB(1, 0.95 - w*0.22, 0.88 - w*0.45);
   const night = 1 - day;
-  hemi.intensity = (0.40 + 0.86*day) * (sectionOn ? 1 : (0.55 + k*0.45)) * (0.35 + 0.65*eru.luce);
+  // di notte un poco più buio (15/11/2026), perché le lucerne si leggano
+  hemi.intensity = (0.26 + 1.00*day) * (sectionOn ? 1 : (0.55 + k*0.45)) * (0.35 + 0.65*eru.luce);
   // il cielo tinge le ombre d'azzurro; il suolo di tufo e intonaco rimanda
   // una luce calda dal basso
   hemi.color.setRGB(0.84 - night*0.30, 0.90 - night*0.24, 0.98 - night*0.10);
@@ -1628,6 +1708,8 @@ function applyEpoch(i, silent){
   depositTarget = e.deposit;
   roofsA.visible = !!e.roofsA;
   roofsB.visible = !!e.roofsB;
+  intonaci.visible = !!e.roofsA;
+  VESUVIO.verde(VERDE_FASE[i] ?? 0);
   shantyGroup.visible = !!e.shanty;
   vegGroup.visible = !!e.veg;
   canalGroup.visible = !!e.canal;
@@ -3035,7 +3117,10 @@ EPOCHS.forEach((e,i) => {
 
 /* --------------------------------------------------------------- loop */
 
-const clock = new Clock();
+// il tempo della scena: secondi dall'avvio e dal fotogramma prima (three.js
+// 0.187 ha deprecato Clock; due righe bastano)
+const clock = { t0: performance.now(), prima: performance.now(), elapsedTime: 0,
+  getDelta(){ const ora = performance.now(), dt = (ora - this.prima) / 1000; this.prima = ora; this.elapsedTime = (ora - this.t0) / 1000; return dt; } };
 const fwd = new Vector3(), right = new Vector3(), up = new Vector3(0,1,0);
 const camWorld = new Vector3();
 const compassSvg = document.querySelector('#compass svg');
@@ -3112,7 +3197,7 @@ function passo(){
       g.position.y = depositCurrent;
   }
 
-  AO_UNI.quota.value = depositCurrent;
+  LUCE.quota(depositCurrent);
   stepParticles(dt, t);
   // sui marciapiedi prima del 79, sul deposito dopo: a scala vera chi lavora
   // ai recuperi sparirebbe sotto la cenere
@@ -3333,6 +3418,10 @@ function passo(){
     }
   }
 
+  CIELO.mesh.visible = MONTI.visible = !eru.on;
+  CIELO.segui(camera, clock.elapsedTime);
+  CIELO.uni.uNebbia.value.copy(scene.fog.color);
+  LUCERNE.notte(epoch === 0 && !eru.on ? CIELO.uni.uNotte.value : 0, clock.elapsedTime);
   if(!senzaDisegno && !POST.render(renderer, scene, camera)) renderer.render(scene, camera);
 }
 
@@ -3499,6 +3588,7 @@ if(new URLSearchParams(location.search).has('debug')){
       terreno: TERRACE.map(p => p.slice())
     }),
     caseInterne: () => MURI_INTERNI.map(c => ({ x0:c.x0, z0:c.z0, x1:c.x1, z1:c.z1 })),
+    tettiPianta: () => TETTI_PIANTA,
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e
     // ritaglia), una fascia scura in alto e la didascalia in Spectral, il
@@ -3590,6 +3680,27 @@ function applicaCamera(){
     if(v.length === 5) ERCOLANO.inquadra(...v);
   } else if(v.length === 6) window.pompei.guarda(...v);
 }
+
+// I suoni vicino alle botteghe e alle fontane: quattro volte al secondo la
+// distanza dal bancone o dalla fontana più vicina, solo nel 79 (a Pompei la
+// vigilia, a Ercolano il momento «79»). Si sentono entro 24 m [regia].
+const VICINO_U = 6;
+setInterval(() => {
+  if(!AUDIO.isOn()) return;
+  const vicino = (x, z, punti) => {
+    let d = 1e9;
+    for(const p of punti) d = Math.min(d, Math.hypot(p.x - x, p.z - z));
+    return Math.max(0, 1 - d / VICINO_U);
+  };
+  if(ercOn){
+    if(ERCOLANO.momentoOra() !== '79'){ AUDIO.setVicino(0, 0); return; }
+    const p = ERCOLANO.posizione();
+    AUDIO.setVicino(vicino(p.x, p.z, ERCOLANO.puntiBotteghe), vicino(p.x, p.z, ERCOLANO.puntiFontane));
+  } else if(epoch === 0){
+    const { x, z } = camera.position;
+    AUDIO.setVicino(vicino(x, z, BOTTEGHE.map(([bx, bz]) => ({ x:bx, z:bz }))), vicino(x, z, FONTANE));
+  } else AUDIO.setVicino(0, 0);
+}, 250);
 
 // «Copia il link»: l'indirizzo è già quello giusto, basta prenderlo
 document.getElementById('pLink').addEventListener('click', async () => {
