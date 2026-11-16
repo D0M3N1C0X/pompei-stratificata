@@ -479,7 +479,7 @@ export function terreno79({ terra, sabbia, acqua, linea, parent, LineLoop, Buffe
   lastra(-85, 85, -70, m(Z_TERRAZZA), QUOTA.citta, terra);
   lastra(-85, 85, m(Z_TERRAZZA), m(Z_SPIAGGIA), QUOTA.terrazza, terra);
   lastra(-85, 85, m(Z_SPIAGGIA), m(140), QUOTA.spiaggia, sabbia);
-  lastra(-85, 85, m(140), 80, QUOTA.spiaggia - 0.05, acqua);
+  // il mare dal 16/11/2026 è in src/scene/mare.js, da m(140) all'orizzonte
   // i salti fra le quote: senza, fra una lastra e l'altra restava il cielo
   const salto = (z, y0, y1) => {
     const g = new Mesh(BOX, terra);

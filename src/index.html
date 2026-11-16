@@ -501,6 +501,9 @@
     width:15px;height:15px;border-radius:50%;background:var(--accent);
     border:2px solid #101412;cursor:pointer;
   }
+  #clockDay{display:flex;gap:.3rem;flex-wrap:wrap}
+  #clockDay button{font:inherit;font-family:var(--mono);font-size:.74rem;letter-spacing:.03em;padding:.18rem .45rem;border-radius:6px;border:1px solid var(--line, rgba(255,255,255,.18));background:transparent;color:var(--ink-soft);cursor:pointer}
+  #clockDay button.on{color:var(--ink);border-color:var(--accent)}
   #clockNote{font-family:var(--mono);font-size:.8rem;letter-spacing:.06em;color:var(--ink-soft)}
   #clockSrc{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--ink-faint);line-height:1.4}
 
@@ -1093,6 +1096,11 @@ body.erc-on #crosshair{ display:block !important; }
   </div>
   <input id="clockSlider" type="range" min="0" max="1439" step="5" value="720" aria-label="Ora del giorno"
          data-i18n-attr="aria-label: ui.clock.aria">
+  <div id="clockDay" role="group" data-i18n-attr="title: ui.clock.giorno.nota">
+    <button data-giorno="oggi" class="on" data-i18n="ui.clock.giorno.oggi">Oggi</button>
+    <button data-giorno="agosto" data-i18n="ui.clock.giorno.agosto">24 agosto</button>
+    <button data-giorno="ottobre" data-i18n="ui.clock.giorno.ottobre">24 ottobre</button>
+  </div>
   <span id="clockNote" data-i18n="ui.clock.nota.reale">ora di Pompei</span>
   <span id="clockSrc" data-i18n="ui.clock.fonte">Pompei 40,75° N · formule NOAA · parametri orbitali odierni</span>
 </div>

@@ -97,7 +97,13 @@ export default {
         "sole": "sole a {gradi}°"
       },
       "fonte": "Pompei 40,75° N · formule NOAA · parametri orbitali odierni",
-      "aria": "Ora del giorno"
+      "aria": "Ora del giorno",
+      "giorno": {
+        "oggi": "Oggi",
+        "agosto": "24 agosto",
+        "ottobre": "24 ottobre",
+        "nota": "Il giorno del sole. Per l'eruzione: 24 agosto nei manoscritti di Plinio, fine ottobre dopo l'iscrizione a carboncino trovata nel 2018"
+      }
     },
     "bussola": {
       "nord": "nord",

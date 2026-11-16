@@ -87,6 +87,12 @@
         "reale": "heure de Pompéi",
         "scelta": "heure choisie",
         "sole": "soleil à {gradi}°"
+      },
+      "giorno": {
+        "oggi": "Aujourd'hui",
+        "agosto": "24 août",
+        "ottobre": "24 octobre",
+        "nota": "Le jour du soleil. Pour l'éruption : 24 août dans les manuscrits de Pline, fin octobre après l'inscription au charbon trouvée en 2018"
       }
     },
     "bussola": {

@@ -87,6 +87,12 @@
         "reale": "hora de Pompeya",
         "scelta": "hora elegida",
         "sole": "sol a {gradi}°"
+      },
+      "giorno": {
+        "oggi": "Hoy",
+        "agosto": "24 de agosto",
+        "ottobre": "24 de octubre",
+        "nota": "El día del sol. Para la erupción: 24 de agosto en los manuscritos de Plinio, finales de octubre tras la inscripción a carbón hallada en 2018"
       }
     },
     "bussola": {

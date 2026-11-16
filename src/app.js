@@ -243,20 +243,35 @@ function currentHour(){
   const n = romeNow();
   return n.hh + n.mm/60;
 }
+// il giorno del sole: oggi, oppure una delle due date proposte per
+// l'eruzione — il 24 agosto dei manoscritti di Plinio (Ep. 6.16), o fine
+// ottobre, dopo l'iscrizione a carboncino della Regio V trovata nel 2018
+let giornoSole = 'oggi';
+const GIORNI_ERUZIONE = { agosto:[8, 24], ottobre:[10, 24] };
 function updateSun(){
   const n = romeNow();
-  const leap = (n.y % 4 === 0 && n.y % 100 !== 0) || n.y % 400 === 0;
+  const [mese, giorno] = GIORNI_ERUZIONE[giornoSole] || [n.m, n.d];
+  const anno = giornoSole === 'oggi' ? n.y : 2023;      // un anno non bisestile
+  const leap = (anno % 4 === 0 && anno % 100 !== 0) || anno % 400 === 0;
   const h = currentHour();
-  const sp = solarPosition(dayOfYear(n.y, n.m, n.d), h, leap);
+  const sp = solarPosition(dayOfYear(anno, mese, giorno), h, leap);
   sunEl = sp.el; sunAz = sp.az;
   const sky = paintSky(sunEl);
   if(!eru.on){
     scene.background = skyTex;
     scene.fog.color.setStyle(rgbStr(mix3(sky.lo, sky.hi, 0.35)));
+    // la foschia del mattino: dall'alba finché il sole non passa i 14°, la
+    // nebbia comincia più vicino e si schiarisce [disegno]
+    const foschia = h < 12 ? Math.max(0, Math.min(1, (14 - sky.deg) / 14)) * (sky.deg > -6 ? 1 : 0) : 0;
+    scene.fog.near = 240 - 190 * foschia;
+    scene.fog.color.lerp(MONTI_ARIA.setRGB(0.86, 0.85, 0.82), 0.35 * foschia);
   }
   CIELO.colori(sky.hi, sky.lo);
   CIELO.sole(sunEl, sunAz);
-  ERCOLANO.luceDelGiorno(sunEl, sunAz, sky.hi, sky.lo);
+  // a fine ottobre il cielo più coperto che a fine agosto [disegno]
+  const nuvole = giornoSole === 'ottobre' ? 0.52 : 0.32;
+  CIELO.uni.uNuvole.value = nuvole;
+  ERCOLANO.luceDelGiorno(sunEl, sunAz, sky.hi, sky.lo, nuvole);
   // i monti lontani prendono il colore dell'aria: due terzi orizzonte
   MONTI_ARIA.setRGB(sky.lo[0]/255, sky.lo[1]/255, sky.lo[2]/255, SRGBColorSpace);
   MONTI.material.color.copy(MONTI_BASE).lerp(MONTI_ARIA, 0.62);
@@ -1062,9 +1077,60 @@ const inhabitants = createInhabitants({ streets:STREETS, siti:{
   0: [...FONTANE, ...BOTTEGHE.map(([x, z]) => ({ x, z, id:'bottega', raggio:0.5 }))]
 }});
 scene.add(inhabitants.group);
+/* Dentro le tre case misurate: percorsi brevi negli spazi grandi (atri,
+   peristili, giardini), ricavati dalla pianta con stanze.js. In ogni spazio
+   di almeno 25 m² una linea lungo il lato lungo, per il centro, e una di
+   traverso se supera gli 80 m²; tenute solo dove c'è almeno 1 m dai muri.
+   Nella vigilia ci sta chi abita e lavora nella casa, oggi chi la visita:
+   quanti e dove è [regia]. */
+function percorsiInterni(){
+  const out = [];
+  for(const [k, c] of Object.entries(CASE_INTERNE)){
+    const casa = INTERNI_P.case[k], s = stanze(casa.muri, casa.dim), W = s.W, D = s.D, cel = s.cella;
+    const libera = (i, j, l) => {
+      if(i < 3 || j < 3 || i >= W - 3 || j >= D - 3 || s.lab[j*W + i] !== l) return false;
+      for(let b = -4; b <= 4; b++) for(let a = -4; a <= 4; a++) if(s.muro[(j+b)*W + i+a]) return false;
+      return true;
+    };
+    for(let l = 0; l < s.n; l++){
+      if(s.area[l] < 25) continue;
+      let i0 = W, i1 = 0, j0 = D, j1 = 0, si = 0, sj = 0, n = 0;
+      for(let p = 0; p < W*D; p++) if(s.lab[p] === l){
+        const i = p % W, j = (p / W) | 0;
+        i0 = Math.min(i0, i); i1 = Math.max(i1, i); j0 = Math.min(j0, j); j1 = Math.max(j1, j);
+        si += i; sj += j; n++;
+      }
+      const ci = Math.round(si / n), cj = Math.round(sj / n);
+      const lungoX = (i1 - i0) >= (j1 - j0);
+      const linee = [lungoX ? 'x' : 'z'];
+      if(s.area[l] > 80) linee.push(lungoX ? 'z' : 'x');
+      for(const asse of linee){
+        // la corsa più lunga di celle libere sulla linea per il centro
+        let best = null, run = null;
+        const [a0, a1] = asse === 'x' ? [i0, i1] : [j0, j1];
+        for(let t = a0; t <= a1 + 1; t++){
+          const ok = t <= a1 && (asse === 'x' ? libera(t, cj, l) : libera(ci, t, l));
+          if(ok){ if(!run) run = [t, t]; else run[1] = t; }
+          else if(run){ if(!best || run[1] - run[0] > best[1] - best[0]) best = run; run = null; }
+        }
+        if(!best || (best[1] - best[0]) * cel < 3) continue;
+        const punto = (i, j) => [c.x0 + (i + 0.5) * cel / 4, c.z0 + (j + 0.5) * cel / 4];
+        const [a, b] = asse === 'x' ? [punto(best[0], cj), punto(best[1], cj)] : [punto(ci, best[0]), punto(ci, best[1])];
+        out.push({ a, b, w:0.12, mw:0.05, hh:0, casa:k });
+      }
+    }
+  }
+  return out;
+}
+const PERCORSI_INTERNI = percorsiInterni();
+const interni = createInhabitants({ streets:PERCORSI_INTERNI, places:false, populations:[
+  { epoch:0, name:'case-79', people:27, dogs:0, pigeons:0, style:'tunic', cloth:0xc7a77b, serie:'romane' },
+  { epoch:7, name:'case-oggi', people:18, dogs:0, pigeons:0, style:'modern', cloth:0x536c72, serie:'oggi' }
+]});
+scene.add(interni.group);
 // le figure di Blender arrivano dopo il primo disegno: fino ad allora, e se
 // qualcosa va storto, restano i manichini
-caricaFigure().then(f => { inhabitants.usaFigure(f); ERCOLANO.usaFigure(f); if(window.pompei) window.pompei.figure = f; })
+caricaFigure().then(f => { inhabitants.usaFigure(f); interni.usaFigure(f); ERCOLANO.usaFigure(f); if(window.pompei) window.pompei.figure = f; })
   .then(() => caricaAnimali()).then(a => { inhabitants.usaAnimali(a); ERCOLANO.usaAnimali(a); if(window.pompei) window.pompei.animali = a; })
   .catch(e => console.warn('Figure del 79 non caricate:', e));
 
@@ -1721,6 +1787,7 @@ function applyEpoch(i, silent){
   smoke.points.visible = !!e.shanty;
   birds.visible = (i === 0 || i === 4 || i === 7);
   inhabitants.setEpoch(i);
+  interni.setEpoch(i);
   applyLight();
 
   document.querySelectorAll('.ep').forEach((el,k) => {
@@ -2866,6 +2933,12 @@ document.getElementById('clockSlider').addEventListener('input', e => {
   document.getElementById('clockNow').classList.remove('on');
   updateSun();
 });
+// il giorno: oggi, 24 agosto, 24 ottobre
+document.querySelectorAll('#clockDay button').forEach(b => b.addEventListener('click', () => {
+  giornoSole = b.dataset.giorno;
+  document.querySelectorAll('#clockDay button').forEach(x => x.classList.toggle('on', x === b));
+  updateSun();
+}));
 document.getElementById('clockNow').addEventListener('click', () => {
   timeMode = 'live';
   document.getElementById('clockNow').classList.add('on');
@@ -3203,6 +3276,7 @@ function passo(){
   // sui marciapiedi prima del 79, sul deposito dopo: a scala vera chi lavora
   // ai recuperi sparirebbe sotto la cenere
   inhabitants.update(t, dt, depositCurrent);
+  interni.update(t, dt, depositCurrent);
 
   // cenere
   if(ashGroup.visible){
@@ -3590,6 +3664,7 @@ if(new URLSearchParams(location.search).has('debug')){
     }),
     caseInterne: () => MURI_INTERNI.map(c => ({ x0:c.x0, z0:c.z0, x1:c.x1, z1:c.z1 })),
     tettiPianta: () => TETTI_PIANTA,
+    percorsiInterni: () => PERCORSI_INTERNI.map(p => ({ casa:p.casa, a:p.a, b:p.b })),
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e
     // ritaglia), una fascia scura in alto e la didascalia in Spectral, il
