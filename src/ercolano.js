@@ -11,6 +11,7 @@ import { creaLuceCotta } from './scene/luce.js';
 import { creaCielo } from './scene/cielo.js';
 import { creaLucerne } from './scene/lucerne.js';
 import { creaMare } from './scene/mare.js';
+import { creaPioggia } from './scene/pioggia.js';
 import aoOggiUrl from './assets/luce/ao-ercolano-oggi.png?url';
 import AO_OGGI from './assets/luce/ao-ercolano-oggi.json';
 import ao79Url from './assets/luce/ao-ercolano-79.png?url';
@@ -81,11 +82,16 @@ export const ERCOLANO = (function(){
   const CIELO_E = creaCielo();
   eScene.add(CIELO_E.mesh);
   const AZ_Z = (ANCORE.azimut.cardini + 180) * Math.PI / 180, AZ_X = AZ_Z - Math.PI / 2;
+  const PIOGGIA_E = creaPioggia(1800);
+  eScene.add(PIOGGIA_E.mesh);
+  let pioveE = false;
   const dirSole = new Vector3(-34, 52, 30).normalize();
   const LUCE_GIORNO = { sole:2.15, emi:1.28, rim:0.34 };
   let notteE = 0;
   function luceDelGiorno(el, az, hi, lo, nuvole = 0.32){
-    CIELO_E.uni.uNuvole.value = nuvole;
+    CIELO_E.uni.uNuvole.value = pioveE ? 0.9 : nuvole;
+    CIELO_E.uni.uGrigio.value = pioveE ? 1 : 0;
+    CIELO_E.vento = pioveE ? 3.5 : 1;
     const ce = Math.cos(el), elOmbra = Math.max(el, 0.24);
     // sulla cupola il sole vero; per le ombre mai troppo radente, come a Pompei
     const sx = Math.cos(az - AZ_X), sz = Math.cos(az - AZ_Z);
@@ -96,7 +102,7 @@ export const ERCOLANO = (function(){
     dirSole.set(sx * Math.cos(elOmbra), Math.sin(elOmbra), sz * Math.cos(elOmbra)).normalize();
     if(inGalleria || eruOre !== null) return;            // hanno la loro luce
     const giorno = Math.max(0, Math.min(1, (deg + 4) / 22));
-    eSun.intensity = LUCE_GIORNO.sole * giorno;
+    eSun.intensity = LUCE_GIORNO.sole * giorno * (pioveE ? 0.18 : 1);
     eHemi.intensity = LUCE_GIORNO.emi * (0.2 + 0.8 * giorno);
     eRim.intensity = LUCE_GIORNO.rim * (0.6 + 0.4 * giorno);
     const nebbia = new Color().setRGB((lo[0]*0.65 + hi[0]*0.35)/255, (lo[1]*0.65 + hi[1]*0.35)/255, (lo[2]*0.65 + hi[2]*0.35)/255, 'srgb');
@@ -705,6 +711,8 @@ export const ERCOLANO = (function(){
     CIELO_E.uni.uNebbia.value.copy(eScene.fog ? eScene.fog.color : eScene.background);
     LUCERNE_E.notte(momento === '79' && eruOre === null ? notteE : 0, elapsed);
     if(G.terra79.visible) MARE.update(elapsed);
+    PIOGGIA_E.accendi(pioveE && !inGalleria && eruOre === null ? 1 : 0);
+    PIOGGIA_E.update(Math.min(0.1, dt), eCam);
 
     hotspots.forEach((h,i) => {
       h.cone.position.y = Math.sin(elapsed*1.6 + i) * 0.10;
@@ -1003,7 +1011,7 @@ export const ERCOLANO = (function(){
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, luceDelGiorno, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
+           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, luceDelGiorno, pioggia: v => { pioveE = !!v; }, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
            momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots, geometria, LIVELLI,
            isActive: () => active };
 })();

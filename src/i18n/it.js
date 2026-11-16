@@ -98,6 +98,7 @@ export default {
       },
       "fonte": "Pompei 40,75° N · formule NOAA · parametri orbitali odierni",
       "aria": "Ora del giorno",
+      "pioggia": "Pioggia",
       "giorno": {
         "oggi": "Oggi",
         "agosto": "24 agosto",

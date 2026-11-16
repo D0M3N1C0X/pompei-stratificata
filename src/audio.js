@@ -404,6 +404,20 @@ export const AUDIO = (function(){
     acquaSrc.connect(hp).connect(acquaG); acquaG.connect(dry); acquaG.connect(wet);
     acquaSrc.start();
   }
+  // la pioggia: rumore filtrato largo, più forte della fontana [regia]
+  let pioggiaG = null, pioggiaSrc = null, pioggiaF = 0;
+  function setPioggia(f){
+    pioggiaF = Math.max(0, Math.min(1, f || 0));
+    if(!ready || !on) return;
+    if(!pioggiaG){
+      pioggiaSrc = noiseSrc();
+      const bp = ctx.createBiquadFilter(); bp.type = 'highpass'; bp.frequency.value = 900; bp.Q.value = 0.3;
+      pioggiaG = ctx.createGain(); pioggiaG.gain.value = 0;
+      pioggiaSrc.connect(bp).connect(pioggiaG); pioggiaG.connect(dry); pioggiaG.connect(wet);
+      pioggiaSrc.start();
+    }
+    pioggiaG.gain.setTargetAtTime(0.09 * pioggiaF, now(), 0.8);
+  }
   function setVicino(bottega, fontana){
     vicinoBottega = Math.max(0, Math.min(1, bottega || 0));
     vicinoFontana = Math.max(0, Math.min(1, fontana || 0));
@@ -477,12 +491,14 @@ export const AUDIO = (function(){
       master.gain.setTargetAtTime(0.9, now(), 0.4);
       planScene(epochNow);
       if(!evTimer) evTimer = setInterval(pump, 250);
+      if(pioggiaF) setTimeout(() => setPioggia(pioggiaF), 0);
     } else if(ready){
       master.gain.setTargetAtTime(0, now(), 0.3);
       bedNodes.forEach(n => n.stop && n.stop());
       bedNodes = [];
       evQueue = [];
       if(acquaG){ try { acquaSrc.stop(); } catch(e){} acquaG = null; acquaSrc = null; }
+      if(pioggiaG){ try { pioggiaSrc.stop(); } catch(e){} pioggiaG = null; pioggiaSrc = null; }
       if(evTimer){ clearInterval(evTimer); evTimer = null; }
     }
     return on;
@@ -504,7 +520,7 @@ export const AUDIO = (function(){
     else master.gain.setTargetAtTime(0.9, now(), 0.5);
   });
 
-  return { init, setEnabled, setEpoch, playFootstep, setVicino, isOn: () => on, isReady: () => ready };
+  return { init, setEnabled, setEpoch, playFootstep, setVicino, setPioggia, isOn: () => on, isReady: () => ready };
 })();
 
 /* =====================================================================
