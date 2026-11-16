@@ -243,16 +243,28 @@ function currentHour(){
   const n = romeNow();
   return n.hh + n.mm/60;
 }
+// il giorno del sole: oggi, oppure una delle due date proposte per
+// l'eruzione — il 24 agosto dei manoscritti di Plinio (Ep. 6.16), o fine
+// ottobre, dopo l'iscrizione a carboncino della Regio V trovata nel 2018
+let giornoSole = 'oggi';
+const GIORNI_ERUZIONE = { agosto:[8, 24], ottobre:[10, 24] };
 function updateSun(){
   const n = romeNow();
-  const leap = (n.y % 4 === 0 && n.y % 100 !== 0) || n.y % 400 === 0;
+  const [mese, giorno] = GIORNI_ERUZIONE[giornoSole] || [n.m, n.d];
+  const anno = giornoSole === 'oggi' ? n.y : 2023;      // un anno non bisestile
+  const leap = (anno % 4 === 0 && anno % 100 !== 0) || anno % 400 === 0;
   const h = currentHour();
-  const sp = solarPosition(dayOfYear(n.y, n.m, n.d), h, leap);
+  const sp = solarPosition(dayOfYear(anno, mese, giorno), h, leap);
   sunEl = sp.el; sunAz = sp.az;
   const sky = paintSky(sunEl);
   if(!eru.on){
     scene.background = skyTex;
     scene.fog.color.setStyle(rgbStr(mix3(sky.lo, sky.hi, 0.35)));
+    // la foschia del mattino: dall'alba finché il sole non passa i 14°, la
+    // nebbia comincia più vicino e si schiarisce [disegno]
+    const foschia = h < 12 ? Math.max(0, Math.min(1, (14 - sky.deg) / 14)) * (sky.deg > -6 ? 1 : 0) : 0;
+    scene.fog.near = 240 - 190 * foschia;
+    scene.fog.color.lerp(MONTI_ARIA.setRGB(0.86, 0.85, 0.82), 0.35 * foschia);
   }
   CIELO.colori(sky.hi, sky.lo);
   CIELO.sole(sunEl, sunAz);
@@ -2918,6 +2930,12 @@ document.getElementById('clockSlider').addEventListener('input', e => {
   document.getElementById('clockNow').classList.remove('on');
   updateSun();
 });
+// il giorno: oggi, 24 agosto, 24 ottobre
+document.querySelectorAll('#clockDay button').forEach(b => b.addEventListener('click', () => {
+  giornoSole = b.dataset.giorno;
+  document.querySelectorAll('#clockDay button').forEach(x => x.classList.toggle('on', x === b));
+  updateSun();
+}));
 document.getElementById('clockNow').addEventListener('click', () => {
   timeMode = 'live';
   document.getElementById('clockNow').classList.add('on');

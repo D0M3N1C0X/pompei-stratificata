@@ -87,6 +87,12 @@
         "reale": "Pompeii time",
         "scelta": "chosen time",
         "sole": "sun at {gradi}°"
+      },
+      "giorno": {
+        "oggi": "Today",
+        "agosto": "24 August",
+        "ottobre": "24 October",
+        "nota": "The day for the sun. For the eruption: 24 August in the manuscripts of Pliny, late October after the charcoal inscription found in 2018"
       }
     },
     "bussola": {
