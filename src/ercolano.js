@@ -21,6 +21,7 @@ import {
   LineBasicMaterial,
   LineLoop,
   Vector3,
+  RepeatWrapping,
   Matrix4,
   Color,
   ConeGeometry,
@@ -83,7 +84,8 @@ export const ERCOLANO = (function(){
   const dirSole = new Vector3(-34, 52, 30).normalize();
   const LUCE_GIORNO = { sole:2.15, emi:1.28, rim:0.34 };
   let notteE = 0;
-  function luceDelGiorno(el, az, hi, lo){
+  function luceDelGiorno(el, az, hi, lo, nuvole = 0.32){
+    CIELO_E.uni.uNuvole.value = nuvole;
     const ce = Math.cos(el), elOmbra = Math.max(el, 0.24);
     // sulla cupola il sole vero; per le ombre mai troppo radente, come a Pompei
     const sx = Math.cos(az - AZ_X), sz = Math.cos(az - AZ_Z);
@@ -117,7 +119,15 @@ export const ERCOLANO = (function(){
       if(!o.tex || !TEX[o.tex]) return;
       o.mm.map = TEX[o.tex];
       // a misura vera, come a Pompei (scene/textures.js, mappaMondo)
-      if(scale && scale.SCALA_MONDO[o.tex]) scale.mappaMondo(o.mm, scale.SCALA_MONDO[o.tex]);
+      const sc = scale && scale.SCALA_MONDO[o.tex];
+      if(sc) scale.mappaMondo(o.mm, sc);
+      // con le coordinate di mondo la texture deve ripetersi: quella del tufo
+      // di Pompei è fatta per una scatola sola e fuori stira il bordo
+      if(sc && o.mm.map.wrapS !== RepeatWrapping){
+        o.mm.map = o.mm.map.clone();
+        o.mm.map.wrapS = o.mm.map.wrapT = RepeatWrapping;
+        o.mm.map.needsUpdate = true;
+      }
       if(o.tex === 'basoli' || o.tex === 'laterizio') o.mm.color.set(0xffffff);
       o.mm.needsUpdate = true;
     });
@@ -141,7 +151,7 @@ export const ERCOLANO = (function(){
     strada:  mat(0x60625f, 'basoli'),
     marcia:  mat(0x9b947f, 'stone'),     // marciapiedi
     colonna: mat(0xdfd8c8, 'marble'),
-    terra:   mat(0x63594a, 'tuff'),
+    terra:   mat(0x63594a, 'tuffNoise'),
     dep1:    mat(0x86806f, 'ash'),       // le bancate del deposito
     dep2:    mat(0x6e695d, 'ash'),
     dep3:    mat(0x504c44, 'ash'),
@@ -149,7 +159,7 @@ export const ERCOLANO = (function(){
     tettoM:  mat(0x7d5f52),
     asfalto: mat(0x4a4a48),
     acqua:   mat(0x5b7f8c),
-    sabbia:  mat(0xa89a80, 'tuff'),
+    sabbia:  mat(0xa89a80, 'tuffNoise'),
     erba:    mat(0x6f7d54, 'veg')
   };
 
