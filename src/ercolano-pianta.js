@@ -253,7 +253,7 @@ export function botteghe79({ parent, vano, bancone, marmo }){
     T.position.set(x, y + alto/2, z); T.rotation.set(0, ang, 0); T.scale.set(lungo, alto, prof);
     T.updateMatrix(); g.applyMatrix4(T.matrix); lista.push(g);
   };
-  let n = 0;
+  let n = 0; const fronti = [];
   for(const e of PIANTA.edifici){
     if(!e.nome || !NOME_BOTTEGA.test(e.nome)) continue;
     const p = e.punti.map(q => [m(q[0]), m(q[1])]);
@@ -277,6 +277,7 @@ export function botteghe79({ parent, vano, bancone, marmo }){
     [x, z] = fuori(m(0.45)/2 + m(0.2));
     pezzo(pezzi.bancone, x, y0, z, ang, m(2.0), m(0.95), m(0.4));
     pezzo(pezzi.marmo, x, y0 + m(0.95), z, ang, m(2.08), m(0.06), m(0.48));
+    fronti.push({ x:mx + nx*m(0.45)/2, z:mz + nz*m(0.45)/2, nx, nz });
     n++;
   }
   for(const [k, mat] of [['vano', vano], ['bancone', bancone], ['marmo', marmo]]){
@@ -284,7 +285,8 @@ export function botteghe79({ parent, vano, bancone, marmo }){
     const mesh = new Mesh(mergeGeometries(pezzi[k], false), mat);
     mesh.castShadow = k !== 'vano'; mesh.receiveShadow = true; parent.add(mesh);
   }
-  return n;
+  // il fronte di ogni bottega con la normale verso la via (per le lucerne)
+  return fronti;
 }
 function casuale(seme){ let s = seme >>> 0; return () => (s = (s*1664525 + 1013904223) >>> 0) / 4294967296; }
 

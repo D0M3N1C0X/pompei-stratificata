@@ -8,6 +8,8 @@ import { trovaPercorso, creaSegno, seguiPercorso } from './scene/cammino.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import vascaUrl from './assets/modelli/ercolano-palestra-vasca.glb?url';
 import { creaLuceCotta } from './scene/luce.js';
+import { creaCielo } from './scene/cielo.js';
+import { creaLucerne } from './scene/lucerne.js';
 import aoOggiUrl from './assets/luce/ao-ercolano-oggi.png?url';
 import AO_OGGI from './assets/luce/ao-ercolano-oggi.json';
 import ao79Url from './assets/luce/ao-ercolano-79.png?url';
@@ -69,6 +71,35 @@ export const ERCOLANO = (function(){
 
   const eRoot = new Group();
   eScene.add(eRoot);
+
+  /* L'ora del giorno, la stessa dell'orologio di Pompei (dal 16/11/2026;
+     prima qui era sempre mattina). La scena è ruotata: +z va verso il mare,
+     cioè lungo i cardini a 238,4° di azimut, +x lungo i decumani a 148,4°
+     (ANCORE.azimut). Il sole va dove lo mette il calcolo NOAA di app.js. */
+  const CIELO_E = creaCielo();
+  eScene.add(CIELO_E.mesh);
+  const AZ_Z = (ANCORE.azimut.cardini + 180) * Math.PI / 180, AZ_X = AZ_Z - Math.PI / 2;
+  const dirSole = new Vector3(-34, 52, 30).normalize();
+  const LUCE_GIORNO = { sole:2.15, emi:1.28, rim:0.34 };
+  let notteE = 0;
+  function luceDelGiorno(el, az, hi, lo){
+    const ce = Math.cos(el), elOmbra = Math.max(el, 0.24);
+    // sulla cupola il sole vero; per le ombre mai troppo radente, come a Pompei
+    const sx = Math.cos(az - AZ_X), sz = Math.cos(az - AZ_Z);
+    CIELO_E.colori(hi, lo);
+    CIELO_E.uni.uSole.value.set(sx * ce, Math.sin(el), sz * ce).normalize();
+    const deg = el * 180 / Math.PI;
+    CIELO_E.uni.uNotte.value = notteE = Math.min(1, Math.max(0, (-deg - 1) / 9));
+    dirSole.set(sx * Math.cos(elOmbra), Math.sin(elOmbra), sz * Math.cos(elOmbra)).normalize();
+    if(inGalleria || eruOre !== null) return;            // hanno la loro luce
+    const giorno = Math.max(0, Math.min(1, (deg + 4) / 22));
+    eSun.intensity = LUCE_GIORNO.sole * giorno;
+    eHemi.intensity = LUCE_GIORNO.emi * (0.2 + 0.8 * giorno);
+    eRim.intensity = LUCE_GIORNO.rim * (0.6 + 0.4 * giorno);
+    const nebbia = new Color().setRGB((lo[0]*0.65 + hi[0]*0.35)/255, (lo[1]*0.65 + hi[1]*0.35)/255, (lo[2]*0.65 + hi[2]*0.35)/255, 'srgb');
+    if(eScene.background && eScene.background.isColor) eScene.background.copy(nebbia);
+    if(eScene.fog) eScene.fog.color.copy(nebbia);
+  }
 
   /* ------------------------------------------------------- materiali */
   // Le texture procedurali vivono nel modulo di Pompei, che viene valutato
@@ -173,7 +204,11 @@ export const ERCOLANO = (function(){
   const solidiDeposito = { oggi:[], '1958':[], '1738':[], '79':[] };
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'rovina', parent:G.rovine, solids });
   caseAntiche({ materiali:[M.tufo, M.tufo2, M.mattone, M.tetto, M.acqua, M.erba], modo:'intera', parent:G.intere, solids:[] });
-  const N_BOTTEGHE = botteghe79({ parent:G.intere, vano:mat(0x2e2923), bancone:mat(0x8f8674, 'stone'), marmo:M.colonna });
+  const FRONTI_BOTTEGHE = botteghe79({ parent:G.intere, vano:mat(0x2e2923), bancone:mat(0x8f8674, 'stone'), marmo:M.colonna });
+  const N_BOTTEGHE = FRONTI_BOTTEGHE.length;
+  // di sera, nel 79, le lucerne davanti alle botteghe, come a Pompei
+  const LUCERNE_E = creaLucerne(FRONTI_BOTTEGHE);
+  G.intere.add(LUCERNE_E.group);
   const FONTANE_E = costruisciFontane({ parent:G.intere, pietra:M.marcia, acqua:M.acqua, pilastro:M.tufo });
   // gli abitanti: le stesse figure di Pompei, sulle vie della pianta vera
   // nel 79 qualcuno si ferma davanti alle botteghe con il nome in OSM
@@ -649,8 +684,12 @@ export const ERCOLANO = (function(){
 
     // il riquadro dell'ombra segue il giocatore
     eSun.target.position.set(volo ? C4 : pos.x, 0, volo ? -4 : pos.z);
-    eSun.position.set((volo ? C4 : pos.x) - 34, 52, (volo ? -4 : pos.z) + 30);
+    eSun.position.copy(eSun.target.position).addScaledVector(dirSole, 66);
     eSun.target.updateMatrixWorld();
+    CIELO_E.mesh.visible = !inGalleria && eruOre === null;
+    CIELO_E.segui(eCam, elapsed);
+    CIELO_E.uni.uNebbia.value.copy(eScene.fog ? eScene.fog.color : eScene.background);
+    LUCERNE_E.notte(momento === '79' && eruOre === null ? notteE : 0, elapsed);
 
     hotspots.forEach((h,i) => {
       h.cone.position.y = Math.sin(elapsed*1.6 + i) * 0.10;
@@ -949,7 +988,7 @@ export const ERCOLANO = (function(){
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
+           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, luceDelGiorno, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
            momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots, geometria, LIVELLI,
            isActive: () => active };
 })();
