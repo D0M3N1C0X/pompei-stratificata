@@ -45,7 +45,7 @@ import { EVENTI, DURATA, statoEruzione, puntoEvento } from './data/eruzione.js';
 import { PERCORSI, MODALITA } from './data/classe.js';
 import { PLACES } from './data/places.js';
 import INTERNI_P from './data/pompei-interni.json';
-import { stanze, rettangoli, atrio } from './scene/stanze.js';
+import { stanze, rettangoli, atrio, percorsiStanze } from './scene/stanze.js';
 import IMPLUVI_P from './data/pompei-impluvi.json';
 import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
@@ -1094,39 +1094,9 @@ scene.add(inhabitants.group);
 function percorsiInterni(){
   const out = [];
   for(const [k, c] of Object.entries(CASE_INTERNE)){
-    const casa = INTERNI_P.case[k], s = stanze(casa.muri, casa.dim), W = s.W, D = s.D, cel = s.cella;
-    const libera = (i, j, l) => {
-      if(i < 3 || j < 3 || i >= W - 3 || j >= D - 3 || s.lab[j*W + i] !== l) return false;
-      for(let b = -4; b <= 4; b++) for(let a = -4; a <= 4; a++) if(s.muro[(j+b)*W + i+a]) return false;
-      return true;
-    };
-    for(let l = 0; l < s.n; l++){
-      if(s.area[l] < 25) continue;
-      let i0 = W, i1 = 0, j0 = D, j1 = 0, si = 0, sj = 0, n = 0;
-      for(let p = 0; p < W*D; p++) if(s.lab[p] === l){
-        const i = p % W, j = (p / W) | 0;
-        i0 = Math.min(i0, i); i1 = Math.max(i1, i); j0 = Math.min(j0, j); j1 = Math.max(j1, j);
-        si += i; sj += j; n++;
-      }
-      const ci = Math.round(si / n), cj = Math.round(sj / n);
-      const lungoX = (i1 - i0) >= (j1 - j0);
-      const linee = [lungoX ? 'x' : 'z'];
-      if(s.area[l] > 80) linee.push(lungoX ? 'z' : 'x');
-      for(const asse of linee){
-        // la corsa più lunga di celle libere sulla linea per il centro
-        let best = null, run = null;
-        const [a0, a1] = asse === 'x' ? [i0, i1] : [j0, j1];
-        for(let t = a0; t <= a1 + 1; t++){
-          const ok = t <= a1 && (asse === 'x' ? libera(t, cj, l) : libera(ci, t, l));
-          if(ok){ if(!run) run = [t, t]; else run[1] = t; }
-          else if(run){ if(!best || run[1] - run[0] > best[1] - best[0]) best = run; run = null; }
-        }
-        if(!best || (best[1] - best[0]) * cel < 3) continue;
-        const punto = (i, j) => [c.x0 + (i + 0.5) * cel / 4, c.z0 + (j + 0.5) * cel / 4];
-        const [a, b] = asse === 'x' ? [punto(best[0], cj), punto(best[1], cj)] : [punto(ci, best[0]), punto(ci, best[1])];
-        out.push({ a, b, w:0.12, mw:0.05, hh:0, casa:k });
-      }
-    }
+    const casa = INTERNI_P.case[k];
+    for(const { a, b } of percorsiStanze(casa.muri, casa.dim))
+      out.push({ a:[c.x0 + a[0]/4, c.z0 + a[1]/4], b:[c.x0 + b[0]/4, c.z0 + b[1]/4], w:0.12, mw:0.05, hh:0, casa:k });
   }
   return out;
 }

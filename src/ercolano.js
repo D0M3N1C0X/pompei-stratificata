@@ -1,5 +1,5 @@
 import { DEC_MAX, DEC_INF, C3, C4, C5, BEACH_Y, LUOGHI } from './data/ercolano-places.js';
-import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79, percorsi, BOTTEGHE, botteghe79, costruisciFontane } from './ercolano-pianta.js';
+import { ANCORE, QUOTA, SCARP_H, deposito, caseAntiche, vie, cittaModerna, terreno79, percorsi, BOTTEGHE, botteghe79, costruisciFontane, percorsiInterniE } from './ercolano-pianta.js';
 import { createInhabitants } from './scene/inhabitants.js';
 import { POPULATIONS_ERCOLANO } from './data/populations.js';
 import { PAL } from './scene/palette.js';
@@ -232,6 +232,13 @@ export const ERCOLANO = (function(){
   const abitanti = createInhabitants({ streets:percorsi(), populations:POPULATIONS_ERCOLANO, places:false,
     siti:{ 0: [...BOTTEGHE.map(b => ({ x:b.x, z:b.z, id:'bottega', raggio:0.5 })), ...FONTANE_E] } });
   eRoot.add(abitanti.group);
+  // dentro le case con l'interno: chi le abita nel 79, chi le visita oggi
+  const PERCORSI_INTERNI_E = percorsiInterniE();
+  const interniE = createInhabitants({ streets:PERCORSI_INTERNI_E, places:false, populations:[
+    { epoch:0, name:'erc-case-79', people:16, dogs:0, pigeons:0, style:'tunic', cloth:0xc7a77b, serie:'romane' },
+    { epoch:3, name:'erc-case-oggi', people:12, dogs:0, pigeons:0, style:'modern', cloth:0x536c72, serie:'oggi' }
+  ]});
+  eRoot.add(interniE.group);
   const M_LINEA = new LineBasicMaterial({ color:PAL.accent });
   terreno79({ terra:M.terra, sabbia:M.sabbia, acqua:M.acqua, linea:M_LINEA, parent:G.terra79, LineLoop, BufferGeometry, Vector3 });
   // il mare del 79 davanti alla spiaggia, fino all'orizzonte
@@ -697,6 +704,7 @@ export const ERCOLANO = (function(){
   function update(dt, elapsed){
     muovi(dt);
     abitanti.update(elapsed, dt, 0);
+    interniE.update(elapsed, dt, 0);
     eCam.position.set(pos.x, volo ? pos.y : pos.y + EYE, pos.z);
     eCam.rotation.set(0,0,0);
     eCam.rotateY(yaw);
@@ -820,6 +828,7 @@ export const ERCOLANO = (function(){
     }
     griglia(solidiDeposito[mo]);
     abitanti.setEpoch(MOMENTI.indexOf(mo));
+    interniE.setEpoch(MOMENTI.indexOf(mo));
     // nel 1738 a terra non si sta: tutto è sotto 20 m di deposito
     if(mo === '1738' && !volo){ volo = true; pos.y = SCARP_H + 6; pitch = -0.4; }
     return momento;
@@ -954,6 +963,7 @@ export const ERCOLANO = (function(){
     if(cima > quota(pos.x, pos.z) - 0.2){ volo = true; vx = vy = vz = 0; pos.y = Math.max(pos.y, cima + 1.3); }
     // le persone in città fino al primo impulso; poi nessuna [disegno]
     abitanti.setEpoch(ore < IMPULSI[0] ? MOMENTI.indexOf('79') : MOMENTI.indexOf('1738'));
+    interniE.setEpoch(ore < IMPULSI[0] ? MOMENTI.indexOf('79') : MOMENTI.indexOf('1738'));
     // la colonna: la stessa crescita di Pompei
     const cresce = Math.min(1, ore / 2), alta = ore < 9 ? 0.72 : 0.72 + 0.28 * Math.min(1, (ore - 9) / 2);
     const cala = ore < 18 ? 1 : Math.max(0, 1 - (ore - 18) / 5), k = cresce * alta * cala;
@@ -1011,7 +1021,7 @@ export const ERCOLANO = (function(){
   return { scene:eScene, camera:eCam, update, resize, enter, exit, reset,
            setGo, setCorsa, apri, textures, dallAlto, inVolo,
            mostraSepolto, sepoltoAttivo, guardaSotto, inquadra, setMomento, momentoAttivo,
-           usaFigure: f => abitanti.usaFigure(f), usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, luceDelGiorno, pioggia: v => { pioveE = !!v; }, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
+           usaFigure: f => { abitanti.usaFigure(f); interniE.usaFigure(f); }, usaAnimali: a => abitanti.usaAnimali(a), botteghe: N_BOTTEGHE, luceDelGiorno, pioggia: v => { pioveE = !!v; }, puntiBotteghe: BOTTEGHE, puntiFontane: FONTANE_E, percorsiInterni: () => PERCORSI_INTERNI_E.map(p => ({ casa:p.n, a:p.a, b:p.b })), posizione: () => pos, momentoOra: () => momento, galleria, galleriaAttiva, bloccato, eruzione, eruzioneAttiva,
            momenti: MOMENTI, luoghi: LUOGHI, marcatori: hotspots, geometria, LIVELLI,
            isActive: () => active };
 })();
