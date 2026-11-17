@@ -242,6 +242,11 @@
       "schedaNota": "Las respuestas y las fuentes están en el simulador, modo Pizarra:",
       "titolo_breve": "La erupción y el sepultamiento",
       "titolo_completo": "Dieciséis siglos, de la erupción al nombre recuperado"
+    },
+    "a11y": {
+      "scena": "Modelo 3D navegable de Pompeya y Herculano. Flechas o W A S D para moverse, teclas 1 a 8 para cambiar de fase, H para ocultar la interfaz.",
+      "fase": "Fase: {tag}, {nome}",
+      "luogo": "Lugar: {nome}"
     }
   },
   "scena": {

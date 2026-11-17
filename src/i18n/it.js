@@ -89,6 +89,11 @@ export default {
       "corpo": "<p><b>Pompei</b> riceve prima una ricaduta pliniana di pomici, poi le correnti\npiroclastiche: circa <b>5 m</b> nel settore indagato, di cui 3,1–3,3 m di lapilli.\nUn piano terra alto 4 m sparisce, il piano superiore no.</p>\n<p><b>Ercolano</b> non è toccata dalla fase di ricaduta — l'asse di dispersione punta\na sud-est, verso Pompei — e riceve <b>correnti piroclastiche fin dall'inizio</b>:\ncirca <b>20 m</b>. La casa sparisce tutta, e sopra ci sono altri 12 m di deposito.</p>\n<p class=\"cmpKey\">Pompei è diventata <b>illeggibile</b>. Ercolano è diventata\n<b>irraggiungibile</b>. È la stessa eruzione, e sono due storie di scavo diverse.</p>\n<p class=\"cmpWarn\">Sullo spessore di Ercolano <b>le fonti divergono</b>: circa 20 m nelle\nfonti peer-reviewed e nel sito del Parco, 25 m nella divulgazione della Herculaneum\nSociety, «16 e più metri» nella voce Treccani. Qui è disegnato 20 m, il valore modale.\nIl conflitto è dichiarato, non risolto.</p>\n<p class=\"cmpSrc\">Sparice et al. 2024, <em>Frontiers in Earth Science</em> 12 ·\nPensa et al. 2023, <em>Scientific Reports</em> 13, 5622 ·\nCamardo 2007, <em>Conservation and Management of Archaeological Sites</em> 8(4) ·\nPetrone 2019, <em>JASs</em> 97 · UNESCO WHC, lista 829 ·\nParco Archeologico di Ercolano, <em>Area archeologica</em></p>",
       "bottoni": "<button class=\"tourBtn\" id=\"cmpReset\">Rimetti in rotazione</button>\n<button class=\"tourBtn\" id=\"cmpClose\">Torna alla città</button>"
     },
+    "a11y": {
+      "scena": "Modello 3D navigabile di Pompei e di Ercolano. Frecce o W A S D per muoversi, i tasti da 1 a 8 per cambiare fase, H per nascondere l'interfaccia.",
+      "fase": "Fase: {tag}, {nome}",
+      "luogo": "Luogo: {nome}"
+    },
     "clock": {
       "adesso": "Adesso",
       "nota": {

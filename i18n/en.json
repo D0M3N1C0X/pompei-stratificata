@@ -242,6 +242,11 @@
       "schedaNota": "Answers and sources are in the simulator, Whiteboard mode:",
       "titolo_breve": "The eruption and the burial",
       "titolo_completo": "Sixteen centuries, from the eruption to the name found again"
+    },
+    "a11y": {
+      "scena": "Navigable 3D model of Pompeii and Herculaneum. Arrow keys or W A S D to move, keys 1 to 8 to change phase, H to hide the interface.",
+      "fase": "Phase: {tag}, {nome}",
+      "luogo": "Place: {nome}"
     }
   },
   "scena": {

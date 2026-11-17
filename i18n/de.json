@@ -242,6 +242,11 @@
       "schedaNota": "Antworten und Quellen stehen im Simulator, Modus Tafel:",
       "titolo_breve": "Der Ausbruch und die Verschüttung",
       "titolo_completo": "Sechzehn Jahrhunderte, vom Ausbruch bis zum wiedergefundenen Namen"
+    },
+    "a11y": {
+      "scena": "Begehbares 3D-Modell von Pompeji und Herculaneum. Pfeiltasten oder W A S D zum Bewegen, Tasten 1 bis 8 zum Wechseln der Phase, H blendet die Oberfläche aus.",
+      "fase": "Phase: {tag}, {nome}",
+      "luogo": "Ort: {nome}"
     }
   },
   "scena": {

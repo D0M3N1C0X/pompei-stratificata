@@ -112,6 +112,7 @@
   #app{position:fixed;inset:0}
   #app canvas{display:block;width:100%;height:100%}
   button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
   button[disabled]{opacity:.32;cursor:not-allowed}
 
@@ -1097,14 +1098,17 @@ body.erc-on #crosshair{ display:block !important; }
   <input id="clockSlider" type="range" min="0" max="1439" step="5" value="720" aria-label="Ora del giorno"
          data-i18n-attr="aria-label: ui.clock.aria">
   <div id="clockDay" role="group" data-i18n-attr="title: ui.clock.giorno.nota">
-    <button data-giorno="oggi" class="on" data-i18n="ui.clock.giorno.oggi">Oggi</button>
-    <button data-giorno="agosto" data-i18n="ui.clock.giorno.agosto">24 agosto</button>
-    <button data-giorno="ottobre" data-i18n="ui.clock.giorno.ottobre">24 ottobre</button>
-    <button id="clockPioggia" data-i18n="ui.clock.pioggia">Pioggia</button>
+    <button data-giorno="oggi" class="on" aria-pressed="true" data-i18n="ui.clock.giorno.oggi">Oggi</button>
+    <button data-giorno="agosto" aria-pressed="false" data-i18n="ui.clock.giorno.agosto">24 agosto</button>
+    <button data-giorno="ottobre" aria-pressed="false" data-i18n="ui.clock.giorno.ottobre">24 ottobre</button>
+    <button id="clockPioggia" aria-pressed="false" data-i18n="ui.clock.pioggia">Pioggia</button>
   </div>
   <span id="clockNote" data-i18n="ui.clock.nota.reale">ora di Pompei</span>
   <span id="clockSrc" data-i18n="ui.clock.fonte">Pompei 40,75° N · formule NOAA · parametri orbitali odierni</span>
 </div>
+
+<!-- per i lettori di schermo: la fase e il luogo appena scelti -->
+<div id="annuncio" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
 <div id="compass" aria-hidden="true">
   <svg width="46" height="46" viewBox="0 0 46 46">

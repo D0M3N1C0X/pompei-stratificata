@@ -105,6 +105,15 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = PCFShadowMap;
 renderer.localClippingEnabled = true;
 app.appendChild(renderer.domElement);
+// per i lettori di schermo la scena è un'immagine con una descrizione, e
+// le scelte (fase, luogo) si annunciano in #annuncio
+renderer.domElement.setAttribute('role', 'img');
+function annuncia(testo){
+  const el = document.getElementById('annuncio');
+  if(!el) return;
+  el.textContent = '';
+  setTimeout(() => { el.textContent = testo; }, 30);   // così anche lo stesso testo si rilegge
+}
 
 // anisotropia al massimo che la scheda regge: le strade viste di scorcio
 // erano una poltiglia con il valore fisso a 4
@@ -287,6 +296,7 @@ function updateSun(){
   const el = document.getElementById('clockTime');
   if(el){
     el.textContent = fmt().orologio(hh, mm);
+    document.getElementById('clockSlider').setAttribute('aria-valuetext', fmt().orologio(hh, mm));
     document.getElementById('clockNote').textContent =
       t(timeMode === 'live' ? 'ui.clock.nota.reale' : 'ui.clock.nota.scelta') +
       ' · ' + t('ui.clock.nota.sole', { gradi: fmt().n(Math.round(sky.deg)) });
@@ -1773,6 +1783,8 @@ function applyEpoch(i, silent){
     el.setAttribute('aria-selected', k===i ? 'true':'false');
   });
   document.getElementById('epTag').textContent = e.tag;
+  renderer.domElement.setAttribute('aria-label', t('ui.a11y.scena'));
+  if(!silent) annuncia(t('ui.a11y.fase', { tag:e.tag, nome:e.name }));
   document.getElementById('epName').textContent = e.name;
   document.getElementById('epText').innerHTML =
     e.caption + (e.src ? `<span class="cite">${e.src}</span>` : '');
@@ -2263,6 +2275,7 @@ const panel = document.getElementById('panel');
 function openPanel(p){
   luogoAperto = p.id || null;
   document.getElementById('pTitle').textContent = p.label;
+  annuncia(t('ui.a11y.luogo', { nome:p.label }));
   document.getElementById('pSub').textContent = p.sub;
   document.getElementById('pBody').innerHTML = p.body;
   document.getElementById('pSrc').innerHTML = p.src;
@@ -2915,6 +2928,7 @@ document.getElementById('clockSlider').addEventListener('input', e => {
 document.getElementById('clockPioggia').addEventListener('click', e => {
   piove = !piove;
   e.currentTarget.classList.toggle('on', piove);
+  e.currentTarget.setAttribute('aria-pressed', String(piove));
   PIOGGIA.accendi(piove && !eru.on ? 1 : 0);
   ERCOLANO.pioggia(piove);
   AUDIO.setPioggia(piove ? 1 : 0);
@@ -2923,7 +2937,7 @@ document.getElementById('clockPioggia').addEventListener('click', e => {
 // il giorno: oggi, 24 agosto, 24 ottobre
 document.querySelectorAll('#clockDay button[data-giorno]').forEach(b => b.addEventListener('click', () => {
   giornoSole = b.dataset.giorno;
-  document.querySelectorAll('#clockDay button[data-giorno]').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('#clockDay button[data-giorno]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
   updateSun();
 }));
 document.getElementById('clockNow').addEventListener('click', () => {
