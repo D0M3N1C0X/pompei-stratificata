@@ -45,7 +45,7 @@ import { EVENTI, DURATA, statoEruzione, puntoEvento } from './data/eruzione.js';
 import { PERCORSI, MODALITA } from './data/classe.js';
 import { PLACES } from './data/places.js';
 import INTERNI_P from './data/pompei-interni.json';
-import { stanze, rettangoli, atrio } from './scene/stanze.js';
+import { stanze, rettangoli, atrio, percorsiStanze } from './scene/stanze.js';
 import IMPLUVI_P from './data/pompei-impluvi.json';
 import { TOUR, TOUR_EPOCH } from './data/tour.js';
 import { ERCOLANO } from './ercolano.js';
@@ -62,6 +62,7 @@ import AO_SUOLO from './assets/luce/ao-suolo.json';
 import { creaLuceCotta } from './scene/luce.js';
 import { creaCielo, creaMonti } from './scene/cielo.js';
 import { creaLucerne } from './scene/lucerne.js';
+import { creaPioggia } from './scene/pioggia.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -104,6 +105,15 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = PCFShadowMap;
 renderer.localClippingEnabled = true;
 app.appendChild(renderer.domElement);
+// per i lettori di schermo la scena è un'immagine con una descrizione, e
+// le scelte (fase, luogo) si annunciano in #annuncio
+renderer.domElement.setAttribute('role', 'img');
+function annuncia(testo){
+  const el = document.getElementById('annuncio');
+  if(!el) return;
+  el.textContent = '';
+  setTimeout(() => { el.textContent = testo; }, 30);   // così anche lo stesso testo si rilegge
+}
 
 // anisotropia al massimo che la scheda regge: le strade viste di scorcio
 // erano una poltiglia con il valore fisso a 4
@@ -123,6 +133,10 @@ const MONTI = creaMonti(0x6f7368);
 MONTI.material.fog = false;            // la foschia la fa il colore, vedi updateSun
 scene.add(MONTI);
 const MONTI_BASE = new Color(0x5c6155), MONTI_ARIA = new Color();
+// la pioggia, accesa dal pulsante dell'orologio (src/scene/pioggia.js)
+const PIOGGIA = creaPioggia();
+scene.add(PIOGGIA.mesh);
+let piove = false;
 
 const camera = new PerspectiveCamera(64, innerWidth/innerHeight, 0.12, 1600);
 
@@ -263,14 +277,17 @@ function updateSun(){
     // la foschia del mattino: dall'alba finché il sole non passa i 14°, la
     // nebbia comincia più vicino e si schiarisce [disegno]
     const foschia = h < 12 ? Math.max(0, Math.min(1, (14 - sky.deg) / 14)) * (sky.deg > -6 ? 1 : 0) : 0;
-    scene.fog.near = 240 - 190 * foschia;
+    scene.fog.near = piove ? 20 : 240 - 190 * foschia;
     scene.fog.color.lerp(MONTI_ARIA.setRGB(0.86, 0.85, 0.82), 0.35 * foschia);
   }
   CIELO.colori(sky.hi, sky.lo);
   CIELO.sole(sunEl, sunAz);
   // a fine ottobre il cielo più coperto che a fine agosto [disegno]
-  const nuvole = giornoSole === 'ottobre' ? 0.52 : 0.32;
+  const nuvole = piove ? 0.9 : giornoSole === 'ottobre' ? 0.52 : 0.32;
   CIELO.uni.uNuvole.value = nuvole;
+  // con la pioggia il cielo è grigio e il vento spinge le nuvole [disegno]
+  CIELO.uni.uGrigio.value = piove ? 1 : 0;
+  CIELO.vento = piove ? 3.5 : 1;
   ERCOLANO.luceDelGiorno(sunEl, sunAz, sky.hi, sky.lo, nuvole);
   // i monti lontani prendono il colore dell'aria: due terzi orizzonte
   MONTI_ARIA.setRGB(sky.lo[0]/255, sky.lo[1]/255, sky.lo[2]/255, SRGBColorSpace);
@@ -279,6 +296,7 @@ function updateSun(){
   const el = document.getElementById('clockTime');
   if(el){
     el.textContent = fmt().orologio(hh, mm);
+    document.getElementById('clockSlider').setAttribute('aria-valuetext', fmt().orologio(hh, mm));
     document.getElementById('clockNote').textContent =
       t(timeMode === 'live' ? 'ui.clock.nota.reale' : 'ui.clock.nota.scelta') +
       ' · ' + t('ui.clock.nota.sole', { gradi: fmt().n(Math.round(sky.deg)) });
@@ -1086,39 +1104,9 @@ scene.add(inhabitants.group);
 function percorsiInterni(){
   const out = [];
   for(const [k, c] of Object.entries(CASE_INTERNE)){
-    const casa = INTERNI_P.case[k], s = stanze(casa.muri, casa.dim), W = s.W, D = s.D, cel = s.cella;
-    const libera = (i, j, l) => {
-      if(i < 3 || j < 3 || i >= W - 3 || j >= D - 3 || s.lab[j*W + i] !== l) return false;
-      for(let b = -4; b <= 4; b++) for(let a = -4; a <= 4; a++) if(s.muro[(j+b)*W + i+a]) return false;
-      return true;
-    };
-    for(let l = 0; l < s.n; l++){
-      if(s.area[l] < 25) continue;
-      let i0 = W, i1 = 0, j0 = D, j1 = 0, si = 0, sj = 0, n = 0;
-      for(let p = 0; p < W*D; p++) if(s.lab[p] === l){
-        const i = p % W, j = (p / W) | 0;
-        i0 = Math.min(i0, i); i1 = Math.max(i1, i); j0 = Math.min(j0, j); j1 = Math.max(j1, j);
-        si += i; sj += j; n++;
-      }
-      const ci = Math.round(si / n), cj = Math.round(sj / n);
-      const lungoX = (i1 - i0) >= (j1 - j0);
-      const linee = [lungoX ? 'x' : 'z'];
-      if(s.area[l] > 80) linee.push(lungoX ? 'z' : 'x');
-      for(const asse of linee){
-        // la corsa più lunga di celle libere sulla linea per il centro
-        let best = null, run = null;
-        const [a0, a1] = asse === 'x' ? [i0, i1] : [j0, j1];
-        for(let t = a0; t <= a1 + 1; t++){
-          const ok = t <= a1 && (asse === 'x' ? libera(t, cj, l) : libera(ci, t, l));
-          if(ok){ if(!run) run = [t, t]; else run[1] = t; }
-          else if(run){ if(!best || run[1] - run[0] > best[1] - best[0]) best = run; run = null; }
-        }
-        if(!best || (best[1] - best[0]) * cel < 3) continue;
-        const punto = (i, j) => [c.x0 + (i + 0.5) * cel / 4, c.z0 + (j + 0.5) * cel / 4];
-        const [a, b] = asse === 'x' ? [punto(best[0], cj), punto(best[1], cj)] : [punto(ci, best[0]), punto(ci, best[1])];
-        out.push({ a, b, w:0.12, mw:0.05, hh:0, casa:k });
-      }
-    }
+    const casa = INTERNI_P.case[k];
+    for(const { a, b } of percorsiStanze(casa.muri, casa.dim))
+      out.push({ a:[c.x0 + a[0]/4, c.z0 + a[1]/4], b:[c.x0 + b[0]/4, c.z0 + b[1]/4], w:0.12, mw:0.05, hh:0, casa:k });
   }
   return out;
 }
@@ -1747,7 +1735,7 @@ function applyLight(){
   // cielo un poco di più, così le ombre non sono buchi neri; il colore
   // scalda già sotto i 30° di altezza, non solo all'alba. La posizione del
   // sole resta quella calcolata (NOAA).
-  sun.intensity = 1.75 * k * day * eru.luce;
+  sun.intensity = 1.75 * k * day * eru.luce * (piove ? 0.18 : 1);
   const warmth = Math.max(0, 1 - Math.max(0, deg) / 30);
   const w = Math.max(warmth * warmth, (!sectionOn && e.warm > .5) ? 1 : 0);
   sun.color.setRGB(1, 0.95 - w*0.22, 0.88 - w*0.45);
@@ -1795,6 +1783,8 @@ function applyEpoch(i, silent){
     el.setAttribute('aria-selected', k===i ? 'true':'false');
   });
   document.getElementById('epTag').textContent = e.tag;
+  renderer.domElement.setAttribute('aria-label', t('ui.a11y.scena'));
+  if(!silent) annuncia(t('ui.a11y.fase', { tag:e.tag, nome:e.name }));
   document.getElementById('epName').textContent = e.name;
   document.getElementById('epText').innerHTML =
     e.caption + (e.src ? `<span class="cite">${e.src}</span>` : '');
@@ -2285,6 +2275,7 @@ const panel = document.getElementById('panel');
 function openPanel(p){
   luogoAperto = p.id || null;
   document.getElementById('pTitle').textContent = p.label;
+  annuncia(t('ui.a11y.luogo', { nome:p.label }));
   document.getElementById('pSub').textContent = p.sub;
   document.getElementById('pBody').innerHTML = p.body;
   document.getElementById('pSrc').innerHTML = p.src;
@@ -2933,10 +2924,20 @@ document.getElementById('clockSlider').addEventListener('input', e => {
   document.getElementById('clockNow').classList.remove('on');
   updateSun();
 });
+// la pioggia: un interruttore, per qualsiasi giorno
+document.getElementById('clockPioggia').addEventListener('click', e => {
+  piove = !piove;
+  e.currentTarget.classList.toggle('on', piove);
+  e.currentTarget.setAttribute('aria-pressed', String(piove));
+  PIOGGIA.accendi(piove && !eru.on ? 1 : 0);
+  ERCOLANO.pioggia(piove);
+  AUDIO.setPioggia(piove ? 1 : 0);
+  updateSun();
+});
 // il giorno: oggi, 24 agosto, 24 ottobre
-document.querySelectorAll('#clockDay button').forEach(b => b.addEventListener('click', () => {
+document.querySelectorAll('#clockDay button[data-giorno]').forEach(b => b.addEventListener('click', () => {
   giornoSole = b.dataset.giorno;
-  document.querySelectorAll('#clockDay button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('#clockDay button[data-giorno]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
   updateSun();
 }));
 document.getElementById('clockNow').addEventListener('click', () => {
@@ -3277,6 +3278,8 @@ function passo(){
   // ai recuperi sparirebbe sotto la cenere
   inhabitants.update(t, dt, depositCurrent);
   interni.update(t, dt, depositCurrent);
+  PIOGGIA.accendi(piove && !eru.on ? 1 : 0);
+  PIOGGIA.update(Math.min(0.1, dt), camera);
 
   // cenere
   if(ashGroup.visible){
@@ -3664,6 +3667,7 @@ if(new URLSearchParams(location.search).has('debug')){
     }),
     caseInterne: () => MURI_INTERNI.map(c => ({ x0:c.x0, z0:c.z0, x1:c.x1, z1:c.z1 })),
     tettiPianta: () => TETTI_PIANTA,
+    pioggia: () => ({ opacita: PIOGGIA.mesh.material.opacity, visibile: PIOGGIA.mesh.visible }),
     percorsiInterni: () => PERCORSI_INTERNI.map(p => ({ casa:p.casa, a:p.a, b:p.b })),
     ercolano: ERCOLANO,
     // un'immagine per lo store: la scena adattata a w × h (riempie e

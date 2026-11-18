@@ -29,7 +29,7 @@ void main(){
 
 const FRAG = `
 uniform vec3 uZenit, uOrizzonte, uSole, uSoleCol, uNebbia;
-uniform float uNotte, uTempo, uNuvole;
+uniform float uNotte, uTempo, uNuvole, uGrigio;
 varying vec3 vDir;
 float hash( vec2 p ){ return fract( sin( dot( p, vec2( 127.1, 311.7 ) ) ) * 43758.5453 ); }
 float noise( vec2 p ){
@@ -54,7 +54,7 @@ void main(){
   float basso = 1.0 - clamp( uSole.y * 3.0, 0.0, 1.0 );
   // il disco: mezzo grado di diametro, come il vero, con il bordo sfumato
   float disco = smoothstep( 0.99994, 0.99998, mu );
-  col += uSoleCol * ( disco * 5.0 + pow( mu, 2400.0 ) * 0.6 + pow( mu, 18.0 ) * ( 0.18 + 0.35 * basso ) ) * ( 1.0 - uNotte );
+  col += ( 1.0 - 0.9 * uGrigio ) * uSoleCol * ( disco * 5.0 + pow( mu, 2400.0 ) * 0.6 + pow( mu, 18.0 ) * ( 0.18 + 0.35 * basso ) ) * ( 1.0 - uNotte );
   // le nuvole: rumore proiettato su un piano alto, sfumato verso l'orizzonte
   if( h > 0.0 ){
     vec2 uv = d.xz / ( h + 0.15 ) * 1.6 + vec2( uTempo * 0.004, uTempo * 0.0015 );
@@ -63,6 +63,8 @@ void main(){
     float luce = 0.55 + 0.45 * mu + 0.25 * ( fbm( uv + 0.35 ) - 0.5 );
     vec3 nube = mix( uOrizzonte * 0.9, vec3( 1.0, 0.98, 0.95 ), luce ) * ( 1.0 - 0.82 * uNotte );
     nube += uSoleCol * pow( mu, 6.0 ) * 0.35 * basso * ( 1.0 - uNotte );
+    // con la pioggia le nuvole si fanno grigie e pesanti
+    nube = mix( nube, vec3( 0.42, 0.44, 0.46 ) * ( 1.0 - 0.8 * uNotte ), uGrigio * ( 0.6 + 0.4 * n ) );
     col = mix( col, nube, c * 0.85 );
     // le stelle, dove il cielo è sereno
     vec2 g = d.xz / ( h + 0.25 ) * 140.0;
@@ -73,6 +75,8 @@ void main(){
   }
   // sotto e appena sopra l'orizzonte il colore della nebbia della scena:
   // così il piano lontano e il cielo si saldano senza una striscia chiara
+  // il cielo coperto: meno azzurro, il sole velato
+  col = mix( col, vec3( dot( col, vec3( 0.333 ) ) ) * 0.85, uGrigio * 0.7 );
   col = mix( uNebbia, col, smoothstep( -0.01, 0.07, h ) );
   gl_FragColor = vec4( col, 1.0 );
   #include <colorspace_fragment>
@@ -82,7 +86,7 @@ export function creaCielo(){
   const uni = {
     uZenit: { value: new Color(0x4e76a3) }, uOrizzonte: { value: new Color(0xd6d2c3) },
     uSole: { value: new Vector3(0, 1, 0) }, uSoleCol: { value: new Color(0xfff0d8) },
-    uNotte: { value: 0 }, uTempo: { value: 0 }, uNuvole: { value: 0.32 }, uNebbia: { value: new Color() }
+    uNotte: { value: 0 }, uTempo: { value: 0 }, uNuvole: { value: 0.32 }, uNebbia: { value: new Color() }, uGrigio: { value: 0 }
   };
   const mat = new ShaderMaterial({ uniforms: uni, vertexShader: VERT, fragmentShader: FRAG,
     side: BackSide, depthWrite: false, fog: false });
@@ -103,7 +107,14 @@ export function creaCielo(){
       const deg = el * 180 / Math.PI;
       uni.uNotte.value = Math.min(1, Math.max(0, (-deg - 1) / 9));
     },
-    segui(camera, t){ cupola.position.copy(camera.position); uni.uTempo.value = t; }
+    // il tempo delle nuvole corre col vento (1 = brezza, 3 = pioggia)
+    vento: 1,
+    segui(camera, t){
+      cupola.position.copy(camera.position);
+      const dt = Math.min(0.2, Math.max(0, t - (this._t ?? t)));
+      this._t = t;
+      uni.uTempo.value += dt * this.vento;
+    }
   };
 }
 

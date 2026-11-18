@@ -93,7 +93,8 @@
         "agosto": "24 de agosto",
         "ottobre": "24 de outubro",
         "nota": "O dia do sol. Para a erupção: 24 de agosto nos manuscritos de Plínio, fim de outubro após a inscrição a carvão encontrada em 2018"
-      }
+      },
+      "pioggia": "Chuva"
     },
     "bussola": {
       "nord": "norte",
@@ -241,6 +242,11 @@
       "schedaNota": "As respostas e as fontes estão no simulador, modo Quadro:",
       "titolo_breve": "A erupção e o soterramento",
       "titolo_completo": "Dezasseis séculos, da erupção ao nome reencontrado"
+    },
+    "a11y": {
+      "scena": "Modelo 3D navegável de Pompeia e Herculano. Setas ou W A S D para se mover, teclas 1 a 8 para mudar de fase, H para ocultar a interface.",
+      "fase": "Fase: {tag}, {nome}",
+      "luogo": "Local: {nome}"
     }
   },
   "scena": {

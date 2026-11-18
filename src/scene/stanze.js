@@ -105,3 +105,45 @@ export function atrio(muri, dim, vasca, max = 250, cella = 0.25){
   }
   return null;
 }
+
+/* I percorsi dentro una casa: negli spazi di almeno 25 m² una linea per il
+   centro lungo il lato lungo, e una di traverso sopra gli 80 m², tenute
+   solo dove c'è almeno 1 m dai muri. In metri nella griglia della pianta:
+   [{ a:[x, z], b:[x, z] }]. Usati per chi cammina dentro le case misurate
+   di Pompei e dentro quelle con l'interno di Ercolano [regia]. */
+export function percorsiStanze(muri, dim){
+  const s = stanze(muri, dim), W = s.W, D = s.D, cel = s.cella, out = [];
+  const libera = (i, j, l) => {
+    if(i < 3 || j < 3 || i >= W - 3 || j >= D - 3 || s.lab[j*W + i] !== l) return false;
+    for(let b = -4; b <= 4; b++) for(let a = -4; a <= 4; a++) if(s.muro[(j+b)*W + i+a]) return false;
+    return true;
+  };
+  for(let l = 0; l < s.n; l++){
+    if(s.area[l] < 25) continue;
+    let i0 = W, i1 = 0, j0 = D, j1 = 0, si = 0, sj = 0, n = 0;
+    for(let p = 0; p < W*D; p++) if(s.lab[p] === l){
+      const i = p % W, j = (p / W) | 0;
+      i0 = Math.min(i0, i); i1 = Math.max(i1, i); j0 = Math.min(j0, j); j1 = Math.max(j1, j);
+      si += i; sj += j; n++;
+    }
+    const ci = Math.round(si / n), cj = Math.round(sj / n);
+    const lungoX = (i1 - i0) >= (j1 - j0);
+    const linee = [lungoX ? 'x' : 'z'];
+    if(s.area[l] > 80) linee.push(lungoX ? 'z' : 'x');
+    for(const asse of linee){
+      // la corsa più lunga di celle libere sulla linea per il centro
+      let best = null, run = null;
+      const [a0, a1] = asse === 'x' ? [i0, i1] : [j0, j1];
+      for(let t = a0; t <= a1 + 1; t++){
+        const ok = t <= a1 && (asse === 'x' ? libera(t, cj, l) : libera(ci, t, l));
+        if(ok){ if(!run) run = [t, t]; else run[1] = t; }
+        else if(run){ if(!best || run[1] - run[0] > best[1] - best[0]) best = run; run = null; }
+      }
+      if(!best || (best[1] - best[0]) * cel < 3) continue;
+      const punto = (i, j) => [(i + 0.5) * cel, (j + 0.5) * cel];
+      const [a, b] = asse === 'x' ? [punto(best[0], cj), punto(best[1], cj)] : [punto(ci, best[0]), punto(ci, best[1])];
+      out.push({ a, b });
+    }
+  }
+  return out;
+}

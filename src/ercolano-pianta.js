@@ -13,6 +13,7 @@ import {
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import PIANTA from './data/ercolano-pianta.json';
 import INTERNI from './data/ercolano-interni.json';
+import { percorsiStanze } from './scene/stanze.js';
 
 // Sei case hanno gli interni, ricavati dalle piante libere di Commons
 // (strumenti/piante/case_ercolano.py): si legano alla pianta OSM per id.
@@ -230,6 +231,25 @@ export function costruisciFontane({ parent, pietra, acqua, pilastro }){
     mesh.castShadow = k !== 'acqua'; mesh.receiveShadow = true; parent.add(mesh);
   }
   return fontane;
+}
+
+/* Chi cammina dentro le sei case con l'interno disegnato (ercolano-interni
+   .json), sugli stessi percorsi ricavati dalla pianta che a Pompei
+   (stanze.js, percorsiStanze), solo dove la casa sta alla quota della città.
+   In unità, nel formato di percorsi(). [regia] */
+export function percorsiInterniE(){
+  const out = [];
+  for(const [nome, casa] of Object.entries(INTERNI.case)){
+    const xs = casa.muri.flatMap(r => [r[0], r[2]]), zs = casa.muri.flatMap(r => [r[1], r[3]]);
+    const x0 = Math.min(...xs), z0 = Math.min(...zs);
+    const locali = casa.muri.map(([a, b, e, f]) => [a - x0, b - z0, e - x0, f - z0]);
+    for(const { a, b } of percorsiStanze(locali, [Math.max(...xs) - x0, Math.max(...zs) - z0])){
+      const A = [a[0] + x0, a[1] + z0], B = [b[0] + x0, b[1] + z0];
+      if(quotaDi(A[1]) !== QUOTA.citta || quotaDi(B[1]) !== QUOTA.citta) continue;
+      out.push({ a:A.map(m), b:B.map(m), w:m(0.48), mw:m(0.2), hh:0, n:nome });
+    }
+  }
+  return out;
 }
 
 /* Il fronte delle botteghe nel 79: sul lato della pianta più vicino a una
