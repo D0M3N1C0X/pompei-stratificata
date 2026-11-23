@@ -61,8 +61,9 @@ import aoSuoloUrl from './assets/luce/ao-suolo.png?url';
 import AO_SUOLO from './assets/luce/ao-suolo.json';
 import { creaLuceCotta } from './scene/luce.js';
 import { creaCielo, creaMonti } from './scene/cielo.js';
-import { creaLucerne } from './scene/lucerne.js';
-import { creaPioggia } from './scene/pioggia.js';
+import { creaLucerne } from './collana/lucerne.js';
+import { creaPioggia } from './collana/pioggia.js';
+import { creaAnnunci } from './collana/annunci.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -108,12 +109,7 @@ app.appendChild(renderer.domElement);
 // per i lettori di schermo la scena è un'immagine con una descrizione, e
 // le scelte (fase, luogo) si annunciano in #annuncio
 renderer.domElement.setAttribute('role', 'img');
-function annuncia(testo){
-  const el = document.getElementById('annuncio');
-  if(!el) return;
-  el.textContent = '';
-  setTimeout(() => { el.textContent = testo; }, 30);   // così anche lo stesso testo si rilegge
-}
+const annuncia = creaAnnunci('annuncio');
 
 // anisotropia al massimo che la scheda regge: le strade viste di scorcio
 // erano una poltiglia con il valore fisso a 4

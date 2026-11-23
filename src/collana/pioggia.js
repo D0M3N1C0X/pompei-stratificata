@@ -2,15 +2,17 @@
    LA PIOGGIA
 
    Gocce come brevi tratti che cadono in una scatola attorno a chi guarda
-   (18 × 8 × 18 unità) e la seguono; il vento le inclina. Cadono a circa
-   9 m/s, la velocità di una goccia di pioggia media. Quando e quanto
-   piovesse sulla vigilia nessuna fonte lo dice: è [disegno], acceso dal
-   pulsante «Pioggia» dell'orologio.
+   (72 × 32 × 72 m) e la seguono; il vento le inclina. Cadono a circa
+   9 m/s, la velocità di una goccia di pioggia media. Quando piovesse lo
+   decide chi la usa: nei progetti della collana è [disegno].
+
+   creaPioggia(n, { metri }) — metri: quanti metri vale un'unità della
+   scena (4 a Pompei e Ercolano).
    ===================================================================== */
 import { BufferAttribute, BufferGeometry, LineBasicMaterial, LineSegments } from 'three';
 
-export function creaPioggia(n = 4000){
-  const L = 18, H = 8, cade = 9 / 4, lungo = 0.22;    // unità; 1 unità = 4 m
+export function creaPioggia(n = 4000, { metri = 4 } = {}){
+  const L = 72 / metri, H = 32 / metri, cade = 9 / metri, lungo = 0.88 / metri;
   const pos = new Float32Array(n * 6), base = new Float32Array(n * 3);
   for(let i = 0; i < n; i++){
     base[i*3] = (Math.random() - 0.5) * L;
@@ -34,7 +36,7 @@ export function creaPioggia(n = 4000){
       linee.visible = k > 0.01;
       if(!linee.visible) return;
       t += dt;
-      const cx = camera.position.x, cy = camera.position.y - 2, cz = camera.position.z;
+      const cx = camera.position.x, cy = camera.position.y - 8 / metri, cz = camera.position.z;
       for(let i = 0; i < n; i++){
         // la quota scende col tempo e ricomincia in cima: nessuno stato per goccia
         let y = base[i*3 + 1] - (t * cade) % H;
