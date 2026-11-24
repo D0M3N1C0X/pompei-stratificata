@@ -583,6 +583,26 @@
   }
   body.presenting #presentExit{display:block}
 
+  /* ------------------------------------------- rifinitura «da app» (23/11/2026)
+     Vetro sfocato dietro i comandi, angoli più morbidi, la fase scelta su un
+     fondo, un ritorno leggero alla pressione. Nessuna misura cambia: le prove
+     d'impaginazione (scripts/giro-layout.js) valgono come prima. */
+  .tool{background:rgba(16,20,18,.62);border-radius:12px;
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+    box-shadow:0 6px 18px rgba(0,0,0,.22)}
+  .tool:active, .scelta:active, .ep:active{transform:scale(.97)}
+  #clock, #altro{border-radius:16px;
+    -webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3)}
+  #clock{background:rgba(19,24,22,.82)}
+  #panel, #rail{-webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);
+    background:rgba(19,24,22,.9)}
+  .ep{border-radius:0 0 10px 10px;transition:border-color .18s,color .18s,background .18s,transform .1s}
+  .ep.on{background:rgba(127,184,163,.10)}
+  #clockDay button{border-radius:999px}
+  @media (prefers-reduced-transparency: reduce){
+    .tool, #clock, #altro, #panel, #rail{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--glass-2)}
+  }
+
   /* ----------------------------------------------------------- intro */
   /* L'ingresso è un fotogramma di film (23/11/2026): dietro la scheda la
      città vola piano, con la luce dell'ora vera; il velo scuro è solo dove
