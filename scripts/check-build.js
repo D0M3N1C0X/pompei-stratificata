@@ -13,6 +13,7 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { scarto } from './cifre.js';
+import { verifica as verificaCollana } from '../src/collana/collana.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = f => readFileSync(join(root, f), 'utf8');
@@ -212,6 +213,14 @@ if(existsSync(join(root, 'dossier/en/index.html'))){
     esigi(tr?.ui?.intro?.dossierLink === './dossier/en/',
           `in ${cod} il collegamento al dossier porta alla versione inglese`);
   }
+}
+
+// ── la collana (src/collana, comune con Firenze 1216) non è stata
+//    modificata da una parte sola senza una nuova firma
+{
+  const { versione, errori: e } = verificaCollana(join(root, 'src/collana'));
+  if(e.length) for(const x of e) errori.push(`collana: ${x} (node src/collana/collana.mjs firma <versione>)`);
+  else ok.push(`collana ${versione}: i file corrispondono al manifest`);
 }
 
 // ── il manifest resta leggibile

@@ -1,11 +1,10 @@
 /* =====================================================================
    LE LUCERNE
 
-   Di sera, nella vigilia, una lucerna accesa accanto a ogni bottega: la
-   fiamma, l'alone attorno e la pozza di luce calda sul selciato. Le
-   lucerne a olio di terracotta sono tra gli oggetti più comuni di Pompei;
-   che ce ne fosse una accesa fuori da ogni bottega, a quell'altezza e con
-   quella luce, è [regia].
+   Di sera, una lucerna accesa nei punti che passa chi la usa (a Pompei e
+   a Ercolano davanti alle botteghe): la fiamma, l'alone attorno e la pozza
+   di luce calda sul selciato. Dove e quante sono è una scelta di chi la
+   usa, da dichiarare come [regia].
 
    Niente luci vere: con centinaia di punti costerebbero troppo. La fiamma
    è un punto luminoso, l'alone uno sprite additivo, la pozza un disco
@@ -29,7 +28,11 @@ function alone(){
 }
 
 // punti: [{ x, z, nx, nz }] — il piede della facciata e la normale verso la via
-export function creaLucerne(punti, { altezza = 0.45, fuori = 0.06 } = {}){
+// metri: quanti metri vale un'unità della scena (4 a Pompei e Ercolano);
+// altezza e fuori in metri
+export function creaLucerne(punti, { metri = 4, altezza = 1.8, fuori = 0.24 } = {}){
+  altezza /= metri; fuori /= metri;
+  const u = 4 / metri;                                   // le misure sotto sono pensate a 4 m per unità
   const group = new Group(); group.name = 'lucerne';
   const tex = alone();
   const pos = new Float32Array(punti.length * 3);
@@ -38,9 +41,9 @@ export function creaLucerne(punti, { altezza = 0.45, fuori = 0.06 } = {}){
   });
   const g = new BufferGeometry(); g.setAttribute('position', new BufferAttribute(pos, 3));
   // la fiamma e l'alone: due nuvole di punti sugli stessi posti
-  const fiamma = new Points(g, new PointsMaterial({ color: 0xffe2a8, size: 0.05, sizeAttenuation: true,
+  const fiamma = new Points(g, new PointsMaterial({ color: 0xffe2a8, size: 0.05 * u, sizeAttenuation: true,
     map: tex, transparent: true, depthWrite: false, blending: AdditiveBlending, fog: false }));
-  const luce = new Points(g, new PointsMaterial({ color: 0xffb060, size: 0.9, sizeAttenuation: true,
+  const luce = new Points(g, new PointsMaterial({ color: 0xffb060, size: 0.9 * u, sizeAttenuation: true,
     map: tex, transparent: true, opacity: 0, depthWrite: false, blending: AdditiveBlending, fog: true }));
   // la pozza sul selciato, davanti alla bottega
   const disco = new PlaneGeometry(1, 1); disco.rotateX(-Math.PI / 2);
@@ -49,7 +52,7 @@ export function creaLucerne(punti, { altezza = 0.45, fuori = 0.06 } = {}){
     polygonOffset: true, polygonOffsetFactor: -2 }), punti.length);
   const M = new Matrix4();
   punti.forEach((p, i) => {
-    M.makeScale(1.15, 1, 1.15).setPosition(p.x + p.nx * 0.35, 0.012, p.z + p.nz * 0.35);
+    M.makeScale(1.15 * u, 1, 1.15 * u).setPosition(p.x + p.nx * 0.35 * u, 0.012 * u, p.z + p.nz * 0.35 * u);
     pozza.setMatrixAt(i, M);
   });
   pozza.instanceMatrix.needsUpdate = true;
