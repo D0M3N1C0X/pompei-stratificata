@@ -167,6 +167,9 @@ const ORA_INGRESSO = 9.5;
 let timeMode = 'manual';
 let manualHour = ORA_INGRESSO;
 let sunEl = 0.6, sunAz = Math.PI;
+// la schermata d'inizio vola sulla città (vedi passo); non con ?debug né col movimento ridotto
+const VOLO_INGRESSO = !new URLSearchParams(location.search).has('debug') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+let voloIngresso = 0, introEl = null;
 // L'eruzione ora per ora (fase 2): dichiarata qui, prima del sole, perché
 // updateSun e applyLight la leggono fin dal primo fotogramma.
 const eru = { on:false, ore:0, play:false, luce:1, ultimo:null };
@@ -3129,13 +3132,16 @@ function mostraGuida(on){
   introGuidaBtn.setAttribute('aria-expanded', String(on));
 }
 introGuidaBtn.addEventListener('click', () => mostraGuida(introGuida.hidden));
+document.body.classList.add('ingresso');
 function chiudiIntro(){
   document.getElementById('intro').classList.add('gone');
+  document.body.classList.remove('ingresso');
   AUDIO.init();
 }
 document.getElementById('btnHelp').addEventListener('click', () => {
   mostraGuida(true);
   document.getElementById('intro').classList.remove('gone');
+  document.body.classList.add('ingresso');
 });
 document.getElementById('btnStart').addEventListener('click', chiudiIntro);
 document.getElementById('sceltaVisita').addEventListener('click', () => {
@@ -3402,6 +3408,21 @@ function passo(){
   camera.rotation.set(0,0,0);
   camera.rotateY(yaw);
   camera.rotateX(pitch);
+  // la schermata d'inizio: un volo lento attorno alla città, finché non si
+  // sceglie come entrare; poi la telecamera torna dov'era chi cammina.
+  // Non con ?debug (le prove fotografano inquadrature precise) né col
+  // movimento ridotto [regia]
+  // durante l'ingresso niente etichette né coni: è un fotogramma di film
+  introEl ??= document.getElementById('intro');
+  const inIngresso = !!introEl && !introEl.classList.contains('gone');
+  labelGroup.visible = !inIngresso;
+  for(const h of hotspots){ h.cone.visible = h.beam.visible = !inIngresso; }
+  if(VOLO_INGRESSO && inIngresso){
+    voloIngresso += dt;
+    const a = 2.2 + voloIngresso * 0.035;
+    camera.position.set(-10 + Math.cos(a) * 165, 48 + 6 * Math.sin(voloIngresso * 0.05), Math.sin(a) * 120);
+    camera.lookAt(-14, 2, 4);
+  }
 
   // l'ombra segue la telecamera, con il riquadro stretto sul campo utile
   camera.getWorldPosition(camWorld);

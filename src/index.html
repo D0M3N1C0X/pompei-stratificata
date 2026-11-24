@@ -584,11 +584,36 @@
   body.presenting #presentExit{display:block}
 
   /* ----------------------------------------------------------- intro */
+  /* L'ingresso è un fotogramma di film (23/11/2026): dietro la scheda la
+     città vola piano, con la luce dell'ora vera; il velo scuro è solo dove
+     serve a leggere, a sinistra e in basso. Sul telefono resta più scuro,
+     perché la scheda copre quasi tutto. */
   #intro{
     position:fixed;inset:0;z-index:40;display:grid;place-items:center;
-    background:rgba(9,12,11,.9);backdrop-filter:blur(3px);padding:1.2rem;transition:opacity .35s;
+    background:
+      linear-gradient(90deg, rgba(9,12,11,.86) 0%, rgba(9,12,11,.6) 38%, rgba(9,12,11,.18) 72%, rgba(9,12,11,.08) 100%),
+      linear-gradient(0deg, rgba(9,12,11,.55) 0%, rgba(9,12,11,0) 40%);
+    padding:1.2rem;transition:opacity .9s ease;
     overflow-y:auto;
   }
+  @media (min-width:900px){
+    #intro{place-items:center start;padding-left:max(4vw,2rem)}
+  }
+  @media (max-width:899px){
+    #intro{background:rgba(9,12,11,.78)}
+  }
+  #introMarchio{
+    position:fixed;top:max(1.1rem, env(safe-area-inset-top));right:1.6rem;margin:0;z-index:41;
+    font-family:var(--serif);font-size:clamp(1.1rem, 2.4vw, 1.9rem);font-weight:500;letter-spacing:.01em;
+    color:rgba(231,235,230,.92);text-shadow:0 2px 18px rgba(0,0,0,.55);pointer-events:none;
+  }
+  #intro.gone #introMarchio{opacity:0}
+  @media (max-width:899px){ #introMarchio{display:none} }
+  /* finché si sta sull'ingresso, l'interfaccia della città non si vede */
+  body.ingresso #top, body.ingresso #rail, body.ingresso #clock, body.ingresso #compass,
+  body.ingresso #bottom, body.ingresso #nearHint, body.ingresso #crosshair, body.ingresso #touch{visibility:hidden}
+  #introCard{animation:entraScheda .9s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes entraScheda{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
   #intro.gone{opacity:0;pointer-events:none}
   #introCard{
     max-width:34rem;width:100%;background:var(--glass-2);border:1px solid var(--line);border-radius:22px;
@@ -1211,6 +1236,7 @@ body.erc-on #crosshair{ display:block !important; }
 </aside>
 
 <div id="intro">
+  <p id="introMarchio" aria-hidden="true" data-i18n="ui.brand.titolo">Dopo il 79 — Pompei ed Ercolano</p>
   <div id="introCard" role="dialog" aria-labelledby="introTitolo">
     <span class="eyebrow" data-i18n="ui.intro.occhiello">Pompei ed Ercolano · dal 79 a oggi</span>
     <h2 id="introTitolo" data-i18n="ui.intro.titolo">Sedici secoli, in otto passi</h2>

@@ -57,6 +57,7 @@ uniform float aoAmount;
 uniform float aoRadius;
 uniform float sharpAmount;
 uniform float vignetteAmount;
+uniform float gradeAmount;
 varying vec2 vUv;
 
 float luma(vec3 c){ return dot(c, vec3(0.299, 0.587, 0.114)); }
@@ -146,6 +147,21 @@ void main(){
     col = clamp(col + (col - b) * sharpAmount, 0.0, 1.0);
   }
 
+  // --- bagliore (23/11/2026): le luci forti (il sole, le lucerne, i
+  // riflessi sul mare) si allargano appena, come in un obiettivo. Dodici
+  // campioni su due anelli, solo di quello che supera la soglia
+  if(gradeAmount > 0.001){
+    vec3 bl = vec3(0.0);
+    for(int i = 0; i < 6; i++){
+      float a = float(i) * 1.0472;
+      vec2 d = vec2(cos(a), sin(a));
+      vec3 s1 = texture2D(tDiffuse, vUv + d * texel * 7.0).rgb;
+      vec3 s2 = texture2D(tDiffuse, vUv + d.yx * texel * 17.0).rgb;
+      bl += max(s1 - 0.78, 0.0) + max(s2 - 0.78, 0.0) * 0.6;
+    }
+    col += bl * 0.11 * gradeAmount;
+  }
+
   // --- vignettatura
   vec2 q = (vUv - 0.5) * vec2(1.0, 0.92);
   float v = 1.0 - dot(q, q) * vignetteAmount;
@@ -156,7 +172,12 @@ void main(){
   col = mix(col, col * vec3(0.978, 0.992, 1.024), (1.0 - l) * 0.18);
   col = mix(col, col * vec3(1.014, 1.003, 0.984), l * 0.16);
 
-  gl_FragColor = vec4(lin2srgb(col), 1.0);
+  // --- colore da pellicola: un filo più saturo, e una curva a S leggera
+  // sul valore percepito (dopo la codifica sRGB)
+  col = mix(vec3(luma(col)), col, 1.0 + 0.07 * gradeAmount);
+  vec3 sr = lin2srgb(col);
+  sr = mix(sr, sr * sr * (3.0 - 2.0 * sr), 0.16 * gradeAmount);
+  gl_FragColor = vec4(sr, 1.0);
 }
 `;
 
@@ -190,7 +211,7 @@ void main(){
         texel:{ value: new Vector2(1/2, 1/2) },
         near:{ value: 0.12 }, far:{ value: 1600 },
         aoAmount:{ value: 0.55 }, aoRadius:{ value: 5.0 },
-        sharpAmount:{ value: 0.26 }, vignetteAmount:{ value: 0.22 }
+        sharpAmount:{ value: 0.26 }, vignetteAmount:{ value: 0.22 }, gradeAmount:{ value: 1 }
       },
       vertexShader: VERT, fragmentShader: FRAG,
       depthTest: false, depthWrite: false
@@ -217,6 +238,8 @@ void main(){
     mat.uniforms.aoAmount.value = ao;
     mat.uniforms.sharpAmount.value = sharp;
     mat.uniforms.vignetteAmount.value = vig;
+    // la qualità più bassa (senza occlusione) rinuncia anche al bagliore
+    mat.uniforms.gradeAmount.value = ao > 0.001 ? 1 : 0;
     if(radius !== undefined) mat.uniforms.aoRadius.value = radius;
   }
 
