@@ -33,7 +33,9 @@
       "tour": "Visite",
       "presenta": "Présenter",
       "comandi": "Commandes",
-      "altro": "Plus"
+      "altro": "Plus",
+      "cinema": "Rendu cinéma",
+      "cinemaNota": "Occlusion et anticrénelage de Firenze 1216 : plus beau, beaucoup plus lourd. Pour ordinateurs et iPad avec une bonne carte graphique."
     },
     "presenta": {
       "esci": "Quitter la présentation"

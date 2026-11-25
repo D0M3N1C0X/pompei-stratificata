@@ -33,7 +33,9 @@
       "tour": "Visita",
       "presenta": "Apresentar",
       "comandi": "Comandos",
-      "altro": "Mais"
+      "altro": "Mais",
+      "cinema": "Render cinema",
+      "cinemaNota": "Oclusão e antialiasing de Firenze 1216: mais bonito, muito mais pesado. Para computadores e iPad com uma boa placa gráfica."
     },
     "presenta": {
       "esci": "Sair da apresentação"
