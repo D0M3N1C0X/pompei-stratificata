@@ -33,7 +33,9 @@
       "tour": "Tour",
       "presenta": "Present",
       "comandi": "Controls",
-      "altro": "More"
+      "altro": "More",
+      "cinema": "Cinema render",
+      "cinemaNota": "Occlusion and antialiasing from Firenze 1216: more beautiful, much heavier. For computers and iPads with a good graphics card."
     },
     "presenta": {
       "esci": "Leave presentation"

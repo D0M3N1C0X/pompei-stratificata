@@ -64,6 +64,7 @@ import { creaCielo, creaMonti } from './scene/cielo.js';
 import { creaLucerne } from './collana/lucerne.js';
 import { creaPioggia } from './collana/pioggia.js';
 import { creaAnnunci } from './collana/annunci.js';
+import { creaCinema } from './scene/cinema.js';
 import { t, fmt, LINGUE, linguaAttiva, scegliLingua } from './i18n/index.js';
 
 /*
@@ -170,6 +171,7 @@ let sunEl = 0.6, sunAz = Math.PI;
 // la schermata d'inizio vola sulla città (vedi passo); non con ?debug né col movimento ridotto
 const VOLO_INGRESSO = !new URLSearchParams(location.search).has('debug') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 let voloIngresso = 0, introEl = null;
+let CINEMA = null;                        // la resa cinema, creata col menu «Altro» (vedi impostaCinema)
 // L'eruzione ora per ora (fase 2): dichiarata qui, prima del sole, perché
 // updateSun e applyLight la leggono fin dal primo fotogramma.
 const eru = { on:false, ore:0, play:false, luce:1, ultimo:null };
@@ -2910,6 +2912,19 @@ function applyQuality(i){
 }
 document.getElementById('btnQuality').addEventListener('click', () => applyQuality(qIndex + 1));
 
+/* La resa cinema (src/scene/cinema.js): la catena di Firenze 1216, GTAO,
+   SMAA e OutputPass. Spenta di serie, la ricorda il browser. */
+CINEMA = creaCinema(renderer, scene, camera);
+const btnCinema = document.getElementById('btnCinema');
+function impostaCinema(on){
+  CINEMA.attiva(on);
+  btnCinema.classList.toggle('on', CINEMA.on);
+  btnCinema.setAttribute('aria-pressed', String(CINEMA.on));
+  try { localStorage.setItem('dopo79.cinema', CINEMA.on ? '1' : '0'); } catch(e){}
+}
+btnCinema.addEventListener('click', () => impostaCinema(!CINEMA.on));
+try { if(localStorage.getItem('dopo79.cinema') === '1' && !new URLSearchParams(location.search).has('debug')) impostaCinema(true); } catch(e){}
+
 /* ------------------------------------------------------------- orologio */
 function setClockUI(on){
   document.body.classList.toggle('clock-on', on);
@@ -3517,10 +3532,14 @@ function passo(){
   CIELO.segui(camera, clock.elapsedTime);
   CIELO.uni.uNebbia.value.copy(scene.fog.color);
   LUCERNE.notte(epoch === 0 && !eru.on ? CIELO.uni.uNotte.value : 0, clock.elapsedTime);
-  if(!senzaDisegno && !POST.render(renderer, scene, camera)) renderer.render(scene, camera);
+  if(!senzaDisegno){
+    if(CINEMA?.on) CINEMA.render(dt);
+    else if(!POST.render(renderer, scene, camera)) renderer.render(scene, camera);
+  }
 }
 
 addEventListener('resize', () => {
+  CINEMA?.ridimensiona();
   CONFRONTO.resize(innerWidth, innerHeight);
   ERCOLANO.resize(innerWidth, innerHeight);
   camera.aspect = innerWidth/innerHeight;

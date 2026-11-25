@@ -34,6 +34,8 @@ export default {
       "dallAlto": "Dall'alto",
       "etichette": "Etichette",
       "qualita": "Qualità",
+      "cinema": "Resa cinema",
+      "cinemaNota": "Occlusione e antialiasing di Firenze 1216: più bella, molto più pesante. Per computer e iPad con una buona scheda video.",
       "controller": "Controller",
       "ora": "Ora",
       "sonoro": "Sonoro",

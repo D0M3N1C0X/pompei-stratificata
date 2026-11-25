@@ -33,7 +33,9 @@
       "tour": "Führung",
       "presenta": "Vorführen",
       "comandi": "Steuerung",
-      "altro": "Mehr"
+      "altro": "Mehr",
+      "cinema": "Kino-Darstellung",
+      "cinemaNota": "Verdeckung und Kantenglättung aus Firenze 1216: schöner, viel schwerer. Für Computer und iPads mit guter Grafikkarte."
     },
     "presenta": {
       "esci": "Vorführung beenden"
